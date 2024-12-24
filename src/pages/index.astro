@@ -1,10 +1,18 @@
 ---
+import Badge from '../components/Badge.astro';
 import Layout from '../layouts/Layout.astro';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
-<Layout title="Astro">
-	<slot />
+<Layout title="DevSolutions">
+	<main>
+		<section class="w-full lg:w-[740px] mx-auto py-44">
+			<img class="rounded-full w-12 h-12 mb-4" src="/perfil.webp" alt="dev_photo" />
+			<h1 class="text-white text-5xl font-bold flex flex-row gap-x-4 pb-4">Hey, soy David <a href="https://www.linkedin.com/in/jdavidsandovals/" target="_blank" rel="noopenerer" class="flex justify-center items-center"><Badge>Disponible para trabajar</Badge></a></h1>
+			<h2 class="text-2xl text-wrap"><span class="">+15 años de experiencia.</span><span class="text-yellow-200/90"> Desarrolaldor Web.</span> <span class="text-red-200/90">De Piura, Perú.</span> <span class="opacity-75"> Me especializo en crear aplicaciones únicas</span></h2>
+			<ul></ul>
+		</section>
+	</main>
 </Layout>
