@@ -20,8 +20,8 @@ const {description, title} = Astro.props
 		<meta name="generator" content={Astro.generator} />
 		<title>{title}</title>
 	</head>
-	<body class="bg-neutral-950">
-		<div class="absolute inset-0 -z-10 h-screen w-full items-center px-5 py-24 [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
+	<body class="relative">
+		<div class="absolute inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
 		<Header/>
 		<slot />
 		<Footer/>
@@ -37,10 +37,9 @@ const {description, title} = Astro.props
 		font-family: "Onest Variable", system-ui, sans-serif;
 	},
 	body {
-		background: #000;
 		display: flex;
-		min-height: 100vh;
 		flex-direction: column;
+		min-height: 100vh;
 	}
 	@media (prefers-reduced-motion: reduce) {
 		html{
