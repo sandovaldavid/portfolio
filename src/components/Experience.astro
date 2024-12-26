@@ -1,0 +1,47 @@
+---
+import ExperienceItem from "./ExperienceItem.astro";
+
+const EXPERIENCE = [
+	{
+		date: "Now",
+		title: "Marketing UI design in Figma",
+		description:
+			"All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project.",
+		link: "#",
+	},
+    {
+		date: "March 2022",
+		title: "Marketing UI design in Figma",
+		description:
+			"All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project.",
+	},
+    {
+		date: "March 2022",
+		title: "Marketing UI design in Figma",
+		description:
+			"All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project.",
+	},
+    {
+		date: "March 2022",
+		title: "Marketing UI design in Figma",
+		description:
+			"All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project.",
+	},
+    {
+		date: "March 2022",
+		title: "Marketing UI design in Figma",
+		description:
+			"All of the pages and components are first designed in Figma and we keep a parity between the two versions even as we update the project.",
+	},
+];
+---
+
+<ol class="relative border-s border-gray-200 ml-3">
+	{
+		EXPERIENCE.map((experience) => (
+			<li class="mb-10 ms-4">
+				<ExperienceItem {...experience} />
+			</li>
+		))
+	}
+</ol>
