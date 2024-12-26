@@ -1,0 +1,58 @@
+---
+import PythonIcon from "./icons/Python.astro";
+import DjangoIcon from "./icons/Django.astro";
+import MarkdownIcon from "./icons/Markdown.astro";
+
+const TAGS = {
+	PYTHON: {
+		name: "Python",
+		color: "bg-blue-500 text-white",
+        icon: PythonIcon,
+	},
+	DJANGO: {
+		name: "Django",
+		color: "bg-green-500 text-white",
+		icon: DjangoIcon,
+	},
+	MARKDOWN: {
+		name: "Markdown",
+		color: "bg-gray-500 text-white",
+		icon: MarkdownIcon,
+	},
+};
+const PROJECTS = [
+	{
+		title: "Wiki",
+		description:
+			"Fist project using Django. It's a wiki where you can create, edit and delete articles.",
+		link: "#",
+		github: "https://github.com/sandovaldavid/project1_wiki",
+		image: "/projects/project1_wiki.webp",
+		tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.MARKDOWN],
+	},
+];
+---
+
+{
+	PROJECTS.map(({ title, description, tags, image }) => (
+		<article>
+			<h3 class="text-2xl font-semibold text-yellow-200 mb-2">{title}</h3>
+			<p class="text-lg mb-4 text-pretty">{description}</p>
+			<ul class="flex gap-x-4 flex-row mb-4">
+				{tags.map((tag) => (
+					<li>
+						<span class={`flex gap-x-2 rounded-full text-xs py-1 px-2 ${tag.color} items-center`}>
+							<tag.icon class="size-6" />
+							{tag.name}
+						</span>
+					</li>
+				))}
+			</ul>
+			<img
+				class="rounded shadow-2xl shadow-white/10"
+				src={image}
+				alt={`Captura de pantalla del proyecto ${image}`}
+			/>
+		</article>
+	))
+}
