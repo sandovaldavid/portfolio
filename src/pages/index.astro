@@ -1,15 +1,14 @@
 ---
-import Badge from "../components/Badge.astro";
-import LinkedInIcon from "../components/icons/LinkedIn.astro";
-import GitHubIcon from "../components/icons/GitHub.astro";
-import MailIcon from "../components/icons/Mail.astro";
 import CodeIcon from "../components/icons/Code.astro";
-import SocialPill from "../components/SocialPill.astro";
+import ProfileCheckIcon from "../components/icons/ProfileCheck.astro";
 import Layout from "../layouts/Layout.astro";
 import Experience from "../components/Experience.astro";
 import SectionContainer from "../components/SectionContainer.astro";
-import BriefCase from "../components/icons/Briefcase.astro";
+import BriefCaseIcon from "../components/icons/Briefcase.astro";
 import Projects from "../components/Projects.astro";
+import TitleSection from "../components/TitleSection.astro";
+import AboutMe from "../components/AboutMe.astro";
+import Hero from "../components/Hero.astro";
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -20,62 +19,33 @@ import Projects from "../components/Projects.astro";
 	description="Contrata a David Sandoval, desarrollador web con +15 años de experiencia. Especializado en crear aplicaciones únicas."
 >
 	<main class="px-4">
-		<SectionContainer id="about" class="py-44 pb-24">
-			<img
-				class="rounded-full size-12 mb-4"
-				src="/perfil.webp"
-				alt="dev_photo"
-			/>
-			<h1
-				class="text-white text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row gap-x-4 pb-6 md:pb-10"
-			>
-				Hey, soy David <a
-					href="https://www.linkedin.com/in/jdavidsandovals/"
-					target="_blank"
-					rel="noopenerer"
-					class="flex justify-center items-center"
-					><Badge>Disponible para trabajar</Badge></a
-				>
-			</h1>
-			<h2 class="text-xl md:text-2xl text-wrap max-w-[700px]">
-				<span class="">+15 años de experiencia.</span><span
-					class="text-yellow-200/90"
-				>
-					Desarrolaldor Web.</span
-				>
-				<span class="text-red-200/90">De Piura, Perú.</span>
-				<span class="opacity-75">
-					Me especializo en crear aplicaciones únicas</span
-				>
-			</h2>
-			<nav class="flex gap-4 mt-8 flex-wrap">
-				<SocialPill href="https://www.linkedin.com/in/jdavidsandovals/">
-					<LinkedInIcon class="size-4 md:size-6" />
-					LinkedIn
-				</SocialPill>
-				<SocialPill href="https://github.com/sandovaldavid">
-					<GitHubIcon class="size-4 md:size-6" />
-					GitHub
-				</SocialPill>
-				<SocialPill href="mailto:sandovaldavid2201@gmail.com">
-					<MailIcon class="size-4 md:size-6" />
-					sandovaldavid2201@gmail.com
-				</SocialPill>
-			</nav>
-		</SectionContainer>
-		<SectionContainer id="experience">
-			<h2 class="text-3xl font-semibold mb-6 flex gap-x-3 items-center">
-				<BriefCase class="size-7" />
-				Experiencia Laboral
-			</h2>
-			<Experience />
-		</SectionContainer>
-		<SectionContainer id="projects">
-			<h2 class="text-3xl font-semibold mb-6 flex gap-x-3 items-center">
-				<CodeIcon class="size-7" />
-				Ultimos Proyectos
-			</h2>
-			<Projects />
+		<SectionContainer class="py-16 md:py-36">
+			<Hero />
 		</SectionContainer>
 	</main>
+	<div class="space-y-24">
+		<SectionContainer id="experiencia">
+			<TitleSection>
+				<BriefCaseIcon class="size-8" />
+				Experiencia laboral
+			</TitleSection>
+			<Experience />
+		</SectionContainer>
+
+		<SectionContainer id="proyectos">
+			<TitleSection>
+				<CodeIcon class="size-7" />
+				Proyectos
+			</TitleSection>
+			<Projects />
+		</SectionContainer>
+
+		<SectionContainer id="sobre-mi">
+			<TitleSection>
+				<ProfileCheckIcon class="size-8" />
+				Sobre mí
+			</TitleSection>
+			<AboutMe />
+		</SectionContainer>
+	</div>
 </Layout>
