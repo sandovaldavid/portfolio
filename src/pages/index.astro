@@ -3,11 +3,13 @@ import Badge from "../components/Badge.astro";
 import LinkedInIcon from "../components/icons/LinkedIn.astro";
 import GitHubIcon from "../components/icons/GitHub.astro";
 import MailIcon from "../components/icons/Mail.astro";
+import CodeIcon from "../components/icons/Code.astro"
 import SocialPill from "../components/SocialPill.astro";
 import Layout from "../layouts/Layout.astro";
 import Experience from "../components/Experience.astro";
 import SectionContainer from "../components/SectionContainer.astro";
 import BriefCase from "../components/icons/Briefcase.astro";
+import Projects from "../components/Projects.astro";
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -17,15 +19,15 @@ import BriefCase from "../components/icons/Briefcase.astro";
 	title="Portfolio's David Sandoval - Web Developer"
 	description="Contrata a David Sandoval, desarrollador web con +15 años de experiencia. Especializado en crear aplicaciones únicas."
 >
-	<main>
-		<SectionContainer class="py-44 pb-24">
+	<main class="px-4">
+		<SectionContainer id="about" class="py-44 pb-24">
 			<img
 				class="rounded-full size-12 mb-4"
 				src="/perfil.webp"
 				alt="dev_photo"
 			/>
 			<h1
-				class="text-white text-5xl font-bold flex flex-row gap-x-4 pb-4"
+				class="text-white text-3xl md:text-4xl lg:text-5xl font-bold flex flex-row gap-x-4 pb-6 md:pb-10"
 			>
 				Hey, soy David <a
 					href="https://www.linkedin.com/in/jdavidsandovals/"
@@ -34,7 +36,7 @@ import BriefCase from "../components/icons/Briefcase.astro";
 					class="flex justify-center items-center"
 					><Badge>Disponible para trabajar</Badge></a>
 			</h1>
-			<h2 class="text-2xl text-wrap">
+			<h2 class="text-xl md:text-2xl text-wrap max-w-[700px]">
 				<span class="">+15 años de experiencia.</span><span
 					class="text-yellow-200/90"
 				>
@@ -44,27 +46,34 @@ import BriefCase from "../components/icons/Briefcase.astro";
 				<span class="opacity-75">
 					Me especializo en crear aplicaciones únicas</span>
 			</h2>
-			<nav class="flex gap-x-4 mt-8">
+			<nav class="flex gap-4 mt-8 flex-wrap">
 				<SocialPill href="https://www.linkedin.com/in/jdavidsandovals/">
-					<LinkedInIcon class="size-6" />
+					<LinkedInIcon class="size-4 md:size-6" />
 					LinkedIn
 				</SocialPill>
 				<SocialPill href="https://github.com/sandovaldavid">
-					<GitHubIcon class="size-6" />
+					<GitHubIcon class="size-4 md:size-6" />
 					GitHub
 				</SocialPill>
 				<SocialPill href="mailto:sandovaldavid2201@gmail.com">
-					<MailIcon class="size-6" />
+					<MailIcon class="size-4 md:size-6" />
 					sandovaldavid2201@gmail.com
 				</SocialPill>
 			</nav>
 		</SectionContainer>
 		<SectionContainer id="experience">
-			<h2 class="text-2xl font-semibold mb-6 flex gap-x-3 items-center">
+			<h2 class="text-3xl font-semibold mb-6 flex gap-x-3 items-center">
 				<BriefCase class="size-7" />
 				Experiencia Laboral
 			</h2>
 			<Experience />
+		</SectionContainer>		
+		<SectionContainer id="projects">
+			<h2 class="text-3xl font-semibold mb-6 flex gap-x-3 items-center">
+				<CodeIcon class="size-7" />
+				Ultimos Proyectos
+			</h2>
+			<Projects/>
 		</SectionContainer>
 	</main>
 </Layout>
