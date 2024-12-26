@@ -7,7 +7,7 @@ const TAGS = {
 	PYTHON: {
 		name: "Python",
 		color: "bg-blue-500 text-white",
-        icon: PythonIcon,
+		icon: PythonIcon,
 	},
 	DJANGO: {
 		name: "Django",
@@ -41,7 +41,9 @@ const PROJECTS = [
 			<ul class="flex gap-x-4 flex-row mb-4">
 				{tags.map((tag) => (
 					<li>
-						<span class={`flex gap-x-2 rounded-full text-xs py-1 px-2 ${tag.color} items-center`}>
+						<span
+							class={`flex gap-x-2 rounded-full text-xs py-1 px-2 ${tag.color} items-center`}
+						>
 							<tag.icon class="size-6" />
 							{tag.name}
 						</span>

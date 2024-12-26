@@ -1,13 +1,13 @@
 ---
-import '@fontsource-variable/onest';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
+import "@fontsource-variable/onest";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
 
 interface Props {
 	title: string;
 	description: string;
 }
-const {description, title} = Astro.props
+const { description, title } = Astro.props;
 ---
 
 <!doctype html>
@@ -21,28 +21,32 @@ const {description, title} = Astro.props
 		<title>{title}</title>
 	</head>
 	<body class="relative">
-		<div class="absolute inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"></div>
-		<Header/>
+		<div
+			class="absolute inset-0 -z-10 w-full h-full [background:radial-gradient(125%_125%_at_50%_10%,#000_40%,#63e_100%)]"
+		>
+		</div>
+		<Header />
 		<slot />
-		<Footer/>
+		<Footer />
 	</body>
 </html>
 
 <style is:global>
-	:root{
+	:root {
 		color-scheme: light dark;
 	}
-	html{
+	html {
 		scroll-behavior: smooth;
 		font-family: "Onest Variable", system-ui, sans-serif;
-	},
+	}
+	,
 	body {
 		display: flex;
 		flex-direction: column;
 		min-height: 100vh;
 	}
 	@media (prefers-reduced-motion: reduce) {
-		html{
+		html {
 			scroll-behavior: auto;
 		}
 	}
