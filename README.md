@@ -1,7 +1,7 @@
 
 # Portafolio Personal
 
-Este es el repositorio de mi portafolio personal, un desarrollador web y mobile apasionado por la creación de aplicaciones únicas e innovadoras.
+Este es el repositorio de mi portafolio personal, soy un desarrollador web y mobile apasionado por la creación de aplicaciones únicas e innovadoras.
 
 ![Texto alternativo](/public/Portfolio.png)
 
