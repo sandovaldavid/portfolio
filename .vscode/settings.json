@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        "**/bun.lockb": true,
+        "**/.bun": true,
+        "**/.bun/**": true,
+        "**/node_modules": true,
+        "**/.astro": true,
+    }
+}
