@@ -1,4 +1,3 @@
-
 # Portafolio Personal
 
 Este es el repositorio de mi portafolio personal, soy un desarrollador web y mobile apasionado por la creación de aplicaciones únicas e innovadoras.
@@ -76,11 +75,11 @@ Dentro de este proyecto, encontrarás las siguientes carpetas y archivos:
 
 Todos los comandos se ejecutan desde la raíz del proyecto, desde una terminal:
 
-| Comando                   | Acción                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Instala las dependencias                         |
-| `npm run dev`             | Inicia el servidor de desarrollo en `localhost:4321` |
-| `npm run build`           | Construye el sitio de producción en producción|
+| Comando                   | Acción                                                      |
+| :------------------------ | :---------------------------------------------------------- |
+| `npm install`             | Instala las dependencias                                    |
+| `npm run dev`             | Inicia el servidor de desarrollo en `localhost:4321`        |
+| `npm run build`           | Construye el sitio de producción en producción              |
 | `npm run preview`         | Previsualiza tu construcción localmente, antes de desplegar |
 | `npm run astro ...`       | Ejecuta comandos CLI como `astro add`, `astro check`        |
 | `npm run astro -- --help` | Obtén ayuda usando el CLI de Astro                          |
