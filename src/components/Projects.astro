@@ -6,6 +6,10 @@ import GitHubIcon from "./icons/GitHub.astro";
 import LinkIcon from "./icons/Link.astro";
 import LinkButton from "./LinkButton.astro";
 import BootstrapIcon from "./icons/Bootstrap.astro";
+import JavaScriptIcon from "./icons/JavaScript.astro";
+import CSSIcon from "./icons/CSS.astro";
+import HTMLIcon from "./icons/HTML.astro";
+import TailwindIcon from "./icons/Tailwind.astro";
 
 const TAGS = {
     PYTHON: {
@@ -28,6 +32,26 @@ const TAGS = {
         class: "bg-purple-500 text-white",
         icon: BootstrapIcon,
     },
+    JAVASCRIPT: {
+        name: "JavaScript",
+        class: "bg-yellow-500 text-white",
+        icon: JavaScriptIcon,
+    },
+    CSS: {
+        name: "CSS",
+        class: "bg-blue-500 text-white",
+        icon: CSSIcon,
+    },
+    HTML: {
+        name: "HTML",
+        class: "bg-red-500 text-white",
+        icon: HTMLIcon,
+    },
+    TAILWIND: {
+        name: "Tailwind",
+        class: "bg-blue-500 text-white",
+        icon: TailwindIcon,
+    },
 };
 const PROJECTS = [
     {
@@ -37,7 +61,7 @@ const PROJECTS = [
         link: "https://project-01-wiki-3a0d7fecf703.herokuapp.com/",
         github: "https://github.com/sandovaldavid/project1_wiki",
         image: "projects/project1_wiki.webp",
-        tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.MARKDOWN],
+        tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.MARKDOWN, TAGS.BOOTSTRAP],
     },
     {
         title: "Auctions",
@@ -46,7 +70,7 @@ const PROJECTS = [
         link: "https://project-02-commerce-b19e4e9c3af7.herokuapp.com/",
         github: "https://github.com/sandovaldavid/Project02_Commerce",
         image: "projects/project1_wiki.webp",
-        tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.BOOTSTRAP],
+        tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.BOOTSTRAP, TAGS.JAVASCRIPT, TAGS.CSS, TAGS.HTML],
     },
 ];
 ---
