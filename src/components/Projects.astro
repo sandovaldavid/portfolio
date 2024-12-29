@@ -10,6 +10,7 @@ import JavaScriptIcon from "./icons/JavaScript.astro";
 import CSSIcon from "./icons/CSS.astro";
 import HTMLIcon from "./icons/HTML.astro";
 import TailwindIcon from "./icons/Tailwind.astro";
+import ReactIcon from "./icons/React.astro";
 
 const TAGS = {
     PYTHON: {
@@ -51,6 +52,11 @@ const TAGS = {
         name: "Tailwind",
         class: "bg-blue-500 text-white",
         icon: TailwindIcon,
+    },
+    REACT: {
+        name: "React",
+        class: "bg-blue-500 text-white",
+        icon: ReactIcon,
     },
 };
 const PROJECTS = [
@@ -96,6 +102,15 @@ const PROJECTS = [
         github: "https://github.com/sandovaldavid/project0_search",
         image: "projects/project-04-search.webp",
         tags: [TAGS.CSS, TAGS.HTML],
+    },
+    {
+        title: "Contador de Clicks",
+        description:
+            "Esta pagina web consiste en un contador de clicks, donde el usuario puede aumentar o disminuir el contador.",
+        link: "https://contador-clicks-43i5fkaed-sandovaldavids-projects.vercel.app",
+        github: "https://github.com/sandovaldavid/contador-clicks",
+        image: "projects/project-04-search.webp",
+        tags: [TAGS.CSS, TAGS.HTML, TAGS.REACT],
     },
 ];
 ---
