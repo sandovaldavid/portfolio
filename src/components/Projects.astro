@@ -5,6 +5,7 @@ import MarkdownIcon from "./icons/Markdown.astro";
 import GitHubIcon from "./icons/GitHub.astro";
 import LinkIcon from "./icons/Link.astro";
 import LinkButton from "./LinkButton.astro";
+import BootstrapIcon from "./icons/Bootstrap.astro";
 
 const TAGS = {
     PYTHON: {
@@ -22,16 +23,30 @@ const TAGS = {
         class: "bg-gray-500 text-white",
         icon: MarkdownIcon,
     },
+    BOOTSTRAP: {
+        name: "Bootstrap",
+        class: "bg-purple-500 text-white",
+        icon: BootstrapIcon,
+    },
 };
 const PROJECTS = [
     {
         title: "Wiki",
         description:
             "Fist project using Django. It's a wiki where you can create, edit and delete articles.",
-        link: "#",
+        link: "https://project-01-wiki-3a0d7fecf703.herokuapp.com/",
         github: "https://github.com/sandovaldavid/project1_wiki",
-        image: "/projects/project1_wiki.webp",
+        image: "projects/project1_wiki.webp",
         tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.MARKDOWN],
+    },
+    {
+        title: "Auctions",
+        description:
+            "The Auction Site is a web application where users can create, bid on, and manage online auctions. It provides a platform for users to list items for sale, place competitive bids, and engage with the auction community through comments and watchlists.",
+        link: "https://project-02-commerce-b19e4e9c3af7.herokuapp.com/",
+        github: "https://github.com/sandovaldavid/Project02_Commerce",
+        image: "projects/project1_wiki.webp",
+        tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.BOOTSTRAP],
     },
 ];
 ---
