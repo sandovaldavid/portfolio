@@ -2,7 +2,7 @@
 
 Este es el repositorio de mi portafolio personal, soy un desarrollador web y mobile apasionado por la creación de aplicaciones únicas e innovadoras.
 
-![Texto alternativo](/public/Portfolio.png)
+![Texto alternativo](/public/projects/portfolio.webp)
 
 ## 🚀 Estructura del Proyecto
 
