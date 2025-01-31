@@ -13,6 +13,11 @@ import TailwindIcon from "./icons/Tailwind.astro";
 import ReactIcon from "./icons/React.astro";
 import NextJSIcon from "./icons/NextJS.astro";
 import MySQLIcon from "./icons/MySQL.astro";
+import MaterialUIIcon from "./icons/MaterialUI.astro";
+import PostgreSQLIcon from "./icons/PostgreSQL.astro";
+import ExpressIcon from "./icons/Express.astro";
+import CloudinaryIcon from "./icons/Cloudinary.astro";
+import SQLiteIcon from "./icons/SQLite.astro";
 
 const TAGS = {
     PYTHON: {
@@ -69,6 +74,31 @@ const TAGS = {
         name: "MySQL",
         class: "bg-blue-500 text-white",
         icon: MySQLIcon,
+    },
+    MATERIALUI: {
+        name: "Material-UI",
+        class: "bg-white text-blue-600",
+        icon: MaterialUIIcon,
+    },
+    POSTGRESQL: {
+        name: "PostgreSQL",
+        class: "bg-blue-500 text-white",
+        icon: PostgreSQLIcon,
+    },
+    EXPRESS: {
+        name: "Express",
+        class: "bg-black text-white border border-withe",
+        icon: ExpressIcon,
+    },
+    CLOUDINARY: {
+        name: "Cloudinary",
+        class: "bg-white text-blue-900",
+        icon: CloudinaryIcon,
+    },
+    SQLITE: {
+        name: "SQLite",
+        class: "bg-blue-500 text-white",
+        icon: SQLiteIcon,
     },
 };
 const PROJECTS = [
@@ -140,7 +170,7 @@ const PROJECTS = [
         link: "https://lectures-management.devprojects.tech",
         github: "https://github.com/sandovaldavid/Lectures-Management",
         image: "/public/projects/project-07-lectures-management.webp",
-        tags: [TAGS.CSS, TAGS.HTML],
+        tags: [TAGS.CSS, TAGS.HTML, TAGS.SQLITE, TAGS.EXPRESS],
     },
     {
         title: "Lista de Facultades",
@@ -149,7 +179,16 @@ const PROJECTS = [
         link: "https://facultades-unp.devprojects.tech",
         github: "https://github.com/sandovaldavid/list-faculties-unp",
         image: "/public/projects/project-08-lista-facultades.webp",
-        tags: [TAGS.TAILWIND, TAGS.HTML, TAGS.NEXTJS, TAGS.MYSQL],
+        tags: [TAGS.TAILWIND, TAGS.CLOUDINARY, TAGS.NEXTJS, TAGS.MYSQL],
+    },
+    {
+        title: "Aplicaión de Notas",
+        description:
+            "Una aplicación de notas moderna y responsiva creada con React y Material-UI que permite a los usuarios crear, editar y administrar notas con una interfaz limpia e intuitiva.",
+        link: "https://app-notes-dev.devprojects.tech/",
+        github: "https://github.com/sandovaldavid/app-notes-dev",
+        image: "/public/projects/project-09-app-notes.webp",
+        tags: [TAGS.REACT, TAGS.MATERIALUI, TAGS.POSTGRESQL, TAGS.EXPRESS],
     },
 ];
 ---
