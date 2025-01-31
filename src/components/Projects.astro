@@ -11,6 +11,13 @@ import CSSIcon from "./icons/CSS.astro";
 import HTMLIcon from "./icons/HTML.astro";
 import TailwindIcon from "./icons/Tailwind.astro";
 import ReactIcon from "./icons/React.astro";
+import NextJSIcon from "./icons/NextJS.astro";
+import MySQLIcon from "./icons/MySQL.astro";
+import MaterialUIIcon from "./icons/MaterialUI.astro";
+import PostgreSQLIcon from "./icons/PostgreSQL.astro";
+import ExpressIcon from "./icons/Express.astro";
+import CloudinaryIcon from "./icons/Cloudinary.astro";
+import SQLiteIcon from "./icons/SQLite.astro";
 
 const TAGS = {
     PYTHON: {
@@ -58,14 +65,49 @@ const TAGS = {
         class: "bg-blue-500 text-white",
         icon: ReactIcon,
     },
+    NEXTJS: {
+        name: "Next.js",
+        class: "bg-black text-white",
+        icon: NextJSIcon,
+    },
+    MYSQL: {
+        name: "MySQL",
+        class: "bg-blue-500 text-white",
+        icon: MySQLIcon,
+    },
+    MATERIALUI: {
+        name: "Material-UI",
+        class: "bg-white text-blue-600",
+        icon: MaterialUIIcon,
+    },
+    POSTGRESQL: {
+        name: "PostgreSQL",
+        class: "bg-blue-500 text-white",
+        icon: PostgreSQLIcon,
+    },
+    EXPRESS: {
+        name: "Express",
+        class: "bg-black text-white border border-withe",
+        icon: ExpressIcon,
+    },
+    CLOUDINARY: {
+        name: "Cloudinary",
+        class: "bg-white text-blue-900",
+        icon: CloudinaryIcon,
+    },
+    SQLITE: {
+        name: "SQLite",
+        class: "bg-blue-500 text-white",
+        icon: SQLiteIcon,
+    },
 };
 const PROJECTS = [
     {
         title: "Wiki",
         description:
             "Este proyecto es un sitio web tipo enciclopedia construido con Django, llamado 'wiki', que contiene una única aplicación llamada 'encyclopedia'",
-        link: "https://project-01-wiki-3a0d7fecf703.herokuapp.com/",
-        github: "https://github.com/sandovaldavid/project1_wiki",
+        link: "https://wiki.devprojects.tech",
+        github: "https://github.com/sandovaldavid/project-01-wiki",
         image: "projects/project-01-wiki.webp",
         tags: [TAGS.DJANGO, TAGS.PYTHON, TAGS.MARKDOWN, TAGS.BOOTSTRAP],
     },
@@ -73,8 +115,8 @@ const PROJECTS = [
         title: "Auctions",
         description:
             "El Sitio de Subastas es una aplicación web donde los usuarios pueden crear, pujar y gestionar subastas en línea. Proporciona una plataforma para que los usuarios enumeren artículos para la venta, realicen ofertas competitivas e interactúen con la comunidad de subastas a través de comentarios y listas de seguimiento.",
-        link: "https://project-02-commerce-b19e4e9c3af7.herokuapp.com/",
-        github: "https://github.com/sandovaldavid/Project02_Commerce",
+        link: "https://auctions.devprojects.tech",
+        github: "https://codificador.devprojects.tech",
         image: "projects/project-02-auctions.webp",
         tags: [
             TAGS.DJANGO,
@@ -89,16 +131,88 @@ const PROJECTS = [
         title: "Codificador de Mensajes",
         description:
             "Esta pagina web consiste en encriptar un texto ingresado por el usuario y en la misma página puede desencriptar el mensaje si el usuario lo desea.",
-        link: "https://sandovaldavid.github.io/Proyecto-Codificador/",
-        github: "https://github.com/sandovaldavid/Proyecto-Codificador",
+        link: "https://codificador.devprojects.tech",
+        github: "https://github.com/sandovaldavid/Challenge-01--Codificador",
         image: "projects/project-03-codificador.webp",
         tags: [TAGS.JAVASCRIPT, TAGS.CSS, TAGS.HTML],
+    },
+    {
+        title: "Clinica Dental",
+        description:
+            "Una página de destino moderna y responsiva para una clínica dental centrada en la atención preventiva y la educación dental.",
+        link: "https://dental-clinic.devprojects.tech",
+        github: "https://github.com/sandovaldavid/Dental-Clinic",
+        image: "/public/projects/project-06-clinica-dental.webp",
+        tags: [TAGS.CSS, TAGS.HTML],
+    },
+    {
+        title: "Lectures Management",
+        description:
+            "Una aplicación web moderna para gestionar clases con operaciones CRUD (Crear, Leer, Actualizar, Eliminar). Desarrollada con JavaScript básico y una API RESTful.",
+        link: "https://lectures-management.devprojects.tech",
+        github: "https://github.com/sandovaldavid/Lectures-Management",
+        image: "/public/projects/project-07-lectures-management.webp",
+        tags: [TAGS.CSS, TAGS.HTML, TAGS.SQLITE, TAGS.EXPRESS],
+    },
+    {
+        title: "Lista de Facultades",
+        description:
+            "Aplicación web para la gestión de facultades universitarias. Este proyecto ofrece una interfaz CRUD (Crear, Leer, Actualizar, Eliminar) completa para la gestión de facultades con un diseño moderno y responsivo.",
+        link: "https://facultades-unp.devprojects.tech",
+        github: "https://github.com/sandovaldavid/list-faculties-unp",
+        image: "/public/projects/project-08-lista-facultades.webp",
+        tags: [TAGS.TAILWIND, TAGS.CLOUDINARY, TAGS.NEXTJS, TAGS.MYSQL],
+    },
+    {
+        title: "Aplicaión de Notas",
+        description:
+            "Una aplicación de notas moderna y responsiva creada con React y Material-UI que permite a los usuarios crear, editar y administrar notas con una interfaz limpia e intuitiva.",
+        link: "https://app-notes-dev.devprojects.tech/",
+        github: "https://github.com/sandovaldavid/app-notes-dev",
+        image: "/public/projects/project-09-app-notes.webp",
+        tags: [TAGS.REACT, TAGS.MATERIALUI, TAGS.POSTGRESQL, TAGS.EXPRESS],
+    },
+    {
+        title: "Juego de Ahorcados",
+        description:
+            "Un juego clásico del ahorcado implementado en HTML, CSS y JavaScript puro. El jugador debe adivinar una palabra letra por letra antes de que el dibujo del 'ahorcado' se complete.",
+        link: "https://juego-ahorcados.devprojects.tech/",
+        github: "https://github.com/sandovaldavid/Challenge-02--Juego-Ahorcados",
+        image: "/public/projects/project-10-juego-ahorcados.webp",
+        tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT],
+    },
+    {
+        title: "Odontología Estética",
+        description:
+            "Un sitio web moderno y responsivo para una clínica dental especializada en odontología estética. Creado con HTML5, CSS3 y JavaScript básico.",
+        link: "https://odontologia-estetica.devprojects.tech",
+        github: "https://github.com/sandovaldavid/Odontologia-Estetica",
+        image: "/public/projects/project-11-odontologia-estetica.webp",
+        tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT],
+    },
+    {
+        title: "Apperia",
+        description:
+            "Apeperia es una aplicación web responsiva que muestra servicios de desarrollo de aplicaciones web y móviles personalizadas. El proyecto demuestra técnicas de diseño responsivo modernas y un enfoque que prioriza los dispositivos móviles.",
+        link: "https://apperia.devprojects.tech",
+        github: "https://github.com/sandovaldavid/Apperia",
+        image: "/public/projects/project-12-apperia.webp",
+        tags: [TAGS.HTML, TAGS.CSS],
+    },
+    {
+        title: "Fruta e Fruto",
+        description:
+            "Un sitio web de recetas responsivo creado con principios de arquitectura CSS modernos centrados en componentes reutilizables y código mantenible.",
+        link: "https://fruto-e-fruto.devprojects.tech",
+        github: "https://github.com/sandovaldavid/Fruta-e-Fruto",
+        image: "/public/projects/project-13-fruta-e-fruto.webp",
+        tags: [TAGS.HTML, TAGS.CSS],
     },
     {
         title: "Search",
         description:
             "Contiene una implementación de una interfaz de búsqueda inspirada en Google, con funcionalidades avanzadas y búsqueda de imágenes, diseñada para ser desplegada como un proyecto de contenido estático.",
-        link: "https://sandovaldavid.github.io/project-01-search/search/",
+        link: "https://search.devprojects.tech",
         github: "https://github.com/sandovaldavid/project-01-search",
         image: "projects/project-04-search.webp",
         tags: [TAGS.CSS, TAGS.HTML],
@@ -107,7 +221,7 @@ const PROJECTS = [
         title: "Contador de Clicks",
         description:
             "Esta pagina web consiste en un contador de clicks, donde el usuario puede aumentar o disminuir el contador.",
-        link: "https://contador-clicks-43i5fkaed-sandovaldavids-projects.vercel.app",
+        link: "https://contador-clicks.devprojects.tech",
         github: "https://github.com/sandovaldavid/contador-clicks",
         image: "projects/project-05-contador.webp",
         tags: [TAGS.CSS, TAGS.HTML, TAGS.REACT],
