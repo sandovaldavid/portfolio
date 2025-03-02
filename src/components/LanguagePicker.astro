@@ -1,23 +1,49 @@
 ---
 import { languages } from '../i18n/config';
 
-const { currentLang } = Astro.props;
+const { currentLang }: { currentLang: keyof typeof languages } = Astro.props;
 const url = new URL(Astro.request.url);
 const pathname = url.pathname;
+
+const alternativeLang = currentLang === 'es' ? 'en' : 'es';
+const alternativePath = pathname.replace(/^\/(en|es)\//, `/${alternativeLang}/`);
+const currentLabel = languages[currentLang];
+
+const languageOptions = Object.entries(languages).map(([lang, label]) => {
+	const path = pathname.replace(/^\/(en|es)\//, `/${lang}/`);
+	const isActive = currentLang === lang;
+	return { lang, label, path, isActive };
+});
 ---
 
-<div class="flex gap-2 items-center text-sm">
+<div class='md:hidden'>
+	<a
+		href={alternativePath}
+		class='flex items-center px-2 py-1 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700'
+	>
+		<span class='font-semibold'>{currentLang.toUpperCase()}</span>
+	</a>
+</div>
+
+<div
+	class='hidden md:flex items-center space-x-1 border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden'
+>
 	{
 		Object.entries(languages).map(([lang, label]) => {
-			const path = pathname.replace(/^\/(en|es)\//, `/${lang}/`);
 			const isActive = currentLang === lang;
+			const path = isActive ? '#' : pathname.replace(/^\/(en|es)\//, `/${lang}/`);
 
 			return (
 				<a
 					href={path}
-					class={`px-2 py-1 rounded-md ${isActive ? 'bg-blue-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}
+					class={`px-2 py-1 text-sm font-medium transition-colors ${
+						isActive
+							? 'bg-blue-500 text-white'
+							: 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+					}`}
+					aria-current={isActive ? 'page' : undefined}
 				>
-					{label}
+					{lang.toUpperCase()}
 				</a>
 			);
 		})
