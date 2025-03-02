@@ -1,0 +1,24 @@
+---
+import { languages } from '../i18n/config';
+
+const { currentLang } = Astro.props;
+const url = new URL(Astro.request.url);
+const pathname = url.pathname;
+---
+
+<div class='flex gap-2 items-center text-sm'>
+	{
+		Object.entries(languages).map(([lang, label]) => {
+			const path = pathname.replace(/^\/(en|es)\//, `/${lang}/`);
+			const isActive = currentLang === lang;
+
+			return (
+				<a
+					href={path}
+					class={`px-2 py-1 rounded-md ${isActive ? 'bg-blue-500 text-white' : 'hover:bg-gray-200 dark:hover:bg-gray-700'}`}>
+					{label}
+				</a>
+			);
+		})
+	}
+</div>
