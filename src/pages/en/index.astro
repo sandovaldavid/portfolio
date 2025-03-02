@@ -1,0 +1,52 @@
+---
+import CodeIcon from '../../components/icons/Code.astro';
+import ProfileCheckIcon from '../../components/icons/ProfileCheck.astro';
+import Layout from '../../layouts/Layout.astro';
+import Experience from '../../components/Experience.astro';
+import SectionContainer from '../../components/SectionContainer.astro';
+import BriefCaseIcon from '../../components/icons/Briefcase.astro';
+import Projects from '../../components/Projects.astro';
+import TitleSection from '../../components/TitleSection.astro';
+import AboutMe from '../../components/AboutMe.astro';
+import Hero from '../../components/Hero.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+const lang = getLangFromUrl(new URL(Astro.request.url));
+const t = useTranslations(lang);
+---
+
+<Layout
+	title='David Sandoval Portfolio - Web Developer'
+	description='Hire David Sandoval, web and mobile developer. Specialized in creating unique applications.'
+	img_preview='/projects/portfolio.webp'>
+	<main class='px-4'>
+		<SectionContainer class='py-16 md:py-36'>
+			<Hero />
+		</SectionContainer>
+	</main>
+	<div class='space-y-24'>
+		<SectionContainer id='experience'>
+			<TitleSection>
+				<BriefCaseIcon class='size-8' />
+				Work Experience
+			</TitleSection>
+			<Experience />
+		</SectionContainer>
+
+		<SectionContainer id='projects'>
+			<TitleSection>
+				<CodeIcon class='size-7' />
+				Projects
+			</TitleSection>
+			<Projects />
+		</SectionContainer>
+
+		<SectionContainer id='about-me'>
+			<TitleSection>
+				<ProfileCheckIcon class='size-8' />
+				About me
+			</TitleSection>
+			<AboutMe />
+		</SectionContainer>
+	</div>
+</Layout>
