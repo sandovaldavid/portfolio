@@ -1,14 +1,14 @@
 ---
-import CodeIcon from "../components/icons/Code.astro";
-import ProfileCheckIcon from "../components/icons/ProfileCheck.astro";
-import Layout from "../layouts/Layout.astro";
-import Experience from "../components/Experience.astro";
-import SectionContainer from "../components/SectionContainer.astro";
-import BriefCaseIcon from "../components/icons/Briefcase.astro";
-import Projects from "../components/Projects.astro";
-import TitleSection from "../components/TitleSection.astro";
-import AboutMe from "../components/AboutMe.astro";
-import Hero from "../components/Hero.astro";
+import CodeIcon from '../components/icons/Code.astro';
+import ProfileCheckIcon from '../components/icons/ProfileCheck.astro';
+import Layout from '../layouts/Layout.astro';
+import Experience from '../components/Experience.astro';
+import SectionContainer from '../components/SectionContainer.astro';
+import BriefCaseIcon from '../components/icons/Briefcase.astro';
+import Projects from '../components/Projects.astro';
+import TitleSection from '../components/TitleSection.astro';
+import AboutMe from '../components/AboutMe.astro';
+import Hero from '../components/Hero.astro';
 import { defaultLang } from '../i18n/config';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
@@ -16,47 +16,46 @@ import { defaultLang } from '../i18n/config';
 ---
 
 <Layout
-    title="Portfolio's David Sandoval - Web Developer"
-    description="Contrata a David Sandoval, desarrollador web y mobile. Especializado en crear aplicaciones únicas."
-    img_preview="/projects/portfolio.webp"
+	title="Portfolio's David Sandoval - Web Developer"
+	description="Contrata a David Sandoval, desarrollador web y mobile. Especializado en crear aplicaciones únicas."
+	img_preview="/projects/portfolio.webp"
 >
-    <main class="px-4">
-        <SectionContainer class="py-16 md:py-36">
-            <Hero />
-        </SectionContainer>
-    </main>
-    <div class="space-y-24">
-        <SectionContainer id="experience">
-            <TitleSection>
-                <BriefCaseIcon class="size-8" />
-                Experiencia laboral
-            </TitleSection>
-            <Experience />
-        </SectionContainer>
+	<main class="px-4">
+		<SectionContainer class="py-16 md:py-36">
+			<Hero />
+		</SectionContainer>
+	</main>
+	<div class="space-y-24">
+		<SectionContainer id="experience">
+			<TitleSection>
+				<BriefCaseIcon class="size-8" />
+				Experiencia laboral
+			</TitleSection>
+			<Experience />
+		</SectionContainer>
 
-        <SectionContainer id="projects">
-            <TitleSection>
-                <CodeIcon class="size-7" />
-                Proyectos
-            </TitleSection>
-            <Projects />
-        </SectionContainer>
+		<SectionContainer id="projects">
+			<TitleSection>
+				<CodeIcon class="size-7" />
+				Proyectos
+			</TitleSection>
+			<Projects />
+		</SectionContainer>
 
-        <SectionContainer id="about-me">
-            <TitleSection>
-                <ProfileCheckIcon class="size-8" />
-                Sobre mí
-            </TitleSection>
-            <AboutMe />
-        </SectionContainer>
-    </div>
+		<SectionContainer id="about-me">
+			<TitleSection>
+				<ProfileCheckIcon class="size-8" />
+				Sobre mí
+			</TitleSection>
+			<AboutMe />
+		</SectionContainer>
+	</div>
 </Layout>
 
+<script define:vars={{ defaultLang }}>
+	const browserLang = navigator.language.split('-')[0];
+	const supportedLang = ['en', 'es'].includes(browserLang) ? browserLang : defaultLang;
+	window.location.pathname = `/${supportedLang}/`;
+</script>
 
-<script define:vars={{defaultLang}}>
-    const browserLang = navigator.language.split('-')[0];
-    const supportedLang = ['en', 'es'].includes(browserLang) ? browserLang : defaultLang;
-    window.location.pathname = `/${supportedLang}/`;
-  </script>
-
-  <meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />
+<meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />

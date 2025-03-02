@@ -20,8 +20,7 @@ export const ui = {
 		'experience.technical-support.title': 'Technical Support',
 		'experience.technical-support.description':
 			'I provided technical support for maintenance and configuration of technological infrastructure, ensuring the operation of systems and equipment in an institutional environment. I developed skills in diagnosing and resolving incidents, optimization of technological processes, and attention to requirements, contributing to operational efficiency. My experience strengthened my ability to address technical challenges and improve systems management, key skills in development and IT environments.',
-		'experience.technical-support.company':
-			'Provincial Municipality of Piura',
+		'experience.technical-support.company': 'Provincial Municipality of Piura',
 		// AboutMe translations
 		'about-me.paragraph1':
 			'My name is Juan David, although most people know me as David. I am currently a graduate in Computer Engineering from the National University of Piura. My passion for software development has led me to create <strong>various independent projects</strong> that reflect my skills and dedication.',
@@ -51,8 +50,7 @@ export const ui = {
 		'experience.technical-support.title': 'Soporte Técnico',
 		'experience.technical-support.description':
 			'Brindé soporte técnico para mantenimiento y configuración de infraestructura tecnológica, asegurando el funcionamiento de sistemas y equipos en un entorno institucional. Desarrollé habilidades en diagnóstico y resolución de incidentes, optimización de procesos tecnológicos y atención de requerimientos, contribuyendo a la eficiencia operativa. Mi experiencia fortaleció mi capacidad para abordar desafíos técnicos y mejorar la gestión de sistemas, habilidades clave en entornos de desarrollo y TI.',
-		'experience.technical-support.company':
-			'Municipalidad Provincial de Piura',
+		'experience.technical-support.company': 'Municipalidad Provincial de Piura',
 		// Sobre mí
 		'about-me.paragraph1':
 			'Me llamo Juan David, aunque la mayoría me conoce como David. Actualmente soy egresado de la carrera de Ingeniería Informática en la Universidad Nacional de Piura. Mi pasión por el desarrollo de software me ha llevado a crear <strong>diversos proyectos independientes</strong> que reflejan mis habilidades y dedicación.',
