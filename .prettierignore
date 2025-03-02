@@ -1,0 +1,16 @@
+# Ignorar directorios de dependencias
+node_modules/
+dist/
+.astro/
+
+# Ignorar archivos generados
+*.min.js
+*.min.css
+
+# Ignorar archivos de bloqueo de paquetes
+package-lock.json
+yarn.lock
+bun.lockb
+
+# Otros archivos a ignorar
+.DS_Store
