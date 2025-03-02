@@ -1,23 +1,26 @@
 ---
-import ExperienceItem from "./ExperienceItem.astro";
+import ExperienceItem from './ExperienceItem.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(new URL(Astro.request.url));
+const t = useTranslations(lang);
 
 const EXPERIENCE = [
-    {
-        date: "Jun 2024 - Oct 2024",
-        title: "Soporte Técnico",
-        description:
-            "Proporcioné soporte técnico en mantenimiento y configuración de infraestructura tecnológica, garantizando la operatividad de sistemas y equipos en un entorno institucional. Desarrollé habilidades en diagnóstico y resolución de incidencias, optimización de procesos tecnológicos y atención a requerimientos, contribuyendo a la eficiencia operativa. Mi experiencia fortaleció mi capacidad para abordar desafíos técnicos y mejorar la gestión de sistemas, habilidades clave en entornos de desarrollo y TI.",
-        company: "Municipalidad Provincial de Piura",
-    },
+	{
+		date: t('experience.technical-support.date'),
+		title: t('experience.technical-support.title'),
+		description: t('experience.technical-support.description'),
+		company: t('experience.technical-support.company'),
+	},
 ];
 ---
 
-<ol class="relative mt-16">
-    {
-        EXPERIENCE.map((experience) => (
-            <li>
-                <ExperienceItem {...experience} />
-            </li>
-        ))
-    }
+<ol class='relative mt-16'>
+	{
+		EXPERIENCE.map((experience) => (
+			<li>
+				<ExperienceItem {...experience} />
+			</li>
+		))
+	}
 </ol>
