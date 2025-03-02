@@ -1,36 +1,37 @@
 ---
 import ThemeToggle from "./ThemeToggle.astro";
+import LanguagePicker from "./LanguagePicker.astro";
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(new URL(Astro.request.url));
+const t = useTranslations(lang);
 
 const navItems = [
     {
-        title: "Experiencia",
+        title: t('nav.experience'),
         label: "experiencia",
-        url: "/#experience",
+        url: `/${lang}/#experience`,
     },
     {
-        title: "Proyectos",
+        title: t('nav.projects'),
         label: "proyectos",
-        url: "/#projects",
+        url: `/${lang}/#projects`,
     },
     {
-        title: "Sobre mí",
+        title: t('nav.about'),
         label: "sobre-mi",
-        url: "/#about-me",
+        url: `/${lang}/#about-me`,
     },
     {
-        title: "Contacto",
+        title: t('nav.contact'),
         label: "contacto",
         url: "mailto:sandovaldavid2201@gmail.com",
     },
 ];
 ---
 
-<header
-    class="fixed top-0 z-10 flex items-center justify-center w-full mx-auto mt-2"
->
-    <nav
-        class="flex px-3 text-sm font-medium rounded-full text-gray-600 dark:text-gray-200 justify-center items-center"
-    >
+<header class="fixed top-0 z-10 flex items-center justify-center w-full mx-auto mt-2">
+    <nav class="flex px-3 text-sm font-medium rounded-full text-gray-600 dark:text-gray-200 justify-center items-center">
         {
             navItems.map((link) => (
                 <a
@@ -43,6 +44,7 @@ const navItems = [
             ))
         }
         <ThemeToggle />
+        <LanguagePicker currentLang={lang} />
     </nav>
 </header>
 
