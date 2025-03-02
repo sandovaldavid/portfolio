@@ -9,10 +9,6 @@ import Projects from '../../components/Projects.astro';
 import TitleSection from '../../components/TitleSection.astro';
 import AboutMe from '../../components/AboutMe.astro';
 import Hero from '../../components/Hero.astro';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
-
-const lang = getLangFromUrl(new URL(Astro.request.url));
-const t = useTranslations(lang);
 ---
 
 <Layout

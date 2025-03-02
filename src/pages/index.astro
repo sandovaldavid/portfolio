@@ -52,7 +52,7 @@ import { defaultLang } from '../i18n/config';
 	</div>
 </Layout>
 
-<script define:vars={{ defaultLang }}>
+<script is:inline define:vars={{ defaultLang }}>
 	const browserLang = navigator.language.split('-')[0];
 	const supportedLang = ['en', 'es'].includes(browserLang) ? browserLang : defaultLang;
 	window.location.pathname = `/${supportedLang}/`;

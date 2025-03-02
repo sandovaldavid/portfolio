@@ -18,11 +18,10 @@ import PostgreSQLIcon from './icons/PostgreSQL.astro';
 import ExpressIcon from './icons/Express.astro';
 import CloudinaryIcon from './icons/Cloudinary.astro';
 import SQLiteIcon from './icons/SQLite.astro';
-import { getLangFromUrl, useTranslations } from '../i18n/utils';
+import { getLangFromUrl } from '../i18n/utils';
 import { Image } from 'astro:assets';
 
 const lang = getLangFromUrl(new URL(Astro.request.url));
-const t = useTranslations(lang);
 
 const TAGS = {
 	PYTHON: {
@@ -357,7 +356,7 @@ const PROJECTS = PROJECTS_DATA[lang] || PROJECTS_DATA.es;
 			<article class="flex flex-col space-x-0 space-y-8 group md:flex-row md:space-x-8 md:space-y-0">
 				<div class="w-full md:w-1/2">
 					<div class="relative flex flex-col items-center col-span-6 row-span-5 gap-8 transition duration-500 ease-in-out transform shadow-xl overflow-clip rounded-xl sm:rounded-xl md:group-hover:-translate-y-1 md:group-hover:shadow-2xl lg:border lg:border-gray-800 lg:hover:border-gray-700 lg:hover:bg-gray-800/50">
-						<img
+						<Image
 							src={image}
 							width="1600"
 							height="900"

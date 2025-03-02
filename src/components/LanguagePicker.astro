@@ -1,32 +1,28 @@
 ---
 import { languages } from '../i18n/config';
+import { getLangFromUrl } from '../i18n/utils';
 
-const { currentLang }: { currentLang: keyof typeof languages } = Astro.props;
+const props = Astro.props;
 const url = new URL(Astro.request.url);
-const pathname = url.pathname;
+const detectedLang = getLangFromUrl(url);
+const currentLang = props.currentLang || detectedLang || 'es';
 
 const alternativeLang = currentLang === 'es' ? 'en' : 'es';
+const pathname = url.pathname;
 const alternativePath = pathname.replace(/^\/(en|es)\//, `/${alternativeLang}/`);
-const currentLabel = languages[currentLang];
-
-const languageOptions = Object.entries(languages).map(([lang, label]) => {
-	const path = pathname.replace(/^\/(en|es)\//, `/${lang}/`);
-	const isActive = currentLang === lang;
-	return { lang, label, path, isActive };
-});
 ---
 
-<div class='md:hidden'>
+<div class="md:hidden">
 	<a
 		href={alternativePath}
-		class='flex items-center px-2 py-1 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700'
+		class="flex items-center px-2 py-1 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
 	>
-		<span class='font-semibold'>{currentLang.toUpperCase()}</span>
+		<span class="font-semibold">{currentLang.toUpperCase()}</span>
 	</a>
 </div>
 
 <div
-	class='hidden md:flex items-center space-x-1 border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden'
+	class="hidden md:flex items-center space-x-1 border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden"
 >
 	{
 		Object.entries(languages).map(([lang, label]) => {
