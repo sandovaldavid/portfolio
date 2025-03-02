@@ -9,6 +9,7 @@ import Projects from "../components/Projects.astro";
 import TitleSection from "../components/TitleSection.astro";
 import AboutMe from "../components/AboutMe.astro";
 import Hero from "../components/Hero.astro";
+import { defaultLang } from '../i18n/config';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
@@ -50,3 +51,12 @@ import Hero from "../components/Hero.astro";
         </SectionContainer>
     </div>
 </Layout>
+
+
+<script define:vars={{defaultLang}}>
+    const browserLang = navigator.language.split('-')[0];
+    const supportedLang = ['en', 'es'].includes(browserLang) ? browserLang : defaultLang;
+    window.location.pathname = `/${supportedLang}/`;
+  </script>
+
+  <meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />
