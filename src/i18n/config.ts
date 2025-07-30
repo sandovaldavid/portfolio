@@ -9,6 +9,7 @@ export const ui = {
 	en: {
 		'nav.experience': 'Experience',
 		'nav.projects': 'Projects',
+		'nav.badges': 'Badges',
 		'nav.about': 'About me',
 		'nav.contact': 'Contact',
 		'hero.available': 'Available for work',
@@ -31,6 +32,7 @@ export const ui = {
 		// Projects translations
 		'projects.code-button': 'Code',
 		'projects.preview-button': 'Preview',
+		'badges.title': 'Badges',
 		// Footer translations
 		'footer.rights': 'All rights reserved',
 		'footer.about': 'About me',
@@ -39,6 +41,7 @@ export const ui = {
 	es: {
 		'nav.experience': 'Experiencia',
 		'nav.projects': 'Proyectos',
+		'nav.badges': 'Insignias',
 		'nav.about': 'Sobre mí',
 		'nav.contact': 'Contacto',
 		'hero.available': 'Disponible para trabajar',
@@ -61,6 +64,7 @@ export const ui = {
 		//Proyectos
 		'projects.code-button': 'Código',
 		'projects.preview-button': 'Vista previa',
+		'badges.title': 'Insignias',
 		//Footer
 		'footer.rights': 'Todos los derechos reservados',
 		'footer.about': 'Sobre mí',
