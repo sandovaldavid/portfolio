@@ -1,6 +1,7 @@
 ---
 import CodeIcon from '../../components/icons/Code.astro';
 import ProfileCheckIcon from '../../components/icons/ProfileCheck.astro';
+import StarIcon from '../../components/icons/Star.astro';
 import Layout from '../../layouts/Layout.astro';
 import Experience from '../../components/Experience.astro';
 import SectionContainer from '../../components/SectionContainer.astro';
@@ -8,6 +9,7 @@ import BriefCaseIcon from '../../components/icons/Briefcase.astro';
 import Projects from '../../components/Projects.astro';
 import TitleSection from '../../components/TitleSection.astro';
 import AboutMe from '../../components/AboutMe.astro';
+import Badges from '../../components/Badges.astro';
 import Hero from '../../components/Hero.astro';
 ---
 
@@ -36,6 +38,14 @@ import Hero from '../../components/Hero.astro';
 				Proyectos
 			</TitleSection>
 			<Projects />
+		</SectionContainer>
+
+		<SectionContainer id="badges">
+			<TitleSection>
+				<StarIcon class="size-7" />
+				Insignias
+			</TitleSection>
+			<Badges />
 		</SectionContainer>
 
 		<SectionContainer id="about-me">

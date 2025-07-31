@@ -1,0 +1,40 @@
+---
+import Badge from './Badge.astro';
+import { getLangFromUrl } from '../i18n/utils';
+
+const lang = getLangFromUrl(new URL(Astro.request.url));
+
+interface BadgeItem {
+	label: string;
+	link?: string;
+}
+
+const BADGES: Record<string, BadgeItem[]> = {
+	es: [
+		{ label: 'GitHub Foundations', link: 'https://www.credly.com/badges' },
+		{ label: 'Data Science', link: '#' },
+	],
+	en: [
+		{ label: 'GitHub Foundations', link: 'https://www.credly.com/badges' },
+		{ label: 'Data Science', link: '#' },
+	],
+};
+
+const badges = BADGES[lang] || BADGES.es;
+---
+
+<ul class="flex flex-wrap gap-4">
+	{
+		badges.map(badge => (
+			<li>
+				{badge.link ? (
+					<a href={badge.link} target="_blank" rel="noopener" class="inline-block">
+						<Badge>{badge.label}</Badge>
+					</a>
+				) : (
+					<Badge>{badge.label}</Badge>
+				)}
+			</li>
+		))
+	}
+</ul>
