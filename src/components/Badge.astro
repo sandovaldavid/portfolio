@@ -2,35 +2,29 @@
 const { src, alt = '', href } = Astro.props;
 ---
 
-{href ? (
-        <a
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center transition-transform hover:scale-105"
-        >
-                <span class="relative inline-flex overflow-hidden rounded-full p-[1px]">
-                        <span
-                                class="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00BFFF_0%,#87CEEB_50%,#00BFFF_100%)]"
-                        ></span>
-                        <div
-                                class="inline-flex items-center justify-center w-full px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full cursor-pointer dark:bg-gray-800 dark:text-white/80 backdrop-blur-3xl whitespace-nowrap"
-                        >
-                                {src ? <img src={src} alt={alt} class="size-10" /> : <slot />}
-                        </div>
-                </span>
-        </a>
-) : (
-        <div class="flex items-center">
-                <span class="relative inline-flex overflow-hidden rounded-full p-[1px]">
-                        <span
-                                class="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00BFFF_0%,#87CEEB_50%,#00BFFF_100%)]"
-                        ></span>
-                        <div
-                                class="inline-flex items-center justify-center w-full px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full cursor-pointer dark:bg-gray-800 dark:text-white/80 backdrop-blur-3xl whitespace-nowrap"
-                        >
-                                {src ? <img src={src} alt={alt} class="size-10" /> : <slot />}
-                        </div>
-                </span>
-        </div>
-)}
+{
+	href ? (
+		<a
+			href={href}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="flex items-center transition-transform hover:scale-105"
+		>
+			<span class="relative inline-flex overflow-hidden rounded-full p-[1px]">
+				<span class="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00BFFF_0%,#87CEEB_50%,#00BFFF_100%)]" />
+				<div class="inline-flex items-center justify-center w-full px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full cursor-pointer dark:bg-gray-800 dark:text-white/80 backdrop-blur-3xl whitespace-nowrap">
+					{src ? <img src={src} alt={alt} class="size-10" /> : <slot />}
+				</div>
+			</span>
+		</a>
+	) : (
+		<div class="flex items-center">
+			<span class="relative inline-flex overflow-hidden rounded-full p-[1px]">
+				<span class="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#00BFFF_0%,#87CEEB_50%,#00BFFF_100%)]" />
+				<div class="inline-flex items-center justify-center w-full px-3 py-1 text-sm text-green-800 bg-green-100 rounded-full cursor-pointer dark:bg-gray-800 dark:text-white/80 backdrop-blur-3xl whitespace-nowrap">
+					{src ? <img src={src} alt={alt} class="size-10" /> : <slot />}
+				</div>
+			</span>
+		</div>
+	)
+}

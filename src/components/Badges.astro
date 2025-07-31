@@ -5,51 +5,47 @@ import { getLangFromUrl } from '../i18n/utils';
 const lang = getLangFromUrl(new URL(Astro.request.url));
 
 interface BadgeItem {
-        label: string;
-        link?: string;
-        image: string;
+	label: string;
+	link?: string;
+	image: string;
 }
 
 const BADGES: Record<string, BadgeItem[]> = {
-        es: [
-                {
-                        label: 'GitHub Foundations',
-                        link: 'https://www.credly.com/badges',
-                        image: '/badges/github-foundations.svg',
-                },
-                {
-                        label: 'Data Science',
-                        link: '#',
-                        image: '/badges/data-science.svg',
-                },
-        ],
-        en: [
-                {
-                        label: 'GitHub Foundations',
-                        link: 'https://www.credly.com/badges',
-                        image: '/badges/github-foundations.svg',
-                },
-                {
-                        label: 'Data Science',
-                        link: '#',
-                        image: '/badges/data-science.svg',
-                },
-        ],
+	es: [
+		{
+			label: 'GitHub Foundations',
+			link: 'https://www.credly.com/badges',
+			image: '/badges/github-foundations.svg',
+		},
+		{
+			label: 'Data Science',
+			link: '#',
+			image: '/badges/data-science.svg',
+		},
+	],
+	en: [
+		{
+			label: 'GitHub Foundations',
+			link: 'https://www.credly.com/badges',
+			image: '/badges/github-foundations.svg',
+		},
+		{
+			label: 'Data Science',
+			link: '#',
+			image: '/badges/data-science.svg',
+		},
+	],
 };
 
 const badges = BADGES[lang] || BADGES.es;
 ---
 
 <ul class="flex flex-wrap gap-4">
-        {
-                badges.map(badge => (
-                        <li>
-                                <Badge
-                                        src={badge.image}
-                                        alt={badge.label}
-                                        href={badge.link}
-                                />
-                        </li>
-                ))
-        }
+	{
+		badges.map(badge => (
+			<li>
+				<Badge src={badge.image} alt={badge.label} href={badge.link} />
+			</li>
+		))
+	}
 </ul>
