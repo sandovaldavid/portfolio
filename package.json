@@ -12,9 +12,9 @@
 	},
 	"dependencies": {
 		"@astrojs/check": "^0.9.4",
-		"@astrojs/tailwind": "6.0.0",
+		"@astrojs/tailwind": "6.0.2",
 		"@fontsource-variable/onest": "^5.1.0",
-		"astro": "5.2.1",
+		"astro": "5.12.7",
 		"astro-i18n": "^2.2.4",
 		"astro-robots-txt": "1.0.0",
 		"prettier": "^3.5.2",
