@@ -67,26 +67,6 @@ const { description, title, img_preview } = Astro.props;
 				}
 			}
 
-			#header-nav {
-				animation: blur linear both 0.5s;
-				animation-timeline: scroll();
-				animation-range: 0 500px;
-			}
-
-			@keyframes blur {
-				to {
-					backdrop-filter: blur(20px);
-					border-width: 1px;
-					border-color: rgba(0, 0, 0);
-					padding: 0.25rem 0.75rem;
-					display: flex;
-					flex-direction: row;
-					align-items: center;
-					background-color: rgb(229, 229, 229);
-					border-radius: 9999px;
-				}
-			}
-
 			@media (prefers-color-scheme: dark) {
 				@keyframes blur {
 					from {
