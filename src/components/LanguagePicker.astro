@@ -12,17 +12,8 @@ const pathname = url.pathname;
 const alternativePath = pathname.replace(/^\/(en|es)\//, `/${alternativeLang}/`);
 ---
 
-<div class="md:hidden">
-	<a
-		href={alternativePath}
-		class="flex items-center px-2 py-1 rounded-md text-sm hover:bg-gray-200 dark:hover:bg-gray-700"
-	>
-		<span class="font-semibold">{currentLang.toUpperCase()}</span>
-	</a>
-</div>
-
 <div
-	class="hidden md:flex items-center space-x-1 border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden"
+	class="flex items-center space-x-1 border border-gray-200 dark:border-gray-700 rounded-md overflow-hidden"
 >
 	{
 		Object.entries(languages).map(([lang, label]) => {
