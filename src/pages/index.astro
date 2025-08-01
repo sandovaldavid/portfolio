@@ -10,46 +10,57 @@ import TitleSection from '../components/TitleSection.astro';
 import AboutMe from '../components/AboutMe.astro';
 import Hero from '../components/Hero.astro';
 import { defaultLang } from '../i18n/config';
+import Badges from '../components/Badges.astro';
+import StarIcon from '../components/icons/Star.astro';
 
 // Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
 // Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
 ---
 
 <Layout
-	title="Portfolio's David Sandoval - Web Developer"
+	title="David Sandoval Portfolio - Desarrollador Web"
 	description="Contrata a David Sandoval, desarrollador web y mobile. Especializado en crear aplicaciones únicas."
 	img_preview="/projects/portfolio.webp"
 >
 	<main class="px-4">
-		<SectionContainer class="py-16 md:py-36">
-			<Hero />
-		</SectionContainer>
+		<div class="py-16 md:py-26 min-h-screen flex flex-col justify-between">
+			<SectionContainer class="mb-4">
+				<Hero />
+			</SectionContainer>
+			<SectionContainer id="badges">
+				<TitleSection>
+					<StarIcon class="size-7" />
+					Badges
+				</TitleSection>
+				<Badges />
+			</SectionContainer>
+		</div>
+		<div class="space-y-24">
+			<SectionContainer id="experience">
+				<TitleSection>
+					<BriefCaseIcon class="size-8" />
+					Experiencia laboral
+				</TitleSection>
+				<Experience />
+			</SectionContainer>
+
+			<SectionContainer id="projects">
+				<TitleSection>
+					<CodeIcon class="size-7" />
+					Proyectos
+				</TitleSection>
+				<Projects />
+			</SectionContainer>
+
+			<SectionContainer id="about-me">
+				<TitleSection>
+					<ProfileCheckIcon class="size-8" />
+					Sobre mí
+				</TitleSection>
+				<AboutMe />
+			</SectionContainer>
+		</div>
 	</main>
-	<div class="space-y-24">
-		<SectionContainer id="experience">
-			<TitleSection>
-				<BriefCaseIcon class="size-8" />
-				Experiencia laboral
-			</TitleSection>
-			<Experience />
-		</SectionContainer>
-
-		<SectionContainer id="projects">
-			<TitleSection>
-				<CodeIcon class="size-7" />
-				Proyectos
-			</TitleSection>
-			<Projects />
-		</SectionContainer>
-
-		<SectionContainer id="about-me">
-			<TitleSection>
-				<ProfileCheckIcon class="size-8" />
-				Sobre mí
-			</TitleSection>
-			<AboutMe />
-		</SectionContainer>
-	</div>
 </Layout>
 
 <script is:inline define:vars={{ defaultLang }}>
