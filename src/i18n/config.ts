@@ -37,6 +37,10 @@ export const ui = {
 		'footer.rights': 'All rights reserved',
 		'footer.about': 'About me',
 		'footer.contact': 'Contact',
+		'theme.select': 'Choose theme',
+		'theme.light': 'Light',
+		'theme.dark': 'Dark',
+		'theme.system': 'System',
 	},
 	es: {
 		'nav.experience': 'Experiencia',
@@ -69,5 +73,9 @@ export const ui = {
 		'footer.rights': 'Todos los derechos reservados',
 		'footer.about': 'Sobre mí',
 		'footer.contact': 'Contacto',
+		'theme.select': 'Elige el tema',
+		'theme.light': 'Claro',
+		'theme.dark': 'Oscuro',
+		'theme.system': 'Sistema',
 	},
 };
