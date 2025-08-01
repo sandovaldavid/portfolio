@@ -19,41 +19,42 @@ import Hero from '../../components/Hero.astro';
 	img_preview="/projects/portfolio.webp"
 >
 	<main class="px-4">
-		<SectionContainer class="py-16 md:py-36">
-			<Hero />
-		</SectionContainer>
+		<div class="py-16 md:py-26 min-h-screen flex flex-col justify-between">
+			<SectionContainer class="mb-4">
+				<Hero />
+			</SectionContainer>
+			<SectionContainer id="badges">
+				<TitleSection>
+					<StarIcon class="size-7" />
+					Badges
+				</TitleSection>
+				<Badges />
+			</SectionContainer>
+		</div>
+		<div class="space-y-24">
+			<SectionContainer id="experience">
+				<TitleSection>
+					<BriefCaseIcon class="size-8" />
+					Work Experience
+				</TitleSection>
+				<Experience />
+			</SectionContainer>
+
+			<SectionContainer id="projects">
+				<TitleSection>
+					<CodeIcon class="size-7" />
+					Projects
+				</TitleSection>
+				<Projects />
+			</SectionContainer>
+
+			<SectionContainer id="about-me">
+				<TitleSection>
+					<ProfileCheckIcon class="size-8" />
+					About me
+				</TitleSection>
+				<AboutMe />
+			</SectionContainer>
+		</div>
 	</main>
-	<div class="space-y-24">
-		<SectionContainer id="experience">
-			<TitleSection>
-				<BriefCaseIcon class="size-8" />
-				Work Experience
-			</TitleSection>
-			<Experience />
-		</SectionContainer>
-
-		<SectionContainer id="projects">
-			<TitleSection>
-				<CodeIcon class="size-7" />
-				Projects
-			</TitleSection>
-			<Projects />
-		</SectionContainer>
-
-		<SectionContainer id="badges">
-			<TitleSection>
-				<StarIcon class="size-7" />
-				Badges
-			</TitleSection>
-			<Badges />
-		</SectionContainer>
-
-		<SectionContainer id="about-me">
-			<TitleSection>
-				<ProfileCheckIcon class="size-8" />
-				About me
-			</TitleSection>
-			<AboutMe />
-		</SectionContainer>
-	</div>
 </Layout>

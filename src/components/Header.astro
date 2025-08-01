@@ -1,6 +1,7 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
 import LanguagePicker from './LanguagePicker.astro';
+import MenuIcon from './icons/MenuIcon.astro';
 import { getLangFromUrl, useTranslations } from '../i18n/utils';
 
 const lang = getLangFromUrl(new URL(Astro.request.url));
@@ -13,14 +14,14 @@ const navItems = [
 		url: `/${lang}/#experience`,
 	},
 	{
-		title: t('nav.projects'),
-		label: 'proyectos',
-		url: `/${lang}/#projects`,
-	},
-	{
 		title: t('nav.badges'),
 		label: 'insignias',
 		url: `/${lang}/#badges`,
+	},
+	{
+		title: t('nav.projects'),
+		label: 'proyectos',
+		url: `/${lang}/#projects`,
 	},
 	{
 		title: t('nav.about'),
@@ -36,8 +37,9 @@ const navItems = [
 ---
 
 <header class="fixed top-0 z-10 flex items-center justify-center w-full mx-auto mt-2">
+	<!-- Desktop/Tablet Nav -->
 	<nav
-		class="flex px-3 text-sm font-medium rounded-full text-gray-600 dark:text-gray-200 justify-center items-center"
+		class="hidden sm:flex px-3 text-sm font-medium rounded-full text-gray-600 dark:text-gray-200 justify-center items-center"
 	>
 		{
 			navItems.map(link => (
@@ -53,47 +55,123 @@ const navItems = [
 		<ThemeToggle />
 		<LanguagePicker currentLang={lang} />
 	</nav>
+
+	<!-- Mobile Nav -->
+	<nav class="flex w-11/12 items-center justify-between px-3 sm:hidden rounded-md">
+		<ThemeToggle />
+		<button
+			id="mobile-menu-btn"
+			class="p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+		>
+			<MenuIcon class="size-7" />
+		</button>
+	</nav>
+	<div
+		id="mobile-menu"
+		class="fixed top-0 left-0 w-full h-full bg-white dark:bg-gray-900 bg-opacity-95 dark:bg-opacity-95 z-10 flex-col items-center justify-center gap-6 text-lg font-medium text-gray-800 dark:text-gray-100 hidden transition-all"
+	>
+		{
+			navItems.map(link => (
+				<a
+					class="block px-4 py-3 rounded hover:bg-blue-100 dark:hover:bg-gray-700 transition"
+					aria-label={link.label}
+					href={link.url}
+					onclick="document.getElementById('mobile-menu').classList.add('hidden')"
+				>
+					{link.title}
+				</a>
+			))
+		}
+		<div class="flex justify-center items-center gap-4">
+			<LanguagePicker currentLang={lang} class="ml-4" />
+		</div>
+
+		<button
+			id="mobile-menu-close"
+			class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+		>
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="size-7"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+				><path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M6 18L18 6M6 6l12 12"></path></svg
+			>
+		</button>
+	</div>
 </header>
 
 <script>
-	document.addEventListener('astro:page-load', () => {
-		const sections = document.querySelectorAll('section');
-		const navItems = document.querySelectorAll('header nav a');
-
-		const callback = (entries: any[]) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					navItems.forEach(item => {
-						if (item.getAttribute('aria-label') == entry.target.id) {
-							item.classList.add('text-blue-500');
-						} else {
-							item.classList.remove('text-blue-500');
-						}
-					});
-				}
-			});
-		};
-
-		const observer = new IntersectionObserver(callback, {
-			root: null,
-			rootMargin: '0px',
-			threshold: 0.3,
-		});
-
-		sections.forEach(section => {
-			observer.observe(section);
-		});
-
-		// Cleanup function
-		document.onvisibilitychange = () => {
-			if (document.visibilityState === 'hidden') {
-				observer.disconnect();
-			} else {
-				sections.forEach(section => {
-					observer.observe(section);
+	// Desktop/Tablet nav highlight
+	const sections = document.querySelectorAll('section');
+	const navItems = document.querySelectorAll('header nav a');
+	const callback = (entries: IntersectionObserverEntry[]) => {
+		entries.forEach((entry: IntersectionObserverEntry) => {
+			if (entry.isIntersecting) {
+				navItems.forEach(item => {
+					if (item.getAttribute('aria-label') == entry.target.id) {
+						item.classList.add('text-blue-500');
+					} else {
+						item.classList.remove('text-blue-500');
+					}
 				});
 			}
-		};
+		});
+	};
+	const observer = new IntersectionObserver(callback, {
+		root: null,
+		rootMargin: '0px',
+		threshold: 0.3,
+	});
+	sections.forEach(section => {
+		observer.observe(section);
+	});
+	document.onvisibilitychange = () => {
+		if (document.visibilityState === 'hidden') {
+			observer.disconnect();
+		} else {
+			sections.forEach(section => {
+				observer.observe(section);
+			});
+		}
+	};
+
+	// Mobile menu logic
+	const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+	const mobileMenu = document.getElementById('mobile-menu');
+	const mobileMenuClose = document.getElementById('mobile-menu-close');
+	if (mobileMenuBtn && mobileMenu) {
+		mobileMenuBtn.addEventListener('click', e => {
+			e.stopPropagation();
+			mobileMenu.classList.remove('hidden');
+			mobileMenu.classList.add('flex');
+		});
+	}
+	if (mobileMenuClose && mobileMenu) {
+		mobileMenuClose.addEventListener('click', e => {
+			e.stopPropagation();
+			mobileMenu.classList.add('hidden');
+			mobileMenu.classList.remove('flex');
+		});
+	}
+	// Cerrar menú al hacer click fuera
+	document.addEventListener('click', e => {
+		if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+			const target = e.target;
+			if (
+				target instanceof Node &&
+				!mobileMenu.contains(target) &&
+				target !== mobileMenuBtn
+			) {
+				mobileMenu.classList.add('hidden');
+				mobileMenu.classList.remove('flex');
+			}
+		}
 	});
 </script>
 
@@ -103,11 +181,6 @@ const navItems = [
 		animation-timeline: scroll();
 		animation-range: 0 100px;
 	}
-
-	nav {
-		@apply dark:bg-gray-800/90 bg-white/50;
-	}
-
 	@keyframes nav-shadown {
 		0% {
 			@apply dark:bg-gray-800/0 bg-white/0;
