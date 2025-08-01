@@ -18,6 +18,9 @@ import PostgreSQLIcon from './icons/PostgreSQL.astro';
 import ExpressIcon from './icons/Express.astro';
 import CloudinaryIcon from './icons/Cloudinary.astro';
 import SQLiteIcon from './icons/SQLite.astro';
+import SanityIcon from './icons/Sanity.astro';
+import ChartJsIcon from './icons/ChartJs.astro';
+import AstroIcon from './icons/AstroIcon.astro';
 import { getLangFromUrl } from '../i18n/utils';
 import { Image } from 'astro:assets';
 
@@ -104,9 +107,60 @@ const TAGS = {
 		class: 'bg-blue-500 text-white',
 		icon: SQLiteIcon,
 	},
+	SANITY: {
+		name: 'Sanity',
+		class: 'bg-black text-white',
+		icon: SanityIcon,
+	},
+	CHARTJS: {
+		name: 'Chart.js',
+		class: 'bg-blue-500 text-white',
+		icon: ChartJsIcon,
+	},
+	ASTRO: {
+		name: 'Astro',
+		class: 'bg-black text-white',
+		icon: AstroIcon,
+	},
 };
 const PROJECTS_DATA = {
 	es: [
+		{
+			title: 'TechShop',
+			description:
+				'TechShop E-Commerce ofrece una experiencia de compra ágil y totalmente responsiva. Incluye filtros avanzados, carrito de compras dinámico, autenticación segura, lista de deseos, modo oscuro y un panel de usuario intuitivo. La gestión de contenido se realiza con Sanity CMS.',
+			link: 'https://byte-shop-ecommerce.vercel.app',
+			github: 'https://github.com/sandovaldavid/byte-shop-ecommerce',
+			image: '/projects/project-15-TechShop.webp',
+			tags: [TAGS.NEXTJS, TAGS.REACT, TAGS.SANITY, TAGS.TAILWIND],
+		},
+		{
+			title: 'Buona Vita Nutrición',
+			description:
+				'Buona Vita Nutrición es una plataforma web diseñada para nutricionistas que facilita el registro, visualización y análisis de información clínica de pacientes. Incluye cálculo automático de IMC, edición de datos y almacenamiento local persistente, ademas ofrece gráficos interactivos gracias a Chart.js.',
+			link: 'https://clinica-alura-demo.devsandoval.me',
+			github: 'https://github.com/sandovaldavid/Pagina_Web_Clinica_Alura',
+			image: '/projects/project-16-buona-vita.webp',
+			tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT, TAGS.CHARTJS],
+		},
+		{
+			title: 'Nike Demo',
+			description:
+				'Nike Website Demo es una landing page creada con Astro, TypeScript y Tailwind CSS que emula fielmente el sitio oficial de Nike, priorizando el rendimiento y un diseño pixel-perfect. Su arquitectura modular facilita la mantenibilidad, mientras que la selección dinámica de productos, el scroll suave y la optimización de imágenes aseguran una experiencia fluida y totalmente responsiva en cualquier dispositivo.',
+			link: 'https://nike-website-demo.vercel.app',
+			github: 'https://github.com/sandovaldavid/nike-website-demo',
+			image: '/projects/project-17-nike-demo.webp',
+			tags: [TAGS.ASTRO, TAGS.TAILWIND, TAGS.JAVASCRIPT],
+		},
+		{
+			title: 'Doguito',
+			description:
+				'Doguito Petshop Admin es un sistema administrativo web que permite gestionar clientes, productos y mascotas mediante operaciones CRUD, con validación de formularios y notificaciones en tiempo real. Su interfaz responsiva ofrece un inventario dinámico y la asociación cliente–mascota. El backend expone una API RESTful sobre JSON Server y el frontend está desplegado en Vercel para asegurar alta disponibilidad y escalabilidad.',
+			link: 'https://doguito.devsandoval.me',
+			github: 'https://github.com/sandovaldavid/CRUD',
+			image: '/projects/project-18-doguito.webp',
+			tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT],
+		},
 		{
 			title: 'Mail',
 			description:
@@ -197,35 +251,44 @@ const PROJECTS_DATA = {
 			image: '/projects/project-11-odontologia-estetica.webp',
 			tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT],
 		},
-		{
-			title: 'Apperia',
-			description:
-				'Apeperia es una aplicación web responsiva que muestra servicios de desarrollo de aplicaciones web y móviles personalizadas. El proyecto demuestra técnicas de diseño responsivo modernas y un enfoque que prioriza los dispositivos móviles.',
-			link: 'https://apperia.devsandoval.me',
-			github: 'https://github.com/sandovaldavid/Apperia',
-			image: '/projects/project-12-apperia.webp',
-			tags: [TAGS.HTML, TAGS.CSS],
-		},
-		{
-			title: 'Fruta e Fruto',
-			description:
-				'Un sitio web de recetas responsivo creado con principios de arquitectura CSS modernos centrados en componentes reutilizables y código mantenible.',
-			link: 'https://fruto-e-fruto.devsandoval.me',
-			github: 'https://github.com/sandovaldavid/Fruta-e-Fruto',
-			image: '/projects/project-13-fruta-e-fruto.webp',
-			tags: [TAGS.HTML, TAGS.CSS],
-		},
-		{
-			title: 'Contador de Clicks',
-			description:
-				'Esta pagina web consiste en un contador de clicks, donde el usuario puede aumentar o disminuir el contador.',
-			link: 'https://contador-clicks.devsandoval.me',
-			github: 'https://github.com/sandovaldavid/contador-clicks',
-			image: '/projects/project-05-contador.webp',
-			tags: [TAGS.CSS, TAGS.HTML, TAGS.REACT],
-		},
 	],
 	en: [
+		{
+			title: 'TechShop',
+			description:
+				'ByteShop E-Commerce offers features advanced product filters, a dynamic shopping cart, secure authentication, a wishlist, dark mode and an intuitive user dashboard. Content is managed via Sanity CMS and the deployment on Vercel ensures top performance and effortless scalability.',
+			link: 'https://byte-shop-ecommerce.vercel.app',
+			github: 'https://github.com/sandovaldavid/byte-shop-ecommerce',
+			image: '/projects/project-15-TechShop.webp',
+			tags: [TAGS.NEXTJS, TAGS.REACT, TAGS.SANITY, TAGS.TAILWIND],
+		},
+		{
+			title: 'Buona Vita Nutrición',
+			description:
+				'Buona Vita Nutrition is a web-based system for nutritionists to record, view, and analyze patients’ clinical data. It features automatic BMI calculation, data editing, and persistent local storage. Leveraging Chart.js for interactive charts, its fully responsive design, real-time validation, and notification system ensure a smooth and professional user experience.',
+			link: 'https://clinica-alura-demo.devsandoval.me/',
+			github: 'https://github.com/sandovaldavid/Pagina_Web_Clinica_Alura',
+			image: '/projects/project-16-buona-vita.webp',
+			tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT, TAGS.CHARTJS],
+		},
+		{
+			title: 'Nike Demo',
+			description:
+				'Nike Website Demo is a landing page built with Astro, TypeScript and Tailwind CSS that faithfully replicates Nike’s official site, prioritizing performance and pixel-perfect design. Its modular architecture enhances maintainability, while dynamic product selection, smooth scrolling and image optimization deliver a seamless, fully responsive experience across all devices.',
+			link: 'https://nike-website-demo.vercel.app',
+			github: 'https://github.com/sandovaldavid/nike-website-demo',
+			image: '/projects/project-17-nike-demo.webp',
+			tags: [TAGS.ASTRO, TAGS.TAILWIND, TAGS.JAVASCRIPT],
+		},
+		{
+			title: 'Doguito',
+			description:
+				'Doguito Petshop Admin is a web-based administrative system that enables full CRUD management of clients, products, and pets, featuring form validation and real-time notifications. The responsive interface supports dynamic inventory updates and client–pet associations. The backend provides a RESTful API via JSON Server, and the frontend is deployed on Vercel for reliability and scalability.',
+			link: 'https://doguito.devsandoval.me/',
+			github: 'https://github.com/sandovaldavid/CRUD',
+			image: '/projects/project-18-doguito.webp',
+			tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT],
+		},
 		{
 			title: 'Mail',
 			description:
@@ -316,33 +379,6 @@ const PROJECTS_DATA = {
 			github: 'https://github.com/sandovaldavid/Odontologia-Estetica',
 			image: '/projects/project-11-odontologia-estetica.webp',
 			tags: [TAGS.HTML, TAGS.CSS, TAGS.JAVASCRIPT],
-		},
-		{
-			title: 'Apperia',
-			description:
-				'Apperia is a responsive web application showcasing custom web and mobile application development services. The project demonstrates modern responsive design techniques with a mobile-first approach.',
-			link: 'https://apperia.devsandoval.me',
-			github: 'https://github.com/sandovaldavid/Apperia',
-			image: '/projects/project-12-apperia.webp',
-			tags: [TAGS.HTML, TAGS.CSS],
-		},
-		{
-			title: 'Fruta e Fruto',
-			description:
-				'A responsive recipe website created using modern CSS architecture principles focused on reusable components and maintainable code.',
-			link: 'https://fruto-e-fruto.devsandoval.me',
-			github: 'https://github.com/sandovaldavid/Fruta-e-Fruto',
-			image: '/projects/project-13-fruta-e-fruto.webp',
-			tags: [TAGS.HTML, TAGS.CSS],
-		},
-		{
-			title: 'Click Counter',
-			description:
-				'This web page consists of a click counter where the user can increase or decrease the count.',
-			link: 'https://contador-clicks.devsandoval.me',
-			github: 'https://github.com/sandovaldavid/contador-clicks',
-			image: '/projects/project-05-contador.webp',
-			tags: [TAGS.CSS, TAGS.HTML, TAGS.REACT],
 		},
 	],
 };
