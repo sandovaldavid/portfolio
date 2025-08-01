@@ -4,17 +4,17 @@ const { src, alt = '', href } = Astro.props;
 
 <a
 	{href}
-	target='_blank'
-	rel='noopener noreferrer'
-	class='relative flex items-center justify-center size-28 rounded-full bg-gray-200/30 dark:bg-gray-500/20 transition-all duration-300 ease-in-out group hover:bg-gray-200/50 dark:hover:bg-gray-500/40 hover:shadow-lg'
+	target="_blank"
+	rel="noopener noreferrer"
+	class="relative flex items-center justify-center size-28 rounded-full bg-gray-200/30 dark:bg-gray-500/20 transition-all duration-300 ease-in-out group hover:bg-gray-200/50 dark:hover:bg-gray-500/40 hover:shadow-lg"
 >
 	<img
 		{src}
 		{alt}
-		class='size-24 aspect-square transition-transform duration-300 ease-in-out group-hover:scale-110'
+		class="size-24 aspect-square transition-transform duration-300 ease-in-out group-hover:scale-110"
 	/>
 	<span
-		class='absolute bottom-0 mb-20 hidden px-2 py-1 text-sm text-white bg-gray-800 rounded-md opacity-0 group-hover:block group-hover:opacity-100 transition-opacity duration-300 text-center w-52'
+		class="absolute bottom-0 mb-20 hidden px-2 py-1 text-sm text-white bg-gray-800 rounded-md opacity-0 group-hover:block group-hover:opacity-100 transition-opacity duration-300 text-center w-52"
 	>
 		{alt}
 	</span>
