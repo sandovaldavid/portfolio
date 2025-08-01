@@ -60,15 +60,11 @@ const BADGES: Record<string, BadgeItem[]> = {
 const badges = BADGES[lang] || BADGES.es;
 ---
 
-<ul class='flex flex-wrap items-center justify-center gap-4'>
+<ul class="flex flex-wrap items-center justify-center gap-4">
 	{
 		badges.map(badge => (
 			<li>
-				<Badge
-					src={badge.image}
-					alt={badge.label}
-					href={badge.link}
-				/>
+				<Badge src={badge.image} alt={badge.label} href={badge.link} />
 			</li>
 		))
 	}
