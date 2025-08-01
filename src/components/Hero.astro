@@ -10,11 +10,11 @@ const lang = getLangFromUrl(new URL(Astro.request.url));
 const t = useTranslations(lang);
 ---
 
-<div class='max-w-3xl'>
-	<div class='flex gap-4 mb-4 items-center'>
+<div class="max-w-3xl">
+	<div class="flex gap-4 mb-4 items-center">
 		<img
-			class='rounded-full shadow-lg size-24 object-cover'
-			src='/perfil.webp'
+			class="rounded-full shadow-lg size-24 object-cover"
+			src="/perfil.webp"
 			alt={personalImageAlt}
 		/>
 		<!--
@@ -25,25 +25,25 @@ const t = useTranslations(lang);
 			{t('hero.available')}
 		</Badge>
 		-->
-		<h1 class='text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl dark:text-white'>
+		<h1 class="text-4xl font-bold tracking-tight text-gray-800 sm:text-5xl dark:text-white">
 			{t('hero.intro')}
 		</h1>
 	</div>
 	<p
-		class='mt-6 text-xl text-gray-800 dark:[&>strong]:text-yellow-200 [&>strong]:text-yellow-500 [&>strong]:font-semibold dark:text-gray-300'
+		class="mt-6 text-xl text-gray-800 dark:[&>strong]:text-yellow-200 [&>strong]:text-yellow-500 [&>strong]:font-semibold dark:text-gray-300"
 		set:html={t('hero.description')}
 	/>
-	<nav class='flex flex-wrap gap-4 mt-8'>
-		<SocialPill href='mailto:sandovaldavid2201@gmail.com'>
-			<MailIcon class='size-4' />
+	<nav class="flex flex-wrap gap-4 mt-8">
+		<SocialPill href="mailto:devsandoval.me@gmail.com">
+			<MailIcon class="size-4" />
 			Contáctame
 		</SocialPill>
-		<SocialPill href='https://www.linkedin.com/in/jdavidsandovals/'>
-			<LinkedInIcon class='size-4' />
+		<SocialPill href="https://www.linkedin.com/in/devsandoval/">
+			<LinkedInIcon class="size-4" />
 			LinkedIn
 		</SocialPill>
-		<SocialPill href='https://github.com/sandovaldavid'>
-			<GitHubIcon class='size-4' />
+		<SocialPill href="https://github.com/sandovaldavid">
+			<GitHubIcon class="size-4" />
 			GitHub
 		</SocialPill>
 	</nav>
