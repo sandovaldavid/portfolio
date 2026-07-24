@@ -24,7 +24,7 @@ A bilingual, static-first portfolio for presenting software-engineering experien
 - **Development environment:** a pinned Playwright/Bun Dev Container supports the complete local validation workflow.
 - **Deployment:** `develop` is the integration branch; `main` is the default and production branch. Promotion to `main` is handled through a separate pull request.
 
-The remaining legacy localization compatibility paths are tracked by issue #143 and are documented as **Deprecated/In progress**, not as the supported path for new work. See [docs/STATUS.md](docs/STATUS.md).
+The removed localization compatibility runtime must not be reintroduced. Current source ownership and enforcement are documented in [docs/I18N.md](docs/I18N.md) and [docs/I18N-ENFORCEMENT.md](docs/I18N-ENFORCEMENT.md).
 
 ## Quality gates
 
