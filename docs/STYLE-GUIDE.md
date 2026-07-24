@@ -1,7 +1,7 @@
 # Style Guide — Typography, Color Tokens, Headings & Shadows
 
-Prescriptive standard for all UI work in this repository. Established 2026-07-05 from the
-findings in [`reports/style-audit-2026-07/`](./reports/style-audit-2026-07/README.md).
+Prescriptive standard for all UI work in this repository. The historical audit that informed the
+initial version is retained in Cortex-L7; this document owns only the current enforceable rules.
 Enforced by `tests/e2e/typography.spec.ts`.
 
 **Tech context:** Tailwind CSS 4 (`@theme` in `src/app/styles/colors.css`, no
