@@ -29,12 +29,13 @@ This document classifies repository-level statements as of **2026-07-25**. It is
 | Development environment   | Versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.                                                 |
 | Workflow definitions      | Pull-request CI, CodeQL and preview workflows for `develop` and `main`; post-integration quality, scheduled quality and production deployment definitions.     |
 | Branch roles              | `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.                       |
+| Resume asset delivery     | The isolated branch contains both canonical PDFs plus provenance manifest; strict source/destination validation and a successful Preview verify consumption.   |
 
 The localization runtime no longer contains monolithic locale dictionaries, the flattened mixed-value translator, `useTranslations()`, `useTranslationsList()`, duplicated Atena/Skills/Components route implementations or the six-file hardcoded-copy debt baseline.
 
 ## In progress
 
-- Issue #182 tracks restoration of the canonical `resume-assets` payload after the bootstrap branch lost or never received the two generated PDFs and provenance manifest. Preview, main-quality and production consumers share one strict installer contract; the branch must be repopulated from authoritative resume output and verified before this item becomes **Implemented** again.
+No repository work is currently classified as **In progress**. Issue #182 is resolved by the restored asset branch and the validated delivery contract in its closing pull request.
 
 Any future item belongs here only when current source is partially implemented and an open issue or pull request identifies the concrete remaining work.
 
@@ -48,11 +49,7 @@ No localization compatibility runtime remains. Reintroducing monolithic locale f
 
 ## Blocked
 
-- GitHub Actions execution may be unavailable because workflows are disabled or account minutes are exhausted. This blocks hosted automation evidence, not local development or local validation.
-- The private resume publisher cannot be represented as successful when its exact stable run is absent or unavailable. Until an authoritative publication or reviewed recovery populates `resume-assets`, dependent preview and production installation remain blocked.
-- A blocked or absent workflow run must never be described as passed.
-
-Update this section when hosted automation and the canonical asset channel are restored and verified.
+No repository work or configured pull-request validation is currently classified as **Blocked**. A future unavailable, cancelled, skipped or quota-limited workflow must be recorded here rather than represented as passed.
 
 ## Unconfirmed
 
@@ -60,8 +57,7 @@ The following GitHub-hosted settings are not versioned in the repository and mus
 
 - current branch rulesets and required-check configuration;
 - automatic branch deletion and permitted merge methods;
-- current workflow enablement and available Actions quota;
-- Vercel environment secrets and deployment-environment protection.
+- Vercel deployment-environment protection.
 
 Repository documentation defines the intended contract but does not claim these settings are active without verification.
 
