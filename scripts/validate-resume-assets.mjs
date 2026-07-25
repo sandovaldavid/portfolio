@@ -2,7 +2,15 @@
 // @ts-check
 
 import { createHash } from 'node:crypto';
-import { lstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import {
+	closeSync,
+	constants,
+	fstatSync,
+	openSync,
+	readFileSync,
+	readdirSync,
+	statSync,
+} from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -29,30 +37,58 @@ function isRecord(value) {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+/** @param {unknown} value */
+function isNodeError(value) {
+	return value instanceof Error && 'code' in value;
+}
+
 /** @param {boolean} condition @param {string} message */
 function assertContract(condition, message) {
 	if (!condition) throw new ResumeAssetValidationError(message);
 }
 
-/** @param {string} file */
-function sha256(file) {
-	return createHash('sha256').update(readFileSync(file)).digest('hex');
+/** @param {Buffer} content */
+function sha256(content) {
+	return createHash('sha256').update(content).digest('hex');
+}
+
+/**
+ * Open, inspect and read one immutable file descriptor so validation never
+ * checks one path entry and then reads a replacement.
+ *
+ * @param {string} file
+ * @param {string} description
+ */
+function readRegularFile(file, description) {
+	/** @type {number | undefined} */
+	let descriptor;
+
+	try {
+		descriptor = openSync(file, constants.O_RDONLY | constants.O_NOFOLLOW);
+		const metadata = fstatSync(descriptor);
+		assertContract(metadata.isFile(), `${description} must be a regular file: ${file}`);
+
+		return {
+			content: readFileSync(descriptor),
+			metadata,
+		};
+	} catch (error) {
+		if (isNodeError(error) && error.code === 'ELOOP') {
+			throw new ResumeAssetValidationError(`${description} must not be a symbolic link: ${file}`);
+		}
+		throw error;
+	} finally {
+		if (descriptor !== undefined) closeSync(descriptor);
+	}
 }
 
 /** @param {string} file @param {string} locale */
 function validatePdf(file, locale) {
-	const metadata = lstatSync(file);
-	assertContract(metadata.isFile(), `${locale} resume must be a regular file: ${file}`);
-	assertContract(
-		!metadata.isSymbolicLink(),
-		`${locale} resume must not be a symbolic link: ${file}`
-	);
+	const { content, metadata } = readRegularFile(file, `${locale} resume`);
 	assertContract(
 		metadata.size > MINIMUM_PDF_BYTES,
 		`${locale} resume must exceed ${MINIMUM_PDF_BYTES} bytes`
 	);
-
-	const content = readFileSync(file);
 	assertContract(
 		content.subarray(0, 5).toString('ascii') === '%PDF-',
 		`${locale} resume has an invalid PDF signature`
@@ -67,7 +103,7 @@ function validatePdf(file, locale) {
 	return {
 		filename: path.basename(file),
 		bytes: metadata.size,
-		sha256: sha256(file),
+		sha256: sha256(content),
 	};
 }
 
@@ -92,16 +128,11 @@ export function validateResumeAssets(directory) {
 	);
 
 	const manifestPath = path.join(absoluteDirectory, MANIFEST_FILENAME);
-	const manifestMetadata = lstatSync(manifestPath);
-	assertContract(manifestMetadata.isFile(), `manifest must be a regular file: ${manifestPath}`);
-	assertContract(
-		!manifestMetadata.isSymbolicLink(),
-		`manifest must not be a symbolic link: ${manifestPath}`
-	);
+	const { content: manifestContent } = readRegularFile(manifestPath, 'manifest');
 
 	let manifest;
 	try {
-		manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
+		manifest = JSON.parse(manifestContent.toString('utf8'));
 	} catch (error) {
 		const detail = error instanceof Error ? error.message : String(error);
 		throw new ResumeAssetValidationError(`manifest.json must contain valid JSON: ${detail}`);
