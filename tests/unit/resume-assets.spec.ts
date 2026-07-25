@@ -1,4 +1,4 @@
-import { mkdtempSync, mkdirSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, mkdirSync, rmSync, symlinkSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -20,12 +20,21 @@ const createPdf = (options: { signature?: string; bytes?: number; eof?: boolean 
 	return Buffer.from(`${signature}${'0'.repeat(padding)}${ending}`);
 };
 
+const replaceWithSymlink = (file: string, content: Buffer | string): void => {
+	const target = `${file}.target`;
+	writeFileSync(target, content);
+	rmSync(file);
+	symlinkSync(target, file);
+};
+
 const createFixture = (
 	overrides: {
 		manifest?: unknown;
 		english?: Buffer;
 		spanish?: Buffer;
 		extraFile?: boolean;
+		englishSymlink?: boolean;
+		manifestSymlink?: boolean;
 	} = {}
 ): string => {
 	const root = mkdtempSync(path.join(tmpdir(), 'portfolio-resume-assets-'));
@@ -43,10 +52,16 @@ const createFixture = (
 			},
 		} as const);
 
-	writeFileSync(path.join(directory, ENGLISH_FILENAME), overrides.english ?? createPdf());
+	const englishPath = path.join(directory, ENGLISH_FILENAME);
+	const manifestPath = path.join(directory, 'manifest.json');
+	writeFileSync(englishPath, overrides.english ?? createPdf());
 	writeFileSync(path.join(directory, SPANISH_FILENAME), overrides.spanish ?? createPdf());
-	writeFileSync(path.join(directory, 'manifest.json'), JSON.stringify(manifest, null, 2));
+	writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
 	if (overrides.extraFile) writeFileSync(path.join(directory, 'unexpected.txt'), 'unexpected');
+	if (overrides.englishSymlink) replaceWithSymlink(englishPath, createPdf());
+	if (overrides.manifestSymlink) {
+		replaceWithSymlink(manifestPath, JSON.stringify(manifest, null, 2));
+	}
 
 	return directory;
 };
@@ -68,6 +83,15 @@ describe('canonical resume asset validation', () => {
 	it('rejects extra files so the public asset directory stays isolated', () => {
 		expect(() => validateResumeAssets(createFixture({ extraFile: true }))).toThrow(
 			'exactly david-sandoval-resume-es.pdf, david-sandoval-resume.pdf, manifest.json'
+		);
+	});
+
+	it.each([
+		['English PDF', { englishSymlink: true }],
+		['manifest', { manifestSymlink: true }],
+	])('rejects a symbolic link for the %s', (_name, overrides) => {
+		expect(() => validateResumeAssets(createFixture(overrides))).toThrow(
+			'must not be a symbolic link'
 		);
 	});
 
