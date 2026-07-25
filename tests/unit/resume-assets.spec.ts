@@ -21,7 +21,7 @@ const createPdf = (options: { signature?: string; bytes?: number; eof?: boolean 
 };
 
 const replaceWithSymlink = (file: string, content: Buffer | string): void => {
-	const target = `${file}.target`;
+	const target = path.join(path.dirname(path.dirname(file)), `${path.basename(file)}.target`);
 	writeFileSync(target, content);
 	rmSync(file);
 	symlinkSync(target, file);
