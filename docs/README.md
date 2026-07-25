@@ -31,6 +31,8 @@ English is the primary repository documentation language. Spanish is maintained 
 
 Catalogs describe current slices but do not redefine architecture rules.
 
+The [branch-protection guide](../.github/BRANCH_PROTECTION.md) owns the desired hosted rulesets and stable required-check names. Its settings remain **Unconfirmed** until verified in GitHub settings.
+
 ## Repository and Cortex-L7 boundary
 
 ### The repository owns

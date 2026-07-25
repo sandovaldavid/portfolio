@@ -23,6 +23,7 @@ A bilingual, static-first portfolio for presenting software-engineering experien
 - **Quality:** repository checks, unit tests, Playwright, Axe, route budgets and Lighthouse commands are versioned in the repository.
 - **Development environment:** a pinned Playwright/Bun Dev Container supports the complete local validation workflow.
 - **Deployment:** `develop` is the integration branch; `main` is the default and production branch. Promotion to `main` is handled through a separate pull request.
+- **Resume delivery:** validated English and Spanish PDFs are supplied through the isolated `resume-assets` branch; editable resume sources remain in the private source repository.
 
 The removed localization compatibility runtime must not be reintroduced. Current source ownership and enforcement are documented in [docs/I18N.md](docs/I18N.md) and [docs/I18N-ENFORCEMENT.md](docs/I18N-ENFORCEMENT.md).
 
@@ -79,6 +80,7 @@ Add generated-link, browser, performance or visual validation according to [docs
 - [Testing](docs/TESTING.md)
 - [CI policy](docs/CI.md)
 - [Delivery and release policy](docs/DELIVERY.md)
+- [Canonical resume artifact delivery](docs/RESUME-DELIVERY.md)
 - [Toolchain](docs/TOOLCHAIN.md)
 - [Performance methodology](docs/PERFORMANCE.md)
 - [Dev Container](docs/DEVCONTAINER.md)
