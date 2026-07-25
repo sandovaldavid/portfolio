@@ -14,6 +14,7 @@
 | Testing                            | [docs/TESTING.md](docs/TESTING.md)                                           |
 | CI behavior                        | [docs/CI.md](docs/CI.md) and `.github/workflows/`                            |
 | Branches, releases and deployment  | [docs/DELIVERY.md](docs/DELIVERY.md)                                         |
+| Canonical resume artifact delivery | [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md)                           |
 | Performance budgets                | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and `performance-budgets.json`    |
 | Documentation ownership            | [docs/README.md](docs/README.md)                                             |
 | Contribution flow                  | [CONTRIBUTING.md](CONTRIBUTING.md)                                           |
@@ -52,7 +53,7 @@ Before changing the repository:
 5. keep one coherent concern per pull request;
 6. open the implementation pull request into `develop`.
 
-Do not work directly on `develop` or `main`. Promotion from `develop` to `main` is a separate release concern governed by [docs/DELIVERY.md](docs/DELIVERY.md).
+Do not work directly on `develop` or `main`. Promotion from `develop` to `main` is a separate release concern governed by [docs/DELIVERY.md](docs/DELIVERY.md). Changes to the public CV payload or its publication path must follow [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md) and must not copy private resume sources into this repository.
 
 ## 4. Architecture and code
 
