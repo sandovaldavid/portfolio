@@ -35,7 +35,7 @@ The localization runtime no longer contains monolithic locale dictionaries, the 
 
 ## In progress
 
-No repository work is currently classified as **In progress**. Issue #182 is resolved by the restored asset branch and the validated delivery contract in its closing pull request.
+No repository work is currently classified as **In progress**. Issues #180 and #182 are closed after merged PRs #181, #183 and #184 delivered their versioned branch-policy and resume-delivery contracts.
 
 Any future item belongs here only when current source is partially implemented and an open issue or pull request identifies the concrete remaining work.
 
@@ -73,7 +73,7 @@ The following policies no longer define current work:
 
 ## Historical
 
-Point-in-time audits, completed branch plans, the completed i18n roadmap and prior test snapshots do not define current behavior. Their durable context belongs in Cortex-L7, while Git history, merged pull requests, closed issues and `CHANGELOG.md` remain public historical evidence.
+Point-in-time audits, completed branch plans, the completed i18n roadmap, the resolved branch-policy alignment and the recovered resume-asset incident do not define current behavior. Their durable context belongs in Cortex-L7, while Git history, merged pull requests, closed issues and `CHANGELOG.md` remain public historical evidence.
 
 ## Update rule
 
