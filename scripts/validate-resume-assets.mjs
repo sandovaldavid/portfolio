@@ -37,11 +37,6 @@ function isRecord(value) {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-/** @param {unknown} value */
-function isNodeError(value) {
-	return value instanceof Error && 'code' in value;
-}
-
 /** @param {boolean} condition @param {string} message */
 function assertContract(condition, message) {
 	if (!condition) throw new ResumeAssetValidationError(message);
@@ -73,7 +68,7 @@ function readRegularFile(file, description) {
 			metadata,
 		};
 	} catch (error) {
-		if (isNodeError(error) && error.code === 'ELOOP') {
+		if (error instanceof Error && 'code' in error && error.code === 'ELOOP') {
 			throw new ResumeAssetValidationError(`${description} must not be a symbolic link: ${file}`);
 		}
 		throw error;
