@@ -8,6 +8,10 @@ The current repository model is:
 - `main`: default and production branch;
 - `resume-assets`: canonical English and Spanish CV artifacts consumed by deployment workflows.
 
+```text
+short-lived branch -> develop -> main -> production
+```
+
 This model is **Implemented** by the active branch history and pull-request workflow. The previous main-only trunk policy is **Discarded** for current work.
 
 ## Ordinary development
