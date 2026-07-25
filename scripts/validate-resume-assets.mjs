@@ -69,7 +69,9 @@ function readRegularFile(file, description) {
 		};
 	} catch (error) {
 		if (error instanceof Error && 'code' in error && error.code === 'ELOOP') {
-			throw new ResumeAssetValidationError(`${description} must not be a symbolic link: ${file}`);
+			throw new ResumeAssetValidationError(
+				`${description} must not be a symbolic link: ${file}`
+			);
 		}
 		throw error;
 	} finally {
