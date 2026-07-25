@@ -1,23 +1,29 @@
 # Continuous integration policy
 
-This document describes the workflows currently versioned in `.github/workflows/` and distinguishes configured automation from validation that actually ran.
+This document describes the workflows versioned in `.github/workflows/` and distinguishes configured automation from validation that actually ran.
 
 ## Branch lifecycle
 
-The repository currently uses two long-lived branches:
+The repository uses two long-lived branches:
 
-- `develop` is the integration branch for ordinary implementation pull requests;
+- `develop` is the integration branch for ordinary implementation, documentation and maintenance pull requests;
 - `main` is the default and production branch and receives focused promotion pull requests from `develop`.
 
-The existing pull-request CI and Vercel preview workflows are configured for pull requests targeting `main`. They therefore validate promotion pull requests, not ordinary pull requests targeting `develop`.
+The supported lifecycle is:
+
+```text
+short-lived branch -> develop -> main -> production
+```
+
+Pull-request quality, security and preview workflows cover both long-lived base branches. `Main Quality` and normal production deployment remain restricted to the integrated `main` revision.
 
 ## Configured workflows
 
 | Trigger                                                    | Workflow                      | Implemented purpose                                                                                                             |
 | ---------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Pull request to `main`                                     | `Continuous Integration`      | Repository checks, unit tests, production build, route budgets, Chromium smoke and Axe gates.                                   |
-| Pull request to `main`                                     | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                              |
-| Pull request or push to `main`; scheduled/manual           | `CodeQL`                      | Security and code-quality analysis.                                                                                             |
+| Pull request to `develop` or `main`                        | `Continuous Integration`      | Promotion-source policy, repository checks, unit tests, production build, route budgets, Chromium smoke and Axe gates.          |
+| Pull request to `develop` or `main`                        | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                              |
+| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`            | Security and code-quality analysis for integration and production changes.                                                       |
 | Push to `main` or manual run                               | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, full desktop browser suite and Lighthouse. |
 | Weekly or manual                                           | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link and bundle audits.                                                    |
 | Dev Container changes or manual run                        | `Build Dev Container`         | Validates the versioned development environment.                                                                                |
@@ -25,56 +31,43 @@ The existing pull-request CI and Vercel preview workflows are configured for pul
 
 Workflow YAML is **Implemented** configuration. A workflow result is evidence only when a run exists for the exact commit and completes successfully.
 
-## Develop pull-request policy
+## Pull requests into develop
 
-Ordinary feature, fix, documentation and maintenance pull requests target `develop`. Because the current pull-request workflows do not trigger for that base branch, the pull request must include local evidence.
+Ordinary feature, fix, documentation and maintenance branches start from current `develop` and target `develop`.
 
-Minimum local gate:
+The stable required checks are:
 
-```bash
-bun install --frozen-lockfile
-bun run check
-bun run test:unit:ci
-bun run build
-```
-
-Add the exact change-specific commands from [TESTING.md](TESTING.md), for example:
-
-```bash
-bun run check:links
-bun run performance:check
-bun run test:e2e:smoke
-bun run test:e2e:desktop
-bun run test:e2e:extended
-bun run test:e2e:visual:docker
-bun run lighthouse
-```
-
-The pull-request description must state:
-
-- exact branch head or commit tested;
-- environment, including Dev Container or host details when relevant;
-- commands executed;
-- pass/fail result and any intentionally unavailable gate.
-
-A skipped, absent, disabled or quota-blocked Actions run is **Blocked**, not successful.
-
-## Promotion pull requests to main
-
-A focused `develop` → `main` pull request is the production promotion boundary.
-
-When GitHub Actions are enabled and quota is available, the promotion pull request is expected to run:
-
+- `Promotion Source`;
 - `Code Quality & Commits`;
 - `Unit Tests (Vitest)`;
 - `Build & Bundle Analysis`;
 - `Playwright Chromium Smoke`;
-- `Analyze Security`;
-- the informative Vercel preview and PR summary jobs.
+- `Analyze Security`.
 
-The stable job names are an external contract with branch protection. Do not rename them without coordinating repository rulesets.
+`Promotion Source` succeeds for every pull request whose base is `develop`; keeping it present on both branch lifecycles gives the promotion policy one stable job name.
 
-If hosted automation is unavailable, do not infer success from the workflow configuration. Record the automation as **Blocked**, execute the closest local equivalents and require explicit maintainer review before promotion.
+`PR Summary Report` and `Deploy to Vercel Preview` are informative. They should not be required because summary generation is derivative and preview availability depends on hosted secrets and Vercel availability.
+
+A skipped, absent, disabled, cancelled, quota-blocked or `action_required` run is **Blocked**, not successful. When hosted automation is unavailable, execute the closest local equivalents and record the limitation explicitly.
+
+## Promotion pull requests into main
+
+A focused `develop` -> `main` pull request is the production promotion boundary. Do not add unrelated implementation work directly to the promotion branch.
+
+The `Promotion Source` job rejects a pull request targeting `main` unless its head branch is exactly `develop`. Configure this job as a required check on `main`; branch protection alone does not encode the source-branch relationship.
+
+Promotion pull requests use the same required quality and security checks as `develop`:
+
+- `Promotion Source`;
+- `Code Quality & Commits`;
+- `Unit Tests (Vitest)`;
+- `Build & Bundle Analysis`;
+- `Playwright Chromium Smoke`;
+- `Analyze Security`.
+
+The stable job names are an external contract with GitHub rulesets. Do not rename them without coordinating the hosted required-check configuration.
+
+Do not require `Deploy to Vercel Production` before merge. Production deployment is intentionally a post-merge control that can run only after `Main Quality` succeeds for the integrated `main` SHA.
 
 ## Main integration and production
 
@@ -86,7 +79,31 @@ After a promotion is merged into `main`:
 4. manual and resume-asset dispatches explicitly rebuild the current `main` tip;
 5. canonical English and Spanish resume URLs are verified after deployment.
 
-No feature branch or failed-quality SHA is part of the normal production path.
+No feature branch, `develop` revision or failed-quality SHA is part of the normal production path.
+
+## Local equivalents
+
+Use the canonical local gate when hosted automation is unavailable or when change-specific validation requires more depth:
+
+```bash
+bun install --frozen-lockfile
+bun run check
+bun run test:unit:ci
+bun run build
+bun run bundle:analyze
+bun run performance:check
+bun run check:links
+CI=true bun run test:e2e:smoke
+```
+
+Add the exact commands required by [TESTING.md](TESTING.md), such as desktop, extended, pinned-Docker visual or Lighthouse suites.
+
+The pull-request description must state:
+
+- exact branch head or commit tested;
+- environment, including Dev Container or host details when relevant;
+- commands executed;
+- pass/fail result and every intentionally unavailable gate.
 
 ## Scheduled and visual policy
 
@@ -104,4 +121,4 @@ Playwright workflows upload reports, traces, screenshots, videos, JSON and JUnit
 
 ## GitHub-hosted settings
 
-Branch rulesets, required checks, workflow enablement, Actions quota and secrets are not versioned in the repository. Their current state is **Unconfirmed** until inspected in GitHub. See [STATUS.md](STATUS.md).
+Branch rulesets, required checks, workflow enablement, Actions quota, secrets and environment protections are not versioned in the repository. Their current state is **Unconfirmed** until inspected in GitHub. See [STATUS.md](STATUS.md) and [the branch-protection guide](../.github/BRANCH_PROTECTION.md).
