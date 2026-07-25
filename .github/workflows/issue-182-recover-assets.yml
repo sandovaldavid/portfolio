@@ -5,7 +5,7 @@ on:
         branches: [develop]
 
 permissions:
-    contents: read
+    contents: write
 
 jobs:
     recover:
@@ -88,3 +88,37 @@ jobs:
                   path: recovery/public/resume
                   if-no-files-found: error
                   retention-days: 1
+
+            - name: Publish disposable asset candidate branch
+              shell: bash
+              env:
+                  CANDIDATE_BRANCH: fix/182-resume-assets-recovery-candidate
+              run: |
+                  set -euo pipefail
+
+                  if git ls-remote --exit-code --heads origin "$CANDIDATE_BRANCH" >/dev/null 2>&1; then
+                      echo "::error::Candidate branch already exists: $CANDIDATE_BRANCH"
+                      exit 1
+                  fi
+
+                  source_commit=$(node -e "const manifest=require('./recovery/public/resume/manifest.json'); process.stdout.write(manifest.sourceCommit)")
+                  mkdir -p /tmp/recovered-resume-assets
+                  cp recovery/public/resume/* /tmp/recovered-resume-assets/
+
+                  git fetch --no-tags origin resume-assets
+                  git switch --create "$CANDIDATE_BRANCH" FETCH_HEAD
+                  rm -rf public/resume
+                  mkdir -p public/resume
+                  cp /tmp/recovered-resume-assets/* public/resume/
+
+                  git add public/resume
+                  test -n "$(git diff --cached --name-only)"
+                  test "$(git diff --cached --name-only | wc -l)" -eq 3
+                  git diff --cached --name-only | grep -Fxq public/resume/david-sandoval-resume.pdf
+                  git diff --cached --name-only | grep -Fxq public/resume/david-sandoval-resume-es.pdf
+                  git diff --cached --name-only | grep -Fxq public/resume/manifest.json
+
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git commit -m "fix(resume): restore canonical PDFs from $source_commit"
+                  git push origin "HEAD:refs/heads/$CANDIDATE_BRANCH"
