@@ -31,7 +31,7 @@ jobs:
                       local url="$2"
                       local status
 
-                      status=$(curl --silent --show-error \
+                      status=$(curl --location --silent --show-error \
                           --dump-header "$diagnostics/${filename}.headers" \
                           --output "$destination/$filename" \
                           --write-out '%{http_code}' \
