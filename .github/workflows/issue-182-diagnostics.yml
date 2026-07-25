@@ -1,0 +1,63 @@
+name: Issue 182 Diagnostics
+
+on:
+    pull_request:
+        branches: [develop]
+
+permissions:
+    contents: read
+
+jobs:
+    diagnose:
+        if: github.event.pull_request.head.ref == 'fix/182-restore-resume-assets'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout pull request head
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Setup repository
+              uses: ./.github/actions/setup-bun
+
+            - name: Capture canonical formatting
+              shell: bash
+              run: |
+                  bun run format
+                  git diff --name-only --diff-filter=ACM > formatted-files.txt
+                  mkdir -p formatted-output
+                  while IFS= read -r file; do
+                      [ -n "$file" ] || continue
+                      mkdir -p "formatted-output/$(dirname "$file")"
+                      cp "$file" "formatted-output/$file"
+                  done < formatted-files.txt
+
+            - name: Capture repository check
+              shell: bash
+              run: |
+                  set +e
+                  bun run check > issue-182-check.log 2>&1
+                  echo "$?" > issue-182-check.exit
+                  exit 0
+
+            - name: Capture focused unit test
+              shell: bash
+              run: |
+                  set +e
+                  bunx vitest run tests/unit/resume-assets.spec.ts > issue-182-unit.log 2>&1
+                  echo "$?" > issue-182-unit.exit
+                  exit 0
+
+            - name: Upload diagnostics
+              uses: actions/upload-artifact@v7
+              with:
+                  name: issue-182-final-diagnostics
+                  path: |
+                      formatted-files.txt
+                      formatted-output
+                      issue-182-check.log
+                      issue-182-check.exit
+                      issue-182-unit.log
+                      issue-182-unit.exit
+                  if-no-files-found: error
+                  retention-days: 1
