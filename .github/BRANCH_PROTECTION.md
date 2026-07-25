@@ -36,12 +36,12 @@ Use branch target `develop` and configure:
 - require the branch to be up to date before merge;
 - require conversation resolution;
 - require these checks:
-  - `Promotion Source`;
-  - `Code Quality & Commits`;
-  - `Unit Tests (Vitest)`;
-  - `Build & Bundle Analysis`;
-  - `Playwright Chromium Smoke`;
-  - `Analyze Security`;
+    - `Promotion Source`;
+    - `Code Quality & Commits`;
+    - `Unit Tests (Vitest)`;
+    - `Build & Bundle Analysis`;
+    - `Playwright Chromium Smoke`;
+    - `Analyze Security`;
 - block direct pushes;
 - block force pushes;
 - block branch deletion;
@@ -58,12 +58,12 @@ Use branch target `main` and configure:
 - require the branch to be up to date before merge;
 - require conversation resolution;
 - require these checks:
-  - `Promotion Source`;
-  - `Code Quality & Commits`;
-  - `Unit Tests (Vitest)`;
-  - `Build & Bundle Analysis`;
-  - `Playwright Chromium Smoke`;
-  - `Analyze Security`;
+    - `Promotion Source`;
+    - `Code Quality & Commits`;
+    - `Unit Tests (Vitest)`;
+    - `Build & Bundle Analysis`;
+    - `Playwright Chromium Smoke`;
+    - `Analyze Security`;
 - block direct pushes;
 - block force pushes;
 - block branch deletion;
