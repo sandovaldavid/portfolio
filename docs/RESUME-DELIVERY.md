@@ -21,12 +21,12 @@ No private YAML, LaTeX source, credentials or intermediate build files may be co
 
 ```json
 {
-  "sourceRepository": "sandovaldavid/resume",
-  "sourceCommit": "<40-character lowercase Git SHA>",
-  "files": {
-    "en": "david-sandoval-resume.pdf",
-    "es": "david-sandoval-resume-es.pdf"
-  }
+	"sourceRepository": "sandovaldavid/resume",
+	"sourceCommit": "<40-character lowercase Git SHA>",
+	"files": {
+		"en": "david-sandoval-resume.pdf",
+		"es": "david-sandoval-resume-es.pdf"
+	}
 }
 ```
 

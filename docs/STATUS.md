@@ -27,7 +27,7 @@ This document classifies repository-level statements as of **2026-07-25**. It is
 | Testing                   | Vitest unit tests, Playwright browser suites, Axe accessibility gates and pinned-Docker visual comparison.                                                     |
 | Performance               | Route-level budgets, bundle reporting and Lighthouse commands.                                                                                                 |
 | Development environment   | Versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.                                                 |
-| Workflow definitions      | Pull-request CI, CodeQL and preview workflows for `develop` and `main`; post-integration quality, scheduled quality and production deployment definitions.    |
+| Workflow definitions      | Pull-request CI, CodeQL and preview workflows for `develop` and `main`; post-integration quality, scheduled quality and production deployment definitions.     |
 | Branch roles              | `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.                       |
 
 The localization runtime no longer contains monolithic locale dictionaries, the flattened mixed-value translator, `useTranslations()`, `useTranslationsList()`, duplicated Atena/Skills/Components route implementations or the six-file hardcoded-copy debt baseline.

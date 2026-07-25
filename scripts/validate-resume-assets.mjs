@@ -43,13 +43,24 @@ function sha256(file) {
 function validatePdf(file, locale) {
 	const metadata = lstatSync(file);
 	assertContract(metadata.isFile(), `${locale} resume must be a regular file: ${file}`);
-	assertContract(!metadata.isSymbolicLink(), `${locale} resume must not be a symbolic link: ${file}`);
-	assertContract(metadata.size > MINIMUM_PDF_BYTES, `${locale} resume must exceed ${MINIMUM_PDF_BYTES} bytes`);
+	assertContract(
+		!metadata.isSymbolicLink(),
+		`${locale} resume must not be a symbolic link: ${file}`
+	);
+	assertContract(
+		metadata.size > MINIMUM_PDF_BYTES,
+		`${locale} resume must exceed ${MINIMUM_PDF_BYTES} bytes`
+	);
 
 	const content = readFileSync(file);
-	assertContract(content.subarray(0, 5).toString('ascii') === '%PDF-', `${locale} resume has an invalid PDF signature`);
 	assertContract(
-		content.subarray(Math.max(0, content.length - PDF_EOF_WINDOW_BYTES)).includes(Buffer.from('%%EOF')),
+		content.subarray(0, 5).toString('ascii') === '%PDF-',
+		`${locale} resume has an invalid PDF signature`
+	);
+	assertContract(
+		content
+			.subarray(Math.max(0, content.length - PDF_EOF_WINDOW_BYTES))
+			.includes(Buffer.from('%%EOF')),
 		`${locale} resume is missing an EOF marker near the end of the file`
 	);
 
@@ -68,7 +79,10 @@ function validatePdf(file, locale) {
 export function validateResumeAssets(directory) {
 	const absoluteDirectory = path.resolve(directory);
 	const directoryMetadata = statSync(absoluteDirectory);
-	assertContract(directoryMetadata.isDirectory(), `resume asset path must be a directory: ${absoluteDirectory}`);
+	assertContract(
+		directoryMetadata.isDirectory(),
+		`resume asset path must be a directory: ${absoluteDirectory}`
+	);
 
 	const expectedEntries = [...Object.values(EXPECTED_FILES), MANIFEST_FILENAME].sort();
 	const actualEntries = readdirSync(absoluteDirectory).sort();
@@ -80,7 +94,10 @@ export function validateResumeAssets(directory) {
 	const manifestPath = path.join(absoluteDirectory, MANIFEST_FILENAME);
 	const manifestMetadata = lstatSync(manifestPath);
 	assertContract(manifestMetadata.isFile(), `manifest must be a regular file: ${manifestPath}`);
-	assertContract(!manifestMetadata.isSymbolicLink(), `manifest must not be a symbolic link: ${manifestPath}`);
+	assertContract(
+		!manifestMetadata.isSymbolicLink(),
+		`manifest must not be a symbolic link: ${manifestPath}`
+	);
 
 	let manifest;
 	try {
@@ -100,8 +117,14 @@ export function validateResumeAssets(directory) {
 		'manifest sourceCommit must be a 40-character lowercase Git SHA'
 	);
 	assertContract(isRecord(manifest.files), 'manifest files must be an object');
-	assertContract(manifest.files.en === EXPECTED_FILES.en, `manifest files.en must be ${EXPECTED_FILES.en}`);
-	assertContract(manifest.files.es === EXPECTED_FILES.es, `manifest files.es must be ${EXPECTED_FILES.es}`);
+	assertContract(
+		manifest.files.en === EXPECTED_FILES.en,
+		`manifest files.en must be ${EXPECTED_FILES.en}`
+	);
+	assertContract(
+		manifest.files.es === EXPECTED_FILES.es,
+		`manifest files.es must be ${EXPECTED_FILES.es}`
+	);
 
 	const files = {
 		en: validatePdf(path.join(absoluteDirectory, EXPECTED_FILES.en), 'English'),
@@ -122,7 +145,9 @@ function main() {
 		const report = validateResumeAssets(directory);
 		console.log(`[resume-assets] source: ${report.sourceRepository}@${report.sourceCommit}`);
 		for (const [locale, file] of Object.entries(report.files)) {
-			console.log(`[resume-assets] ${locale}: ${file.filename} (${file.bytes} bytes, sha256 ${file.sha256})`);
+			console.log(
+				`[resume-assets] ${locale}: ${file.filename} (${file.bytes} bytes, sha256 ${file.sha256})`
+			);
 		}
 	} catch (error) {
 		const message = error instanceof Error ? error.message : String(error);
