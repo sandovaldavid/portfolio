@@ -21,6 +21,7 @@ English is the primary repository documentation language. Spanish is maintained 
 | [testing/UNIT-COVERAGE.md](testing/UNIT-COVERAGE.md) | Measured Vitest coverage scope                                   |
 | [CI.md](CI.md)                                       | Configured workflows, local evidence and automation availability |
 | [DELIVERY.md](DELIVERY.md)                           | Integration, promotion, production and release policy            |
+| [RESUME-DELIVERY.md](RESUME-DELIVERY.md)             | Canonical CV artifact provenance, validation and recovery         |
 | [TOOLCHAIN.md](TOOLCHAIN.md)                         | Runtime and dependency classification policy                     |
 | [PERFORMANCE.md](PERFORMANCE.md)                     | Route-budget methodology and loading contracts                   |
 | [STYLE-GUIDE.md](STYLE-GUIDE.md)                     | Maintained visual tokens, typography and semantic styling rules  |
