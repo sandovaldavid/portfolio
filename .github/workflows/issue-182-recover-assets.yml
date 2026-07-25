@@ -1,0 +1,59 @@
+name: Issue 182 Resume Asset Recovery
+
+on:
+    pull_request:
+        branches: [develop]
+
+permissions:
+    contents: read
+
+jobs:
+    recover:
+        if: github.event.pull_request.head.ref == 'fix/182-restore-resume-assets'
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout pull request head
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Recover the deployed canonical payload
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  destination=recovered-resume-assets/public/resume
+                  mkdir -p "$destination"
+
+                  download_pdf() {
+                      local filename="$1"
+                      local headers="$destination/${filename}.headers"
+                      local output="$destination/$filename"
+
+                      curl --fail-with-body --silent --show-error \
+                          --dump-header "$headers" \
+                          --output "$output" \
+                          "https://sandovaldavid.com/resume/$filename"
+
+                      tr -d '\r' < "$headers" > "${headers}.normalized"
+                      grep -qi '^content-type: application/pdf' "${headers}.normalized"
+                      grep -qi "^content-disposition: attachment; filename=\"${filename}\"" "${headers}.normalized"
+                      rm -f "$headers" "${headers}.normalized"
+                  }
+
+                  download_pdf david-sandoval-resume.pdf
+                  download_pdf david-sandoval-resume-es.pdf
+
+                  curl --fail-with-body --silent --show-error \
+                      --output "$destination/manifest.json" \
+                      https://sandovaldavid.com/resume/manifest.json
+
+                  node scripts/validate-resume-assets.mjs "$destination"
+
+            - name: Upload reviewed recovery candidate
+              uses: actions/upload-artifact@v7
+              with:
+                  name: issue-182-recovered-resume-assets
+                  path: recovered-resume-assets/public/resume
+                  if-no-files-found: error
+                  retention-days: 1
