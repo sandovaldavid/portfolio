@@ -17,43 +17,74 @@ jobs:
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
 
-            - name: Recover the deployed canonical payload
+            - name: Capture the deployed canonical payload
               shell: bash
               run: |
                   set -euo pipefail
 
-                  destination=recovered-resume-assets/public/resume
-                  mkdir -p "$destination"
+                  destination=recovery/public/resume
+                  diagnostics=recovery/diagnostics
+                  mkdir -p "$destination" "$diagnostics"
 
-                  download_pdf() {
+                  download() {
                       local filename="$1"
-                      local headers="$destination/${filename}.headers"
-                      local output="$destination/$filename"
+                      local url="$2"
+                      local status
 
-                      curl --fail-with-body --silent --show-error \
-                          --dump-header "$headers" \
-                          --output "$output" \
-                          "https://sandovaldavid.com/resume/$filename"
-
-                      tr -d '\r' < "$headers" > "${headers}.normalized"
-                      grep -qi '^content-type: application/pdf' "${headers}.normalized"
-                      grep -qi "^content-disposition: attachment; filename=\"${filename}\"" "${headers}.normalized"
-                      rm -f "$headers" "${headers}.normalized"
+                      status=$(curl --silent --show-error \
+                          --dump-header "$diagnostics/${filename}.headers" \
+                          --output "$destination/$filename" \
+                          --write-out '%{http_code}' \
+                          "$url" || true)
+                      printf '%s\n' "$status" > "$diagnostics/${filename}.status"
+                      tr -d '\r' < "$diagnostics/${filename}.headers" \
+                          > "$diagnostics/${filename}.headers.normalized"
                   }
 
-                  download_pdf david-sandoval-resume.pdf
-                  download_pdf david-sandoval-resume-es.pdf
-
-                  curl --fail-with-body --silent --show-error \
-                      --output "$destination/manifest.json" \
+                  download \
+                      david-sandoval-resume.pdf \
+                      https://sandovaldavid.com/resume/david-sandoval-resume.pdf
+                  download \
+                      david-sandoval-resume-es.pdf \
+                      https://sandovaldavid.com/resume/david-sandoval-resume-es.pdf
+                  download \
+                      manifest.json \
                       https://sandovaldavid.com/resume/manifest.json
 
-                  node scripts/validate-resume-assets.mjs "$destination"
+            - name: Upload recovery diagnostics
+              uses: actions/upload-artifact@v7
+              with:
+                  name: issue-182-recovery-diagnostics
+                  path: recovery
+                  if-no-files-found: error
+                  retention-days: 1
+
+            - name: Validate the recovered canonical payload
+              shell: bash
+              run: |
+                  set -euo pipefail
+
+                  for filename in \
+                      david-sandoval-resume.pdf \
+                      david-sandoval-resume-es.pdf \
+                      manifest.json; do
+                      test "$(cat "recovery/diagnostics/${filename}.status")" = 200
+                  done
+
+                  for filename in \
+                      david-sandoval-resume.pdf \
+                      david-sandoval-resume-es.pdf; do
+                      headers="recovery/diagnostics/${filename}.headers.normalized"
+                      grep -qi '^content-type: application/pdf' "$headers"
+                      grep -qi "^content-disposition: attachment; filename=\"${filename}\"" "$headers"
+                  done
+
+                  node scripts/validate-resume-assets.mjs recovery/public/resume
 
             - name: Upload reviewed recovery candidate
               uses: actions/upload-artifact@v7
               with:
                   name: issue-182-recovered-resume-assets
-                  path: recovered-resume-assets/public/resume
+                  path: recovery/public/resume
                   if-no-files-found: error
                   retention-days: 1
