@@ -60,4 +60,5 @@ jobs:
                       issue-180-unit.log
                       issue-180-unit.exit
                   if-no-files-found: error
+                  include-hidden-files: true
                   retention-days: 1
