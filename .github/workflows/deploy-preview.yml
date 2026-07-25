@@ -2,7 +2,7 @@ name: Deploy to Vercel Preview
 
 on:
     pull_request:
-        branches: [main]
+        branches: [develop, main]
         types: [opened, synchronize, reopened]
 
 permissions:
