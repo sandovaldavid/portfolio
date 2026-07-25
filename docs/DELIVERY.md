@@ -8,7 +8,7 @@ The current repository model is:
 - `main`: default and production branch;
 - `resume-assets`: canonical English and Spanish CV artifacts consumed by deployment workflows.
 
-This model is **Implemented** by the active branch history and recent pull requests. The previous main-only trunk policy is **Discarded** for current work.
+This model is **Implemented** by the active branch history and pull-request workflow. The previous main-only trunk policy is **Discarded** for current work.
 
 ## Ordinary development
 
@@ -17,8 +17,9 @@ This model is **Implemented** by the active branch history and recent pull reque
 3. Open the pull request into `develop`.
 4. Keep one coherent concern per pull request.
 5. Run the canonical local gate and every change-specific validation.
-6. Use a Conventional Commit pull-request title and squash merge after review and explicit authorization.
-7. Delete the short-lived source branch after merge.
+6. Require the configured pull-request quality and security checks when GitHub Actions are available.
+7. Use a Conventional Commit pull-request title and squash merge after review and explicit authorization.
+8. Delete the short-lived source branch after merge.
 
 Do not push directly to `develop` or `main`.
 
@@ -34,11 +35,11 @@ Before promotion:
 - confirm that documentation and `docs/STATUS.md` describe the promoted state;
 - record any unavailable GitHub automation as **Blocked**, never as passed.
 
-When GitHub Actions are enabled, pull requests targeting `main` trigger the configured CI and Vercel preview workflows. See [CI.md](CI.md).
+The `Promotion Source` CI job rejects pull requests targeting `main` when the head branch is not exactly `develop`. Configure that stable job as a required check on `main`.
 
 ## Preview deployments
 
-`Deploy to Vercel Preview` is configured only for pull requests targeting `main`.
+`Deploy to Vercel Preview` is configured for pull requests targeting `develop` and `main`.
 
 The workflow:
 
@@ -49,7 +50,7 @@ The workflow:
 5. builds and deploys without production flags;
 6. updates one stable pull-request comment with the preview URL and source SHA.
 
-Ordinary pull requests into `develop` do not receive this workflow under the current configuration. Preview availability therefore must not be claimed for them unless an explicit deployment exists.
+Preview deployment is informative rather than a required branch check because it depends on hosted credentials and Vercel availability. Its absence, cancellation or failure must not be represented as successful evidence.
 
 ## Production deployments
 
@@ -63,6 +64,8 @@ Two explicit dispatch paths rebuild the current `main` tip:
 - a maintainer-initiated `workflow_dispatch` recovery deployment.
 
 The workflow verifies both canonical resume URLs after deployment.
+
+`Deploy to Vercel Production` is a post-merge control and must not be configured as a required pre-merge status check on `main`.
 
 Workflow definitions are **Implemented**. Their current enablement, quota, secrets and environment protection are **Unconfirmed** until inspected in GitHub. An unavailable run is **Blocked**, not a successful production gate.
 
@@ -81,13 +84,16 @@ This repository is a private package and a public website, not a published npm l
 
 Verify these GitHub-hosted settings before relying on them:
 
-1. `main` is the default branch;
+1. `main` remains the default and production branch;
 2. ordinary work is based on and merged into `develop`;
-3. `main` requires a promotion pull request;
-4. required checks match [CI.md](CI.md) when Actions are available;
-5. squash merge is the permitted integration method;
-6. merged short-lived branches are deleted automatically;
-7. direct pushes and force pushes to long-lived branches are blocked.
+3. `develop` requires pull requests, current branches and the documented quality/security checks;
+4. `main` requires a promotion pull request whose source is `develop` and the documented quality/security checks;
+5. required check names match [CI.md](CI.md);
+6. preview deployment is informative rather than required;
+7. squash merge is the permitted integration method;
+8. merged short-lived branches are deleted automatically;
+9. direct pushes, force pushes and deletion of long-lived branches are blocked;
+10. the Production environment accepts only `main` deployments.
 
 These settings are **Unconfirmed** until inspected because they live outside the versioned tree. Record intentional deviations in this document and synchronize durable rationale to Cortex-L7.
 
