@@ -14,6 +14,8 @@ short-lived branch -> develop -> main -> production
 
 This model is **Implemented** by the active branch history and pull-request workflow. The previous main-only trunk policy is **Discarded** for current work.
 
+The `resume-assets` payload, provenance rules, validation command and non-destructive recovery procedure are defined in [RESUME-DELIVERY.md](RESUME-DELIVERY.md).
+
 ## Ordinary development
 
 1. Update `develop`.
@@ -49,10 +51,11 @@ The workflow:
 
 1. checks out the exact pull-request head SHA;
 2. checks out canonical files from `resume-assets`;
-3. installs the pinned repository toolchain;
-4. pulls the Vercel preview environment;
-5. builds and deploys without production flags;
-6. updates one stable pull-request comment with the preview URL and source SHA.
+3. validates provenance, filenames, PDF structure and the isolated asset directory before and after installation;
+4. installs the pinned repository toolchain;
+5. pulls the Vercel preview environment;
+6. builds and deploys without production flags;
+7. updates one stable pull-request comment with the preview URL and source SHA.
 
 Preview deployment is informative rather than a required branch check because it depends on hosted credentials and Vercel availability. Its absence, cancellation or failure must not be represented as successful evidence.
 
