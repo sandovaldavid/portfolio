@@ -20,7 +20,7 @@ The recommended environment is the Dev Container documented in [docs/DEVCONTAINE
 
 1. Update `develop` and create a short-lived prefixed branch from it.
 2. Read [AGENTS.md](AGENTS.md), [docs/STATUS.md](docs/STATUS.md) and the owning document for the area being changed.
-3. Implement one coherent concern without expanding deprecated compatibility paths.
+3. Implement one coherent concern without reintroducing removed compatibility paths or bypassing executable gates.
 4. Add the relevant unit or browser regression.
 5. For user-facing content, follow [docs/I18N.md](docs/I18N.md), update English and Spanish together and include accessibility and metadata copy.
 6. Run the canonical local checks and every change-specific check.

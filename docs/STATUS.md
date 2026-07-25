@@ -34,11 +34,13 @@ The localization runtime no longer contains monolithic locale dictionaries, the 
 
 ## In progress
 
-| Area                 | Remaining work                                                                        |
-| -------------------- | ------------------------------------------------------------------------------------- |
-| i18n roadmap closure | Issue #144 must record completion of #143 and close after final validation and merge. |
+No repository work is currently classified as **In progress**. Issues #143 and #144 are closed as completed after the final `develop` validation.
 
-No other roadmap item is documented here as implemented functionality.
+Any future item belongs here only when current source is partially implemented and an open issue or pull request identifies the concrete remaining work.
+
+## Planned
+
+No future work is currently classified as **Planned** in the active repository documentation. Proposed work must remain in GitHub issues or Cortex-L7 until it becomes an approved operational commitment.
 
 ## Deprecated
 
@@ -74,7 +76,7 @@ The following policies no longer define current work:
 
 ## Historical
 
-Point-in-time audits, completed branch plans, migration rationale and prior test snapshots have been removed from the active documentation tree. Their durable context belongs in Cortex-L7, while Git history, merged pull requests, closed issues and `CHANGELOG.md` remain public historical evidence.
+Point-in-time audits, completed branch plans, the completed i18n roadmap and prior test snapshots do not define current behavior. Their durable context belongs in Cortex-L7, while Git history, merged pull requests, closed issues and `CHANGELOG.md` remain public historical evidence.
 
 ## Update rule
 

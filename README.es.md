@@ -24,7 +24,7 @@ Portafolio bilingüe y static-first para presentar experiencia profesional, evid
 - **Entorno de desarrollo:** un Dev Container con Playwright y Bun fijados soporta la validación local completa.
 - **Despliegue:** `develop` es la rama de integración; `main` es la rama por defecto y de producción. La promoción a `main` se realiza mediante una PR separada.
 
-Los caminos legacy de localización que aún permanecen están rastreados por la issue #143 y se clasifican como **Deprecated/In progress**, no como el mecanismo admitido para trabajo nuevo. Consulta [docs/STATUS.md](docs/STATUS.md).
+El runtime legacy de localización fue eliminado y no debe reintroducirse. El ownership actual y sus validaciones están documentados en [docs/I18N.md](docs/I18N.md) y [docs/I18N-ENFORCEMENT.md](docs/I18N-ENFORCEMENT.md).
 
 ## Controles de calidad
 
