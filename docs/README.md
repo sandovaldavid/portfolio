@@ -22,6 +22,7 @@ English is the primary repository documentation language. Spanish is maintained 
 | [CI.md](CI.md)                                       | Configured workflows, local evidence and automation availability |
 | [DELIVERY.md](DELIVERY.md)                           | Integration, promotion, production and release policy            |
 | [RESUME-DELIVERY.md](RESUME-DELIVERY.md)             | Canonical CV artifact provenance, validation and recovery        |
+| [branch-protection guide](../.github/BRANCH_PROTECTION.md) | Desired hosted rulesets and stable required-check names     |
 | [TOOLCHAIN.md](TOOLCHAIN.md)                         | Runtime and dependency classification policy                     |
 | [PERFORMANCE.md](PERFORMANCE.md)                     | Route-budget methodology and loading contracts                   |
 | [STYLE-GUIDE.md](STYLE-GUIDE.md)                     | Maintained visual tokens, typography and semantic styling rules  |
@@ -29,7 +30,7 @@ English is the primary repository documentation language. Spanish is maintained 
 | [widgets-catalog.md](widgets-catalog.md)             | Current widget slices                                            |
 | [tools.md](tools.md)                                 | Maintained developer-tool usage notes                            |
 
-Catalogs describe current slices but do not redefine architecture rules.
+Catalogs describe current slices but do not redefine architecture rules. The branch-protection guide records intended hosted configuration; its checkboxes are **Unconfirmed** until verified in GitHub settings.
 
 ## Repository and Cortex-L7 boundary
 
