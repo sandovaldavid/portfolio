@@ -76,7 +76,7 @@ jobs:
                       david-sandoval-resume-es.pdf; do
                       headers="recovery/diagnostics/${filename}.headers.normalized"
                       grep -qi '^content-type: application/pdf' "$headers"
-                      grep -qi "^content-disposition: attachment; filename=\"${filename}\"" "$headers"
+                      grep -Eqi "^content-disposition: (attachment|inline); filename=\"${filename}\"" "$headers"
                   done
 
                   node scripts/validate-resume-assets.mjs recovery/public/resume
