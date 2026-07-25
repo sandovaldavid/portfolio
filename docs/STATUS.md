@@ -1,6 +1,6 @@
 # Current implementation status
 
-This document classifies repository-level statements as of **2026-07-24**. It is an operational snapshot, not a roadmap. Code, configuration and executable checks remain authoritative.
+This document classifies repository-level statements as of **2026-07-25**. It is an operational snapshot, not a roadmap. Code, configuration and executable checks remain authoritative.
 
 ## Status vocabulary
 
@@ -27,14 +27,14 @@ This document classifies repository-level statements as of **2026-07-24**. It is
 | Testing                   | Vitest unit tests, Playwright browser suites, Axe accessibility gates and pinned-Docker visual comparison.                                                     |
 | Performance               | Route-level budgets, bundle reporting and Lighthouse commands.                                                                                                 |
 | Development environment   | Versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.                                                 |
-| Workflow definitions      | Pull-request CI/preview workflows for `main`, post-integration quality, scheduled quality, CodeQL and production deployment definitions.                       |
+| Workflow definitions      | Pull-request CI, CodeQL and preview workflows for `develop` and `main`; post-integration quality, scheduled quality and production deployment definitions.    |
 | Branch roles              | `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.                       |
 
 The localization runtime no longer contains monolithic locale dictionaries, the flattened mixed-value translator, `useTranslations()`, `useTranslationsList()`, duplicated Atena/Skills/Components route implementations or the six-file hardcoded-copy debt baseline.
 
 ## In progress
 
-No repository work is currently classified as **In progress**. Issues #143 and #144 are closed as completed after the final `develop` validation.
+- Issue #182 tracks restoration of the canonical `resume-assets` payload after the bootstrap branch lost or never received the two generated PDFs and provenance manifest. Preview, main-quality and production consumers share one strict installer contract; the branch must be repopulated from authoritative resume output and verified before this item becomes **Implemented** again.
 
 Any future item belongs here only when current source is partially implemented and an open issue or pull request identifies the concrete remaining work.
 
@@ -49,9 +49,10 @@ No localization compatibility runtime remains. Reintroducing monolithic locale f
 ## Blocked
 
 - GitHub Actions execution may be unavailable because workflows are disabled or account minutes are exhausted. This blocks hosted automation evidence, not local development or local validation.
+- The private resume publisher cannot be represented as successful when its exact stable run is absent or unavailable. Until an authoritative publication or reviewed recovery populates `resume-assets`, dependent preview and production installation remain blocked.
 - A blocked or absent workflow run must never be described as passed.
 
-Update this section when hosted automation is restored and verified.
+Update this section when hosted automation and the canonical asset channel are restored and verified.
 
 ## Unconfirmed
 
