@@ -10,7 +10,7 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 
 <div
 	id="splash-screen"
-	class="hidden fixed inset-0 w-screen h-screen bg-[#07090e] z-[9999] flex-col items-center justify-center font-mono text-primary-500 overflow-hidden px-4"
+	class="hidden fixed inset-0 w-screen h-screen bg-channel-portfolio-terminal-background z-[9999] flex-col items-center justify-center font-mono text-channel-portfolio-terminal-cyan overflow-hidden px-4"
 	role="dialog"
 	aria-modal="true"
 	aria-labelledby="retro-mode-title"
@@ -18,26 +18,30 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 	<div class="crt-overlay pointer-events-none absolute inset-0 z-10 opacity-[0.15]"></div>
 
 	<div
-		class="w-full max-w-2xl border-2 border-[#00ff88]/60 bg-black/80 p-6 sm:p-8 shadow-retro-3xl relative z-20"
+		class="w-full max-w-2xl border-2 border-channel-portfolio-terminal-phosphor/60 bg-channel-portfolio-terminal-surface/80 p-6 sm:p-8 shadow-retro-3xl relative z-20"
 	>
-		<div class="flex items-start justify-between gap-4 border-b border-[#00ff88]/30 pb-4">
+		<div
+			class="flex items-start justify-between gap-4 border-b border-channel-portfolio-terminal-phosphor/30 pb-4"
+		>
 			<div>
-				<p class="text-xs sm:text-sm text-[#00ff88]/70">
+				<p class="text-xs sm:text-sm text-channel-portfolio-terminal-phosphor/70">
 					PORTFOLIO SYSTEM BIOS // {year}
 					{siteConfig.handle.toUpperCase()}
 				</p>
 				<h2
 					id="retro-mode-title"
-					class="mt-2 text-2xl sm:text-3xl font-pixel-clean text-[#00ff88]"
+					class="mt-2 text-2xl sm:text-3xl font-pixel-clean text-channel-portfolio-terminal-phosphor"
 				>
 					{tSplash('title')}
 				</h2>
-				<p class="mt-2 text-sm text-neutral-300">{tSplash('intro')}</p>
+				<p class="mt-2 text-sm text-channel-portfolio-terminal-content/75">
+					{tSplash('intro')}
+				</p>
 			</div>
 			<button
 				id="retro-close"
 				type="button"
-				class="border border-[#00ff88]/60 px-2 py-1 text-[#00ff88] cursor-pointer"
+				class="border border-channel-portfolio-terminal-phosphor/60 px-2 py-1 text-channel-portfolio-terminal-phosphor cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-cyan-bright"
 				aria-label={tSplash('close')}
 			>
 				<span aria-hidden="true">×</span>
@@ -45,7 +49,7 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 		</div>
 
 		<ul
-			class="mt-6 space-y-3 text-sm sm:text-base text-neutral-200"
+			class="mt-6 space-y-3 text-sm sm:text-base text-channel-portfolio-terminal-content/85"
 			aria-label={tSplash('intro')}
 		>
 			{
@@ -60,7 +64,7 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 		<button
 			id="retro-continue"
 			type="button"
-			class="mt-8 w-full sm:w-auto px-8 py-3 bg-primary-500 text-white dark:text-black font-pixel text-xs tracking-widest border-2 border-white shadow-retro-lg hover:bg-primary-400 focus:outline-none cursor-pointer"
+			class="mt-8 w-full sm:w-auto px-8 py-3 bg-button-primary-background text-button-primary-content font-pixel text-xs tracking-widest border-2 border-channel-portfolio-terminal-content shadow-retro-lg hover:bg-button-primary-background-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-cyan-bright cursor-pointer"
 		>
 			{tSplash('continue')}
 		</button>
@@ -115,7 +119,10 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 
 <style>
 	.crt-overlay {
-		background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+		background: linear-gradient(
+			var(--color-channel-portfolio-terminal-grid) 50%,
+			transparent 50%
+		);
 		background-size: 100% 4px;
 	}
 

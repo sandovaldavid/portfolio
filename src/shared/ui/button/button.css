@@ -4,31 +4,33 @@
 .btn-base {
 	@apply inline-flex items-center justify-center gap-2;
 	@apply px-4 py-2 text-sm font-bold uppercase tracking-wider;
-	@apply rounded-none border-2 border-black dark:border-white;
+	@apply rounded-none border-2 border-button-border;
 	@apply transition-all duration-100;
 	@apply focus:outline-none focus-visible:outline-none;
-	@apply focus-visible:ring-2 focus-visible:ring-primary-500;
+	@apply focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2;
+	@apply focus-visible:ring-offset-channel-background-canvas;
 
-	/* Retro 3D offset shadow */
-	box-shadow: 3px 3px 0px 0px var(--color-edge-strong);
+	box-shadow: var(--shadow-retro-md);
 }
 
 .btn-base:hover {
 	@apply -translate-x-[2px] -translate-y-[2px];
-	box-shadow: 5px 5px 0px 0px var(--color-edge-strong);
+	box-shadow: var(--shadow-retro-xl);
 }
 
 .btn-base:active {
 	@apply translate-x-[1px] translate-y-[1px];
-	box-shadow: 1px 1px 0px 0px var(--color-edge-strong);
+	box-shadow: var(--shadow-retro-xs);
 }
 
-/* Primary variant - Neon Brand style */
+/* Primary variant */
 .btn-primary {
-	@apply text-white dark:text-black bg-primary-500 hover:bg-primary-400 dark:hover:bg-primary-300;
+	@apply bg-button-primary-background text-button-primary-content;
+	@apply hover:bg-button-primary-background-hover;
 }
 
-/* Secondary variant - High-contrast style */
+/* Secondary variant */
 .btn-secondary {
-	@apply text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800;
+	@apply bg-button-secondary-background text-button-secondary-content;
+	@apply hover:bg-button-secondary-background-hover;
 }

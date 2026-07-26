@@ -19,15 +19,15 @@ Pull-request quality, security and preview workflows cover both long-lived base 
 
 ## Configured workflows
 
-| Trigger                                                               | Workflow                      | Implemented purpose                                                                                                             |
-| --------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| Pull request to `develop` or `main`                                   | `Continuous Integration`      | Promotion-source policy, repository checks, unit tests, production build, route budgets, Chromium smoke and Axe gates.          |
-| Pull request to `develop` or `main`                                   | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                              |
-| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`                      | Security and code-quality analysis for integration and production changes.                                                      |
-| Push to `main` or manual run                                          | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, full desktop browser suite and Lighthouse. |
-| Weekly or manual                                                      | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link and bundle audits.                                                    |
-| Dev Container changes or manual run                                   | `Build Dev Container`         | Validates the versioned development environment.                                                                                |
-| Successful `Main Quality` push run; manual/resume dispatch            | `Deploy to Vercel Production` | Deploys the validated `main` revision or the explicitly selected current `main` revision.                                       |
+| Trigger                                                               | Workflow                      | Implemented purpose                                                                                                                                             |
+| --------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pull request to `develop` or `main`                                   | `Continuous Integration`      | Promotion-source policy, repository checks, unit tests, production build, route budgets, Chromium smoke/Axe gates and exact base/head Portfolio Retro evidence. |
+| Pull request to `develop` or `main`                                   | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                                                              |
+| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`                      | Security and code-quality analysis for integration and production changes.                                                                                      |
+| Push to `main` or manual run                                          | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, full desktop browser suite and Lighthouse.                                 |
+| Weekly or manual                                                      | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link and bundle audits.                                                                                    |
+| Dev Container changes or manual run                                   | `Build Dev Container`         | Validates the versioned development environment.                                                                                                                |
+| Successful `Main Quality` push run; manual/resume dispatch            | `Deploy to Vercel Production` | Deploys the validated `main` revision or the explicitly selected current `main` revision.                                                                       |
 
 Workflow YAML is **Implemented** configuration. A workflow result is evidence only when a run exists for the exact commit and completes successfully.
 
@@ -46,9 +46,15 @@ The stable required checks are:
 
 `Promotion Source` succeeds for every pull request whose base is `develop`; keeping it present on both branch lifecycles gives the promotion policy one stable job name.
 
-`PR Summary Report` and `Deploy to Vercel Preview` are informative. They should not be required because summary generation is derivative and preview availability depends on hosted secrets and Vercel availability.
+`PR Summary Report`, `Portfolio Retro Visual Evidence` and `Deploy to Vercel Preview` are informative. They should not be required because summary generation is derivative, the evidence job is change-specific and preview availability depends on hosted secrets and Vercel availability.
 
 A skipped, absent, disabled, cancelled, quota-blocked or `action_required` run is **Blocked**, not successful. When hosted automation is unavailable, execute the closest local equivalents and record the limitation explicitly.
+
+## Portfolio Retro visual evidence
+
+`Portfolio Retro Visual Evidence` checks out the exact pull-request base SHA beside the exact head SHA, builds both revisions, starts isolated preview servers and uploads paired screenshots as `portfolio-retro-color-evidence`.
+
+The maintained matrix covers English/light desktop, Spanish/dark desktop, English/dark mobile, light 404, dark CLI and dark retro Splash. This artifact supports review of token migrations; it does not replace the blocking Playwright smoke/Axe job or the pinned maintained visual suite.
 
 ## Promotion pull requests into main
 
@@ -96,6 +102,14 @@ bun run check:links
 CI=true bun run test:e2e:smoke
 ```
 
+For a local base/head visual capture, build a baseline checkout in `baseline/`, ensure the current checkout has `dist/`, install Chromium and run:
+
+```bash
+DESIGN_SYSTEM_BEFORE_DIR=baseline \
+DESIGN_SYSTEM_AFTER_DIR=. \
+bun run screenshots:design-system
+```
+
 Add the exact commands required by [TESTING.md](TESTING.md), such as desktop, extended, pinned-Docker visual or Lighthouse suites.
 
 The pull-request description must state:
@@ -117,7 +131,7 @@ Only dependency and `.astro` caches are used. `dist/` is rebuilt and transferred
 
 ## Failure artifacts
 
-Playwright workflows upload reports, traces, screenshots, videos, JSON and JUnit diagnostics with `if: always()`. Coverage, Lighthouse, route-budget and bundle reports are retained by the workflows that generate them.
+Playwright workflows upload reports, traces, screenshots, videos, JSON and JUnit diagnostics with `if: always()`. Coverage, Lighthouse, route-budget, bundle and Portfolio Retro before/after evidence are retained by the workflows that generate them.
 
 ## GitHub-hosted settings
 

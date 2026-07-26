@@ -10,8 +10,6 @@ bun install --frozen-lockfile
 
 ## Recommended command guide
 
-The script list is intentionally broader than a minimal Astro project because it represents different validation depths. Use these groups instead of treating every command as part of the daily loop.
-
 ### Daily development
 
 ```bash
@@ -23,15 +21,14 @@ bun run test:e2e:smoke
 bun run test:e2e:report
 ```
 
-- `dev` starts the standard Astro development server; VS Code forwards container port `4321` to `http://localhost:4321`.
 - `check` is the main non-mutating quality gate and matches the PR validation contract.
 - `test:unit:ci` is the deterministic one-shot unit suite.
-- `test:e2e:smoke` is the fastest browser and accessibility gate.
-- `test:e2e:report` serves the generated Playwright HTML report through forwarded port `9323` at `http://localhost:9323`.
+- `test:e2e:smoke` is the fastest browser, color-contract and accessibility gate.
+- `test:e2e:report` serves the generated Playwright report at `http://localhost:9323`.
 
 ### Focused quality commands
 
-The `format:*`, `lint:*`, `typecheck:*`, `check:docs`, `check:devcontainer`, `check:i18n:*` and `check:links` scripts exist so a failing part of `check` can be reproduced independently. `format` and `lint:fix` modify files; their corresponding check commands do not.
+The `format:*`, `lint:*`, `typecheck:*`, `check:docs`, `check:devcontainer`, `check:i18n:*` and `check:links` scripts reproduce individual parts of `check`. `format` and `lint:fix` modify files; their corresponding check commands do not.
 
 ### Internationalization quality gates
 
@@ -45,26 +42,15 @@ bun run build
 bun run check:i18n:routes
 ```
 
-The source-level catalog, content and hardcoded-copy checks are mandatory parts of `bun run check`. Generated locale routes require fresh build output and therefore run through `bun run check:links` after the normal internal-link audit. The enforced contracts and exact allowlist policy are documented in [I18N-ENFORCEMENT.md](I18N-ENFORCEMENT.md).
+The source-level catalog, content and hardcoded-copy checks are mandatory parts of `bun run check`. Generated locale routes require fresh build output and run through `bun run check:links`. See [I18N-ENFORCEMENT.md](I18N-ENFORCEMENT.md).
 
 ### Browser test depth
 
-- `test`, `test:local`, `test:e2e:desktop` and `test:e2e:extended` intentionally cover progressively broader browser/device matrices.
+- `test`, `test:local`, `test:e2e:desktop` and `test:e2e:extended` cover progressively broader browser/device matrices.
 - `test:ui` and `test:debug` are interactive diagnostics.
-- `test:e2e:visual` is a fast host-sensitive comparison; `test:e2e:visual:docker` is the reproducible merge-grade visual gate.
-- `test:snapshots` and `test:snapshots:all` modify visual baselines and must be used only for deliberate, reviewed updates.
-
-### Performance and bundle diagnostics
-
-- `lighthouse` runs the complete Lighthouse CI flow; `lighthouse:collect` and `lighthouse:assert` expose its phases for diagnosis.
-- `performance:check` is the blocking route-budget gate.
-- `bundle:analyze` creates the emitted-file report; `bundle:visualize` additionally enables the Rollup treemap.
-
-### VS Code Dev Container workflow
-
-From **Run and Debug**, select **Portfolio: Dev Server + Browser**. VS Code starts `bun run dev`, waits for Astro and opens the fixed forwarded URL `http://localhost:4321` in the host browser.
-
-Useful tasks are available through **Tasks: Run Task**, including quality checks, build, unit tests, Playwright smoke tests and the report server. **Portfolio: Serve Playwright Report** serves the report on forwarded port `9323`; **Portfolio: Open Playwright Report** opens it in the host browser.
+- `test:e2e:visual` is a host-sensitive comparison; `test:e2e:visual:docker` is the reproducible merge-grade visual gate.
+- `test:snapshots` and `test:snapshots:all` modify baselines and are only for deliberate reviewed updates.
+- `screenshots:design-system` captures paired base/head Portfolio Retro evidence when both built checkouts are available.
 
 ## Repository quality
 
@@ -72,15 +58,13 @@ Useful tasks are available through **Tasks: Run Task**, including quality checks
 bun run check
 ```
 
-`check` runs repository-wide Prettier validation, active-document link validation, Dev Container contract validation, source-level i18n enforcement, ESLint, the Feature-Sliced Design boundary checker, Astro diagnostics and strict tooling type-checking.
+`check` runs Prettier validation, documentation links, Dev Container contracts, source-level i18n enforcement, ESLint, Feature-Sliced Design boundaries, Astro diagnostics and strict tooling type-checking.
 
 Documentation links can also be checked independently:
 
 ```bash
 bun run check:docs
 ```
-
-The documentation checker validates maintained Markdown and the archive indexes. Frozen historical report bodies are excluded because their point-in-time references are intentionally preserved.
 
 ## Unit tests
 
@@ -90,7 +74,7 @@ bun run test:unit:coverage
 bun run test:unit:ui
 ```
 
-Coverage thresholds apply only to the risk-based pure-unit scope in [testing/UNIT-COVERAGE.md](testing/UNIT-COVERAGE.md), not the complete Astro repository.
+The design-system contract suite verifies token-layer order, required aliases, contrast pairs, representative component migration, terminal literal removal, logo roles and inventory classifications. Coverage thresholds remain limited to the risk-based pure-unit scope in [testing/UNIT-COVERAGE.md](testing/UNIT-COVERAGE.md).
 
 ## Playwright
 
@@ -105,20 +89,30 @@ bun run test:ui
 bun run test:debug
 ```
 
-- `test:e2e:smoke` checks critical English and Spanish routes in Chromium, blocks serious or critical Axe violations and runs the mandatory bilingual route matrix.
-- `test:e2e:report` serves the latest local HTML report on forwarded `http://localhost:9323` from the rebuilt Dev Container.
+- `test:e2e:smoke` checks critical English and Spanish routes in Chromium, computed Portfolio Retro colors, primary-button contrast, CLI keyboard behavior, Splash dismissal and serious/critical Axe violations.
 - `test:e2e:desktop` runs Chromium, Firefox and WebKit.
 - `test:e2e:extended` adds Mobile Chrome and Mobile Safari.
-- `test:e2e:visual` runs maintained Chromium, Firefox and Mobile Chrome snapshots directly on the host. Use it for fast diagnostics when the host matches the baseline environment.
-- `test:e2e:visual:docker` is the merge-grade local Linux comparison. It builds the pinned Ubuntu 24.04 Playwright image, pins Bun to the repository version, enables CI-style single-worker execution and compares the maintained snapshots without update mode.
+- `test:e2e:visual` runs maintained Chromium, Firefox and Mobile Chrome snapshots on the host.
+- `test:e2e:visual:docker` is the merge-grade Linux comparison using the pinned Playwright/Bun image.
 
-Screenshot rendering can vary with the host operating system, browser build, font stack, hardware and headless configuration. A native mismatch is not evidence that a committed baseline should be replaced when the same head passes in the pinned Docker and CI environments. Never run `--update-snapshots` merely to make a host-specific failure pass.
+Screenshot rendering can vary with the host operating system, browser build, font stack, hardware and headless configuration. Never update maintained snapshots merely to make a host-specific mismatch pass.
 
-The Docker visual command must finish with all 27 maintained tests passing and must leave `tests/e2e/visual.spec.ts-snapshots/` unchanged. The image version in `Dockerfile.test` must remain aligned with the resolved `@playwright/test` version in `bun.lock`.
+The Docker visual command must leave `tests/e2e/visual.spec.ts-snapshots/` unchanged. Any deliberate baseline update must be generated in the pinned environment and followed by a complete comparison without update mode.
 
-Any deliberate baseline update must be generated inside the same pinned Docker environment, limited to reviewed cases and followed by a complete `bun run test:e2e:visual:docker` run without update mode. Passing only the snapshot-update command is not validation.
+Playwright retains first-retry traces, failure screenshots and videos. CI uploads HTML, JSON and JUnit diagnostics even when tests fail.
 
-Playwright retains first-retry traces, failure screenshots and failure videos. CI uploads HTML, JSON and JUnit diagnostics even when tests fail.
+## Portfolio Retro before/after evidence
+
+The PR workflow builds the exact base SHA and downloads the exact head build, then runs:
+
+```bash
+DESIGN_SYSTEM_BEFORE_DIR=baseline \
+DESIGN_SYSTEM_AFTER_DIR=. \
+DESIGN_SYSTEM_EVIDENCE_DIR=design-system-evidence \
+bun run screenshots:design-system
+```
+
+The artifact contains paired captures for English/light desktop, Spanish/dark desktop, English/dark mobile, light 404, dark CLI and dark Splash. It is review evidence, not a replacement for smoke/Axe or maintained visual snapshots.
 
 ## Production build and generated links
 
@@ -127,7 +121,7 @@ bun run build
 bun run check:links
 ```
 
-`check:links` validates internal `href` and `src` references emitted into `dist/**/*.html`, then verifies generated locale, canonical, alternate and language-picker targets. External URLs are excluded so branch protection does not depend on third-party availability.
+`check:links` validates emitted internal `href`/`src` references and generated locale, canonical, alternate and language-picker targets.
 
 ## Lighthouse
 
@@ -146,7 +140,7 @@ bun run build
 bun run performance:check
 ```
 
-Configuration lives in `performance-budgets.json`; methodology lives in [PERFORMANCE.md](PERFORMANCE.md). The gate measures representative English and Spanish home, about, projects and blog routes.
+Configuration lives in `performance-budgets.json`; methodology lives in [PERFORMANCE.md](PERFORMANCE.md).
 
 ## Bundle inspection
 
@@ -156,8 +150,8 @@ bun run bundle:analyze
 bun run bundle:visualize
 ```
 
-`bundle:analyze` produces an informational emitted-file inventory. `bundle:visualize` explicitly enables the Rollup treemap; route budgets remain the blocking performance gate.
+`bundle:analyze` creates an informational emitted-file inventory. Route budgets remain the blocking performance gate.
 
 ## CI policy
 
-Validation depth follows the branch lifecycle rather than running every expensive suite on every feature PR. Workflow responsibilities, stable required-check names, cache policy and artifact retention are documented in [CI.md](CI.md).
+Validation depth follows the branch lifecycle. Workflow responsibilities, stable required-check names, cache policy and artifact retention are documented in [CI.md](CI.md).

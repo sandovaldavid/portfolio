@@ -4,30 +4,31 @@ English is the primary repository documentation language. Spanish is maintained 
 
 ## Active operational documentation
 
-| Document                                             | Owns                                                             |
-| ---------------------------------------------------- | ---------------------------------------------------------------- |
-| [README.md](../README.md)                            | Recruiter/developer overview, live resources and quick start     |
-| [README.es.md](../README.es.md)                      | Spanish repository overview                                      |
-| [AGENTS.md](../AGENTS.md)                            | Shared operating rules for human and AI contributors             |
-| [CONTRIBUTING.md](../CONTRIBUTING.md)                | Contribution workflow and pull-request expectations              |
-| [STATUS.md](STATUS.md)                               | Verified current state and status classification                 |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                   | Current FSD boundaries and executable architecture policy        |
-| [DEVCONTAINER.md](DEVCONTAINER.md)                   | Reproducible development environment and troubleshooting         |
-| [I18N.md](I18N.md)                                   | English/Spanish content ownership and localization rules         |
-| [I18N-CATALOGS.md](I18N-CATALOGS.md)                 | Current granular UI catalog and localized-content API            |
-| [I18N-METADATA.md](I18N-METADATA.md)                 | SEO, social, RSS, JSON-LD and accessibility metadata             |
-| [I18N-ENFORCEMENT.md](I18N-ENFORCEMENT.md)           | Executable locale parity, copy and route quality gates           |
-| [TESTING.md](TESTING.md)                             | Test strategy and local commands                                 |
-| [testing/UNIT-COVERAGE.md](testing/UNIT-COVERAGE.md) | Measured Vitest coverage scope                                   |
-| [CI.md](CI.md)                                       | Configured workflows, local evidence and automation availability |
-| [DELIVERY.md](DELIVERY.md)                           | Integration, promotion, production and release policy            |
-| [RESUME-DELIVERY.md](RESUME-DELIVERY.md)             | Canonical CV artifact provenance, validation and recovery        |
-| [TOOLCHAIN.md](TOOLCHAIN.md)                         | Runtime and dependency classification policy                     |
-| [PERFORMANCE.md](PERFORMANCE.md)                     | Route-budget methodology and loading contracts                   |
-| [STYLE-GUIDE.md](STYLE-GUIDE.md)                     | Maintained visual tokens, typography and semantic styling rules  |
-| [features-catalog.md](features-catalog.md)           | Current feature slices                                           |
-| [widgets-catalog.md](widgets-catalog.md)             | Current widget slices                                            |
-| [tools.md](tools.md)                                 | Maintained developer-tool usage notes                            |
+| Document                                                                                             | Owns                                                                        |
+| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| [README.md](../README.md)                                                                            | Recruiter/developer overview, live resources and quick start                |
+| [README.es.md](../README.es.md)                                                                      | Spanish repository overview                                                 |
+| [AGENTS.md](../AGENTS.md)                                                                            | Shared operating rules for human and AI contributors                        |
+| [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                | Contribution workflow and pull-request expectations                         |
+| [STATUS.md](STATUS.md)                                                                               | Verified current state and status classification                            |
+| [ARCHITECTURE.md](ARCHITECTURE.md)                                                                   | Current FSD boundaries and executable architecture policy                   |
+| [DEVCONTAINER.md](DEVCONTAINER.md)                                                                   | Reproducible development environment and troubleshooting                    |
+| [I18N.md](I18N.md)                                                                                   | English/Spanish content ownership and localization rules                    |
+| [I18N-CATALOGS.md](I18N-CATALOGS.md)                                                                 | Current granular UI catalog and localized-content API                       |
+| [I18N-METADATA.md](I18N-METADATA.md)                                                                 | SEO, social, RSS, JSON-LD and accessibility metadata                        |
+| [I18N-ENFORCEMENT.md](I18N-ENFORCEMENT.md)                                                           | Executable locale parity, copy and route quality gates                      |
+| [TESTING.md](TESTING.md)                                                                             | Test strategy and local commands                                            |
+| [testing/UNIT-COVERAGE.md](testing/UNIT-COVERAGE.md)                                                 | Measured Vitest coverage scope                                              |
+| [CI.md](CI.md)                                                                                       | Configured workflows, local evidence and automation availability            |
+| [DELIVERY.md](DELIVERY.md)                                                                           | Integration, promotion, production and release policy                       |
+| [RESUME-DELIVERY.md](RESUME-DELIVERY.md)                                                             | Canonical CV artifact provenance, validation and recovery                   |
+| [TOOLCHAIN.md](TOOLCHAIN.md)                                                                         | Runtime and dependency classification policy                                |
+| [PERFORMANCE.md](PERFORMANCE.md)                                                                     | Route-budget methodology and loading contracts                              |
+| [STYLE-GUIDE.md](STYLE-GUIDE.md)                                                                     | Maintained visual tokens, typography and semantic styling rules             |
+| [design-system/portfolio-retro-color-inventory.md](design-system/portfolio-retro-color-inventory.md) | Portfolio Retro color layers, production migration inventory and exceptions |
+| [features-catalog.md](features-catalog.md)                                                           | Current feature slices                                                      |
+| [widgets-catalog.md](widgets-catalog.md)                                                             | Current widget slices                                                       |
+| [tools.md](tools.md)                                                                                 | Maintained developer-tool usage notes                                       |
 
 Catalogs describe current slices but do not redefine architecture rules.
 

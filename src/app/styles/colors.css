@@ -7,6 +7,7 @@
 	--font-retro-tag: 'Silkscreen', monospace;
 	--font-gaming-mono: 'Share Tech Mono', monospace;
 
+	/* Identity Core primitives */
 	--color-primary-50: #f0f7ff;
 	--color-primary-100: #e0effe;
 	--color-primary-200: #bae0fd;
@@ -33,84 +34,222 @@
 
 	--color-success-500: #00e676;
 	--color-success-900: #1b5e20;
-
 	--color-warning-500: #ffc107;
 	--color-warning-900: #ff6f00;
-
 	--color-error-500: #ff1744;
 	--color-error-900: #b71c1c;
 
-	/* Light mode colors */
+	/*
+	 * Restricted Portfolio Retro primitives.
+	 * These are channel accents, not a second brand palette.
+	 */
+	--color-retro-cyan: #00b0ff;
+	--color-retro-cyan-bright: #00d8ff;
+	--color-retro-phosphor: #00ff88;
+
+	/* Mode primitives */
 	--color-background-light: #f5f8fc;
 	--color-surface-light: #ffffff;
 	--color-surface-highlight-light: #e8eef9;
-
 	--color-content-strong-light: #0f172a;
 	--color-content-light: #334155;
 	--color-content-muted-light: #475569;
-
 	--color-edge-subtle-light: #cbd5e1;
 	--color-edge-strong-light: #0f172a;
 
-	/* Dark mode colors */
 	--color-background-dark: #020408;
 	--color-surface-dark: #0a0d14;
 	--color-surface-highlight-dark: #141b29;
-
 	--color-content-strong-dark: #f1f5f9;
 	--color-content-dark: #cbd5e1;
 	--color-content-muted-dark: #94a3b8;
-
 	--color-edge-subtle-dark: #1e293b;
 	--color-edge-strong-dark: #cbd5e1;
 
-	/* Semantic tokens with light-dark() */
-	--color-background: light-dark(var(--color-background-light), var(--color-background-dark));
-	--color-surface: light-dark(var(--color-surface-light), var(--color-surface-dark));
-	--color-surface-highlight: light-dark(
+	/* Shared semantic roles */
+	--color-semantic-background-canvas: light-dark(
+		var(--color-background-light),
+		var(--color-background-dark)
+	);
+	--color-semantic-surface-default: light-dark(
+		var(--color-surface-light),
+		var(--color-surface-dark)
+	);
+	--color-semantic-surface-highlight: light-dark(
 		var(--color-surface-highlight-light),
 		var(--color-surface-highlight-dark)
 	);
-
-	--color-content-strong: light-dark(
+	--color-semantic-content-strong: light-dark(
 		var(--color-content-strong-light),
 		var(--color-content-strong-dark)
 	);
-	--color-content: light-dark(var(--color-content-light), var(--color-content-dark));
-	--color-content-muted: light-dark(
+	--color-semantic-content-default: light-dark(
+		var(--color-content-light),
+		var(--color-content-dark)
+	);
+	--color-semantic-content-muted: light-dark(
 		var(--color-content-muted-light),
 		var(--color-content-muted-dark)
 	);
+	--color-semantic-edge-default: light-dark(
+		var(--color-edge-strong-light),
+		var(--color-edge-strong-dark)
+	);
+	--color-semantic-edge-subtle: light-dark(
+		var(--color-edge-subtle-light),
+		var(--color-edge-subtle-dark)
+	);
+	--color-semantic-accent-primary: light-dark(var(--color-primary-500), var(--color-retro-cyan));
+	--color-semantic-accent-primary-hover: light-dark(
+		var(--color-primary-600),
+		var(--color-primary-300)
+	);
+	--color-semantic-accent-secondary: light-dark(
+		var(--color-primary-400),
+		var(--color-retro-cyan-bright)
+	);
+	--color-semantic-status-success: var(--color-success-500);
+	--color-semantic-status-warning: var(--color-warning-500);
+	--color-semantic-status-error: var(--color-error-500);
 
-	--color-edge-subtle: light-dark(var(--color-edge-subtle-light), var(--color-edge-subtle-dark));
-	--color-edge-strong: light-dark(var(--color-edge-strong-light), var(--color-edge-strong-dark));
-
-	/* Custom accessibility & retro status colors */
-	--color-banner-border: light-dark(rgba(10, 92, 214, 0.6), rgba(0, 216, 255, 0.6));
-	--color-banner-text: light-dark(var(--color-primary-600), var(--color-primary-400));
-
-	--color-badge-brand-bg: light-dark(rgba(10, 92, 214, 0.1), rgba(0, 176, 255, 0.15));
-	--color-badge-brand-bg-hover: light-dark(rgba(10, 92, 214, 0.2), rgba(0, 176, 255, 0.25));
-	--color-badge-brand-text: light-dark(var(--color-primary-600), var(--color-primary-400));
-
-	--color-badge-brand-outline-border: light-dark(rgba(10, 92, 214, 0.4), rgba(0, 176, 255, 0.4));
-	--color-badge-brand-outline-bg-hover: light-dark(
-		rgba(10, 92, 214, 0.1),
-		rgba(0, 176, 255, 0.1)
+	/* Portfolio Retro channel aliases */
+	--color-channel-background-canvas: var(--color-semantic-background-canvas);
+	--color-channel-surface-default: var(--color-semantic-surface-default);
+	--color-channel-surface-highlight: var(--color-semantic-surface-highlight);
+	--color-channel-content-strong: var(--color-semantic-content-strong);
+	--color-channel-content-default: var(--color-semantic-content-default);
+	--color-channel-content-muted: var(--color-semantic-content-muted);
+	--color-channel-edge-default: var(--color-semantic-edge-default);
+	--color-channel-edge-subtle: var(--color-semantic-edge-subtle);
+	--color-channel-accent-primary: var(--color-semantic-accent-primary);
+	--color-channel-accent-primary-hover: var(--color-semantic-accent-primary-hover);
+	--color-channel-accent-secondary: var(--color-semantic-accent-secondary);
+	--color-channel-status-online: var(--color-retro-phosphor);
+	--color-channel-status-success: var(--color-semantic-status-success);
+	--color-channel-status-warning: var(--color-semantic-status-warning);
+	--color-channel-status-error: var(--color-semantic-status-error);
+	--color-channel-overlay: color-mix(in srgb, var(--color-neutral-950) 88%, transparent);
+	--color-channel-hero-glow: light-dark(
+		color-mix(in srgb, var(--color-primary-500) 6%, transparent),
+		color-mix(in srgb, var(--color-retro-cyan) 14%, transparent)
 	);
 
-	--color-status-success-bg: light-dark(rgba(16, 185, 129, 0.05), rgba(16, 185, 129, 0.1));
-	--color-status-success-border: light-dark(rgba(16, 185, 129, 0.4), rgba(16, 185, 129, 0.6));
+	/* Portfolio-only terminal roles */
+	--color-channel-portfolio-terminal-background: var(--color-neutral-950);
+	--color-channel-portfolio-terminal-surface: #0a0a0a;
+	--color-channel-portfolio-terminal-surface-raised: #111111;
+	--color-channel-portfolio-terminal-content: #f8fafc;
+	--color-channel-portfolio-terminal-content-muted: color-mix(
+		in srgb,
+		var(--color-channel-portfolio-terminal-content) 58%,
+		transparent
+	);
+	--color-channel-portfolio-terminal-cyan: var(--color-retro-cyan);
+	--color-channel-portfolio-terminal-cyan-bright: var(--color-retro-cyan-bright);
+	--color-channel-portfolio-terminal-phosphor: var(--color-retro-phosphor);
+	--color-channel-portfolio-terminal-grid: color-mix(
+		in srgb,
+		var(--color-retro-cyan) 5%,
+		transparent
+	);
+	--color-channel-portfolio-terminal-error: var(--color-semantic-status-error);
+	--color-channel-portfolio-terminal-warning: var(--color-semantic-status-warning);
+
+	/* Backward-compatible semantic aliases */
+	--color-background: var(--color-channel-background-canvas);
+	--color-surface: var(--color-channel-surface-default);
+	--color-surface-highlight: var(--color-channel-surface-highlight);
+	--color-content-strong: var(--color-channel-content-strong);
+	--color-content: var(--color-channel-content-default);
+	--color-content-muted: var(--color-channel-content-muted);
+	--color-edge-strong: var(--color-channel-edge-default);
+	--color-edge-subtle: var(--color-channel-edge-subtle);
+
+	/* Component roles */
+	--color-button-primary-background: var(--color-channel-accent-primary);
+	--color-button-primary-background-hover: var(--color-channel-accent-primary-hover);
+	--color-button-primary-content: light-dark(#ffffff, var(--color-neutral-950));
+	--color-button-secondary-background: var(--color-channel-surface-highlight);
+	--color-button-secondary-background-hover: light-dark(
+		var(--color-neutral-200),
+		var(--color-neutral-700)
+	);
+	--color-button-secondary-content: var(--color-channel-content-strong);
+	--color-button-border: var(--color-channel-edge-default);
+	--color-button-focus: var(--color-channel-accent-secondary);
+
+	--color-logo-content: var(--color-channel-content-strong);
+	--color-logo-primary: light-dark(var(--color-primary-500), #3b82f6);
+	--color-logo-primary-hover: var(--color-channel-accent-secondary);
+	--color-logo-effect-magenta: #ff0055;
+	--color-logo-effect-cyan: #00ffaa;
+
+	--color-theme-control-background-hover: var(--color-channel-surface-highlight);
+	--color-theme-menu-background: color-mix(
+		in srgb,
+		var(--color-channel-surface-default) 95%,
+		transparent
+	);
+	--color-theme-menu-border: color-mix(
+		in srgb,
+		var(--color-channel-edge-subtle) 50%,
+		transparent
+	);
+	--color-theme-option-background-hover: light-dark(
+		var(--color-neutral-200),
+		var(--color-neutral-700)
+	);
+
+	/* Maintained status and badge roles */
+	--color-banner-border: color-mix(
+		in srgb,
+		var(--color-channel-accent-secondary) 60%,
+		transparent
+	);
+	--color-banner-text: var(--color-channel-accent-primary-hover);
+	--color-badge-brand-bg: color-mix(
+		in srgb,
+		var(--color-channel-accent-primary) 12%,
+		transparent
+	);
+	--color-badge-brand-bg-hover: color-mix(
+		in srgb,
+		var(--color-channel-accent-primary) 22%,
+		transparent
+	);
+	--color-badge-brand-text: var(--color-channel-accent-primary-hover);
+	--color-badge-brand-outline-border: color-mix(
+		in srgb,
+		var(--color-channel-accent-primary) 40%,
+		transparent
+	);
+	--color-badge-brand-outline-bg-hover: color-mix(
+		in srgb,
+		var(--color-channel-accent-primary) 10%,
+		transparent
+	);
+	--color-status-success-bg: color-mix(
+		in srgb,
+		var(--color-channel-status-success) 8%,
+		transparent
+	);
+	--color-status-success-border: color-mix(
+		in srgb,
+		var(--color-channel-status-success) 50%,
+		transparent
+	);
 	--color-status-success-text: light-dark(#065f46, #34d399);
 
-	/* Retro 3D offset shadow scale */
-	--shadow-retro-xs: 1px 1px 0px 0px var(--color-edge-strong);
-	--shadow-retro-sm: 1.5px 1.5px 0px 0px var(--color-edge-strong);
-	--shadow-retro-md: 3px 3px 0px 0px var(--color-edge-strong);
-	--shadow-retro-lg: 4px 4px 0px 0px var(--color-edge-strong);
-	--shadow-retro-xl: 5px 5px 0px 0px var(--color-edge-strong);
-	--shadow-retro-2xl: 6px 6px 0px 0px var(--color-edge-strong);
-	--shadow-retro-3xl: 8px 8px 0px 0px var(--color-edge-strong);
+	/* Effect roles */
+	--shadow-retro-xs: 1px 1px 0px 0px var(--color-channel-edge-default);
+	--shadow-retro-sm: 1.5px 1.5px 0px 0px var(--color-channel-edge-default);
+	--shadow-retro-md: 3px 3px 0px 0px var(--color-channel-edge-default);
+	--shadow-retro-lg: 4px 4px 0px 0px var(--color-channel-edge-default);
+	--shadow-retro-xl: 5px 5px 0px 0px var(--color-channel-edge-default);
+	--shadow-retro-2xl: 6px 6px 0px 0px var(--color-channel-edge-default);
+	--shadow-retro-3xl: 8px 8px 0px 0px var(--color-channel-edge-default);
+	--shadow-terminal-glow: 0 0 30px
+		color-mix(in srgb, var(--color-channel-portfolio-terminal-cyan) 35%, transparent);
 
 	/* Pixel-grid spacing scale (4px increments) */
 	--space-1: 0.25rem;
@@ -126,7 +265,6 @@
 	--space-20: 5rem;
 	--space-24: 6rem;
 
-	/* Animaciones Standard */
 	--animate-fade-in: fade-in 0.4s ease-out forwards;
 	--animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
@@ -138,6 +276,7 @@
 			opacity: 1;
 		}
 	}
+
 	@keyframes slide-up {
 		from {
 			opacity: 0;
@@ -159,19 +298,15 @@
 }
 
 body {
-	background-color: var(--color-background);
-	color: var(--color-content);
+	background-color: var(--color-channel-background-canvas);
+	color: var(--color-channel-content-default);
 	-webkit-font-smoothing: antialiased;
 }
 
 .hero-gradient {
 	background: radial-gradient(
 		circle at 50% 0%,
-		rgba(10, 92, 214, 0.06) 0%,
-		rgba(245, 248, 252, 0) 50%
+		var(--color-channel-hero-glow) 0%,
+		transparent 50%
 	);
-}
-
-:root.dark .hero-gradient {
-	background: radial-gradient(circle at 50% 0%, rgba(0, 176, 255, 0.14) 0%, rgba(2, 4, 8, 0) 50%);
 }
