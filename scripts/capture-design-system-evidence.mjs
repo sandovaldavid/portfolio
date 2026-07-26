@@ -93,11 +93,11 @@ const scenarios = [
 		prepare: async page => {
 			await page.waitForFunction(
 				() =>
-					typeof (/** @type {Window & { __openCLI?: unknown }} */ (window).__openCLI) ===
+					typeof (/** @type {Window & { __openCLI?: unknown }} */ (globalThis).__openCLI) ===
 					'function'
 			);
 			await page.evaluate(() => {
-				/** @type {Window & { __openCLI?: () => void }} */ (window).__openCLI?.();
+				/** @type {Window & { __openCLI?: () => void }} */ (globalThis).__openCLI?.();
 			});
 			await page.locator('#cli-overlay').waitFor({ state: 'visible' });
 		},
