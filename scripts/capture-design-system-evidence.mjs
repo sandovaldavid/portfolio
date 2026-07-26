@@ -93,8 +93,9 @@ const scenarios = [
 		prepare: async page => {
 			await page.waitForFunction(
 				() =>
-					typeof (/** @type {Window & { __openCLI?: unknown }} */ (globalThis).__openCLI) ===
-					'function'
+					typeof (
+						/** @type {Window & { __openCLI?: unknown }} */ (globalThis).__openCLI
+					) === 'function'
 			);
 			await page.evaluate(() => {
 				/** @type {Window & { __openCLI?: () => void }} */ (globalThis).__openCLI?.();
