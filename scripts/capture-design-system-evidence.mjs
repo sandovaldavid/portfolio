@@ -3,14 +3,28 @@ import { mkdir } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { chromium } from '@playwright/test';
 
+/**
+ * @typedef {object} EvidenceScenario
+ * @property {string} name
+ * @property {string} path
+ * @property {'light' | 'dark'} theme
+ * @property {{ width: number, height: number }} viewport
+ * @property {(page: import('@playwright/test').Page) => Promise<void>} [prepare]
+ */
+
 const beforeDirectory = resolve(process.env.DESIGN_SYSTEM_BEFORE_DIR ?? 'baseline');
 const afterDirectory = resolve(process.env.DESIGN_SYSTEM_AFTER_DIR ?? '.');
 const outputDirectory = resolve(process.env.DESIGN_SYSTEM_EVIDENCE_DIR ?? 'design-system-evidence');
 const beforeUrl = 'http://127.0.0.1:4322';
 const afterUrl = 'http://127.0.0.1:4323';
 
+/** @type {import('node:child_process').ChildProcess[]} */
 const servers = [];
 
+/**
+ * @param {string} directory
+ * @param {number} port
+ */
 function startPreview(directory, port) {
 	const server = spawn(
 		'bun',
@@ -27,8 +41,10 @@ function startPreview(directory, port) {
 	return server;
 }
 
+/** @param {string} url */
 async function waitForUrl(url) {
 	const deadline = Date.now() + 45_000;
+	/** @type {unknown} */
 	let lastError;
 	while (Date.now() < deadline) {
 		try {
@@ -43,6 +59,7 @@ async function waitForUrl(url) {
 	throw new Error(`Preview did not become ready: ${url}`, { cause: lastError });
 }
 
+/** @type {EvidenceScenario[]} */
 const scenarios = [
 	{
 		name: 'home-en-light-desktop',
@@ -89,6 +106,11 @@ const scenarios = [
 	},
 ];
 
+/**
+ * @param {import('@playwright/test').Browser} browser
+ * @param {'before' | 'after'} side
+ * @param {string} baseUrl
+ */
 async function captureSide(browser, side, baseUrl) {
 	for (const scenario of scenarios) {
 		const context = await browser.newContext({ viewport: scenario.viewport });
