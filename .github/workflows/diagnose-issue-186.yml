@@ -23,17 +23,19 @@ jobs:
               run: |
                   bun run format
                   git diff --binary > formatting.patch
-                  mkdir -p formatted
+                  mkdir -p formatted diagnostic
                   while IFS= read -r file; do
                     mkdir -p "formatted/$(dirname "$file")"
                     cp "$file" "formatted/$file"
                   done < <(git diff --name-only)
+                  cp --parents src/app/layouts/Layout.astro src/features/cli-terminal/model/runtime.ts diagnostic/
             - uses: actions/upload-artifact@v7
               with:
                   name: issue-186-formatted-files
                   path: |
                       formatting.patch
                       formatted/
+                      diagnostic/
                   if-no-files-found: error
                   retention-days: 1
 
@@ -55,13 +57,19 @@ jobs:
                   });
                   const excludedRoots = ['src/assets/'];
                   const excludedFiles = new Set(['src/app/styles/colors.css', 'src/app/styles/print.css']);
-                  const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/i;
+                  const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/gi;
                   const offenders = collect('src')
                     .filter(path => /\.(astro|css|ts|tsx|js|mjs)$/.test(path))
                     .map(path => relative('.', path).replaceAll('\\', '/'))
                     .filter(path => !excludedFiles.has(path))
                     .filter(path => !excludedRoots.some(root => path.startsWith(root)))
-                    .filter(path => rawColor.test(readFileSync(path, 'utf8')));
+                    .flatMap(path => {
+                      const lines = readFileSync(path, 'utf8').split('\n');
+                      return lines.flatMap((line, index) => {
+                        const matches = [...line.matchAll(rawColor)].map(match => match[0]);
+                        return matches.length ? [{ path, line: index + 1, matches, source: line.trim() }] : [];
+                      });
+                    });
                   console.log(JSON.stringify(offenders, null, 2));
                   EOF
             - name: Write Vitest JSON diagnostics
