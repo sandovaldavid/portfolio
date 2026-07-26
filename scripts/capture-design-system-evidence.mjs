@@ -92,13 +92,11 @@ const scenarios = [
 		viewport: { width: 1280, height: 900 },
 		prepare: async page => {
 			await page.waitForFunction(
-				() =>
-					typeof (
-						/** @type {Window & { __openCLI?: unknown }} */ (globalThis).__openCLI
-					) === 'function'
+				() => typeof Reflect.get(globalThis, '__openCLI') === 'function'
 			);
 			await page.evaluate(() => {
-				/** @type {Window & { __openCLI?: () => void }} */ (globalThis).__openCLI?.();
+				const openCli = Reflect.get(globalThis, '__openCLI');
+				if (typeof openCli === 'function') openCli();
 			});
 			await page.locator('#cli-overlay').waitFor({ state: 'visible' });
 		},
