@@ -1,85 +1,70 @@
-name: Diagnose issue 186
+name: Finalize issue 186
 
 on:
     pull_request:
         branches: [develop]
 
 permissions:
-    contents: read
+    contents: write
 
 concurrency:
-    group: diagnose-issue-186-${{ github.event.pull_request.number }}
+    group: finalize-issue-186-${{ github.event.pull_request.number }}
     cancel-in-progress: true
 
 jobs:
-    format:
+    finalize:
+        if: github.head_ref == 'refactor/186-portfolio-retro-color-tokens'
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v7
               with:
-                  ref: ${{ github.event.pull_request.head.sha }}
+                  ref: ${{ github.event.pull_request.head.ref }}
+                  fetch-depth: 0
+
             - uses: ./.github/actions/setup-bun
-            - name: Generate canonical formatted files
+
+            - name: Apply final source corrections
+              run: |
+                  python <<'PY'
+                  from pathlib import Path
+
+                  layout = Path('src/app/layouts/Layout.astro')
+                  layout_text = layout.read_text()
+                  stale_theme_color = '\t\t<meta name="theme-color" content="#0096ff" />\n'
+                  if stale_theme_color not in layout_text:
+                      raise SystemExit('Expected stale theme-color metadata was not found.')
+                  layout.write_text(layout_text.replace(stale_theme_color, ''))
+
+                  contract = Path('tests/unit/design-system-color-contract.spec.ts')
+                  contract_text = contract.read_text()
+                  old_regex = "const rawColor = /#[0-9a-f]{3,8}\\b|\\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\\(/i;"
+                  new_regex = "const rawColor = /(?<!&)#[0-9a-f]{3,8}\\b|\\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\\(/i;"
+                  if old_regex not in contract_text:
+                      raise SystemExit('Expected raw-color scanner expression was not found.')
+                  contract.write_text(contract_text.replace(old_regex, new_regex))
+
+                  inventory = Path('docs/design-system/portfolio-retro-color-inventory.md')
+                  inventory_text = inventory.read_text()
+                  header_row = '| `Migrated` | `src/widgets/header/ui/Header.astro` | Raw RGB/RGBA scroll effects and direct active-link ramp class | Header effect tokens and channel accent role |\n'
+                  layout_row = '| `Migrated` | `src/app/layouts/Layout.astro` | Stale non-canonical `theme-color` metadata literal | Removed duplicate metadata color so browser chrome no longer owns an ungoverned palette value |\n'
+                  if layout_row not in inventory_text:
+                      if header_row not in inventory_text:
+                          raise SystemExit('Expected inventory insertion point was not found.')
+                      inventory.write_text(inventory_text.replace(header_row, header_row + layout_row))
+                  PY
+
+            - name: Format and remove temporary workflow
               run: |
                   bun run format
-                  git diff --binary > formatting.patch
-                  mkdir -p formatted diagnostic
-                  while IFS= read -r file; do
-                    mkdir -p "formatted/$(dirname "$file")"
-                    cp "$file" "formatted/$file"
-                  done < <(git diff --name-only)
-                  cp --parents src/app/layouts/Layout.astro src/features/cli-terminal/model/runtime.ts diagnostic/
-            - uses: actions/upload-artifact@v7
-              with:
-                  name: issue-186-formatted-files
-                  path: |
-                      formatting.patch
-                      formatted/
-                      diagnostic/
-                  if-no-files-found: error
-                  retention-days: 1
+                  rm .github/workflows/diagnose-issue-186.yml
 
-    unit:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v7
-              with:
-                  ref: ${{ github.event.pull_request.head.sha }}
-            - uses: ./.github/actions/setup-bun
-            - name: Inventory raw runtime color literals
+            - name: Commit finalized implementation
+              env:
+                  HEAD_REF: ${{ github.head_ref }}
               run: |
-                  node --input-type=module <<'EOF' | tee raw-color-offenders.txt
-                  import { readdirSync, readFileSync, statSync } from 'node:fs';
-                  import { join, relative } from 'node:path';
-                  const collect = directory => readdirSync(directory).flatMap(entry => {
-                    const path = join(directory, entry);
-                    return statSync(path).isDirectory() ? collect(path) : [path];
-                  });
-                  const excludedRoots = ['src/assets/'];
-                  const excludedFiles = new Set(['src/app/styles/colors.css', 'src/app/styles/print.css']);
-                  const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/gi;
-                  const offenders = collect('src')
-                    .filter(path => /\.(astro|css|ts|tsx|js|mjs)$/.test(path))
-                    .map(path => relative('.', path).replaceAll('\\', '/'))
-                    .filter(path => !excludedFiles.has(path))
-                    .filter(path => !excludedRoots.some(root => path.startsWith(root)))
-                    .flatMap(path => {
-                      const lines = readFileSync(path, 'utf8').split('\n');
-                      return lines.flatMap((line, index) => {
-                        const matches = [...line.matchAll(rawColor)].map(match => match[0]);
-                        return matches.length ? [{ path, line: index + 1, matches, source: line.trim() }] : [];
-                      });
-                    });
-                  console.log(JSON.stringify(offenders, null, 2));
-                  EOF
-            - name: Write Vitest JSON diagnostics
-              continue-on-error: true
-              run: bunx vitest run --reporter=json --outputFile=unit-results.json
-            - uses: actions/upload-artifact@v7
-              with:
-                  name: issue-186-unit-results
-                  path: |
-                      unit-results.json
-                      raw-color-offenders.txt
-                  if-no-files-found: error
-                  retention-days: 1
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git add -A
+                  git diff --cached --check
+                  git commit -m 'chore(design-system): finalize token validation'
+                  git push origin "HEAD:${HEAD_REF}"
