@@ -91,6 +91,11 @@ const scenarios = [
 		theme: 'dark',
 		viewport: { width: 1280, height: 900 },
 		prepare: async page => {
+			await page.waitForFunction(
+				() =>
+					typeof /** @type {Window & { __openCLI?: unknown }} */ (window).__openCLI ===
+					'function'
+			);
 			await page.keyboard.press('Shift+;');
 			await page.locator('#cli-overlay').waitFor({ state: 'visible' });
 		},
