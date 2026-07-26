@@ -1,0 +1,33 @@
+name: Diagnose format issue 186
+
+on:
+    pull_request:
+        branches: [develop]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: diagnose-format-186-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    format:
+        if: github.head_ref == 'refactor/186-portfolio-retro-color-tokens'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+            - uses: ./.github/actions/setup-bun
+            - name: Format evidence script
+              run: |
+                  bun run format
+                  mkdir -p formatted/scripts
+                  cp scripts/capture-design-system-evidence.mjs formatted/scripts/
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: issue-186-formatted-evidence
+                  path: formatted/
+                  if-no-files-found: error
+                  retention-days: 1
