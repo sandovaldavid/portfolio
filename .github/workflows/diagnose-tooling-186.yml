@@ -24,7 +24,7 @@ jobs:
               continue-on-error: true
               run: |
                   set -o pipefail
-                  bun run check:tooling 2>&1 | tee tooling-output.txt
+                  bun run typecheck:tooling 2>&1 | tee tooling-output.txt
             - uses: actions/upload-artifact@v7
               with:
                   name: issue-186-tooling-output
