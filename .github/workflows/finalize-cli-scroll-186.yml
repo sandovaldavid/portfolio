@@ -1,0 +1,61 @@
+name: Finalize CLI scroll accessibility 186
+
+on:
+    pull_request:
+        branches: [develop]
+
+permissions:
+    contents: write
+
+concurrency:
+    group: finalize-cli-scroll-186-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    finalize:
+        if: github.head_ref == 'refactor/186-portfolio-retro-color-tokens'
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.ref }}
+                  fetch-depth: 0
+
+            - uses: ./.github/actions/setup-bun
+
+            - name: Make terminal output keyboard accessible
+              run: |
+                  python <<'PY'
+                  from pathlib import Path
+
+                  path = Path('src/features/cli-terminal/ui/CLITerminalCatalog.astro')
+                  text = path.read_text()
+                  old = '''\t\t\t\t<div
+\t\t\t\t\tid="cli-output"
+\t\t\t\t\tclass="h-96 overflow-y-auto p-4 space-y-0.5"
+\t\t\t\t\taria-live="polite"'''
+                  new = '''\t\t\t\t<div
+\t\t\t\t\tid="cli-output"
+\t\t\t\t\ttabindex="0"
+\t\t\t\t\tclass="h-96 overflow-y-auto p-4 space-y-0.5"
+\t\t\t\t\taria-live="polite"'''
+                  if text.count(old) != 1:
+                      raise SystemExit('Expected CLI output block was not found exactly once.')
+                  path.write_text(text.replace(old, new))
+                  PY
+
+            - name: Format and remove temporary workflow
+              run: |
+                  bun run format
+                  rm .github/workflows/finalize-cli-scroll-186.yml
+
+            - name: Commit terminal accessibility fix
+              env:
+                  HEAD_REF: ${{ github.head_ref }}
+              run: |
+                  git config user.name 'github-actions[bot]'
+                  git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+                  git add -A
+                  git diff --cached --check
+                  git commit -m 'fix(cli): expose scroll output to keyboard users'
+                  git push origin "HEAD:${HEAD_REF}"
