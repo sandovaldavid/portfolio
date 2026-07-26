@@ -1,0 +1,48 @@
+name: Diagnose issue 186
+
+on:
+    pull_request:
+        branches: [develop]
+
+permissions:
+    contents: read
+
+concurrency:
+    group: diagnose-issue-186-${{ github.event.pull_request.number }}
+    cancel-in-progress: true
+
+jobs:
+    format:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+            - uses: ./.github/actions/setup-bun
+            - name: Generate canonical formatting patch
+              run: |
+                  bun run format
+                  git diff --binary > formatting.patch
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: issue-186-formatting-patch
+                  path: formatting.patch
+                  if-no-files-found: error
+                  retention-days: 1
+
+    unit:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+            - uses: ./.github/actions/setup-bun
+            - name: Write Vitest JSON diagnostics
+              continue-on-error: true
+              run: bunx vitest run --reporter=json --outputFile=unit-results.json
+            - uses: actions/upload-artifact@v7
+              with:
+                  name: issue-186-unit-results
+                  path: unit-results.json
+                  if-no-files-found: error
+                  retention-days: 1
