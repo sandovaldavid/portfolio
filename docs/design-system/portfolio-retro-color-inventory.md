@@ -64,6 +64,8 @@ The primary interactive pairs are fixed at:
 - Dark default: `#00B0FF` with `#020408` content, above WCAG AA for normal text.
 - Dark hover: `#00D8FF` with `#020408` content, above WCAG AA for normal text.
 
+Text-bearing elements must preserve accessible computed contrast throughout their complete rendered state. Do not animate opacity on an entire text badge; animate a separate decorative indicator instead. Small terminal metadata uses full cyan or the `channel-portfolio-terminal-content-muted` role rather than opacity modifiers.
+
 Unit tests validate the reference contrast ratios. Browser tests compare computed component colors against resolved CSS custom properties in English/light and Spanish/dark routes, avoiding assumptions about whether a browser serializes OKLCH as `oklch()` or `rgb()`.
 
 ## Validation and evidence
