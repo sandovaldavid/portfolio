@@ -1,58 +1,69 @@
 # Portfolio Retro color inventory
 
-This document owns the production inventory for the `portfolio-v1` color architecture. It separates the reusable Identity Core from the Portfolio Retro channel and records every intentional exception that remains outside semantic aliases.
+This document owns the current production inventory for the `portfolio-v1` color architecture. Figma remains the authority for designed intent; `src/app/styles/colors.css` is the authority for implemented behavior; Cortex-L7 owns durable decisions, investigation history and handoffs.
 
 ## Canonical architecture
 
 ```text
-Identity Core primitives
-  -> shared semantic roles
-    -> Portfolio Retro channel aliases
-      -> component roles and maintained utilities
-        -> Astro and TypeScript consumers
+Figma sRGB reference + documented canonical OKLCH
+  -> production OKLCH primitive
+    -> shared semantic alias
+      -> Portfolio channel alias
+        -> component role or maintained utility
+          -> Astro and TypeScript consumer
 ```
 
-`src/app/styles/colors.css` is the canonical implementation. Components must consume the narrowest stable role available. A raw ramp step or hexadecimal value is not a component API.
+Production primitives use the canonical OKLCH values copied from the Figma Identity System in its documented sRGB working gamut. The hexadecimal values in comments and tests are provenance references, not an alternative production palette.
 
-## Channel aliases
+## Portfolio channel contract
 
-| Responsibility      | Canonical roles                                                                                                                                                 |
-| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Canvas and surfaces | `channel-background-canvas`, `channel-surface-default`, `channel-surface-highlight`                                                                             |
-| Content             | `channel-content-strong`, `channel-content-default`, `channel-content-muted`                                                                                    |
-| Edges               | `channel-edge-default`, `channel-edge-subtle`                                                                                                                   |
-| Accents             | `channel-accent-primary`, `channel-accent-primary-hover`, `channel-accent-secondary`                                                                            |
-| Status              | `channel-status-online`, `channel-status-success`, `channel-status-warning`, `channel-status-error`                                                             |
-| Terminal            | `channel-portfolio-terminal-background`, `surface`, `surface-raised`, `content`, `content-muted`, `cyan`, `cyan-bright`, `phosphor`, `grid`, `warning`, `error` |
-| Components          | `button-*`, `logo-*`, `theme-*`                                                                                                                                 |
+| Responsibility | Canonical roles |
+| --- | --- |
+| Canvas and surfaces | `channel-background-canvas`, `channel-surface-default`, `channel-surface-highlight` |
+| Content | `channel-content-strong`, `channel-content-default`, `channel-content-muted` |
+| Edges | `channel-edge-default`, `channel-edge-subtle` |
+| Accents | `channel-accent-primary`, `channel-accent-primary-hover`, `channel-accent-secondary` |
+| Status | `channel-status-online`, `channel-status-success`, `channel-status-warning`, `channel-status-error` |
+| Terminal | `channel-portfolio-terminal-background`, `surface`, `surface-raised`, `content`, `content-muted`, `cyan`, `cyan-bright`, `phosphor`, `grid`, `warning`, `error` |
+| Components | `button-*`, `logo-*`, `theme-*`, header effect roles and `shadow-retro-*` |
 
-`#00B0FF`, `#00D8FF` and `#00FF88` are governed Portfolio Retro primitives. The phosphor green remains a restricted terminal/status accent; it is not a second primary brand color.
+The cyan terminal values alias the dark-mode Identity Core primary primitives. Phosphor is a scoped Figma primitive for terminal and online-state expression. Neither creates a second brand palette.
 
 ## Production inventory
 
-| Classification          | Location                                                                             | Previous usage                                             | Current contract                                                                         |
-| ----------------------- | ------------------------------------------------------------------------------------ | ---------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `Migrated`              | `src/shared/ui/button/button.css`                                                    | Primary ramp utilities and literal offset shadows          | Button component roles and `--shadow-retro-*`                                            |
-| `Migrated`              | `src/widgets/header/ui/BrandLogo.astro`                                              | Primary ramp utilities and literal glitch colors           | Logo roles; approved dark base `#3B82F6`; reduced-motion fallback                        |
-| `Migrated`              | `src/widgets/recruiter-hud/ui/RecruiterHUD.astro`                                    | Primary/neutral ramp utilities                             | Button, channel surface, content and edge roles                                          |
-| `Migrated`              | `src/features/theme-toggle/ui/ThemeToggle.astro`                                     | Neutral ramp utilities                                     | Theme component roles and channel content roles                                          |
-| `Migrated`              | `src/features/splash-screen/ui/SplashScreen.astro`                                   | Terminal hex values and primary ramp hover                 | Named terminal and button roles                                                          |
-| `Migrated`              | `src/features/cli-terminal/ui/CLITerminalCatalog.astro`                              | Terminal hex values, raw status utilities and literal glow | Named terminal/status roles and `--shadow-terminal-glow`                                 |
-| `Migrated`              | `src/features/cli-terminal/model/runtime.ts`                                         | Dynamically generated raw color utilities                  | Static named terminal/status utilities                                                   |
-| `Migrated`              | `src/pages/404.astro`                                                                | Neutral canvas and primary ramp composition                | Channel canvas and accent aliases                                                        |
-| `Intentional exception` | `src/assets/technologies/React.astro` and other technology artwork                   | Vendor-owned brand colors such as React cyan               | Preserve source-brand fidelity; these values are asset content, not UI tokens            |
-| `Intentional exception` | Image, illustration and Open Graph assets                                            | Embedded pixels or SVG artwork colors                      | Governed by the asset source; not converted into CSS component tokens                    |
-| `Historical`            | `docs/reports/**` and frozen audit records                                           | Point-in-time raw values and findings                      | Preserve as evidence; do not treat as current implementation guidance                    |
-| `Follow-up`             | Remaining decorative gradient combinations outside the migrated high-impact surfaces | Tailwind ramp composition with no content/status meaning   | Review only when the owning component changes; do not broaden issue #186 into a redesign |
+| Classification | Location | Previous usage | Current contract |
+| --- | --- | --- | --- |
+| `Migrated` | `src/app/styles/colors.css` | HEX ramps, incomplete semantic layer and no Channel Theme layer | Figma-derived OKLCH primitives, semantic aliases, Portfolio channel aliases, component roles and compatibility aliases |
+| `Migrated` | `src/shared/ui/button/button.css` | Primary ramp utilities and literal offset shadows | Button component roles and `--shadow-retro-*`; light/dark default and hover pairs are contrast-gated |
+| `Migrated` | `src/widgets/header/ui/BrandLogo.astro` | Primary ramp utilities and literal glitch colors | Logo roles; approved dark bracket base maps to Identity Core `primary-400-light`; reduced-motion fallback retained |
+| `Migrated` | `src/widgets/header/ui/Header.astro` | Raw RGB/RGBA scroll effects and direct active-link ramp class | Header effect tokens and channel accent role |
+| `Migrated` | `src/widgets/recruiter-hud/ui/RecruiterHUD.astro` | Primary/neutral ramp utilities | Button, channel surface, content and edge roles |
+| `Migrated` | `src/features/theme-toggle/ui/ThemeToggle.astro` | Neutral ramp utilities | Theme component roles and channel content roles |
+| `Migrated` | `src/features/splash-screen/ui/SplashScreen.astro` | Terminal literals and primary ramp hover | Named terminal and button roles |
+| `Migrated` | `src/features/cli-terminal/ui/CLITerminalCatalog.astro` | Terminal literals, raw status utilities and literal glow | Named terminal/status roles and `--shadow-terminal-glow` |
+| `Migrated` | `src/features/cli-terminal/model/runtime.ts` | Dynamically generated raw color utilities | Static named terminal/status utilities |
+| `Migrated` | `src/pages/404.astro` | Neutral canvas and primary ramp composition | Portfolio channel canvas and accent aliases |
+| `Intentional exception` | `src/assets/**` | Vendor-owned or exported artwork colors | Preserve source artwork fidelity; assets are not component token APIs |
+| `Intentional exception` | `src/app/styles/print.css` | Black/white print-output literals | Preserve deterministic print output; excluded from runtime color-token enforcement |
+| `Historical` | Frozen audit and report records | Point-in-time literals and findings | Preserve as evidence; do not treat as current implementation guidance |
+| `Follow-up` | Remaining governed ramp utilities in low-risk editorial/decorative consumers | Direct Tailwind ramp utilities backed by the canonical primitive map | Migrate opportunistically to narrower roles when the owning component changes; do not broaden issue #186 into a redesign |
+
+## Provenance and duplicate policy
+
+Every production primitive in `colors.css` includes its approved sRGB reference beside the canonical OKLCH authoring value. Automated unit tests assert the full primitive map, layer order, unique custom-property declarations and the absence of raw HEX/RGB/HSL/OKLCH literals in runtime consumers.
+
+The only equal primitive value retained intentionally is Figma's separate `color/retro/phosphor` and `color/terminal/success` provenance. Consumer code still reaches these through semantic or channel aliases.
 
 ## Contrast contract
 
-The primary interactive hover pair is fixed at:
+The primary interactive pairs are fixed at:
 
-- Light mode: `#0044CC` with white content, approximately `7.78:1`.
-- Dark mode: `#7CC7FB` with `#020408` content, approximately `11.16:1`.
+- Light default: `#0A5CD6` with white content, above WCAG AA for normal text.
+- Light hover: `#0044CC` with white content, above WCAG AA for normal text.
+- Dark default: `#00B0FF` with `#020408` content, above WCAG AA for normal text.
+- Dark hover: `#00D8FF` with `#020408` content, above WCAG AA for normal text.
 
-Both exceed WCAG AA `4.5:1` for normal text. Automated unit and browser tests enforce the pair and verify the computed hover result in English/light and Spanish/dark routes.
+Unit tests validate the reference contrast ratios. Browser tests compare computed component colors against resolved CSS custom properties in English/light and Spanish/dark routes, avoiding assumptions about whether a browser serializes OKLCH as `oklch()` or `rgb()`.
 
 ## Validation and evidence
 
@@ -66,7 +77,7 @@ bun run test:e2e:smoke
 bun run screenshots:design-system
 ```
 
-The pull-request workflow creates a `portfolio-retro-color-evidence` artifact containing before/after captures from the exact pull-request base and head for:
+The pull-request workflow builds the exact base and head revisions and uploads a `portfolio-retro-color-evidence` before/after artifact for:
 
 - English light desktop home;
 - Spanish dark desktop home;
@@ -75,14 +86,15 @@ The pull-request workflow creates a `portfolio-retro-color-evidence` artifact co
 - dark CLI terminal;
 - dark retro splash.
 
-The smoke suite also verifies computed colors, contrast, terminal keyboard behavior, splash dismissal, English/Spanish routes and serious/critical Axe violations. Existing focus-visible and `prefers-reduced-motion` behavior remains mandatory.
+The smoke suite also verifies resolved roles, button hover contrast behavior, terminal keyboard behavior, splash dismissal, mobile focus handling, English/Spanish routes and serious/critical Axe violations. Existing `focus-visible` and `prefers-reduced-motion` behavior remains mandatory.
 
 ## Change rule
 
 Before adding a color to a component:
 
 1. reuse an existing component role;
-2. otherwise reuse a Portfolio Retro channel alias;
+2. otherwise reuse a Portfolio channel alias;
 3. otherwise reuse a shared semantic role;
-4. add a primitive only when no current primitive represents the approved visual value;
-5. document every remaining exception in this inventory.
+4. add a primitive only when Figma defines the approved visual value and no current primitive represents it;
+5. copy the documented canonical OKLCH value rather than converting it independently;
+6. document every remaining exception in this inventory.
