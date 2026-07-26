@@ -139,7 +139,7 @@ export function setupCliTerminal(): void {
 		command: 'text-channel-portfolio-terminal-content',
 		error: 'text-channel-portfolio-terminal-error',
 		info: 'text-channel-portfolio-terminal-cyan',
-		muted: 'text-channel-portfolio-terminal-content/40',
+		muted: 'text-channel-portfolio-terminal-content-muted',
 		warning: 'text-channel-portfolio-terminal-warning',
 	};
 
