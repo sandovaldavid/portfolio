@@ -120,9 +120,9 @@ const navItems = [
 					if (entry.isIntersecting) {
 						navLinks.forEach(link => {
 							if (link.dataset.sectionId === entry.target.id) {
-								link.classList.add('active', 'text-primary-500');
+								link.classList.add('active', 'text-channel-accent-primary');
 							} else {
-								link.classList.remove('active', 'text-primary-500');
+								link.classList.remove('active', 'text-channel-accent-primary');
 							}
 						});
 					}
@@ -167,32 +167,9 @@ const navItems = [
 			box-shadow: none;
 		}
 		to {
-			background: rgba(248, 250, 252, 0.78);
+			background: var(--color-header-surface-scrolled);
 			backdrop-filter: blur(14px);
-			box-shadow:
-				0 8px 24px -6px rgb(0 0 0 / 0.12),
-				0 6px 12px -6px rgb(0 0 0 / 0.14);
-		}
-	}
-
-	:global(.dark) .navbar-header {
-		animation: navbar-shadow-dark 1s linear both;
-		animation-timeline: scroll();
-		animation-range: 0 100px;
-	}
-
-	@keyframes navbar-shadow-dark {
-		0% {
-			background: transparent;
-			backdrop-filter: none;
-			box-shadow: none;
-		}
-		to {
-			background: rgba(15, 23, 42, 0.88);
-			backdrop-filter: blur(14px);
-			box-shadow:
-				0 8px 24px -6px rgb(0 0 0 / 0.45),
-				0 6px 12px -6px rgb(0 0 0 / 0.35);
+			box-shadow: var(--shadow-header-scrolled);
 		}
 	}
 </style>
