@@ -84,42 +84,96 @@
 	--color-background: light-dark(var(--color-base-background-light), var(--color-neutral-950));
 	--color-surface: light-dark(var(--color-base-white), var(--color-base-surface-dark));
 	--color-surface-light: var(--color-base-white);
-	--color-surface-highlight: light-dark(var(--color-base-surface-highlight-light), var(--color-base-surface-highlight-dark));
-	--color-content-strong: light-dark(var(--color-neutral-900), var(--color-base-content-strong-dark));
+	--color-surface-highlight: light-dark(
+		var(--color-base-surface-highlight-light),
+		var(--color-base-surface-highlight-dark)
+	);
+	--color-content-strong: light-dark(
+		var(--color-neutral-900),
+		var(--color-base-content-strong-dark)
+	);
 	--color-content: light-dark(var(--color-neutral-700), var(--color-neutral-300));
 	--color-content-muted: light-dark(var(--color-neutral-600), var(--color-neutral-400));
 	--color-edge-subtle: light-dark(var(--color-neutral-300), var(--color-neutral-800));
 	--color-edge-strong: light-dark(var(--color-neutral-900), var(--color-neutral-300));
-	--color-banner-border: light-dark(var(--alpha-primary-600-60-light), var(--alpha-primary-400-60-dark));
+	--color-banner-border: light-dark(
+		var(--alpha-primary-600-60-light),
+		var(--alpha-primary-400-60-dark)
+	);
 	--color-banner-text: light-dark(var(--color-primary-600-light), var(--color-primary-400-dark));
-	--color-badge-brand-bg: light-dark(var(--alpha-primary-500-10-light), var(--alpha-primary-500-15-dark));
-	--color-badge-brand-bg-hover: light-dark(var(--alpha-primary-500-20-light), var(--alpha-primary-500-25-dark));
-	--color-badge-brand-text: light-dark(var(--color-primary-600-light), var(--color-primary-400-dark));
-	--color-badge-brand-outline-border: light-dark(var(--alpha-primary-600-40-light), var(--alpha-primary-500-40-dark));
-	--color-badge-brand-outline-bg-hover: light-dark(var(--alpha-primary-500-10-light), var(--alpha-primary-500-10-dark));
-	--color-status-success-bg: light-dark(var(--alpha-success-05-light), var(--alpha-success-10-dark));
-	--color-status-success-border: light-dark(var(--alpha-success-40-light), var(--alpha-success-60-dark));
-	--color-status-success-text: light-dark(var(--color-base-status-success-text-light), var(--color-base-status-success-text-dark));
-	--color-hero-glow: light-dark(var(--alpha-primary-500-06-light), var(--alpha-primary-500-14-dark));
+	--color-badge-brand-bg: light-dark(
+		var(--alpha-primary-500-10-light),
+		var(--alpha-primary-500-15-dark)
+	);
+	--color-badge-brand-bg-hover: light-dark(
+		var(--alpha-primary-500-20-light),
+		var(--alpha-primary-500-25-dark)
+	);
+	--color-badge-brand-text: light-dark(
+		var(--color-primary-600-light),
+		var(--color-primary-400-dark)
+	);
+	--color-badge-brand-outline-border: light-dark(
+		var(--alpha-primary-600-40-light),
+		var(--alpha-primary-500-40-dark)
+	);
+	--color-badge-brand-outline-bg-hover: light-dark(
+		var(--alpha-primary-500-10-light),
+		var(--alpha-primary-500-10-dark)
+	);
+	--color-status-success-bg: light-dark(
+		var(--alpha-success-05-light),
+		var(--alpha-success-10-dark)
+	);
+	--color-status-success-border: light-dark(
+		var(--alpha-success-40-light),
+		var(--alpha-success-60-dark)
+	);
+	--color-status-success-text: light-dark(
+		var(--color-base-status-success-text-light),
+		var(--color-base-status-success-text-dark)
+	);
+	--color-hero-glow: light-dark(
+		var(--alpha-primary-500-06-light),
+		var(--alpha-primary-500-14-dark)
+	);
 	--color-terminal-primary: var(--color-primary-500-dark);
 	--color-terminal-glow: var(--alpha-primary-500-35-dark);
 	--color-logo-ring: light-dark(var(--color-primary-600-light), var(--color-primary-500-dark));
 	--color-logo-brackets: light-dark(var(--color-primary-800), var(--color-primary-400-light));
 	--color-logo-slash-start: light-dark(var(--color-primary-800), var(--color-primary-400-light));
-	--color-logo-slash-end: light-dark(var(--color-primary-500-dark), var(--color-primary-400-dark));
+	--color-logo-slash-end: light-dark(
+		var(--color-primary-500-dark),
+		var(--color-primary-400-dark)
+	);
 	--color-logo-inverted: var(--color-base-white);
 	--color-logo-monochrome: light-dark(var(--color-neutral-950), var(--color-base-white));
 
 	/* Portfolio channel aliases: exact Portfolio Light/Dark mappings from Figma Channel / Theme. */
-	--channel-background-canvas: light-dark(var(--color-base-background-light), var(--color-neutral-950));
+	--channel-background-canvas: light-dark(
+		var(--color-base-background-light),
+		var(--color-neutral-950)
+	);
 	--channel-surface-default: light-dark(var(--color-base-white), var(--color-base-surface-dark));
-	--channel-surface-highlight: light-dark(var(--color-base-surface-highlight-light), var(--color-base-surface-highlight-dark));
-	--channel-content-strong: light-dark(var(--color-neutral-900), var(--color-base-content-strong-dark));
+	--channel-surface-highlight: light-dark(
+		var(--color-base-surface-highlight-light),
+		var(--color-base-surface-highlight-dark)
+	);
+	--channel-content-strong: light-dark(
+		var(--color-neutral-900),
+		var(--color-base-content-strong-dark)
+	);
 	--channel-content-default: light-dark(var(--color-neutral-700), var(--color-neutral-300));
 	--channel-content-muted: light-dark(var(--color-neutral-600), var(--color-neutral-400));
 	--channel-edge-default: light-dark(var(--color-neutral-300), var(--color-neutral-800));
-	--channel-accent-primary: light-dark(var(--color-primary-500-light), var(--color-primary-500-dark));
-	--channel-accent-secondary: light-dark(var(--color-primary-400-light), var(--color-primary-400-dark));
+	--channel-accent-primary: light-dark(
+		var(--color-primary-500-light),
+		var(--color-primary-500-dark)
+	);
+	--channel-accent-secondary: light-dark(
+		var(--color-primary-400-light),
+		var(--color-primary-400-dark)
+	);
 	--channel-status-online: light-dark(var(--color-success-900), var(--color-retro-phosphor));
 	--color-terminal-background: var(--color-neutral-950);
 	--color-terminal-surface: var(--color-base-surface-dark);
@@ -139,7 +193,10 @@
 	--color-channel-edge-default: var(--channel-edge-default);
 	--color-channel-edge-subtle: var(--color-edge-subtle);
 	--color-channel-accent-primary: var(--channel-accent-primary);
-	--color-channel-accent-primary-hover: light-dark(var(--color-primary-600-light), var(--color-primary-400-dark));
+	--color-channel-accent-primary-hover: light-dark(
+		var(--color-primary-600-light),
+		var(--color-primary-400-dark)
+	);
 	--color-channel-accent-secondary: var(--channel-accent-secondary);
 	--color-channel-status-online: var(--channel-status-online);
 	--color-channel-status-success: var(--color-success-500);
@@ -151,7 +208,11 @@
 	--color-channel-portfolio-terminal-surface: var(--color-terminal-surface);
 	--color-channel-portfolio-terminal-surface-raised: var(--color-base-surface-highlight-dark);
 	--color-channel-portfolio-terminal-content: var(--color-terminal-content);
-	--color-channel-portfolio-terminal-content-muted: color-mix(in oklch, var(--color-terminal-content) 58%, transparent);
+	--color-channel-portfolio-terminal-content-muted: color-mix(
+		in oklch,
+		var(--color-terminal-content) 58%,
+		transparent
+	);
 	--color-channel-portfolio-terminal-cyan: var(--color-terminal-cyan);
 	--color-channel-portfolio-terminal-cyan-bright: var(--color-terminal-cyan-bright);
 	--color-channel-portfolio-terminal-phosphor: var(--color-terminal-phosphor);
@@ -179,10 +240,16 @@
 
 	/* Component roles: components encode behavior, never ramp steps. */
 	--color-button-primary-background: var(--channel-accent-primary);
-	--color-button-primary-background-hover: light-dark(var(--color-primary-600-light), var(--color-primary-400-dark));
+	--color-button-primary-background-hover: light-dark(
+		var(--color-primary-600-light),
+		var(--color-primary-400-dark)
+	);
 	--color-button-primary-content: light-dark(var(--color-base-white), var(--color-neutral-950));
 	--color-button-secondary-background: var(--channel-surface-highlight);
-	--color-button-secondary-background-hover: light-dark(var(--color-neutral-200), var(--color-neutral-700));
+	--color-button-secondary-background-hover: light-dark(
+		var(--color-neutral-200),
+		var(--color-neutral-700)
+	);
 	--color-button-secondary-content: var(--channel-content-strong);
 	--color-button-border: var(--color-edge-strong);
 	--color-button-focus: var(--channel-accent-secondary);
@@ -195,12 +262,28 @@
 	--color-logo-effect-magenta: var(--color-error-500);
 	--color-logo-effect-cyan: var(--color-terminal-phosphor);
 	--color-theme-control-background-hover: var(--channel-surface-highlight);
-	--color-theme-menu-background: color-mix(in oklch, var(--channel-surface-default) 95%, transparent);
+	--color-theme-menu-background: color-mix(
+		in oklch,
+		var(--channel-surface-default) 95%,
+		transparent
+	);
 	--color-theme-menu-border: color-mix(in oklch, var(--color-edge-subtle) 50%, transparent);
-	--color-theme-option-background-hover: light-dark(var(--color-neutral-200), var(--color-neutral-700));
-	--color-header-surface-scrolled: light-dark(color-mix(in oklch, var(--color-base-background-light) 78%, transparent), color-mix(in oklch, var(--color-neutral-900) 88%, transparent));
-	--color-header-shadow-primary: light-dark(color-mix(in oklch, var(--color-neutral-950) 12%, transparent), color-mix(in oklch, var(--color-neutral-950) 45%, transparent));
-	--color-header-shadow-secondary: light-dark(color-mix(in oklch, var(--color-neutral-950) 14%, transparent), color-mix(in oklch, var(--color-neutral-950) 35%, transparent));
+	--color-theme-option-background-hover: light-dark(
+		var(--color-neutral-200),
+		var(--color-neutral-700)
+	);
+	--color-header-surface-scrolled: light-dark(
+		color-mix(in oklch, var(--color-base-background-light) 78%, transparent),
+		color-mix(in oklch, var(--color-neutral-900) 88%, transparent)
+	);
+	--color-header-shadow-primary: light-dark(
+		color-mix(in oklch, var(--color-neutral-950) 12%, transparent),
+		color-mix(in oklch, var(--color-neutral-950) 45%, transparent)
+	);
+	--color-header-shadow-secondary: light-dark(
+		color-mix(in oklch, var(--color-neutral-950) 14%, transparent),
+		color-mix(in oklch, var(--color-neutral-950) 35%, transparent)
+	);
 
 	/* Effects */
 	--shadow-retro-xs: 1px 1px 0 0 var(--color-edge-strong);
@@ -211,7 +294,9 @@
 	--shadow-retro-2xl: 6px 6px 0 0 var(--color-edge-strong);
 	--shadow-retro-3xl: 8px 8px 0 0 var(--color-edge-strong);
 	--shadow-terminal-glow: 0 0 30px var(--color-terminal-glow);
-	--shadow-header-scrolled: 0 8px 24px -6px var(--color-header-shadow-primary), 0 6px 12px -6px var(--color-header-shadow-secondary);
+	--shadow-header-scrolled:
+		0 8px 24px -6px var(--color-header-shadow-primary),
+		0 6px 12px -6px var(--color-header-shadow-secondary);
 
 	/* Pixel-grid spacing scale (4px increments) */
 	--space-1: 0.25rem;
@@ -230,18 +315,32 @@
 	--animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
 	@keyframes fade-in {
-		from { opacity: 0; }
-		to { opacity: 1; }
+		from {
+			opacity: 0;
+		}
+		to {
+			opacity: 1;
+		}
 	}
 
 	@keyframes slide-up {
-		from { opacity: 0; transform: translateY(20px); }
-		to { opacity: 1; transform: translateY(0); }
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
 	}
 }
 
-:root { color-scheme: light; }
-:root.dark { color-scheme: dark; }
+:root {
+	color-scheme: light;
+}
+:root.dark {
+	color-scheme: dark;
+}
 
 body {
 	background-color: var(--channel-background-canvas);

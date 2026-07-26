@@ -100,8 +100,7 @@ test.describe('Portfolio Retro color token contract', () => {
 		await useTheme(page, 'dark');
 		await page.goto('/');
 		await page.waitForFunction(
-			() =>
-				typeof (window as Window & { __openCLI?: unknown }).__openCLI === 'function'
+			() => typeof (window as Window & { __openCLI?: unknown }).__openCLI === 'function'
 		);
 		await page.evaluate(() => {
 			document.dispatchEvent(
@@ -119,12 +118,7 @@ test.describe('Portfolio Retro color token contract', () => {
 		const input = page.locator('#cli-input');
 		await expect(overlay).toBeVisible();
 		await expect(input).toBeFocused();
-		await expectColorRole(
-			page,
-			terminal,
-			'border-top-color',
-			'--color-primary-500-dark'
-		);
+		await expectColorRole(page, terminal, 'border-top-color', '--color-primary-500-dark');
 
 		await input.fill('help');
 		await input.press('Enter');
@@ -139,12 +133,7 @@ test.describe('Portfolio Retro color token contract', () => {
 		const splash = page.locator('#splash-screen');
 		const continueButton = splash.locator('#retro-continue');
 		await expect(splash).toBeVisible();
-		await expectColorRole(
-			page,
-			continueButton,
-			'background-color',
-			'--color-primary-500-dark'
-		);
+		await expectColorRole(page, continueButton, 'background-color', '--color-primary-500-dark');
 		await expectNoBlockingAxeViolations(page);
 
 		await continueButton.click();

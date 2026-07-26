@@ -18,14 +18,14 @@ Use the narrowest stable role available. Components must not treat raw color lit
 
 ## Typography
 
-| Role | Token or utility | Use |
-| --- | --- | --- |
-| Body and UI | `font-sans` | Default interface and long-form copy |
-| Terminal and code | `font-mono`, `font-code` | CLI, source excerpts and technical metadata |
-| Pixel display | `font-pixel` | Very short, high-emphasis labels only |
-| Pixel display, cleaner | `font-pixel-clean` | Logo and compact retro headings |
-| Retro tag | `font-retro-tag` | Small editorial labels |
-| Gaming mono | `font-gaming-mono` | Restricted decorative or terminal details |
+| Role                   | Token or utility         | Use                                         |
+| ---------------------- | ------------------------ | ------------------------------------------- |
+| Body and UI            | `font-sans`              | Default interface and long-form copy        |
+| Terminal and code      | `font-mono`, `font-code` | CLI, source excerpts and technical metadata |
+| Pixel display          | `font-pixel`             | Very short, high-emphasis labels only       |
+| Pixel display, cleaner | `font-pixel-clean`       | Logo and compact retro headings             |
+| Retro tag              | `font-retro-tag`         | Small editorial labels                      |
+| Gaming mono            | `font-gaming-mono`       | Restricted decorative or terminal details   |
 
 Pixel fonts are a channel treatment. They must not replace readable body typography or make David's identity depend on a game aesthetic.
 

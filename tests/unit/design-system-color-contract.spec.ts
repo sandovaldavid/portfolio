@@ -113,8 +113,12 @@ describe('Portfolio Retro color architecture', () => {
 	});
 
 	it('does not declare duplicate custom-property names', () => {
-		const declarations = [...colors.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gim)].map(match => match[1]);
-		const duplicates = declarations.filter((token, index) => declarations.indexOf(token) !== index);
+		const declarations = [...colors.matchAll(/^\s*(--[a-z0-9-]+)\s*:/gim)].map(
+			match => match[1]
+		);
+		const duplicates = declarations.filter(
+			(token, index) => declarations.indexOf(token) !== index
+		);
 		expect([...new Set(duplicates)]).toEqual([]);
 	});
 
@@ -171,7 +175,7 @@ describe('Portfolio Retro color architecture', () => {
 	it('removes raw color literals from production consumers except governed artwork and print CSS', () => {
 		const excludedRoots = ['src/assets/'];
 		const excludedFiles = new Set(['src/app/styles/colors.css', 'src/app/styles/print.css']);
-		const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/i;
+		const rawColor = /(?<!&)#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/i;
 		const offenders = collectFiles('src')
 			.filter(path => /\.(astro|css|ts|tsx|js|mjs)$/.test(path))
 			.map(path => relative('.', path).replaceAll('\\', '/'))

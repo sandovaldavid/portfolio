@@ -17,36 +17,37 @@ Production primitives use the canonical OKLCH values copied from the Figma Ident
 
 ## Portfolio channel contract
 
-| Responsibility | Canonical roles |
-| --- | --- |
-| Canvas and surfaces | `channel-background-canvas`, `channel-surface-default`, `channel-surface-highlight` |
-| Content | `channel-content-strong`, `channel-content-default`, `channel-content-muted` |
-| Edges | `channel-edge-default`, `channel-edge-subtle` |
-| Accents | `channel-accent-primary`, `channel-accent-primary-hover`, `channel-accent-secondary` |
-| Status | `channel-status-online`, `channel-status-success`, `channel-status-warning`, `channel-status-error` |
-| Terminal | `channel-portfolio-terminal-background`, `surface`, `surface-raised`, `content`, `content-muted`, `cyan`, `cyan-bright`, `phosphor`, `grid`, `warning`, `error` |
-| Components | `button-*`, `logo-*`, `theme-*`, header effect roles and `shadow-retro-*` |
+| Responsibility      | Canonical roles                                                                                                                                                 |
+| ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Canvas and surfaces | `channel-background-canvas`, `channel-surface-default`, `channel-surface-highlight`                                                                             |
+| Content             | `channel-content-strong`, `channel-content-default`, `channel-content-muted`                                                                                    |
+| Edges               | `channel-edge-default`, `channel-edge-subtle`                                                                                                                   |
+| Accents             | `channel-accent-primary`, `channel-accent-primary-hover`, `channel-accent-secondary`                                                                            |
+| Status              | `channel-status-online`, `channel-status-success`, `channel-status-warning`, `channel-status-error`                                                             |
+| Terminal            | `channel-portfolio-terminal-background`, `surface`, `surface-raised`, `content`, `content-muted`, `cyan`, `cyan-bright`, `phosphor`, `grid`, `warning`, `error` |
+| Components          | `button-*`, `logo-*`, `theme-*`, header effect roles and `shadow-retro-*`                                                                                       |
 
 The cyan terminal values alias the dark-mode Identity Core primary primitives. Phosphor is a scoped Figma primitive for terminal and online-state expression. Neither creates a second brand palette.
 
 ## Production inventory
 
-| Classification | Location | Previous usage | Current contract |
-| --- | --- | --- | --- |
-| `Migrated` | `src/app/styles/colors.css` | HEX ramps, incomplete semantic layer and no Channel Theme layer | Figma-derived OKLCH primitives, semantic aliases, Portfolio channel aliases, component roles and compatibility aliases |
-| `Migrated` | `src/shared/ui/button/button.css` | Primary ramp utilities and literal offset shadows | Button component roles and `--shadow-retro-*`; light/dark default and hover pairs are contrast-gated |
-| `Migrated` | `src/widgets/header/ui/BrandLogo.astro` | Primary ramp utilities and literal glitch colors | Logo roles; approved dark bracket base maps to Identity Core `primary-400-light`; reduced-motion fallback retained |
-| `Migrated` | `src/widgets/header/ui/Header.astro` | Raw RGB/RGBA scroll effects and direct active-link ramp class | Header effect tokens and channel accent role |
-| `Migrated` | `src/widgets/recruiter-hud/ui/RecruiterHUD.astro` | Primary/neutral ramp utilities | Button, channel surface, content and edge roles |
-| `Migrated` | `src/features/theme-toggle/ui/ThemeToggle.astro` | Neutral ramp utilities | Theme component roles and channel content roles |
-| `Migrated` | `src/features/splash-screen/ui/SplashScreen.astro` | Terminal literals and primary ramp hover | Named terminal and button roles |
-| `Migrated` | `src/features/cli-terminal/ui/CLITerminalCatalog.astro` | Terminal literals, raw status utilities and literal glow | Named terminal/status roles and `--shadow-terminal-glow` |
-| `Migrated` | `src/features/cli-terminal/model/runtime.ts` | Dynamically generated raw color utilities | Static named terminal/status utilities |
-| `Migrated` | `src/pages/404.astro` | Neutral canvas and primary ramp composition | Portfolio channel canvas and accent aliases |
-| `Intentional exception` | `src/assets/**` | Vendor-owned or exported artwork colors | Preserve source artwork fidelity; assets are not component token APIs |
-| `Intentional exception` | `src/app/styles/print.css` | Black/white print-output literals | Preserve deterministic print output; excluded from runtime color-token enforcement |
-| `Historical` | Frozen audit and report records | Point-in-time literals and findings | Preserve as evidence; do not treat as current implementation guidance |
-| `Follow-up` | Remaining governed ramp utilities in low-risk editorial/decorative consumers | Direct Tailwind ramp utilities backed by the canonical primitive map | Migrate opportunistically to narrower roles when the owning component changes; do not broaden issue #186 into a redesign |
+| Classification          | Location                                                                     | Previous usage                                                       | Current contract                                                                                                         |
+| ----------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `Migrated`              | `src/app/styles/colors.css`                                                  | HEX ramps, incomplete semantic layer and no Channel Theme layer      | Figma-derived OKLCH primitives, semantic aliases, Portfolio channel aliases, component roles and compatibility aliases   |
+| `Migrated`              | `src/shared/ui/button/button.css`                                            | Primary ramp utilities and literal offset shadows                    | Button component roles and `--shadow-retro-*`; light/dark default and hover pairs are contrast-gated                     |
+| `Migrated`              | `src/widgets/header/ui/BrandLogo.astro`                                      | Primary ramp utilities and literal glitch colors                     | Logo roles; approved dark bracket base maps to Identity Core `primary-400-light`; reduced-motion fallback retained       |
+| `Migrated`              | `src/widgets/header/ui/Header.astro`                                         | Raw RGB/RGBA scroll effects and direct active-link ramp class        | Header effect tokens and channel accent role                                                                             |
+| `Migrated`              | `src/app/layouts/Layout.astro`                                               | Stale non-canonical `theme-color` metadata literal                   | Removed duplicate metadata color so browser chrome no longer owns an ungoverned palette value                            |
+| `Migrated`              | `src/widgets/recruiter-hud/ui/RecruiterHUD.astro`                            | Primary/neutral ramp utilities                                       | Button, channel surface, content and edge roles                                                                          |
+| `Migrated`              | `src/features/theme-toggle/ui/ThemeToggle.astro`                             | Neutral ramp utilities                                               | Theme component roles and channel content roles                                                                          |
+| `Migrated`              | `src/features/splash-screen/ui/SplashScreen.astro`                           | Terminal literals and primary ramp hover                             | Named terminal and button roles                                                                                          |
+| `Migrated`              | `src/features/cli-terminal/ui/CLITerminalCatalog.astro`                      | Terminal literals, raw status utilities and literal glow             | Named terminal/status roles and `--shadow-terminal-glow`                                                                 |
+| `Migrated`              | `src/features/cli-terminal/model/runtime.ts`                                 | Dynamically generated raw color utilities                            | Static named terminal/status utilities                                                                                   |
+| `Migrated`              | `src/pages/404.astro`                                                        | Neutral canvas and primary ramp composition                          | Portfolio channel canvas and accent aliases                                                                              |
+| `Intentional exception` | `src/assets/**`                                                              | Vendor-owned or exported artwork colors                              | Preserve source artwork fidelity; assets are not component token APIs                                                    |
+| `Intentional exception` | `src/app/styles/print.css`                                                   | Black/white print-output literals                                    | Preserve deterministic print output; excluded from runtime color-token enforcement                                       |
+| `Historical`            | Frozen audit and report records                                              | Point-in-time literals and findings                                  | Preserve as evidence; do not treat as current implementation guidance                                                    |
+| `Follow-up`             | Remaining governed ramp utilities in low-risk editorial/decorative consumers | Direct Tailwind ramp utilities backed by the canonical primitive map | Migrate opportunistically to narrower roles when the owning component changes; do not broaden issue #186 into a redesign |
 
 ## Provenance and duplicate policy
 
