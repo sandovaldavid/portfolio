@@ -58,8 +58,11 @@ jobs:
             - name: Run lint and architecture checks
               run: bun run lint
 
-            - name: Run Astro and tooling typechecks
-              run: bun run typecheck
+            - name: Run Astro typecheck
+              run: bun run typecheck:astro
+
+            - name: Run tooling typecheck
+              run: bun run typecheck:tooling
 
             - name: Validate squash-merge title
               env:
