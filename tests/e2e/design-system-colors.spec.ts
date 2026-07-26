@@ -103,14 +103,28 @@ test.describe('Portfolio Retro color token contract', () => {
 			() =>
 				typeof (window as Window & { __openCLI?: unknown }).__openCLI === 'function'
 		);
-		await page.keyboard.press('Shift+;');
+		await page.evaluate(() => {
+			document.dispatchEvent(
+				new KeyboardEvent('keydown', {
+					key: ':',
+					shiftKey: true,
+					bubbles: true,
+					cancelable: true,
+				})
+			);
+		});
 
 		const overlay = page.locator('#cli-overlay');
 		const terminal = overlay.locator('.border-channel-portfolio-terminal-cyan');
 		const input = page.locator('#cli-input');
 		await expect(overlay).toBeVisible();
 		await expect(input).toBeFocused();
-		await expectColorRole(page, terminal, 'border-top-color', '--color-primary-500-dark');
+		await expectColorRole(
+			page,
+			terminal,
+			'border-top-color',
+			'--color-primary-500-dark'
+		);
 
 		await input.fill('help');
 		await input.press('Enter');
