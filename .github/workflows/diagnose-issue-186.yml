@@ -19,14 +19,21 @@ jobs:
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
             - uses: ./.github/actions/setup-bun
-            - name: Generate canonical formatting patch
+            - name: Generate canonical formatted files
               run: |
                   bun run format
                   git diff --binary > formatting.patch
+                  mkdir -p formatted
+                  while IFS= read -r file; do
+                    mkdir -p "formatted/$(dirname "$file")"
+                    cp "$file" "formatted/$file"
+                  done < <(git diff --name-only)
             - uses: actions/upload-artifact@v7
               with:
-                  name: issue-186-formatting-patch
-                  path: formatting.patch
+                  name: issue-186-formatted-files
+                  path: |
+                      formatting.patch
+                      formatted/
                   if-no-files-found: error
                   retention-days: 1
 
@@ -37,12 +44,34 @@ jobs:
               with:
                   ref: ${{ github.event.pull_request.head.sha }}
             - uses: ./.github/actions/setup-bun
+            - name: Inventory raw runtime color literals
+              run: |
+                  node --input-type=module <<'EOF' | tee raw-color-offenders.txt
+                  import { readdirSync, readFileSync, statSync } from 'node:fs';
+                  import { join, relative } from 'node:path';
+                  const collect = directory => readdirSync(directory).flatMap(entry => {
+                    const path = join(directory, entry);
+                    return statSync(path).isDirectory() ? collect(path) : [path];
+                  });
+                  const excludedRoots = ['src/assets/'];
+                  const excludedFiles = new Set(['src/app/styles/colors.css', 'src/app/styles/print.css']);
+                  const rawColor = /#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/i;
+                  const offenders = collect('src')
+                    .filter(path => /\.(astro|css|ts|tsx|js|mjs)$/.test(path))
+                    .map(path => relative('.', path).replaceAll('\\', '/'))
+                    .filter(path => !excludedFiles.has(path))
+                    .filter(path => !excludedRoots.some(root => path.startsWith(root)))
+                    .filter(path => rawColor.test(readFileSync(path, 'utf8')));
+                  console.log(JSON.stringify(offenders, null, 2));
+                  EOF
             - name: Write Vitest JSON diagnostics
               continue-on-error: true
               run: bunx vitest run --reporter=json --outputFile=unit-results.json
             - uses: actions/upload-artifact@v7
               with:
                   name: issue-186-unit-results
-                  path: unit-results.json
+                  path: |
+                      unit-results.json
+                      raw-color-offenders.txt
                   if-no-files-found: error
                   retention-days: 1
