@@ -96,7 +96,9 @@ const scenarios = [
 					typeof /** @type {Window & { __openCLI?: unknown }} */ (window).__openCLI ===
 					'function'
 			);
-			await page.keyboard.press('Shift+;');
+			await page.evaluate(() => {
+				/** @type {Window & { __openCLI?: () => void }} */ (window).__openCLI?.();
+			});
 			await page.locator('#cli-overlay').waitFor({ state: 'visible' });
 		},
 	},
