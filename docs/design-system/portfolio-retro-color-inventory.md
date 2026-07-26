@@ -89,7 +89,7 @@ The pull-request workflow builds the exact base and head revisions and uploads a
 - dark CLI terminal;
 - dark retro splash.
 
-The smoke suite also verifies resolved roles, button hover contrast behavior, terminal keyboard behavior, splash dismissal, mobile focus handling, English/Spanish routes and serious/critical Axe violations. Existing `focus-visible` and `prefers-reduced-motion` behavior remains mandatory.
+The smoke suite also verifies resolved roles, button hover contrast behavior, terminal keyboard behavior, splash dismissal, mobile focus handling, English/Spanish routes and serious/critical Axe violations. Existing `focus-visible` and `prefers-reduced-motion` behavior remains mandatory. Scrollable terminal output remains keyboard-focusable because an `aria-live` region does not by itself provide Safari keyboard access.
 
 ## Change rule
 
