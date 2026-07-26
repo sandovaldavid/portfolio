@@ -1,35 +1,39 @@
 import AxeBuilder from '@axe-core/playwright';
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { test, expect } from './fixtures';
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;
 
-function parseRgb(value: string): [number, number, number] {
-	const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-	if (!match) throw new Error(`Unsupported RGB value: ${value}`);
-	return [Number(match[1]), Number(match[2]), Number(match[3])];
-}
+type Theme = 'light' | 'dark';
+type ColorProperty = 'background-color' | 'color' | 'border-top-color';
 
-function relativeLuminance([red, green, blue]: [number, number, number]): number {
-	const linear = [red, green, blue].map(channel => {
-		const normalized = channel / 255;
-		return normalized <= 0.03928 ? normalized / 12.92 : ((normalized + 0.055) / 1.055) ** 2.4;
-	});
-	return linear[0] * 0.2126 + linear[1] * 0.7152 + linear[2] * 0.0722;
-}
-
-function contrastRatio(foreground: string, background: string): number {
-	const foregroundLuminance = relativeLuminance(parseRgb(foreground));
-	const backgroundLuminance = relativeLuminance(parseRgb(background));
-	const lighter = Math.max(foregroundLuminance, backgroundLuminance);
-	const darker = Math.min(foregroundLuminance, backgroundLuminance);
-	return (lighter + 0.05) / (darker + 0.05);
-}
-
-async function useTheme(page: Page, theme: 'light' | 'dark') {
+async function useTheme(page: Page, theme: Theme) {
 	await page.addInitScript(selectedTheme => {
 		localStorage.setItem('theme', selectedTheme);
 	}, theme);
+}
+
+async function expectColorRole(
+	page: Page,
+	locator: Locator,
+	property: ColorProperty,
+	token: string
+) {
+	const result = await locator.evaluate(
+		(element, input) => {
+			const actual = getComputedStyle(element).getPropertyValue(input.property);
+			const probe = document.createElement('div');
+			probe.style.setProperty(input.property, `var(${input.token})`);
+			probe.style.position = 'fixed';
+			probe.style.pointerEvents = 'none';
+			document.body.appendChild(probe);
+			const expected = getComputedStyle(probe).getPropertyValue(input.property);
+			probe.remove();
+			return { actual, expected };
+		},
+		{ property, token }
+	);
+	expect(result.actual).toBe(result.expected);
 }
 
 async function expectNoBlockingAxeViolations(page: Page) {
@@ -45,16 +49,18 @@ test.describe('Portfolio Retro color token contract', () => {
 		{
 			route: '/',
 			theme: 'light' as const,
-			canvas: 'rgb(245, 248, 252)',
-			hover: 'rgb(0, 68, 204)',
-			content: 'rgb(255, 255, 255)',
+			canvasToken: '--color-base-background-light',
+			defaultToken: '--color-primary-500-light',
+			hoverToken: '--color-primary-600-light',
+			contentToken: '--color-base-white',
 		},
 		{
 			route: '/es/',
 			theme: 'dark' as const,
-			canvas: 'rgb(2, 4, 8)',
-			hover: 'rgb(124, 199, 251)',
-			content: 'rgb(2, 4, 8)',
+			canvasToken: '--color-neutral-950',
+			defaultToken: '--color-primary-500-dark',
+			hoverToken: '--color-primary-400-dark',
+			contentToken: '--color-neutral-950',
 		},
 	] as const) {
 		test(`${scenario.route} resolves ${scenario.theme} channel and button roles`, async ({
@@ -64,28 +70,39 @@ test.describe('Portfolio Retro color token contract', () => {
 			await page.goto(scenario.route);
 			await page.waitForLoadState('networkidle');
 
-			await expect(page.locator('body')).toHaveCSS('background-color', scenario.canvas);
+			await expectColorRole(
+				page,
+				page.locator('body'),
+				'background-color',
+				scenario.canvasToken
+			);
 
 			const primaryButton = page.locator('#recruiter-hud-toggle');
 			await expect(primaryButton).toBeVisible();
-			await primaryButton.hover();
-			await expect(primaryButton).toHaveCSS('background-color', scenario.hover);
-			await expect(primaryButton).toHaveCSS('color', scenario.content);
+			await expectColorRole(page, primaryButton, 'background-color', scenario.defaultToken);
+			await expectColorRole(page, primaryButton, 'color', scenario.contentToken);
 
-			const styles = await primaryButton.evaluate(element => {
-				const computed = getComputedStyle(element);
-				return {
-					background: computed.backgroundColor,
-					color: computed.color,
-				};
-			});
-			expect(contrastRatio(styles.color, styles.background)).toBeGreaterThanOrEqual(4.5);
+			await primaryButton.hover();
+			await expectColorRole(page, primaryButton, 'background-color', scenario.hoverToken);
+			await expectColorRole(page, primaryButton, 'color', scenario.contentToken);
+			await expectNoBlockingAxeViolations(page);
+
+			await primaryButton.focus();
+			await expect(primaryButton).toBeFocused();
+			const focusShadow = await primaryButton.evaluate(
+				element => getComputedStyle(element).boxShadow
+			);
+			expect(focusShadow).not.toBe('none');
 		});
 	}
 
 	test('CLI resolves named terminal roles and retains keyboard behavior', async ({ page }) => {
 		await useTheme(page, 'dark');
 		await page.goto('/');
+		await page.waitForFunction(
+			() =>
+				typeof (window as Window & { __openCLI?: unknown }).__openCLI === 'function'
+		);
 		await page.keyboard.press('Shift+;');
 
 		const overlay = page.locator('#cli-overlay');
@@ -93,7 +110,7 @@ test.describe('Portfolio Retro color token contract', () => {
 		const input = page.locator('#cli-input');
 		await expect(overlay).toBeVisible();
 		await expect(input).toBeFocused();
-		await expect(terminal).toHaveCSS('border-top-color', 'rgb(0, 176, 255)');
+		await expectColorRole(page, terminal, 'border-top-color', '--color-primary-500-dark');
 
 		await input.fill('help');
 		await input.press('Enter');
@@ -106,26 +123,45 @@ test.describe('Portfolio Retro color token contract', () => {
 		await page.goto('/?retro=1');
 
 		const splash = page.locator('#splash-screen');
+		const continueButton = splash.locator('#retro-continue');
 		await expect(splash).toBeVisible();
-		await expect(splash.locator('#retro-continue')).toHaveCSS(
+		await expectColorRole(
+			page,
+			continueButton,
 			'background-color',
-			'rgb(0, 176, 255)'
+			'--color-primary-500-dark'
 		);
 		await expectNoBlockingAxeViolations(page);
 
-		await splash.locator('#retro-continue').click();
+		await continueButton.click();
 		await expect(splash).toBeHidden();
 	});
 
 	for (const scenario of [
-		{ theme: 'light' as const, canvas: 'rgb(245, 248, 252)' },
-		{ theme: 'dark' as const, canvas: 'rgb(2, 4, 8)' },
+		{ theme: 'light' as const, canvasToken: '--color-base-background-light' },
+		{ theme: 'dark' as const, canvasToken: '--color-neutral-950' },
 	] as const) {
 		test(`404 uses the ${scenario.theme} channel canvas`, async ({ page }) => {
 			await useTheme(page, scenario.theme);
 			await page.goto('/missing-design-system-token-route');
-			await expect(page.locator('body')).toHaveCSS('background-color', scenario.canvas);
+			await expectColorRole(
+				page,
+				page.locator('body'),
+				'background-color',
+				scenario.canvasToken
+			);
 			await expect(page.locator('h1')).toHaveCount(1);
 		});
 	}
+
+	test('mobile navigation preserves focus and channel roles', async ({ page }) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await useTheme(page, 'light');
+		await page.goto('/');
+		const trigger = page.locator('#mobile-menu-btn');
+		await trigger.click();
+		await expect(page.locator('#mobile-menu')).toBeVisible();
+		await expect(page.locator('#mobile-menu-close')).toBeFocused();
+		await expectNoBlockingAxeViolations(page);
+	});
 });
