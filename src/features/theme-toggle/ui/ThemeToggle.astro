@@ -16,7 +16,7 @@ const THEMES = [
 
 <div class="theme-toggle relative ml-1 mr-1">
 	<button
-		class="theme-toggle-btn relative appearance-none border-none size-7 flex justify-center items-center rounded-lg hover:bg-neutral-200/80 dark:hover:bg-neutral-800/80 hover:scale-110 transition-all duration-300 p-1"
+		class="theme-toggle-btn relative appearance-none border-none size-7 flex justify-center items-center rounded-lg hover:bg-theme-control-background-hover hover:scale-110 transition-all duration-300 p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 		aria-label={tTheme('select')}
 	>
 		<span class="sr-only">{tTheme('select')}</span>
@@ -32,14 +32,14 @@ const THEMES = [
 	</button>
 
 	<div
-		class="themes-menu absolute hidden w-28 top-10 right-0 text-sm p-1.5 rounded-xl border border-neutral-200/50 dark:border-neutral-700/50 bg-neutral-50/95 dark:bg-neutral-800/95 backdrop-blur-lg shadow-lg shadow-neutral-900/10 dark:shadow-neutral-950/30 z-50 transition-all duration-200"
+		class="themes-menu absolute hidden w-28 top-10 right-0 text-sm p-1.5 rounded-xl border border-theme-menu-border bg-theme-menu-background backdrop-blur-lg shadow-lg z-50 transition-all duration-200"
 	>
 		<ul class="space-y-0.5">
 			{
 				THEMES.map(theme => (
 					<li
 						data-theme={theme.id}
-						class="themes-menu-option px-3 py-2 cursor-pointer rounded-lg text-content hover:text-primary-600 dark:hover:text-primary-400 hover:bg-neutral-200/70 dark:hover:bg-neutral-700/70 transition-all duration-200 font-medium"
+						class="themes-menu-option px-3 py-2 cursor-pointer rounded-lg text-content hover:text-channel-accent-primary-hover hover:bg-theme-option-background-hover transition-all duration-200 font-medium"
 					>
 						{theme.name}
 					</li>
@@ -50,12 +50,8 @@ const THEMES = [
 </div>
 
 <script>
-	// View-transition safe: listeners are (re)wired on every page load, while
-	// document/window listeners are attached once. See Astro docs → View
-	// transitions → Script behavior (astro:page-load).
 	const media = window.matchMedia('(prefers-color-scheme: dark)');
 
-	// Applies the theme globally and syncs every toggle's icons to live DOM.
 	const applyTheme = (theme: string) => {
 		const isDark = theme === 'dark' || (theme === 'system' && media.matches);
 		document.documentElement.classList.toggle('dark', isDark);
@@ -70,7 +66,6 @@ const THEMES = [
 		});
 	};
 
-	// Wires each toggle instance; guarded so re-runs never double-bind.
 	const setupThemeToggles = () => {
 		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
 			if (root.dataset.themeReady === 'true') return;
@@ -84,9 +79,9 @@ const THEMES = [
 				return;
 			}
 
-			const toggleMenu = (e: Event) => {
-				e.stopPropagation();
-				e.preventDefault();
+			const toggleMenu = (event: Event) => {
+				event.stopPropagation();
+				event.preventDefault();
 				menu.classList.toggle('hidden');
 			};
 			btn.addEventListener('click', toggleMenu);
@@ -103,16 +98,14 @@ const THEMES = [
 			});
 		});
 
-		// Re-sync icons to the persisted theme after each (re)render.
 		applyTheme(localStorage.getItem('theme') || 'dark');
 	};
 
-	// Attach document/window listeners once — they survive navigation.
 	media.addEventListener('change', () => {
 		if ((localStorage.getItem('theme') || 'dark') === 'system') applyTheme('system');
 	});
-	document.addEventListener('click', (e: MouseEvent) => {
-		const target = e.target as Node;
+	document.addEventListener('click', (event: MouseEvent) => {
+		const target = event.target as Node;
 		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
 			const menu = root.querySelector<HTMLDivElement>('.themes-menu');
 			if (menu && !menu.classList.contains('hidden') && !root.contains(target)) {
@@ -121,6 +114,5 @@ const THEMES = [
 		});
 	});
 
-	// Runs on first load and after every client-side navigation.
 	document.addEventListener('astro:page-load', setupThemeToggles);
 </script>
