@@ -5,9 +5,9 @@
 	"ready": "System ready",
 	"title": "Retro mode",
 	"intro": "Optional portfolio boot sequence",
-	"line1": "Loading Angular, .NET and TypeScript profile…",
+	"line1": "Loading backend-oriented Software Engineer profile…",
 	"line2": "Connecting project case studies…",
-	"line3": "Loading BiLSTM/OSS research notes…",
+	"line3": "Loading research and evidence notes…",
 	"line4": "Professional profile ready.",
 	"continue": "Continue to portfolio",
 	"close": "Close retro mode"

@@ -1,19 +1,19 @@
 {
 	"banner": "[ AVAILABLE FOR SOFTWARE ENGINEERING OPPORTUNITIES ]",
 	"title": "Software Engineer building reliable web products",
-	"subtitle": ".NET · Angular · TypeScript",
-	"credential": "Based in Lima (UTC-5) · Remote across Europe and Latin America · BiLSTM/OSS research",
+	"subtitle": "Backend-oriented Software Engineer with frontend experience",
+	"credential": "Remote from Peru (UTC-5) · Fintech domain · Structured problem solving",
 	"profile": "Professional profile",
 	"roleLabel": "Role",
 	"role": "Software Engineer",
 	"stackLabel": "Core stack",
 	"stack": "Angular · .NET · TypeScript",
 	"locationLabel": "Location",
-	"location": "Lima, Peru · UTC-5",
+	"location": "Peru · UTC-5",
 	"workModeLabel": "Work mode",
-	"workMode": "Remote · Europe and LATAM",
+	"workMode": "Remote · Peru",
 	"currentLabel": "Currently",
-	"current": "Software Engineer @ Atena",
-	"researchLabel": "Research",
-	"research": "OSS abandonment prediction with BiLSTM"
+	"current": "Jr. Software Engineer @ Atena",
+	"researchLabel": "Domain",
+	"research": "Fintech"
 }

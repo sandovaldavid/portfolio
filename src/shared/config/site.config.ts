@@ -12,8 +12,8 @@ export const siteConfig = {
 	name: 'David Sandoval',
 	fullName: 'Juan David Sandoval Salvador',
 	handle: 'sandovaldavid',
-	role: 'Software Engineer · Angular, .NET & TypeScript',
-	location: 'Lima, Peru (UTC-5)',
+	role: 'Software Engineer',
+	location: 'Peru (UTC-5)',
 	currentCompany: 'Atena',
 	availability: true,
 
@@ -34,9 +34,9 @@ export const siteConfig = {
 	social: {
 		github: 'https://github.com/sandovaldavid',
 		githubUsername: 'sandovaldavid',
-		linkedin: 'https://www.linkedin.com/in/jdavidsandoval',
-		linkedinUsername: 'jdavidsandoval',
-		linkHub: 'https://linkdevs.social',
+		linkedin: 'https://www.linkedin.com/in/jdsandovals',
+		linkedinUsername: 'jdsandovals',
+		linkHub: 'https://hub.sandovaldavid.com',
 	},
 
 	// ─── Resume ──────────────────────────────────────────────────

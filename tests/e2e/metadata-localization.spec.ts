@@ -97,7 +97,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'en',
 			title: 'David Sandoval — Software Engineer',
 			description:
-				'Software Engineer building reliable web products with Angular, .NET and TypeScript. Based in Lima and open to remote opportunities across Europe and Latin America.',
+				'Backend-oriented Software Engineer with frontend experience, building reliable web products with .NET, Angular and TypeScript. Remote from Peru, open to international opportunities.',
 			ogLocale: 'en_US',
 			alternateOgLocale: 'es_PE',
 			imageAlt: 'David Sandoval portfolio preview',
@@ -111,7 +111,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'es',
 			title: 'David Sandoval — Ingeniero de Software',
 			description:
-				'Ingeniero de software que construye productos web confiables con Angular, .NET y TypeScript. En Lima y disponible para oportunidades remotas en Europa y Latinoamérica.',
+				'Ingeniero de software orientado a backend con experiencia frontend, que construye productos web confiables con .NET, Angular y TypeScript. Remoto desde Perú, disponible para oportunidades internacionales.',
 			ogLocale: 'es_PE',
 			alternateOgLocale: 'en_US',
 			imageAlt: 'Vista previa del portafolio de David Sandoval',
@@ -163,7 +163,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(profile, 'inLanguage')).toBe('es');
 		expect(getString(profile, 'description')).toContain('Conoce a David Sandoval');
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
-		expect(getString(person, 'description')).toContain('productos web mantenibles');
+		expect(getString(person, 'description')).toContain('productos web confiables');
 	});
 
 	test('canonical alternate targets resolve for representative route families', async ({

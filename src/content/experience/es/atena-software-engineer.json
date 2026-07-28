@@ -2,11 +2,11 @@
 	"experienceId": "atena-software-engineer",
 	"locale": "es",
 	"company": "Atena",
-	"title": "Ingeniero de Software — Full-Stack",
+	"title": "Jr. Software Engineer",
 	"dateLabel": "Ene 2026 – Presente",
 	"achievements": [
-		"Implementé la migración de módulos críticos a Angular 19 Signals, reduciendo la carga del Event Loop al eliminar la dependencia de Zone.js en componentes de visualización de datos",
-		"Desarrollé y documenté 3 nuevas APIs REST usando .NET 8 y Clean Architecture, garantizando una cobertura de pruebas unitarias del >80% y facilitando la escalabilidad del sistema",
-		"Reduje el Bundle Size del frontend en un 35% mediante la implementación de Standalone Components y Lazy Loading, optimizando el Time to Interactive (TTI) para usuarios en conexiones de baja latencia"
+		"Migré módulos críticos a Angular 19 Signals, eliminando la dependencia de Zone.js en componentes de visualización de datos",
+		"Desarrollé y documenté nuevas APIs REST usando .NET 8 y Clean Architecture, con cobertura de pruebas unitarias como parte del contrato de entrega",
+		"Adopté Standalone Components y Lazy Loading para mejorar la entrega del bundle frontend en conexiones de baja latencia"
 	]
 }
