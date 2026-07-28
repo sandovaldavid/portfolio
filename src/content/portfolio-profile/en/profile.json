@@ -3,25 +3,25 @@
 	"locale": "en",
 	"seo": {
 		"title": "About David Sandoval — Software Engineer",
-		"description": "Learn about David Sandoval, a Software Engineer building maintainable web products with Angular, .NET and TypeScript and researching OSS abandonment with BiLSTM models."
+		"description": "Learn about David Sandoval, a backend-oriented Software Engineer with frontend experience who builds reliable web products with .NET, Angular and TypeScript."
 	},
-	"summary": "Computer Engineer building maintainable web products with Angular, .NET and TypeScript. My work includes frontend modernization, REST APIs and performance improvements. I also research OSS abandonment prediction using BiLSTM models.",
+	"summary": "Backend-oriented Software Engineer with frontend experience, building reliable web products with .NET, Angular and TypeScript. I connect technical decisions with business context and validate solutions through testing and reproducible workflows.",
 	"biography": [
-		"Computer Engineer focused on building maintainable web products with Angular, .NET and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
+		"Backend-oriented Software Engineer with frontend experience, building reliable web products with .NET, Angular and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
 		"My professional work includes modernizing frontend modules, contributing to REST APIs, improving bundle delivery and supporting migrations from legacy systems. The public portfolio documents the projects and trade-offs that can be shared openly.",
-		"Alongside product engineering, I research Mining Software Repositories and the use of BiLSTM models to study OSS project abandonment. This research is a secondary specialization that complements my software-engineering work."
+		"Alongside product engineering, I research Mining Software Repositories and the use of BiLSTM models to study OSS project abandonment, currently in progress toward my professional degree. This research is a secondary specialization that complements my software-engineering work."
 	],
 	"focusAreas": [
-		"Angular and reactive frontend architecture",
 		".NET APIs and maintainable backend boundaries",
+		"Angular and reactive frontend architecture",
 		"TypeScript and web performance",
 		"Automated testing and CI quality gates",
-		"BiLSTM models for OSS abandonment prediction",
+		"Business-aware, validation-driven engineering",
 		"Open-source documentation and contribution"
 	],
-	"availabilityStatement": "Open to remote software engineering opportunities across Europe and Latin America.",
-	"location": "Lima, Peru (UTC-5)",
-	"workMode": "Remote across Europe and Latin America",
-	"researchSummary": "Researching OSS abandonment prediction with BiLSTM models and repository activity data.",
-	"currentRoleSummary": "I currently work at Atena as a Software Engineer contributing to Angular frontends and .NET APIs. My focus is maintainable delivery, measurable performance improvements and clear technical documentation."
+	"availabilityStatement": "Open to remote software engineering opportunities, including international relocation or graduate study as part of ongoing career growth.",
+	"location": "Peru (UTC-5)",
+	"workMode": "Remote from Peru",
+	"researchSummary": "Researching OSS abandonment prediction with BiLSTM models and repository activity data as part of ongoing thesis work.",
+	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer, backend-oriented with frontend experience across Angular and .NET. My focus is maintainable delivery, validated changes and clear technical documentation."
 }

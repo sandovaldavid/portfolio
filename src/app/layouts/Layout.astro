@@ -51,7 +51,7 @@ const {
 	publishedTime,
 	modifiedTime,
 	breadcrumbLabel,
-	keywords = 'Software Engineer, .NET 8, Angular 19, BiLSTM, Machine Learning, OSS, Portfolio, Peru, Astro',
+	keywords = 'Software Engineer, Backend, .NET 8, Angular 19, TypeScript, Peru, Remote, Portfolio, Astro',
 	localizedPaths,
 } = Astro.props;
 
@@ -157,7 +157,7 @@ const personEntity = {
 	sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
 	jobTitle: tMetadata('personJobTitle'),
 	worksFor: { '@type': 'Organization', name: siteConfig.currentCompany },
-	address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
+	address: { '@type': 'PostalAddress', addressCountry: 'PE' },
 	email: siteConfig.email,
 	knowsAbout: [
 		'.NET 8',

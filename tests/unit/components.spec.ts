@@ -8,7 +8,7 @@ describe('home section catalog consumers', () => {
 		const techStack = createScopedUiTranslator(Language.ENGLISH, 'sections.techStack');
 
 		expect(hero('title')).toBe('Software Engineer building reliable web products');
-		expect(hero('credential')).toContain('BiLSTM/OSS research');
+		expect(hero('credential')).toContain('Remote from Peru');
 		expect(research('sectionTitle')).toBe('Research');
 		expect(techStack('frontendTitle')).toBe('Core frontend stack');
 	});
