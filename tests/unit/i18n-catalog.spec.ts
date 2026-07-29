@@ -1,7 +1,11 @@
 import { describe, expect, expectTypeOf, it } from 'vitest';
 import {
+	assertKeyParity,
+	assertNoMissingTranslations,
+	assertUniqueModules,
 	createScopedUiTranslator,
 	createUiTranslator,
+	flattenCatalog,
 	getUiCatalog,
 	getUiCatalogNamespace,
 	Language,
@@ -66,5 +70,55 @@ describe('granular UI catalogs', () => {
 
 		expect(catalog[key]).toBe('Technologies');
 		expectTypeOf<UiCatalogKey>().toMatchTypeOf<string>();
+	});
+
+	describe('catalog integrity guards', () => {
+		it('rejects duplicate module namespaces', () => {
+			expect(() => assertUniqueModules(['common', 'navigation', 'common'])).toThrowError(
+				'UI catalog module namespaces must be unique.'
+			);
+			expect(() => assertUniqueModules(['common', 'navigation'])).not.toThrow();
+		});
+
+		it('rejects mismatched key counts between locales', () => {
+			expect(() => assertKeyParity(['a', 'b'], ['a'])).toThrowError(
+				'English and Spanish UI catalogs must contain the same number of keys.'
+			);
+		});
+
+		it('rejects a key mismatch at the same sorted index', () => {
+			expect(() => assertKeyParity(['a', 'b'], ['a', 'c'])).toThrowError(
+				'UI catalog key parity failed at "b".'
+			);
+			expect(() => assertKeyParity(['a', 'b'], ['a', 'b'])).not.toThrow();
+		});
+
+		it('rejects a non-object catalog namespace', () => {
+			expect(() => flattenCatalog('not-an-object')).toThrowError(
+				'UI catalog namespace "<root>" must be an object.'
+			);
+			expect(() => flattenCatalog('not-an-object', 'sections')).toThrowError(
+				'UI catalog namespace "sections" must be an object.'
+			);
+		});
+
+		it('rejects a non-scalar catalog value', () => {
+			expect(() => flattenCatalog({ hero: { title: 42 } })).toThrowError(
+				'UI catalog value "hero.title" must be a scalar string.'
+			);
+		});
+
+		it('rejects a blank translation value', () => {
+			expect(() =>
+				assertNoMissingTranslations({
+					[Language.ENGLISH]: { 'navigation.projects': '   ' },
+				})
+			).toThrowError(MissingUiTranslationError);
+			expect(() =>
+				assertNoMissingTranslations({
+					[Language.ENGLISH]: { 'navigation.projects': 'Projects' },
+				})
+			).not.toThrow();
+		});
 	});
 });
