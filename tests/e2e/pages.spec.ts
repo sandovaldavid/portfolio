@@ -42,9 +42,9 @@ pages.forEach(({ path, name }) => {
 });
 
 const internalRouteExpectations = [
-	{ path: '/about', heading: 'FULL BIOGRAPHY' },
+	{ path: '/about', heading: 'Full biography' },
 	{ path: '/projects', heading: 'Projects Catalog' },
-	{ path: '/es/about', heading: 'BIOGRAFÍA COMPLETA' },
+	{ path: '/es/about', heading: 'Biografía completa' },
 	{ path: '/es/projects', heading: 'Catálogo de Proyectos' },
 ];
 
@@ -69,12 +69,12 @@ test.describe('Navigation between pages', () => {
 		// Actually navigate: /blog is the only page link in the header nav
 		// (the rest are same-page anchors). On small viewports the desktop nav
 		// link is hidden, so open the mobile menu overlay and click there.
-		const blogLink = page.locator('header a[href="/blog"]').first();
+		const blogLink = page.locator('header a[href="/blog/"]').first();
 		if (await blogLink.isVisible()) {
 			await blogLink.click();
 		} else {
 			await page.locator('#mobile-menu-btn').click();
-			await page.locator('#mobile-menu a[href="/blog"]').click();
+			await page.locator('#mobile-menu a[href="/blog/"]').click();
 		}
 
 		await expect(page).toHaveURL(/\/blog\/?$/);

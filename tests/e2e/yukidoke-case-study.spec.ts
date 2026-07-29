@@ -7,7 +7,7 @@ test.describe('Yukidoke flagship case study', () => {
 		await expect(page.getByRole('heading', { name: 'Yukidoke' })).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Case Study' }).first()).toHaveAttribute(
 			'href',
-			'/projects/yukidoke'
+			'/projects/yukidoke/'
 		);
 	});
 

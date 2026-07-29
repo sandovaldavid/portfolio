@@ -7,9 +7,9 @@ test.describe('Homepage', () => {
 		await expect(page).toHaveTitle(/David Sandoval.*Software Engineer/i);
 		await expect(page.locator('h1')).toHaveText(/David Sandoval/i);
 		await expect(page.getByText(/Angular · \.NET · TypeScript/i).first()).toBeVisible();
-		await expect(page.getByRole('link', { name: /view selected work/i })).toBeVisible();
-		await expect(page.getByRole('link', { name: /contact me/i })).toBeVisible();
-		await expect(page.getByRole('link', { name: /download resume/i })).toBeVisible();
+		await expect(page.getByRole('link', { name: /view work/i })).toBeVisible();
+		await expect(page.getByRole('link', { name: /get in touch/i })).toBeVisible();
+		await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
 		await expect(page.getByRole('link', { name: 'GitHub', exact: true }).first()).toBeVisible();
 		await expect(
 			page.getByRole('link', { name: 'LinkedIn', exact: true }).first()
@@ -54,7 +54,7 @@ test.describe('Homepage', () => {
 		await page.goto('/');
 
 		await expect(page.locator('main, [role="main"]')).toBeVisible();
-		await expect(page.getByRole('link', { name: /contact me/i })).toBeVisible();
+		await expect(page.getByRole('link', { name: /get in touch/i })).toBeVisible();
 	});
 
 	test('has no basic accessibility regressions', async ({ page }) => {
