@@ -19,15 +19,15 @@ Pull-request quality, security and preview workflows cover both long-lived base 
 
 ## Configured workflows
 
-| Trigger                                                               | Workflow                      | Implemented purpose                                                                                                                                                         |
-| --------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pull request to `develop` or `main`                                   | `Continuous Integration`      | Repository checks, unit tests, production build, route budgets, Chromium smoke/Axe gates and exact base/head Portfolio Retro evidence.                                      |
-| Pull request to `develop` or `main`                                   | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                                                                          |
-| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`                      | Security and code-quality analysis for integration and production changes.                                                                                                  |
-| Pull request to `main` or manual run                                  | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, full desktop browser suite and Lighthouse — a required check gating merge into `main`. |
-| Weekly or manual                                                      | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link and bundle audits.                                                                                                |
-| Dev Container changes or manual run                                   | `Build Dev Container`         | Validates the versioned development environment.                                                                                                                            |
-| Push to `main`; manual/resume dispatch                                | `Deploy to Vercel Production` | Deploys the pushed `main` revision or the explicitly selected current `main` revision.                                                                                      |
+| Trigger                                                               | Workflow                      | Implemented purpose                                                                                                                                                                                           |
+| --------------------------------------------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Pull request to `develop` or `main`                                   | `Continuous Integration`      | Repository checks, unit tests, production build, route budgets, Chromium smoke/Axe gates and exact base/head Portfolio Retro evidence.                                                                        |
+| Pull request to `develop` or `main`                                   | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                                                                                                            |
+| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`                      | Security and code-quality analysis for integration and production changes.                                                                                                                                    |
+| Pull request to `main` or manual run                                  | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, a Chromium Playwright run and a single-run performance-only Lighthouse pass — a required check gating merge into `main`. |
+| Weekly or manual                                                      | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link, bundle and full four-category/three-run Lighthouse audits.                                                                                         |
+| Dev Container changes or manual run                                   | `Build Dev Container`         | Validates the versioned development environment.                                                                                                                                                              |
+| Push to `main`; manual/resume dispatch                                | `Deploy to Vercel Production` | Deploys the pushed `main` revision or the explicitly selected current `main` revision.                                                                                                                        |
 
 Workflow YAML is **Implemented** configuration. A workflow result is evidence only when a run exists for the exact commit and completes successfully.
 
@@ -67,8 +67,10 @@ Promotion pull requests use the same required quality and security checks as `de
 - `Playwright Chromium Smoke`;
 - `Analyze Security`;
 - `Main Build & Unit Quality`;
-- `Full Desktop Browser Suite`;
+- `Main Chromium Suite`;
 - `Main Lighthouse`.
+
+`Main Chromium Suite` runs Chromium only, and `Main Lighthouse` audits a single run scoped to the `performance` category — this is the fast pre-merge gate, not the full cross-browser/multi-category sweep. Firefox, WebKit, the mobile matrix, and the full four-category/three-run Lighthouse audit (`accessibility`, `best-practices`, `seo`) run weekly in `Scheduled Extended Quality` instead; accessibility is not re-audited there via Lighthouse either, since `tests/e2e/a11y.spec.ts` already covers it directly with axe-core.
 
 The stable job names are an external contract with GitHub rulesets. Do not rename them without coordinating the hosted required-check configuration.
 

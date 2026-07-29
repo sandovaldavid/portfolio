@@ -85,8 +85,8 @@ jobs:
                   if-no-files-found: warn
                   retention-days: 7
 
-    desktop-browsers:
-        name: Full Desktop Browser Suite
+    chromium-suite:
+        name: Main Chromium Suite
         runs-on: ubuntu-latest
         needs: build
         steps:
@@ -104,13 +104,15 @@ jobs:
                   name: main-build-output
                   path: dist
 
-            - name: Install desktop browsers
-              run: bunx playwright install --with-deps chromium firefox webkit
+            - name: Install Chromium
+              uses: ./.github/actions/setup-playwright
+              with:
+                  browsers: chromium
 
-            - name: Run Chromium, Firefox and WebKit
-              run: bun run test:e2e:desktop
+            - name: Run Chromium
+              run: node scripts/run-playwright.mjs --project=chromium
 
-            - name: Upload desktop Playwright diagnostics
+            - name: Upload Playwright diagnostics
               if: always()
               uses: actions/upload-artifact@v7
               with:

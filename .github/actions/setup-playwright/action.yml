@@ -1,0 +1,22 @@
+name: Setup Playwright browsers
+description: Install pinned Playwright browsers with a shared binary cache keyed by bun.lock.
+
+inputs:
+    browsers:
+        description: Space-separated browser names to install (e.g. "chromium" or "chromium firefox webkit").
+        required: true
+
+runs:
+    using: composite
+    steps:
+        - name: Cache Playwright browsers
+          uses: actions/cache@v6
+          with:
+              path: ~/.cache/ms-playwright
+              key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
+              restore-keys: |
+                  ${{ runner.os }}-playwright-
+
+        - name: Install Playwright browsers
+          shell: bash
+          run: bunx playwright install --with-deps ${{ inputs.browsers }}
