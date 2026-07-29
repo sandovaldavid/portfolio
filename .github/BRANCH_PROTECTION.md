@@ -10,14 +10,13 @@ short-lived branch -> develop -> main -> production
 
 - `develop` is the integration branch for ordinary pull requests.
 - `main` is the default and production branch.
-- Only a pull request whose head branch is `develop` may promote into `main`.
+- Ordinary promotions come from `develop`, but pull requests into `main` are not restricted to that source: a hotfix may go directly to `main`, and Release Please opens its own release pull requests from a branch that is never `develop`.
 - Both long-lived branches use squash merge and reject direct or force pushes.
 
 ## Stable pull-request checks
 
 The versioned workflows expose these stable checks for pull requests targeting `develop` or `main`:
 
-- `Promotion Source`;
 - `Code Quality & Commits`;
 - `Unit Tests (Vitest)`;
 - `Build & Bundle Analysis`;
@@ -36,7 +35,6 @@ Use branch target `develop` and configure:
 - require the branch to be up to date before merge;
 - require conversation resolution;
 - require these checks:
-    - `Promotion Source`;
     - `Code Quality & Commits`;
     - `Unit Tests (Vitest)`;
     - `Build & Bundle Analysis`;
@@ -47,8 +45,6 @@ Use branch target `develop` and configure:
 - block branch deletion;
 - allow squash merge only at repository level;
 - optionally require one approval when an independent reviewer is available.
-
-The `Promotion Source` job passes for ordinary pull requests into `develop` and keeps one stable policy check across both branch lifecycles.
 
 ## Ruleset for main
 
@@ -58,7 +54,6 @@ Use branch target `main` and configure:
 - require the branch to be up to date before merge;
 - require conversation resolution;
 - require these checks:
-    - `Promotion Source`;
     - `Code Quality & Commits`;
     - `Unit Tests (Vitest)`;
     - `Build & Bundle Analysis`;
@@ -70,7 +65,7 @@ Use branch target `main` and configure:
 - allow squash merge only at repository level;
 - optionally require one approval when an independent reviewer is available.
 
-`Promotion Source` is the executable source-branch policy. It fails when a pull request targets `main` from any head other than `develop`.
+`main` intentionally accepts pull requests from more than one kind of source branch: `develop` promotions, direct hotfixes, and Release Please's release pull requests. No job restricts the head branch name.
 
 ## Environment protection
 
@@ -111,9 +106,8 @@ Verify:
 ## Verification checklist
 
 - [ ] `develop` accepts ordinary pull requests and rejects direct/force pushes.
-- [ ] `main` accepts promotion pull requests and rejects direct/force pushes.
-- [ ] A test pull request into `main` from a non-`develop` branch fails `Promotion Source`.
-- [ ] Pull requests into both bases report all six required checks.
+- [ ] `main` accepts promotion, hotfix and Release Please pull requests and rejects direct/force pushes.
+- [ ] Pull requests into both bases report all five required checks.
 - [ ] Check names in rulesets exactly match the workflow job names above.
 - [ ] Preview runs for pull requests into `develop` and `main` when credentials are available.
 - [ ] Preview and PR summary remain informative rather than required.

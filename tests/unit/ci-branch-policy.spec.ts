@@ -13,7 +13,6 @@ const deliveryPolicy = readSource('docs/DELIVERY.md');
 const protectionPolicy = readSource('.github/BRANCH_PROTECTION.md');
 
 const requiredChecks = [
-	'Promotion Source',
 	'Code Quality & Commits',
 	'Unit Tests (Vitest)',
 	'Build & Bundle Analysis',
@@ -28,13 +27,11 @@ describe('develop integration and main promotion policy', () => {
 		expect(previewWorkflow).toContain('branches: [develop, main]');
 	});
 
-	it('enforces develop as the only source branch for main promotions', () => {
-		expect(ciWorkflow).toContain('name: Promotion Source');
-		expect(ciWorkflow).toContain('BASE_REF: ${{ github.base_ref }}');
-		expect(ciWorkflow).toContain('HEAD_REF: ${{ github.head_ref }}');
-		expect(ciWorkflow).toContain(
-			'if [ "$BASE_REF" = "main" ] && [ "$HEAD_REF" != "develop" ]; then'
-		);
+	it('does not restrict pull requests into main by source branch', () => {
+		expect(ciWorkflow).not.toContain('name: Promotion Source');
+		expect(ciWorkflow).not.toContain('BASE_REF: ${{ github.base_ref }}');
+		expect(deliveryPolicy).toContain('Release Please');
+		expect(protectionPolicy).not.toContain('Promotion Source');
 	});
 
 	it('keeps post-merge quality and production restricted to main', () => {

@@ -41,7 +41,7 @@ Before promotion:
 - confirm that documentation and `docs/STATUS.md` describe the promoted state;
 - record any unavailable GitHub automation as **Blocked**, never as passed.
 
-The `Promotion Source` CI job rejects pull requests targeting `main` when the head branch is not exactly `develop`. Configure that stable job as a required check on `main`.
+Ordinary promotions originate from `develop`, but pull requests into `main` are not restricted to that source branch: a hotfix may go directly to `main` when the situation warrants it, and Release Please's own release pull requests (see "Release policy" below) never originate from `develop` either. Required status checks (`Code Quality & Commits`, `Unit Tests (Vitest)`, `Build & Bundle Analysis`) gate every merge into `main` regardless of source branch.
 
 ## Preview deployments
 
@@ -81,11 +81,12 @@ Workflow definitions are **Implemented**. Their current enablement, quota, secre
 This repository is a private package and a public website, not a published npm library.
 
 - Production deployment is independent from GitHub Releases.
-- Create a Git tag and GitHub Release manually only for a meaningful public milestone.
-- Use stable semantic versions such as `v2.0.0` for those milestones.
-- Do not create routine beta tags or automated release pull requests for ordinary portfolio updates.
-- Keep `CHANGELOG.md` as public release history; pull requests and Git history remain the operational change record.
-- Historical `porfolio-dev-*` and beta tags are immutable **Historical** evidence and are not renamed.
+- `main` is the single source of truth for releases. [Release Please](https://github.com/googleapis/release-please) (`.github/workflows/release-please.yml`) runs only on pushes to `main`; it does not run on `develop`, which avoids conflicting release state when `develop` is promoted.
+- Release Please opens or updates a release pull request against `main` derived from Conventional Commit history since the last release. Merging that pull request — squash merge, like every other pull request into `main` — is what cuts the Git tag and the GitHub Release. This is not a bypass of review.
+- Tags and releases use plain stable semantic versions, e.g. `v1.0.0`, `v2.0.0` (`include-component-in-tag: false` in `release-please-config.json`). Do not hand-create ad hoc beta or `porfolio-dev-*`-style tags.
+- `CHANGELOG.md` is generated and maintained by Release Please from Conventional Commit history. Do not hand-edit it.
+- Promotions from `develop` to `main` are squash-merged, so Release Please reads only the promotion pull request's title (its Conventional Commit type) and any `BREAKING CHANGE:` footer added to the squash-commit body — it does not replay the individual commits that lived on `develop`. Whoever authors a promotion pull request must choose an accurate type and add a `BREAKING CHANGE:` footer to the merge commit body whenever the promoted change should trigger a major version.
+- `v1.0.0` (commit `72d8c852a8a518922e705409f4785484e999d53e`) is the release baseline as of 2026-07-29. The previous `porfolio-dev-*` and `vX.Y.Z-beta.0` tags/releases (2026-06-21 through 2026-07-05) were deleted: they were pre-release artifacts of a discontinued dual-branch (`main` + `develop`) Release Please setup and are **Discarded**, not preserved historical evidence.
 
 ## Repository settings contract
 
