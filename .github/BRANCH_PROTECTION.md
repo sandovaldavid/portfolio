@@ -60,7 +60,7 @@ Use branch target `main` and configure:
     - `Playwright Chromium Smoke`;
     - `Analyze Security`;
     - `Main Build & Unit Quality`;
-    - `Full Desktop Browser Suite`;
+    - `Main Chromium Suite`;
     - `Main Lighthouse`;
 - block direct pushes;
 - block force pushes;

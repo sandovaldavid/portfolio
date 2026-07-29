@@ -28,6 +28,6 @@ export default {
 		],
 		'subject-case': [2, 'never', ['start-case', 'pascal-case', 'upper-case']],
 		'type-case': [2, 'always', 'lowercase'],
-		'header-max-length': [2, 'always', 72],
+		'header-max-length': [0],
 	},
 };

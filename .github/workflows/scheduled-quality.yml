@@ -46,13 +46,30 @@ jobs:
               run: bun run performance:check
 
             - name: Install complete browser matrix
-              run: bunx playwright install --with-deps chromium firefox webkit
+              uses: ./.github/actions/setup-playwright
+              with:
+                  browsers: chromium firefox webkit
 
             - name: Run extended desktop and mobile matrix
               run: bun run test:e2e:extended
 
             - name: Run visual regression suite in pinned Docker
               run: bun run test:e2e:visual:docker
+
+            - name: Collect extended Lighthouse reports
+              run: bun run lighthouse:collect:extended
+
+            - name: Assert extended Lighthouse thresholds
+              run: bun run lighthouse:assert:extended
+
+            - name: Prepare Lighthouse artifact
+              if: always()
+              run: |
+                  rm -rf lighthouse-reports
+                  mkdir -p lighthouse-reports
+                  if [ -d .lighthouseci ]; then
+                    cp -R .lighthouseci/. lighthouse-reports/
+                  fi
 
             - name: Upload extended Playwright diagnostics
               if: always()
@@ -67,7 +84,7 @@ jobs:
                   if-no-files-found: warn
                   retention-days: 14
 
-            - name: Upload coverage and bundle audit
+            - name: Upload coverage, bundle and Lighthouse audit
               if: always()
               uses: actions/upload-artifact@v7
               with:
@@ -76,5 +93,6 @@ jobs:
                       coverage/
                       bundle-analysis/
                       performance-report/
+                      lighthouse-reports/
                   if-no-files-found: warn
                   retention-days: 14

@@ -131,7 +131,17 @@ bun run lighthouse:collect
 bun run lighthouse:assert
 ```
 
-Thresholds are owned by `.lighthouserc.json`; do not duplicate or weaken them in prose.
+Thresholds are owned by `.lighthouserc.json`; do not duplicate or weaken them in prose. This is the fast, `performance`-only, single-run config used by the `Main Quality` pre-merge gate.
+
+For the full four-category (`performance`, `accessibility`, `best-practices`, `seo`), three-run audit used only by the weekly `Scheduled Extended Quality` workflow, use the `:extended` scripts and `.lighthouserc.extended.json` instead:
+
+```bash
+bun run build
+bun run lighthouse:collect:extended
+bun run lighthouse:assert:extended
+```
+
+Accessibility is not re-audited via Lighthouse in the fast config because `tests/e2e/a11y.spec.ts` already covers it directly with axe-core.
 
 ## Route performance budgets
 
