@@ -5,6 +5,6 @@
 	"title": "Predicción del estado de abandono de repositorios OSS mediante redes neuronales BiLSTM",
 	"summary": "Aplico redes neuronales LSTM bidireccionales para detectar el riesgo de abandono de repositorios OSS mediante series temporales de actividad de GitHub y comparar los resultados con modelos tradicionales de machine learning.",
 	"techStackLabel": "Stack tecnológico",
-	"methodologyHint": "La metodología, arquitectura y pipeline completos están disponibles en la página de investigación.",
+	"methodologyHint": "Metodología, arquitectura y pipeline completos en la página de investigación.",
 	"viewFull": "Ver investigación completa"
 }
