@@ -1,23 +1,17 @@
 ---
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import type { ExperienceItem as ExperienceItemData } from '@entities/experience';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { LinkInline } from '@shared/ui';
-import { getLangFromUrl, useTranslations } from '@shared/lib/i18n';
-import { Language } from '@shared/config/i18n';
 
-interface Props {
-	title: string;
-	date: string;
-	description: string | string[];
-	technologies: string | string[];
-	link?: string;
-	company?: string;
-}
+type Props = Pick<
+	ExperienceItemData,
+	'title' | 'date' | 'description' | 'technologies' | 'link' | 'company'
+>;
+
 const { title, date, description, technologies, link, company } = Astro.props;
-const descriptionItems = Array.isArray(description) ? description : [description];
-const technologyItems = Array.isArray(technologies) ? technologies : [technologies];
-
-const langCode = getLangFromUrl(new URL(Astro.request.url));
-const lang = langCode === 'en' ? Language.ENGLISH : Language.SPANISH;
-const t = useTranslations(lang);
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 ---
 
 <div
@@ -44,31 +38,31 @@ const t = useTranslations(lang);
 		</div>
 	</div>
 
-	<!-- Bullet Points Description -->
 	<ul class="space-y-3 text-content leading-relaxed">
 		{
-			descriptionItems.map((point, idx) => (
+			description.map((point, idx) => (
 				<li
 					class="flex items-start gap-2.5 text-base transition-all duration-300"
 					style={`animation: var(--animate-slide-up); animation-delay: ${idx * 50}ms;`}
 				>
-					<span class="text-primary-500 shrink-0 mt-1.5 text-xs font-bold font-gaming-mono">
-						▸
-					</span>
+					<ArrowRightIcon
+						class="size-3.5 text-primary-500 shrink-0 mt-1.5"
+						aria-hidden="true"
+						focusable="false"
+					/>
 					<span class="leading-relaxed">{point}</span>
 				</li>
 			))
 		}
 	</ul>
 
-	<!-- Technologies Tags -->
 	{
-		technologyItems && technologyItems.length > 0 && (
+		technologies.length > 0 && (
 			<div
 				class="flex flex-wrap gap-2 pt-2 justify-start"
 				style="animation: var(--animate-slide-up); animation-delay: 150ms;"
 			>
-				{technologyItems.map(tech => (
+				{technologies.map(tech => (
 					<span class="px-3 py-1.5 rounded-none bg-badge-brand-bg text-badge-brand-text text-sm font-bold uppercase tracking-wider border-2 border-black dark:border-white shadow-retro-sm hover:-translate-y-0.5 hover:bg-badge-brand-bg-hover transition-all duration-100">
 						{tech}
 					</span>
@@ -81,22 +75,8 @@ const t = useTranslations(lang);
 		link && (
 			<div class="pt-3 flex items-center gap-1">
 				<LinkInline href={link}>
-					{t('experience.learn-more')}
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="w-4 h-4 ml-1"
-						width="24"
-						height="24"
-						viewBox="0 0 24 24"
-						stroke-width="2"
-						stroke="currentColor"
-						fill="none"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-					>
-						<path stroke="none" d="M0 0h24v24H0z" fill="none" />
-						<path d="M9 6l6 6l-6 6" />
-					</svg>
+					{tExperience('learnMore')}
+					<ArrowRightIcon class="size-4 ml-1" aria-hidden="true" focusable="false" />
 				</LinkInline>
 			</div>
 		)

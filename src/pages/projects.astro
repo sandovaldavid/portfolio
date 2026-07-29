@@ -1,19 +1,22 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
 import { Projects as ProjectsWidget } from '@widgets/projects';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
 import { SectionContainer } from '@shared/ui';
+
+const tProjects = createScopedUiTranslator(Language.ENGLISH, 'sections.projects');
 ---
 
 <Layout
-	title="Projects Catalog - David Sandoval"
-	description="Explore all projects built by David Sandoval: scalable web and mobile applications."
+	title={tProjects('catalogTitle')}
+	description={tProjects('catalogDescription')}
 	img_preview="/projects/portfolio.webp"
 >
 	<SectionContainer id="projects-catalog" class="w-full max-w-5xl px-4">
 		<h1
 			class="text-4xl md:text-5xl font-bold font-pixel-clean text-content-strong mb-12 text-center uppercase tracking-wide"
 		>
-			Projects Catalog
+			{tProjects('catalogHeading')}
 		</h1>
 		<ProjectsWidget showAll={true} />
 	</SectionContainer>

@@ -60,15 +60,19 @@
 		"source=devcontainer-${localWorkspaceFolderBasename}-zsh-history,target=/commandhistory,type=volume"
 	],
 
-	"appPort": ["127.0.0.1:4321:4321", "127.0.0.1:9323:9323"],
+	"forwardPorts": [4321, 9323],
 	"portsAttributes": {
 		"4321": {
-			"label": "Astro development server (published on host localhost)",
-			"onAutoForward": "ignore"
+			"label": "Astro development server",
+			"protocol": "http",
+			"onAutoForward": "openBrowserOnce",
+			"requireLocalPort": true
 		},
 		"9323": {
-			"label": "Playwright HTML report (published on host localhost)",
-			"onAutoForward": "ignore"
+			"label": "Playwright HTML report",
+			"protocol": "http",
+			"onAutoForward": "notify",
+			"requireLocalPort": true
 		}
 	},
 

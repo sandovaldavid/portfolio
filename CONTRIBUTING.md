@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome. Keep changes focused, reproducible and aligned with the active repository documentation.
+Contributions are welcome. Keep changes focused, reproducible and aligned with the current repository documentation.
 
 ## Setup
 
@@ -9,20 +9,28 @@ Use the Bun version declared in [package.json](package.json).
 ```bash
 git clone https://github.com/sandovaldavid/portfolio-v1.git
 cd portfolio-v1
+git switch develop
 bun install --frozen-lockfile
 bun run dev
 ```
 
-## Workflow
+The recommended environment is the Dev Container documented in [docs/DEVCONTAINER.md](docs/DEVCONTAINER.md).
 
-1. Update `main` and create a prefixed, short-lived branch from it.
-2. Read [AGENTS.md](AGENTS.md) and the owning document for the area being changed.
-3. Implement one coherent concern.
+## Branch workflow
+
+1. Update `develop` and create a short-lived prefixed branch from it.
+2. Read [AGENTS.md](AGENTS.md), [docs/STATUS.md](docs/STATUS.md) and the owning document for the area being changed.
+3. Implement one coherent concern without reintroducing removed compatibility paths or bypassing executable gates.
 4. Add the relevant unit or browser regression.
 5. For user-facing content, follow [docs/I18N.md](docs/I18N.md), update English and Spanish together and include accessibility and metadata copy.
-6. Run the canonical checks and any change-specific checks.
-7. Open a pull request into `main` using a Conventional Commit title.
-8. Use the Vercel preview to verify user-facing changes and squash merge after every required check passes.
+6. Run the canonical local checks and every change-specific check.
+7. Open a pull request into `develop` using a Conventional Commit title.
+8. Record exact validation commands, environment and results in the pull request.
+9. Squash merge only after review and explicit authorization.
+
+`main` is the default and production branch. Promotion from `develop` to `main` is a separate pull request governed by [docs/DELIVERY.md](docs/DELIVERY.md); ordinary feature branches do not target `main` directly.
+
+## Canonical validation
 
 ```bash
 bun run check
@@ -30,23 +38,43 @@ bun run test:unit:ci
 bun run build
 ```
 
-See [docs/TESTING.md](docs/TESTING.md) for browser, accessibility, coverage and performance commands. The complete branch, preview, production and release policy lives in [docs/DELIVERY.md](docs/DELIVERY.md).
+Add `bun run check:links`, the relevant Playwright command, route budgets, Lighthouse or pinned-Docker visual validation according to [docs/TESTING.md](docs/TESTING.md).
+
+A missing, skipped, disabled or quota-blocked GitHub Actions run is not a pass. When automation is unavailable, local validation remains mandatory and the unavailable automation must be reported as **Blocked** or **Unconfirmed**.
 
 ## Pull requests
 
 A pull request should include:
 
-- the problem and root cause;
-- the chosen solution and trade-offs;
-- the validation performed;
+- the problem and verified current state;
+- the chosen solution and its impact;
+- validation performed, including commands and environment;
+- risks, trade-offs or intentionally deferred work;
 - screenshots for visible changes;
-- `Closes #<issue>` when appropriate.
+- `Closes #<issue>` only when the merge completes that issue.
 
-All required checks must pass. Do not bypass architecture, testing, accessibility or performance gates by weakening configuration without documenting and justifying the change.
+Do not weaken architecture, localization, testing, accessibility or performance gates merely to make a check pass. Update configuration only with evidence and a documented operational reason.
 
 ## Documentation
 
-[docs/README.md](docs/README.md) defines ownership and update rules. [docs/I18N.md](docs/I18N.md) owns localization placement, naming, fallback, rich-content safety and migration policy. Avoid copying versions, thresholds or common agent guidance. Historical audits and completed plans are read-only references indexed through [docs/archive/README.md](docs/archive/README.md).
+[docs/README.md](docs/README.md) defines ownership, status classification and the repository/Cortex-L7 boundary.
+
+Keep in the repository:
+
+- current behavior and architecture;
+- installation, configuration and development instructions;
+- testing, deployment and troubleshooting contracts;
+- conventions required by contributors and agents.
+
+Keep in Cortex-L7:
+
+- decisions and alternatives;
+- historical reasoning and audits;
+- cross-repository strategy;
+- plans and session handoffs;
+- private or durable context that should survive repository refactors.
+
+Do not document an issue, roadmap item or vault note as existing functionality. Update the canonical owner and run `bun run check:docs` after changing links or moving files.
 
 ## Conduct
 

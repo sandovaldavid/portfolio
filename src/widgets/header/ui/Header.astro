@@ -11,61 +11,61 @@
  * - Features: ThemeToggle, LanguagePicker
  */
 
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { LinkButton } from '@shared/ui';
-import { getLangFromUrl, getLocalizedPath } from '@shared/lib/i18n';
-import { createScopedUiTranslator } from '@shared/config/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 import BrandLogo from './BrandLogo.astro';
 import DesktopNav from './DesktopNav.astro';
 import MobileNav from './MobileNav.astro';
 
-const lang = getLangFromUrl(new URL(Astro.request.url));
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const tNavigation = createScopedUiTranslator(lang, 'navigation');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+const homeUrl = getRelativeLocaleUrl(lang, '');
+const homeSectionUrl = (section: string) => `${homeUrl}#${section}`;
 
 const navItems = [
 	{
 		title: tNavigation('experience'),
 		label: 'experience',
 		icon: 'experience',
-		url: getLocalizedPath(lang, '/#experience'),
+		url: homeSectionUrl('experience'),
 	},
 	{
 		title: tNavigation('research'),
 		label: 'research',
 		icon: 'research',
-		url: getLocalizedPath(lang, '/#research'),
+		url: homeSectionUrl('research'),
 	},
 	{
 		title: tNavigation('projects'),
 		label: 'projects',
 		icon: 'projects',
 		prefetch: true,
-		url: getLocalizedPath(lang, '/#projects'),
+		url: homeSectionUrl('projects'),
 	},
 	{
 		title: tNavigation('blog'),
 		label: 'blog',
 		icon: 'blog',
 		prefetch: true,
-		url: getLocalizedPath(lang, '/blog'),
+		url: getRelativeLocaleUrl(lang, 'blog'),
 	},
 	{
 		title: tNavigation('about'),
 		label: 'about-me',
 		icon: 'about-me',
 		prefetch: true,
-		url: getLocalizedPath(lang, '/#about-me'),
+		url: homeSectionUrl('about-me'),
 	},
 	{
 		title: tNavigation('stack'),
 		label: 'technologies',
 		icon: 'technologies',
-		url: getLocalizedPath(lang, '/#technologies'),
+		url: homeSectionUrl('technologies'),
 	},
 ];
-
-const homeUrl = getLocalizedPath(lang, '/');
 ---
 
 <header
@@ -120,9 +120,9 @@ const homeUrl = getLocalizedPath(lang, '/');
 					if (entry.isIntersecting) {
 						navLinks.forEach(link => {
 							if (link.dataset.sectionId === entry.target.id) {
-								link.classList.add('active', 'text-primary-500');
+								link.classList.add('active', 'text-channel-accent-primary');
 							} else {
-								link.classList.remove('active', 'text-primary-500');
+								link.classList.remove('active', 'text-channel-accent-primary');
 							}
 						});
 					}
@@ -167,32 +167,9 @@ const homeUrl = getLocalizedPath(lang, '/');
 			box-shadow: none;
 		}
 		to {
-			background: rgba(248, 250, 252, 0.78);
+			background: var(--color-header-surface-scrolled);
 			backdrop-filter: blur(14px);
-			box-shadow:
-				0 8px 24px -6px rgb(0 0 0 / 0.12),
-				0 6px 12px -6px rgb(0 0 0 / 0.14);
-		}
-	}
-
-	:global(.dark) .navbar-header {
-		animation: navbar-shadow-dark 1s linear both;
-		animation-timeline: scroll();
-		animation-range: 0 100px;
-	}
-
-	@keyframes navbar-shadow-dark {
-		0% {
-			background: transparent;
-			backdrop-filter: none;
-			box-shadow: none;
-		}
-		to {
-			background: rgba(15, 23, 42, 0.88);
-			backdrop-filter: blur(14px);
-			box-shadow:
-				0 8px 24px -6px rgb(0 0 0 / 0.45),
-				0 6px 12px -6px rgb(0 0 0 / 0.35);
+			box-shadow: var(--shadow-header-scrolled);
 		}
 	}
 </style>

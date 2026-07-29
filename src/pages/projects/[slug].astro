@@ -1,58 +1,53 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
+import { getProjectBySlug, getProjectsData } from '@entities/project';
+import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
 import { ProjectCaseStudy } from '@widgets/project-case-study';
-import { getProjectsData } from '@entities/project';
-import { Language } from '@shared/config/i18n';
-import { getLangFromUrl, useTranslations } from '@shared/lib/i18n';
 
-export function getStaticPaths() {
-	const t = useTranslations(Language.ENGLISH);
-	const projects = getProjectsData(t);
-	return projects
-		.filter(p => p.caseStudy)
-		.map(p => ({
-			params: { slug: p.slug },
-			props: { slug: p.slug },
-		}));
+export async function getStaticPaths() {
+	const projects = await getProjectsData(Language.ENGLISH);
+	return projects.map(project => ({
+		params: { slug: project.slug },
+		props: { slug: project.slug },
+	}));
 }
 
-const { slug } = Astro.params;
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-const projects = getProjectsData(t);
-const project = projects.find(p => p.slug === slug);
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const slug = Astro.params.slug ?? '';
+const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+const project = await getProjectBySlug(lang, slug);
 
 if (!project) {
 	return Astro.redirect('/404');
 }
 
-const pageTitle = `${project.title} — Case Study | David Sandoval`;
+const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandoval`;
 ---
 
 <Layout
 	title={pageTitle}
 	description={project.description}
 	img_preview={project.image.src}
-	isHome={false}
+	imageAlt={project.imageAlt}
+	pageType="project"
+	breadcrumbLabel={project.title}
 >
 	<div class="py-16 md:py-24">
-		{
-			project.caseStudy && (
-				<ProjectCaseStudy
-					project={project}
-					backLink="/projects"
-					backText={t('projects.case.back')}
-					codeButtonText={t('projects.code-button')}
-					previewButtonText={t('projects.preview-button')}
-					labelProblem={t('projects.case.problem')}
-					labelApproach={t('projects.case.approach')}
-					labelTradeoffs={t('projects.case.tradeoffs')}
-					labelOutcome={t('projects.case.outcome')}
-					labelLearnings={t('projects.case.learnings')}
-					labelTimeline={t('projects.case.timeline')}
-					labelRole={t('projects.case.role')}
-				/>
-			)
-		}
+		<ProjectCaseStudy
+			{project}
+			backLink={getRelativeLocaleUrl(lang, 'projects')}
+			backText={tProjects('back')}
+			codeButtonText={tProjects('codeButton')}
+			previewButtonText={tProjects('previewButton')}
+			caseStudyLabel={tProjects('caseStudyBanner')}
+			labelProblem={tProjects('problem')}
+			labelApproach={tProjects('approach')}
+			labelTradeoffs={tProjects('tradeoffs')}
+			labelOutcome={tProjects('outcome')}
+			labelLearnings={tProjects('learnings')}
+			labelTimeline={tProjects('timeline')}
+			labelRole={tProjects('role')}
+		/>
 	</div>
 </Layout>

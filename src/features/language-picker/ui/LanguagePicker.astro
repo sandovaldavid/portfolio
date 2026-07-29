@@ -1,34 +1,17 @@
 ---
 import {
 	AVAILABLE_LANGUAGES,
-	DEFAULT_LANGUAGE,
 	LANGUAGE_LABELS,
 	createScopedUiTranslator,
+	getLanguageFromLocale,
 } from '@shared/config/i18n';
-import { getLangFromUrl } from '@shared/lib/i18n';
+import type { LanguagePickerProps } from '../model';
 
-const url = new URL(Astro.request.url);
-const currentLang = getLangFromUrl(url);
-const pathname = url.pathname;
+const { currentLang: providedCurrentLang, localizedPaths } = Astro.props as LanguagePickerProps;
+const currentLang = providedCurrentLang ?? getLanguageFromLocale(Astro.currentLocale);
 const tAccessibility = createScopedUiTranslator(currentLang, 'accessibility');
-
-/**
- * Generates the correct path for language switching.
- * Astro-native counterpart resolution is implemented by issue #139.
- */
-const getLanguagePath = (targetLang: string): string => {
-	const cleanPath = pathname.replace(/^\/(es|en)(\/|$)/, '/');
-
-	if (targetLang === DEFAULT_LANGUAGE) {
-		return cleanPath === '' ? '/' : cleanPath;
-	}
-
-	if (cleanPath === '/' || cleanPath === '') {
-		return '/es/';
-	}
-
-	return `/es${cleanPath}`;
-};
+const baseClass =
+	'px-2.5 py-1 text-xs font-bold transition-all duration-100 uppercase tracking-wider border-2 border-black dark:border-white';
 ---
 
 <div
@@ -39,15 +22,32 @@ const getLanguagePath = (targetLang: string): string => {
 	{
 		AVAILABLE_LANGUAGES.map(lang => {
 			const isActive = currentLang === lang;
-			const path = isActive ? '#' : getLanguagePath(lang);
+			const path = localizedPaths[lang];
+			const isUnavailable = !path;
 			const label = isActive
 				? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('currentPage')}`
-				: LANGUAGE_LABELS[lang];
+				: isUnavailable
+					? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('translationUnavailable')}`
+					: LANGUAGE_LABELS[lang];
+
+			if (isUnavailable) {
+				return (
+					<button
+						type="button"
+						disabled
+						class={`${baseClass} cursor-not-allowed opacity-50 bg-surface text-content-muted`}
+						aria-label={label}
+					>
+						{lang.toUpperCase()}
+					</button>
+				);
+			}
 
 			return (
 				<a
 					href={path}
-					class={`px-2.5 py-1 text-xs font-bold transition-all duration-100 uppercase tracking-wider border-2 border-black dark:border-white ${
+					data-language-base-path={path}
+					class={`${baseClass} ${
 						isActive
 							? 'bg-primary-500 text-white dark:text-black shadow-retro-xs translate-x-[1.5px] translate-y-[1.5px] cursor-default pointer-events-none'
 							: 'bg-surface text-content-strong shadow-retro-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-retro-md active:translate-x-[1.5px] active:translate-y-[1.5px] active:shadow-retro-xs'
@@ -61,3 +61,31 @@ const getLanguagePath = (targetLang: string): string => {
 		})
 	}
 </div>
+
+<script>
+	const preservePathShape = (pathname: string, trailingSlash: boolean): string => {
+		if (pathname === '/') return pathname;
+		if (trailingSlash) return pathname.endsWith('/') ? pathname : `${pathname}/`;
+		return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+	};
+
+	const syncLanguageLinkState = () => {
+		const preserveTrailingSlash = window.location.pathname.endsWith('/');
+
+		document.querySelectorAll<HTMLAnchorElement>('[data-language-base-path]').forEach(link => {
+			const basePath = link.dataset.languageBasePath;
+			if (!basePath) return;
+
+			const target = new URL(basePath, window.location.origin);
+			const targetPath = preservePathShape(target.pathname, preserveTrailingSlash);
+
+			target.search = window.location.search;
+			target.hash = window.location.hash;
+			link.href = `${targetPath}${target.search}${target.hash}`;
+		});
+	};
+
+	syncLanguageLinkState();
+	document.addEventListener('astro:page-load', syncLanguageLinkState);
+	window.addEventListener('hashchange', syncLanguageLinkState);
+</script>

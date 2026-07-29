@@ -2,7 +2,6 @@ import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
-const readJson = (path: string): Record<string, unknown> => JSON.parse(readSource(path));
 
 describe('home section localization migration', () => {
 	it('uses focused granular catalogs in home widgets', () => {
@@ -47,18 +46,9 @@ describe('home section localization migration', () => {
 		expect(catalog).toContain("'sections.projects'");
 	});
 
-	it('removes obsolete home copy from legacy dictionaries', () => {
+	it('deletes the monolithic compatibility dictionaries', () => {
 		for (const locale of ['en', 'es']) {
-			const legacy = readJson(`src/shared/config/i18n/locales/${locale}.json`);
-			expect(legacy).not.toHaveProperty('hero');
-			expect(legacy).not.toHaveProperty('badges');
-			expect(legacy).not.toHaveProperty('vision');
-			expect(legacy).not.toHaveProperty('title');
-			expect(legacy).not.toHaveProperty('about-me');
-			expect(legacy).not.toHaveProperty('research.summary');
-			expect(legacy).not.toHaveProperty('research.tech-stack-label');
-			expect(legacy).not.toHaveProperty('research.full-methodology');
-			expect(legacy).not.toHaveProperty('research.view-full-button');
+			expect(existsSync(`src/shared/config/i18n/locales/${locale}.json`)).toBe(false);
 		}
 	});
 

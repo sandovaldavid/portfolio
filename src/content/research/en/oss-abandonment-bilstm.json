@@ -1,0 +1,76 @@
+{
+	"researchId": "oss-abandonment-bilstm",
+	"locale": "en",
+	"label": "Bachelor Thesis",
+	"title": "Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks",
+	"problem": "A significant number of Open Source Software (OSS) repositories become abandoned over time, leaving dependent projects exposed to security vulnerabilities, missing updates, and technical debt. Early detection of abandonment risk is a critical yet underexplored challenge in software ecosystem health.",
+	"hypothesis": "Can Bidirectional LSTM (BiLSTM) networks, trained on historical activity metrics from GitHub repositories (commits, issues, pull requests, contributor patterns), predict the abandonment state of an OSS repository with higher accuracy than traditional ML baselines?",
+	"approach": "Mining Software Repositories (MSR) — extracting temporal sequences of activity signals from the GitHub API (GH Archive), engineering features that capture contribution decay, issue resolution rates, and bus factor trends, then training BiLSTM models to classify future abandonment probability.",
+	"dataset": "Curated dataset of GitHub OSS repositories spanning multiple domains, labeled by abandonment state using historical activity thresholds (commit frequency, last contribution date, open issue aging).",
+	"status": "In Progress",
+	"institution": "National University of Piura",
+	"keywords": [
+		"BiLSTM",
+		"OSS Abandonment",
+		"MSR",
+		"Deep Learning",
+		"GitHub Mining",
+		"Repository Health",
+		"Time Series Classification"
+	],
+	"metrics": {
+		"accuracy": "Classification accuracy vs. Logistic Regression & Random Forest baselines",
+		"f1": "F1-Score on imbalanced abandonment classes",
+		"auc": "AUC-ROC for abandonment probability ranking",
+		"loss": "Binary Cross-Entropy loss curves for BiLSTM training convergence"
+	},
+	"pipelineSteps": [
+		"GitHub API / GH Archive",
+		"Raw Repo Activity Data",
+		"Feature Engineering",
+		"Temporal Sequences",
+		"BiLSTM Training",
+		"Abandonment Classifier"
+	],
+	"architecture": [
+		{
+			"label": "Input",
+			"value": "Time-series of repo activity signals (T steps)"
+		},
+		{
+			"label": "Layer 1",
+			"value": "BiLSTM — 128 units forward + backward"
+		},
+		{
+			"label": "Layer 2",
+			"value": "BiLSTM — 64 units with dropout (0.3)"
+		},
+		{
+			"label": "Layer 3",
+			"value": "Dense — 32 units, ReLU activation"
+		},
+		{
+			"label": "Output",
+			"value": "Sigmoid — P(abandoned) ∈ [0,1]"
+		},
+		{
+			"label": "Loss",
+			"value": "Binary Cross-Entropy + class weights"
+		},
+		{
+			"label": "Optimizer",
+			"value": "Adam (lr=1e-3)"
+		}
+	],
+	"engineeredFeatures": [
+		"Commit frequency (weekly rolling avg)",
+		"Unique contributors per time window",
+		"Open issue aging (days unresolved)",
+		"PR merge rate & close rate",
+		"Days since last commit",
+		"Bus factor estimate",
+		"Issue response time",
+		"Release cadence"
+	],
+	"currentStatus": "Actively training BiLSTM models and comparing against ML baselines. Results will be published upon thesis completion."
+}

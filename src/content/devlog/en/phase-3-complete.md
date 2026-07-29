@@ -1,4 +1,5 @@
 ---
+translationKey: phase-3-complete
 title: 'v1.4.0-beta — Phase 3: Backlog Complete'
 summary: 'SVGO optimization, structured data (BreadcrumbList/ScholarlyArticle), spacing design tokens, print stylesheet, image optimization, project case studies, and developer devlog.'
 pubDate: 2026-06-28

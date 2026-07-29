@@ -1,0 +1,21 @@
+{
+	"projectId": "fluentreads",
+	"locale": "en",
+	"title": "FluentReads",
+	"description": "A modern online store specializing in the sale of English books, international exams, and study packages. It features an interactive catalog, functional shopping cart, and checkout flow, built with Astro Islands architecture for maximum performance.",
+	"category": "Frontend Development",
+	"imageAlt": "FluentReads online bookstore interface preview",
+	"caseStudy": {
+		"problem": "English learners lacked a dedicated online store for international exam materials and graded readers. Existing options on general e-commerce platforms had poor categorization and no study-package bundling.",
+		"approach": "Architected an Astro Islands storefront with React micro-interactions for the cart and checkout. Implemented a server-side catalog with dynamic filtering, shopping cart with localStorage persistence, and a streamlined checkout flow.",
+		"tradeoffs": "Used Astro Islands for the cart to keep the page lightweight (zero JS on static content). Accepted longer initial development time to build a custom checkout instead of embedding a third-party payment widget.",
+		"outcome": "A fast, SEO-friendly e-commerce site serving English learners with categorized books, exams, and study packages. Lighthouse scores: 95+ Performance, 100 Accessibility.",
+		"learnings": [
+			"Astro Islands architecture for progressive hydration of interactive elements",
+			"Shopping cart state management across page navigations",
+			"SEO optimization strategies for e-commerce product pages"
+		],
+		"timeline": "2 months",
+		"role": "Solo Developer"
+	}
+}

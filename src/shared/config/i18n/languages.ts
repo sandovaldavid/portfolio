@@ -32,3 +32,13 @@ export const DEFAULT_LANGUAGE = Language.ENGLISH;
  * All available languages
  */
 export const AVAILABLE_LANGUAGES = Object.values(Language);
+
+/**
+ * Converts Astro's current locale into the repository's typed language.
+ * Undefined or unsupported locale values use the configured routing default.
+ */
+export function getLanguageFromLocale(locale: string | undefined): Language {
+	return AVAILABLE_LANGUAGES.includes(locale as Language)
+		? (locale as Language)
+		: DEFAULT_LANGUAGE;
+}

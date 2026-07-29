@@ -1,10 +1,9 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getPortfolioProfile } from '@entities/profile';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { getLangFromUrl, getLocalizedPath } from '@shared/lib/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 
-const langCode = getLangFromUrl(new URL(Astro.request.url));
-const lang = langCode === 'en' ? Language.ENGLISH : Language.SPANISH;
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const profile = (await getPortfolioProfile(lang)).data;
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
 const tCommon = createScopedUiTranslator(lang, 'common');
@@ -26,7 +25,7 @@ const tCommon = createScopedUiTranslator(lang, 'common');
 				</p>
 				<div class="pt-2">
 					<a
-						href={getLocalizedPath(lang, '/about')}
+						href={getRelativeLocaleUrl(lang, 'about')}
 						class="inline-flex items-center justify-center rounded-none bg-primary-500 text-white dark:text-black border-2 border-black dark:border-white text-xs px-5 py-3 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-retro-md active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
 					>
 						{tAbout('readMore')}
@@ -65,7 +64,7 @@ const tCommon = createScopedUiTranslator(lang, 'common');
 			</p>
 			<div class="pt-2">
 				<a
-					href={getLocalizedPath(lang, '/atena')}
+					href={getRelativeLocaleUrl(lang, 'atena')}
 					class="inline-flex items-center justify-center rounded-none bg-primary-500 text-white dark:text-black border-2 border-black dark:border-white text-xs px-5 py-3 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-retro-md active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
 				>
 					{tCommon('actions.viewWork')}

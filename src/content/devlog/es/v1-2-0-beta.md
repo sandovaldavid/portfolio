@@ -1,4 +1,5 @@
 ---
+translationKey: v1-2-0-beta
 title: 'v1.2.0-beta — Sprint 2: i18n y SEO'
 summary: 'Soporte bilingüe inglés/español, internacionalización del héroe, refactor FSD, etiquetas hreflang y escaneos de accesibilidad axe-core.'
 pubDate: 2026-06-21

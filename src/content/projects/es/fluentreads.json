@@ -1,0 +1,21 @@
+{
+	"projectId": "fluentreads",
+	"locale": "es",
+	"title": "FluentReads",
+	"description": "Una tienda en línea moderna especializada en la venta de libros en inglés, exámenes internacionales y paquetes de estudio. Cuenta con un catálogo interactivo, carrito de compras funcional y flujo de pago, construida con la arquitectura de Islas de Astro para máximo rendimiento.",
+	"category": "Desarrollo Frontend",
+	"imageAlt": "Vista previa de la tienda de libros en línea FluentReads",
+	"caseStudy": {
+		"problem": "Los estudiantes de inglés carecían de una tienda en línea dedicada a materiales de exámenes internacionales y lecturas graduadas. Las opciones existentes en plataformas de comercio electrónico general tenían mala categorización y no permitían agrupar paquetes de estudio.",
+		"approach": "Arquitecté una tienda con Astro Islands y micro-interacciones React para el carrito y el pago. Implementé un catálogo del lado del servidor con filtrado dinámico, carrito de compras con persistencia en localStorage y un flujo de pago optimizado.",
+		"tradeoffs": "Usé Astro Islands para el carrito, manteniendo la página liviana (zero JS en contenido estático). Acepté mayor tiempo de desarrollo inicial para construir un checkout personalizado en lugar de incrustar un widget de pago de terceros.",
+		"outcome": "Un sitio de comercio electrónico rápido y optimizado para SEO que sirve a estudiantes de inglés con libros, exámenes y paquetes categorizados. Puntajes Lighthouse: 95+ Rendimiento, 100 Accesibilidad.",
+		"learnings": [
+			"Arquitectura Astro Islands para hidratación progresiva de elementos interactivos",
+			"Gestión de estado del carrito de compras entre navegaciones",
+			"Estrategias de optimización SEO para páginas de productos de e-commerce"
+		],
+		"timeline": "2 meses",
+		"role": "Desarrollador independiente"
+	}
+}

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
@@ -37,7 +37,9 @@ describe('localized portfolio profile content', () => {
 		const config = readSource('src/content.config.ts');
 		expect(config).toContain('const portfolioProfile = defineCollection');
 		expect(config).toContain("base: './src/content/portfolio-profile'");
-		expect(config).toContain('export const collections = { blog, devlog, portfolioProfile }');
+		expect(config).toContain(
+			'export const collections = { blog, devlog, portfolioProfile, experience, research, projects }'
+		);
 	});
 
 	it('keeps stable identity and required structure in parity', () => {
@@ -69,17 +71,14 @@ describe('localized portfolio profile content', () => {
 		expect(query).toContain('profile.data.locale !== lang');
 	});
 
-	it('removes long profile records from UI and legacy dictionaries', () => {
+	it('keeps long profile records out of UI catalogs and legacy dictionaries', () => {
 		for (const locale of ['en', 'es']) {
 			const catalog = readJson<Record<string, unknown>>(
 				`src/shared/config/i18n/locales/${locale}/sections/about.json`
 			);
-			const legacy = readJson<Record<string, unknown>>(
-				`src/shared/config/i18n/locales/${locale}.json`
-			);
 			expect(catalog).not.toHaveProperty('profileSummary');
 			expect(catalog).not.toHaveProperty('currentSummary');
-			expect(legacy).not.toHaveProperty('about-me');
+			expect(existsSync(`src/shared/config/i18n/locales/${locale}.json`)).toBe(false);
 		}
 	});
 

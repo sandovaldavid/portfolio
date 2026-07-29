@@ -1,7 +1,7 @@
 # David Sandoval — Portafolio de Ingeniería de Software
 
 [![Portafolio](https://img.shields.io/badge/live-sandovaldavid.com-0096ff)](https://sandovaldavid.com)
-[![CI](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml/badge.svg)](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml)
+[![Workflow de CI](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml/badge.svg)](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml)
 [![Licencia MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Portafolio bilingüe y static-first para presentar experiencia profesional, evidencia de proyectos, investigación y contenido técnico.
@@ -10,32 +10,35 @@ Portafolio bilingüe y static-first para presentar experiencia profesional, evid
 
 | Recurso                  | Enlace                                                                                        |
 | ------------------------ | --------------------------------------------------------------------------------------------- |
-| Demo                     | [sandovaldavid.com](https://sandovaldavid.com)                                                |
+| Sitio publicado          | [sandovaldavid.com](https://sandovaldavid.com)                                                |
 | CV en inglés             | [david-sandoval-resume.pdf](https://sandovaldavid.com/resume/david-sandoval-resume.pdf)       |
 | CV en español            | [david-sandoval-resume-es.pdf](https://sandovaldavid.com/resume/david-sandoval-resume-es.pdf) |
 | Guía principal en inglés | [README.md](README.md)                                                                        |
 
-## Decisiones de ingeniería
+## Implementación actual
 
-- **Entrega static-first:** Astro genera el contenido profesional como HTML; JavaScript queda limitado a mejoras progresivas.
-- **Feature-Sliced Design:** las dependencias siguen `app → widgets → features → entities → shared` y un checker valida los límites.
-- **Rutas bilingües:** inglés es el idioma por defecto y español utiliza `/es`, con metadata, contenido y RSS localizados.
-- **Evidencia antes que claims:** rendimiento y cobertura se sustentan en configuración versionada y comandos reproducibles.
-- **Carga intencional:** presupuestos por ruta, prefetch selectivo y fuentes locales protegen los recorridos principales.
+- **Entrega:** Astro genera un sitio estático; JavaScript se utiliza para interacciones progresivas y el ciclo de navegación cliente.
+- **Arquitectura:** las dependencias siguen `src/pages → app → widgets → features → entities → shared` y `bun run lint:architecture` valida sus límites.
+- **Localización:** inglés no usa prefijo y español utiliza `/es`; catálogos granulares, Content Collections localizadas, metadata y validaciones de rutas generadas hacen ejecutable el contrato bilingüe.
+- **Calidad:** el repositorio versiona checks, pruebas unitarias, Playwright, Axe, presupuestos por ruta y comandos de Lighthouse.
+- **Entorno de desarrollo:** un Dev Container con Playwright y Bun fijados soporta la validación local completa.
+- **Despliegue:** `develop` es la rama de integración; `main` es la rama por defecto y de producción. La promoción a `main` se realiza mediante una PR separada.
+
+El runtime legacy de localización fue eliminado y no debe reintroducirse. El ownership actual y sus validaciones están documentados en [docs/I18N.md](docs/I18N.md) y [docs/I18N-ENFORCEMENT.md](docs/I18N-ENFORCEMENT.md).
 
 ## Controles de calidad
 
-| Área                    | Validación                                          |
-| ----------------------- | --------------------------------------------------- |
-| Formato, lint y tipos   | `bun run check`                                     |
-| Enlaces documentales    | `bun run check:docs`                                |
-| Comportamiento unitario | Vitest con alcance de cobertura basado en riesgo    |
-| Flujos de navegador     | Playwright en pipelines proporcionales              |
-| Accesibilidad           | Axe bloquea violaciones serious y critical          |
-| Rendimiento             | Presupuestos por ruta y Lighthouse CI               |
-| Despliegue              | Previews de Vercel y validación de CV en producción |
+| Área                        | Contrato del repositorio                                 |
+| --------------------------- | -------------------------------------------------------- |
+| Formato, lint y tipos       | `bun run check`                                          |
+| Enlaces documentales        | `bun run check:docs`                                     |
+| Comportamiento unitario     | `bun run test:unit:ci` y el comando de cobertura acotada |
+| Salida de producción        | `bun run build` y `bun run check:links`                  |
+| Navegadores y accesibilidad | comandos smoke, desktop, extended y visual de Playwright |
+| Rendimiento                 | presupuestos por ruta y comandos de Lighthouse           |
+| Entorno de desarrollo       | `bun run check:devcontainer`                             |
 
-Los alcances y umbrales exactos viven en la configuración del repositorio, no en afirmaciones promocionales.
+Los workflows de GitHub automatizan gates seleccionados de promoción, producción y auditoría programada. Un workflow ausente, deshabilitado o bloqueado por cuota no constituye evidencia de validación; cada PR debe indicar los comandos realmente ejecutados.
 
 ## Arquitectura
 
@@ -43,7 +46,7 @@ Los alcances y umbrales exactos viven en la configuración del repositorio, no e
 src/pages → src/app → src/widgets → src/features → src/entities → src/shared
 ```
 
-Las rutas Astro son entry points del framework. El código consume capas inferiores mediante aliases semánticos y APIs públicas. Consulta [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Las rutas Astro son entry points del framework. El código consume capas inferiores mediante aliases semánticos y APIs públicas por slice. Consulta [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## Desarrollo local
 
@@ -52,31 +55,37 @@ Usa la versión de Bun declarada en `packageManager` dentro de [package.json](pa
 ```bash
 git clone https://github.com/sandovaldavid/portfolio-v1.git
 cd portfolio-v1
+git switch develop
 bun install --frozen-lockfile
 bun run dev
 ```
 
-Validación habitual:
+Validación canónica:
 
 ```bash
 bun run check
 bun run test:unit:ci
 bun run build
-bun run performance:check
-bun run test:e2e:smoke
 ```
+
+Añade validación de enlaces generados, navegador, rendimiento o visual según [docs/TESTING.md](docs/TESTING.md).
 
 ## Documentación
 
-- [Índice y ownership documental](docs/README.md)
+- [Ownership documental y vocabulario de estados](docs/README.md)
+- [Estado actual de implementación](docs/STATUS.md)
 - [Arquitectura](docs/ARCHITECTURE.md)
+- [Internacionalización](docs/I18N.md)
 - [Testing](docs/TESTING.md)
 - [Política de CI](docs/CI.md)
+- [Entrega y releases](docs/DELIVERY.md)
 - [Toolchain](docs/TOOLCHAIN.md)
 - [Metodología de rendimiento](docs/PERFORMANCE.md)
+- [Dev Container](docs/DEVCONTAINER.md)
 - [Reglas para agentes](AGENTS.md)
 - [Flujo de contribución](CONTRIBUTING.md)
-- [Material histórico](docs/archive/README.md)
+
+Las decisiones, alternativas, auditorías históricas, planes y handoffs de sesión se mantienen en el área `portfolio-v1` de Cortex-L7 en lugar de la documentación activa del repositorio.
 
 ## Licencia
 

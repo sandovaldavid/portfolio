@@ -40,6 +40,8 @@ const COMMANDS = [
 	':q',
 ] as const;
 
+const EDITABLE_SELECTOR = 'input, textarea, select, [contenteditable="true"]';
+
 function escapeHtml(value: string): string {
 	return value
 		.replace(/&/g, '&amp;')
@@ -57,6 +59,10 @@ function formatCopy(template: string, variables: Record<string, string> = {}): s
 	return value;
 }
 
+function isEditableTarget(target: EventTarget | null): boolean {
+	return target instanceof Element && target.matches(EDITABLE_SELECTOR);
+}
+
 export function setupCliTerminal(): void {
 	const root = document.getElementById('cli-terminal-root');
 	const dataElement = document.getElementById('cli-runtime-data');
@@ -66,7 +72,7 @@ export function setupCliTerminal(): void {
 	cliWindow.__portfolioCliAbort?.abort();
 	const controller = new AbortController();
 	cliWindow.__portfolioCliAbort = controller;
-	const listenerOptions = { signal: controller.signal };
+	const listenerOptions: AddEventListenerOptions = { signal: controller.signal };
 
 	const copy = JSON.parse(dataElement.dataset.copy ?? '{}') as RuntimeCopy;
 	const sectionNames = JSON.parse(dataElement.dataset.sectionNames ?? '[]') as string[];
@@ -129,12 +135,12 @@ export function setupCliTerminal(): void {
 	let keyTimer: number | null = null;
 
 	const colorClasses: Record<LineType, string> = {
-		output: 'text-[#00ff88]',
-		command: 'text-white',
-		error: 'text-red-400',
-		info: 'text-[#00b0ff]',
-		muted: 'text-white/40',
-		warning: 'text-yellow-400',
+		output: 'text-channel-portfolio-terminal-phosphor',
+		command: 'text-channel-portfolio-terminal-content',
+		error: 'text-channel-portfolio-terminal-error',
+		info: 'text-channel-portfolio-terminal-cyan',
+		muted: 'text-channel-portfolio-terminal-content-muted',
+		warning: 'text-channel-portfolio-terminal-warning',
 	};
 
 	function printLine(html: string, type: LineType = 'output'): void {
@@ -161,7 +167,7 @@ export function setupCliTerminal(): void {
 
 	function printCommand(command: string, descriptionKey: string): void {
 		printLine(
-			`│  <span class="text-yellow-400">${escapeHtml(command)}</span> — ${localized(descriptionKey)}`,
+			`│  <span class="text-channel-portfolio-terminal-warning">${escapeHtml(command)}</span> — ${localized(descriptionKey)}`,
 			'output'
 		);
 	}
@@ -179,6 +185,17 @@ export function setupCliTerminal(): void {
 		cliOverlay.classList.remove('flex');
 	}
 
+	function openShortcuts(): void {
+		shortcutsModal.classList.remove('hidden');
+		shortcutsModal.classList.add('flex');
+		requestAnimationFrame(() => shortcutsClose.focus());
+	}
+
+	function closeShortcuts(): void {
+		shortcutsModal.classList.add('hidden');
+		shortcutsModal.classList.remove('flex');
+	}
+
 	function bootCli(): void {
 		cliBooted = true;
 		const lines: Array<[string, LineType]> = [
@@ -193,7 +210,8 @@ export function setupCliTerminal(): void {
 		window.setTimeout(
 			() => {
 				printBlank();
-				const command = '<span class="text-yellow-400 font-bold">help</span>';
+				const command =
+					'<span class="text-channel-portfolio-terminal-warning font-bold">help</span>';
 				const message = localized('runtime.ready', { command: '__COMMAND__' }).replace(
 					'__COMMAND__',
 					command
@@ -206,18 +224,18 @@ export function setupCliTerminal(): void {
 	}
 
 	const sections = [
-		{ number: 1, id: null as string | null, name: sectionNames[0] ?? 'Hero' },
-		{ number: 2, id: 'experience', name: sectionNames[1] ?? 'Experience' },
-		{ number: 3, id: 'research', name: sectionNames[2] ?? 'Research' },
-		{ number: 4, id: 'projects', name: sectionNames[3] ?? 'Projects' },
-		{ number: 5, id: 'about-me', name: sectionNames[4] ?? 'About' },
-		{ number: 6, id: 'technologies', name: sectionNames[5] ?? 'Technologies' },
+		{ number: 1, id: null as string | null, key: 'hero', name: sectionNames[0] ?? 'Hero' },
+		{ number: 2, id: 'experience', key: 'experience', name: sectionNames[1] ?? 'Experience' },
+		{ number: 3, id: 'research', key: 'research', name: sectionNames[2] ?? 'Research' },
+		{ number: 4, id: 'projects', key: 'projects', name: sectionNames[3] ?? 'Projects' },
+		{ number: 5, id: 'about-me', key: 'about', name: sectionNames[4] ?? 'About' },
+		{ number: 6, id: 'technologies', key: 'tech', name: sectionNames[5] ?? 'Technologies' },
 	];
 
 	function showNavigationPopup(text: string): void {
 		const popup = document.createElement('div');
 		popup.className =
-			'fixed top-[10%] left-1/2 -translate-x-1/2 bg-primary-500 text-white dark:text-black px-5 py-2 border-2 border-black dark:border-white font-mono font-bold text-xs uppercase tracking-widest z-[150] opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap';
+			'fixed top-[10%] left-1/2 -translate-x-1/2 bg-component-button-primary-bg text-component-button-primary-text px-5 py-2 border-2 border-component-button-border font-mono font-bold text-xs uppercase tracking-widest z-[150] opacity-0 transition-opacity duration-200 pointer-events-none whitespace-nowrap';
 		popup.textContent = text;
 		document.body.appendChild(popup);
 		requestAnimationFrame(() => {
@@ -235,6 +253,29 @@ export function setupCliTerminal(): void {
 		if (section.id) document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
 		else window.scrollTo({ top: 0, behavior: 'smooth' });
 		showNavigationPopup(section.name);
+	}
+
+	function navigateToNamedSection(value: string): void {
+		const normalized = value.trim().toLowerCase();
+		const aliases: Record<string, string> = {
+			home: 'hero',
+			landing: 'hero',
+			technologies: 'tech',
+			technology: 'tech',
+			skills: 'tech',
+		};
+		const target = aliases[normalized] ?? normalized;
+		const section = sections.find(item => item.key === target);
+		if (!section) {
+			printLine(localized('runtime.gotoUnknown', { section: normalized }), 'error');
+			printLine(localized('runtime.gotoAvailable'), 'muted');
+			return;
+		}
+		printLine(localized('runtime.gotoNavigating', { section: section.name }), 'info');
+		window.setTimeout(() => {
+			closeCli();
+			navigateToSection(section.number);
+		}, 250);
 	}
 
 	async function fetchGitHubStats(): Promise<GitHubStats | null> {
@@ -342,65 +383,55 @@ export function setupCliTerminal(): void {
 		);
 		printLine(`│  ${localized('runtime.profileCompany')}: Atena`, 'output');
 		printLine(
-			`│  ${localized('runtime.profileStatus')}: <span class="text-[#00ff88]">${localized('runtime.profileStatusValue')}</span>`,
+			`│  ${localized('runtime.profileStatus')}: ${localized('runtime.profileStatusValue')}`,
 			'output'
 		);
 		printBoxEnd();
 	}
 
-	function printDirectory(path: string, descriptionKey: string): void {
-		printLine(
-			`drwxr-xr-x  <span class="text-[#00b0ff]">${escapeHtml(path)}/</span>  ${localized(descriptionKey)}`,
-			'output'
-		);
+	function printList(): void {
+		printBlank();
+		for (const [number, key] of [
+			[1, 'runtime.listHero'],
+			[2, 'runtime.listExperience'],
+			[3, 'runtime.listResearch'],
+			[4, 'runtime.listProjects'],
+			[5, 'runtime.listAbout'],
+			[6, 'runtime.listTechnologies'],
+		] as const) {
+			printLine(`${number}. ${localized(key)}`, number === 1 ? 'info' : 'output');
+		}
+		printLine(localized('runtime.listTip', { name: 'projects' }), 'muted');
 	}
 
-	function printSectionList(): void {
+	function printAbout(): void {
 		printBlank();
-		printDirectory('hero', 'runtime.listHero');
-		printDirectory('experience', 'runtime.listExperience');
-		printDirectory('research', 'runtime.listResearch');
-		printDirectory('projects', 'runtime.listProjects');
-		printDirectory('about-me', 'runtime.listAbout');
-		printDirectory('technologies', 'runtime.listTechnologies');
-		printBlank();
-		printLine(localized('runtime.listTip', { name: 'name' }), 'muted');
-	}
-
-	async function printGitHubStats(): Promise<void> {
-		printLine(localized('runtime.githubFetching'), 'muted');
-		const stats = await fetchGitHubStats();
-		if (!stats) {
-			printLine(localized('runtime.githubError'), 'error');
-			printLine(
-				`${localized('runtime.githubDirect')}: <span class="text-[#00b0ff]">github.com/${escapeHtml(githubUser)}</span>`,
-				'muted'
-			);
-			return;
+		printBoxTitle('runtime.aboutTitle');
+		for (const key of [
+			'runtime.aboutRole',
+			'runtime.aboutCurrent',
+			'runtime.aboutThesis',
+			'runtime.aboutUsing',
+			'runtime.aboutAvailable',
+		] as const) {
+			printLine(`│  ${localized(key)}`, 'output');
 		}
-		printBlank();
-		printBoxTitle('runtime.githubTitle');
-		printLine(`│  ${localized('runtime.githubRepos')}: ${stats.public_repos}`, 'output');
-		printLine(`│  ${localized('runtime.githubStars')}: ${stats.totalStars}`, 'output');
-		printLine(`│  ${localized('runtime.githubForks')}: ${stats.totalForks}`, 'output');
-		printLine(`│  ${localized('runtime.githubFollowers')}: ${stats.followers}`, 'output');
-		if (stats.topLangs.length > 0) {
-			printLine(
-				`│  ${localized('runtime.githubLanguages')}: ${escapeHtml(stats.topLangs.join(', '))}`,
-				'output'
-			);
-		}
-		if (stats.bio) printLine(`│  Bio: ${escapeHtml(stats.bio)}`, 'muted');
 		printBoxEnd();
 	}
 
-	function printContact(): void {
+	function printResearch(): void {
 		printBlank();
-		printBoxTitle('runtime.contactTitle');
-		printLine(`│  ${escapeHtml(contactEmail)}`, 'output');
-		printLine(`│  linkedin.com/in/${escapeHtml(contactLinkedin)}`, 'output');
-		printLine(`│  github.com/${escapeHtml(githubUser)}`, 'output');
-		printLine(`│  ${escapeHtml(siteUrl)}`, 'output');
+		printBoxTitle('runtime.researchTitle');
+		for (const key of [
+			'runtime.researchThesis',
+			'runtime.researchModel',
+			'runtime.researchData',
+			'runtime.researchEvaluation',
+			'runtime.researchStatus',
+			'runtime.researchDetails',
+		] as const) {
+			printLine(`│  ${localized(key)}`, 'output');
+		}
 		printBoxEnd();
 	}
 
@@ -408,305 +439,228 @@ export function setupCliTerminal(): void {
 		printBlank();
 		printBoxTitle('runtime.skillsTitle');
 		printLine(
-			`│  ${localized('runtime.skillsFrontend')}: Angular · React · Astro · TypeScript`,
+			`│  ${localized('runtime.skillsFrontend')}: Angular, Astro, TypeScript`,
 			'output'
 		);
+		printLine(`│  ${localized('runtime.skillsBackend')}: .NET, C#, Node.js`, 'output');
+		printLine(`│  ${localized('runtime.skillsMl')}: TensorFlow, BiLSTM`, 'output');
 		printLine(
-			`│  ${localized('runtime.skillsBackend')}: Django · FastAPI · .NET · Node.js`,
+			`│  ${localized('runtime.skillsDevops')}: GitHub Actions, Docker, Vercel`,
 			'output'
 		);
-		printLine(
-			`│  ${localized('runtime.skillsMl')}: BiLSTM · TensorFlow · Scikit-learn`,
-			'output'
-		);
-		printLine(
-			`│  ${localized('runtime.skillsDevops')}: Docker · Kubernetes · GitHub Actions`,
-			'output'
-		);
-		printLine(
-			`│  ${localized('runtime.skillsDatabase')}: PostgreSQL · MongoDB · Redis`,
-			'output'
-		);
+		printLine(`│  ${localized('runtime.skillsDatabase')}: PostgreSQL, SQL Server`, 'output');
 		printBoxEnd();
 	}
 
-	function printResearch(): void {
+	function printContact(): void {
 		printBlank();
-		printBoxTitle('runtime.researchTitle');
-		printLine(`│  ${localized('runtime.researchThesis')}`, 'output');
-		printLine(`│  ${localized('runtime.researchModel')}`, 'output');
-		printLine(`│  ${localized('runtime.researchData')}`, 'output');
-		printLine(`│  ${localized('runtime.researchEvaluation')}`, 'output');
+		printBoxTitle('runtime.contactTitle');
 		printLine(
-			`│  <span class="text-[#00ff88]">${localized('runtime.researchStatus')}</span>`,
+			`│  Email: <a class="underline text-channel-portfolio-terminal-cyan" href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a>`,
 			'output'
 		);
-		printLine(`│  ${localized('runtime.researchDetails')}`, 'muted');
+		printLine(
+			`│  LinkedIn: <a class="underline text-channel-portfolio-terminal-cyan" href="https://www.linkedin.com/in/${escapeHtml(contactLinkedin)}" target="_blank" rel="noreferrer">${escapeHtml(contactLinkedin)}</a>`,
+			'output'
+		);
+		printLine(
+			`│  Web: <a class="underline text-channel-portfolio-terminal-cyan" href="${escapeHtml(siteUrl)}" target="_blank" rel="noreferrer">${escapeHtml(siteUrl)}</a>`,
+			'output'
+		);
 		printBoxEnd();
 	}
 
-	function printAbout(): void {
+	async function printGitHub(): Promise<void> {
 		printBlank();
-		printBoxTitle('runtime.aboutTitle');
-		printLine(`│  ${localized('runtime.aboutRole')}`, 'output');
-		printLine(`│  ${localized('runtime.aboutCurrent')}`, 'output');
-		printLine(`│  ${localized('runtime.aboutThesis')}`, 'output');
-		printLine(`│  ${localized('runtime.aboutUsing')}`, 'output');
-		printLine(
-			`│  <span class="text-[#00ff88]">${localized('runtime.aboutAvailable')}</span>`,
-			'output'
-		);
-		printBoxEnd();
-	}
-
-	async function handleCommand(raw: string): Promise<void> {
-		const input = raw.trim();
-		if (!input) return;
-		history.unshift(input);
-		historyIndex = -1;
-		printLine(
-			`<span class="text-[#00b0ff]">$</span> <span class="text-white">${escapeHtml(input)}</span>`,
-			'command'
-		);
-		const [rawCommand = '', ...args] = input.split(/\s+/);
-		const command = rawCommand.toLowerCase();
-
-		switch (command) {
-			case 'help':
-				printHelp();
-				break;
-			case 'whoami':
-				printProfile();
-				break;
-			case 'ls':
-				printSectionList();
-				break;
-			case 'goto': {
-				const target = args[0]?.toLowerCase() ?? '';
-				const sectionMap: Record<string, string | null> = {
-					hero: null,
-					top: null,
-					inicio: null,
-					experience: 'experience',
-					exp: 'experience',
-					experiencia: 'experience',
-					research: 'research',
-					investigacion: 'research',
-					thesis: 'research',
-					projects: 'projects',
-					proyectos: 'projects',
-					about: 'about-me',
-					'about-me': 'about-me',
-					sobre: 'about-me',
-					tech: 'technologies',
-					technologies: 'technologies',
-					stack: 'technologies',
-					tecnologias: 'technologies',
-				};
-				if (!target) {
-					printLine(localized('runtime.gotoUsage', { section: 'section' }), 'warning');
-				} else if (target in sectionMap) {
-					printLine(localized('runtime.gotoNavigating', { section: target }), 'output');
-					window.setTimeout(() => {
-						const id = sectionMap[target];
-						if (id) document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
-						else window.scrollTo({ top: 0, behavior: 'smooth' });
-						closeCli();
-					}, 500);
-				} else {
-					printLine(localized('runtime.gotoUnknown', { section: target }), 'error');
-					printLine(localized('runtime.gotoAvailable'), 'muted');
-				}
-				break;
-			}
-			case 'github':
-				await printGitHubStats();
-				break;
-			case 'contact':
-				printContact();
-				break;
-			case 'skills':
-				printSkills();
-				break;
-			case 'matrix':
-				document.getElementById('hud-cheat-matrix')?.click();
-				printLine(localized('runtime.matrixToggled'), 'output');
-				break;
-			case 'open':
-			case 'cat': {
-				const target = args[0]?.toLowerCase() ?? '';
-				if (target === 'resume' || target === 'cv') {
-					printLine(localized('runtime.resumeOpening'), 'muted');
-					window.setTimeout(
-						() => window.open(resumeUrl, '_blank', 'noopener,noreferrer'),
-						400
-					);
-				} else {
-					printLine(localized('runtime.unknownTarget', { target }), 'error');
-					printLine(localized('runtime.tryResume'), 'muted');
-				}
-				break;
-			}
-			case 'clear':
-				cliOutput.innerHTML = '';
-				cliBooted = false;
-				bootCli();
-				return;
-			case 'exit':
-			case 'q':
-			case ':q':
-			case ':q!':
-			case ':wq':
-				printLine(localized('runtime.goodbye'), 'muted');
-				window.setTimeout(closeCli, 400);
-				break;
-			case 'research':
-				printResearch();
-				break;
-			case 'about':
-				printAbout();
-				break;
-			case 'sudo':
-				printLine(localized('runtime.sudoDenied'), 'error');
-				printLine(localized('runtime.sudoHint'), 'muted');
-				break;
-			case 'vim':
-			case 'nvim':
-				printLine(localized('runtime.vimTaste'), 'output');
-				window.setTimeout(() => printLine(localized('runtime.vimMotions'), 'muted'), 500);
-				break;
-			default:
-				printLine(localized('runtime.commandNotFound', { command }), 'error');
-				printLine(localized('runtime.typeHelp'), 'muted');
+		printLine(localized('runtime.githubFetching'), 'info');
+		const stats = await fetchGitHubStats();
+		if (!stats) {
+			printLine(localized('runtime.githubError'), 'error');
+			printLine(
+				`${localized('runtime.githubDirect')}: https://github.com/${escapeHtml(githubUser)}`,
+				'muted'
+			);
+			return;
 		}
-		printBlank();
+		printBoxTitle('runtime.githubTitle');
+		printLine(`│  ${escapeHtml(stats.name)} (@${escapeHtml(stats.login)})`, 'output');
+		printLine(`│  ${localized('runtime.githubRepos')}: ${stats.public_repos}`, 'output');
+		printLine(`│  ${localized('runtime.githubStars')}: ${stats.totalStars}`, 'output');
+		printLine(`│  ${localized('runtime.githubForks')}: ${stats.totalForks}`, 'output');
+		printLine(`│  ${localized('runtime.githubFollowers')}: ${stats.followers}`, 'output');
+		printLine(
+			`│  ${localized('runtime.githubLanguages')}: ${escapeHtml(stats.topLangs.join(', ') || '—')}`,
+			'output'
+		);
+		printBoxEnd();
 	}
 
-	function openShortcuts(): void {
-		shortcutsModal.classList.remove('hidden');
-		shortcutsModal.classList.add('flex');
-		shortcutsClose.focus();
+	function toggleMatrix(): void {
+		document.body.classList.toggle('matrix-mode');
+		printLine(localized('runtime.matrixToggled'), 'info');
 	}
 
-	function closeShortcuts(): void {
-		shortcutsModal.classList.add('hidden');
-		shortcutsModal.classList.remove('flex');
+	function openResume(): void {
+		if (!resumeUrl) return;
+		printLine(localized('runtime.resumeOpening'), 'info');
+		window.open(resumeUrl, '_blank', 'noopener,noreferrer');
 	}
 
-	function triggerEasterEgg(): void {
+	function revealEasterEgg(): void {
+		if (!easterEggOverlay.classList.contains('hidden')) return;
+		closeCli();
+		closeShortcuts();
 		easterEggOverlay.classList.remove('hidden');
 		easterEggOverlay.classList.add('flex');
+		eggLoading.replaceChildren();
 		eggStats.classList.add('hidden');
-		eggLoading.innerHTML = '';
-		document.documentElement.classList.add('pf-glitch');
-		window.setTimeout(() => document.documentElement.classList.remove('pf-glitch'), 450);
-		const loadLines = Array.from({ length: 9 }, (_, index) =>
-			getCopy(`easter.load${index + 1}`)
-		);
-		loadLines.forEach((text, index) => {
+		const loadingKeys = [
+			'easter.load1',
+			'easter.load2',
+			'easter.load3',
+			'easter.load4',
+			'easter.load5',
+			'easter.load6',
+			'easter.load7',
+			'easter.load8',
+			'easter.load9',
+		];
+		loadingKeys.forEach((key, index) => {
 			window.setTimeout(() => {
 				const line = document.createElement('div');
-				line.className = 'text-[#00b0ff] text-xs font-mono leading-relaxed';
-				line.textContent = text;
+				line.className = 'text-channel-portfolio-terminal-cyan';
+				line.textContent = `> ${getCopy(key)}`;
 				eggLoading.appendChild(line);
-				eggLoading.scrollTop = eggLoading.scrollHeight;
-			}, index * 370);
+				if (index === loadingKeys.length - 1) {
+					eggStats.classList.remove('hidden');
+					requestAnimationFrame(() => eggClose.focus());
+				}
+			}, index * 100);
 		});
-		window.setTimeout(() => eggStats.classList.remove('hidden'), loadLines.length * 370 + 300);
 	}
+
+	function closeEasterEgg(): void {
+		easterEggOverlay.classList.add('hidden');
+		easterEggOverlay.classList.remove('flex');
+	}
+
+	async function executeCommand(rawCommand: string): Promise<void> {
+		const command = rawCommand.trim();
+		if (!command) return;
+		printLine(`$ ${escapeHtml(command)}`, 'command');
+		history.push(command);
+		historyIndex = history.length;
+
+		const normalized = command.toLowerCase();
+		if (normalized === 'clear') {
+			cliOutput.replaceChildren();
+			return;
+		}
+		if (normalized === 'help') printHelp();
+		else if (normalized === 'whoami') printProfile();
+		else if (normalized === 'about') printAbout();
+		else if (normalized === 'research') printResearch();
+		else if (normalized === 'ls') printList();
+		else if (normalized.startsWith('goto ')) navigateToNamedSection(command.slice(5));
+		else if (normalized === 'goto') {
+			printLine(localized('runtime.gotoUsage'), 'warning');
+		} else if (normalized === 'github') await printGitHub();
+		else if (normalized === 'contact') printContact();
+		else if (normalized === 'skills') printSkills();
+		else if (normalized === 'matrix') toggleMatrix();
+		else if (normalized === 'open resume') openResume();
+		else if (normalized.startsWith('open ')) {
+			printLine(localized('runtime.unknownTarget', { target: command.slice(5) }), 'error');
+			printLine(localized('runtime.tryResume'), 'muted');
+		} else if (normalized === 'vim' || normalized === 'nvim') {
+			printLine(localized('runtime.vimTaste'), 'info');
+			printLine(localized('runtime.vimMotions'), 'muted');
+		} else if (normalized.startsWith('sudo')) {
+			printLine(localized('runtime.sudoDenied'), 'error');
+			printLine(localized('runtime.sudoHint'), 'muted');
+		} else if (normalized === 'exit' || normalized === ':q') {
+			printLine(localized('runtime.goodbye'), 'muted');
+			window.setTimeout(closeCli, 150);
+		} else {
+			printLine(localized('runtime.commandNotFound', { command }), 'error');
+			printLine(localized('runtime.typeHelp'), 'muted');
+		}
+	}
+
+	function autocomplete(): void {
+		const value = cliInput.value.toLowerCase();
+		if (!value) return;
+		const matches = COMMANDS.filter(command => command.startsWith(value));
+		if (matches.length === 1) {
+			cliInput.value = matches[0];
+			cliInput.setSelectionRange(cliInput.value.length, cliInput.value.length);
+		} else if (matches.length > 1) {
+			printLine(matches.join('   '), 'muted');
+		}
+	}
+
+	function closeTopmostOverlay(): boolean {
+		if (!easterEggOverlay.classList.contains('hidden')) {
+			closeEasterEgg();
+			return true;
+		}
+		if (!shortcutsModal.classList.contains('hidden')) {
+			closeShortcuts();
+			return true;
+		}
+		if (!cliOverlay.classList.contains('hidden')) {
+			closeCli();
+			return true;
+		}
+		return false;
+	}
+
+	cliWindow.__openCLI = openCli;
+	cliWindow.__openShortcutsModal = openShortcuts;
+
+	cliClose.addEventListener('click', closeCli, listenerOptions);
+	shortcutsClose.addEventListener('click', closeShortcuts, listenerOptions);
+	eggClose.addEventListener('click', closeEasterEgg, listenerOptions);
 
 	cliInput.addEventListener(
 		'keydown',
 		event => {
 			if (event.key === 'Enter') {
-				const value = cliInput.value;
+				event.preventDefault();
+				const command = cliInput.value;
 				cliInput.value = '';
-				void handleCommand(value);
-			} else if (event.key === 'Escape') {
-				closeCli();
-			} else if (event.key === 'ArrowUp') {
+				void executeCommand(command);
+				return;
+			}
+			if (event.key === 'Tab') {
 				event.preventDefault();
-				if (historyIndex < history.length - 1) {
-					historyIndex += 1;
-					cliInput.value = history[historyIndex] ?? '';
-				}
-			} else if (event.key === 'ArrowDown') {
+				autocomplete();
+				return;
+			}
+			if (event.key === 'ArrowUp') {
 				event.preventDefault();
-				if (historyIndex > 0) {
-					historyIndex -= 1;
-					cliInput.value = history[historyIndex] ?? '';
-				} else {
-					historyIndex = -1;
-					cliInput.value = '';
-				}
-			} else if (event.key === 'Tab') {
+				historyIndex = Math.max(0, historyIndex - 1);
+				cliInput.value = history[historyIndex] ?? '';
+				return;
+			}
+			if (event.key === 'ArrowDown') {
 				event.preventDefault();
-				const match = COMMANDS.find(
-					candidate =>
-						candidate.startsWith(cliInput.value) && candidate !== cliInput.value
-				);
-				if (match) cliInput.value = match;
+				historyIndex = Math.min(history.length, historyIndex + 1);
+				cliInput.value = history[historyIndex] ?? '';
 			}
 		},
 		listenerOptions
 	);
-
-	cliClose.addEventListener('click', closeCli, listenerOptions);
-	cliOverlay.addEventListener(
-		'click',
-		event => {
-			if (event.target === cliOverlay) closeCli();
-		},
-		listenerOptions
-	);
-	shortcutsClose.addEventListener('click', closeShortcuts, listenerOptions);
-	shortcutsModal.addEventListener(
-		'click',
-		event => {
-			if (event.target === shortcutsModal) closeShortcuts();
-		},
-		listenerOptions
-	);
-	eggClose.addEventListener(
-		'click',
-		() => {
-			easterEggOverlay.classList.add('hidden');
-			easterEggOverlay.classList.remove('flex');
-		},
-		listenerOptions
-	);
-
-	cliWindow.__openShortcutsModal = openShortcuts;
-	cliWindow.__openCLI = openCli;
 
 	document.addEventListener(
 		'keydown',
 		event => {
-			const activeElement = document.activeElement as HTMLElement | null;
-			if (
-				activeElement &&
-				(activeElement.tagName === 'INPUT' ||
-					activeElement.tagName === 'TEXTAREA' ||
-					activeElement.isContentEditable)
-			) {
+			if (event.key === 'Escape') {
+				if (closeTopmostOverlay()) event.preventDefault();
 				return;
 			}
-			if (event.ctrlKey || event.metaKey || event.altKey) return;
-
-			const overlaysOpen =
-				!cliOverlay.classList.contains('hidden') ||
-				!shortcutsModal.classList.contains('hidden') ||
-				!easterEggOverlay.classList.contains('hidden');
-			if (overlaysOpen) {
-				if (event.key === 'Escape') {
-					closeCli();
-					closeShortcuts();
-					easterEggOverlay.classList.add('hidden');
-					easterEggOverlay.classList.remove('flex');
-				}
+			if (event.ctrlKey || event.metaKey || event.altKey || isEditableTarget(event.target))
 				return;
-			}
-
 			if (event.key === ':') {
 				event.preventDefault();
 				openCli();
@@ -722,41 +676,28 @@ export function setupCliTerminal(): void {
 				openShortcuts();
 				return;
 			}
-			if (event.key === 'j') {
-				window.scrollBy({ top: 280, behavior: 'smooth' });
+			if (/^[1-6]$/.test(event.key)) {
+				navigateToSection(Number(event.key));
 				return;
 			}
-			if (event.key === 'k') {
-				window.scrollBy({ top: -280, behavior: 'smooth' });
-				return;
-			}
-			if (event.key === 'G') {
-				event.preventDefault();
+			if (event.key === 'j') window.scrollBy({ top: 160, behavior: 'smooth' });
+			if (event.key === 'k') window.scrollBy({ top: -160, behavior: 'smooth' });
+			if (event.key === 'G')
 				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-				keyBuffer = '';
-				if (keyTimer) window.clearTimeout(keyTimer);
-				return;
-			}
 
-			keyBuffer += event.key;
-			if (keyTimer) window.clearTimeout(keyTimer);
+			keyBuffer = `${keyBuffer}${event.key}`.slice(-5);
+			if (keyTimer !== null) window.clearTimeout(keyTimer);
+			keyTimer = window.setTimeout(() => {
+				keyBuffer = '';
+			}, 900);
 			if (keyBuffer.endsWith('gg')) {
 				window.scrollTo({ top: 0, behavior: 'smooth' });
 				keyBuffer = '';
-				return;
 			}
-			if (keyBuffer.includes('12')) {
-				event.preventDefault();
-				triggerEasterEgg();
+			if (keyBuffer.toLowerCase().endsWith('iddqd')) {
+				revealEasterEgg();
 				keyBuffer = '';
-				return;
 			}
-			keyTimer = window.setTimeout(() => {
-				const lastNumber = keyBuffer.replace(/\D/g, '').slice(-1);
-				const number = Number.parseInt(lastNumber, 10);
-				if (!Number.isNaN(number) && number >= 1 && number <= 6) navigateToSection(number);
-				keyBuffer = '';
-			}, 360);
 		},
 		listenerOptions
 	);

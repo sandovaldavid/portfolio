@@ -1,0 +1,115 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getExperienceData } from '@entities/experience';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { SectionContainer, TechPill } from '@shared/ui';
+
+interface Props {
+	lang: Language;
+}
+
+const { lang } = Astro.props;
+const tPage = createScopedUiTranslator(lang, 'pages.atena');
+const experience = (await getExperienceData(lang)).find(
+	item => item.experienceId === 'atena-software-engineer'
+);
+
+if (!experience) {
+	throw new Error(`Missing Atena experience content for locale "${lang}".`);
+}
+---
+
+<SectionContainer id="atena-details" class="w-full max-w-4xl px-4 flex flex-col gap-8">
+	<div class="text-center space-y-3">
+		<h1
+			class="text-4xl md:text-5xl font-bold font-pixel-clean text-content-strong uppercase tracking-wide"
+		>
+			{tPage('heading')}
+		</h1>
+		<p class="text-content-muted font-mono text-sm uppercase">
+			[ {tPage('subtitle')} ]
+		</p>
+	</div>
+
+	<div
+		class="border-2 border-black dark:border-white bg-surface shadow-retro-2xl p-6 md:p-8 flex flex-col gap-6"
+	>
+		<div
+			class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-dashed border-edge-subtle pb-4 gap-4"
+		>
+			<div>
+				<span class="text-content-muted text-xs font-bold tracking-wider uppercase block">
+					{tPage('companyLabel')}
+				</span>
+				<span class="text-2xl font-bold text-content-strong font-mono">
+					{experience.company}
+				</span>
+				<span class="text-content-muted text-sm font-mono block mt-1">
+					{experience.title}
+				</span>
+			</div>
+			<div class="sm:text-right">
+				<span class="text-content-muted text-xs font-bold tracking-wider uppercase block">
+					{tPage('periodLabel')}
+				</span>
+				<span
+					class="text-base font-bold text-status-success-text font-mono uppercase bg-status-success-bg px-2.5 py-1 border border-status-success-border inline-block"
+				>
+					[ {experience.date} ]
+				</span>
+			</div>
+		</div>
+
+		<div class="space-y-6">
+			<div>
+				<h2
+					class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 mb-3"
+				>
+					[ {tPage('achievementsLabel')} ]
+				</h2>
+				<ul class="space-y-4 text-base font-mono">
+					{
+						experience.description.map(achievement => (
+							<li class="flex items-start gap-3">
+								<span
+									class="shrink-0 w-2 h-2 rounded-none bg-primary-500 dark:bg-primary-400 mt-2.5"
+									aria-hidden="true"
+								/>
+								<span class="text-content leading-relaxed">{achievement}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<div class="border-t-2 border-dashed border-edge-subtle pt-4">
+				<h2
+					class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 mb-3"
+				>
+					[ {tPage('technologiesLabel')} ]
+				</h2>
+				<div class="flex flex-wrap gap-2.5 mt-2">
+					{
+						experience.technologies.map(technology => (
+							<TechPill
+								label={technology}
+								variant="stack"
+								size="sm"
+								class="px-2.5 py-1.5 text-xs font-mono font-semibold"
+							/>
+						))
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="w-full flex justify-center mt-4">
+		<a
+			href={getRelativeLocaleUrl(lang, '')}
+			class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
+		>
+			[ {tPage('returnHome')} ]
+		</a>
+	</div>
+</SectionContainer>

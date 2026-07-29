@@ -1,9 +1,10 @@
 /**
- * Site Configuration — Single Source of Truth
+ * Site Configuration — Language-Neutral Source of Truth
  * FSD Layer: Shared > Config
  *
- * Edit this file to update all SEO metadata, social links,
- * contact info, and personal details across the entire portfolio.
+ * Edit this file to update identity, URLs, contact details and technical
+ * metadata shared by every locale. Localized SEO and RSS copy belongs to
+ * the typed `metadata` catalog namespace.
  */
 
 export const siteConfig = {
@@ -11,8 +12,8 @@ export const siteConfig = {
 	name: 'David Sandoval',
 	fullName: 'Juan David Sandoval Salvador',
 	handle: 'sandovaldavid',
-	role: 'Software Engineer · Angular, .NET & TypeScript',
-	location: 'Lima, Peru (UTC-5)',
+	role: 'Software Engineer',
+	location: 'Peru (UTC-5)',
 	currentCompany: 'Atena',
 	availability: true,
 
@@ -22,9 +23,6 @@ export const siteConfig = {
 	get canonicalBase() {
 		return this.url;
 	},
-	defaultTitle: 'David Sandoval — Software Engineer',
-	defaultDescription:
-		'Portfolio of David Sandoval, a Software Engineer building reliable web products with Angular, .NET and TypeScript. Based in Lima and open to remote opportunities across Europe and Latin America.',
 	defaultImage: '/projects/portfolio.webp',
 	twitterCard: 'summary_large_image' as const,
 
@@ -36,9 +34,9 @@ export const siteConfig = {
 	social: {
 		github: 'https://github.com/sandovaldavid',
 		githubUsername: 'sandovaldavid',
-		linkedin: 'https://www.linkedin.com/in/jdavidsandoval',
-		linkedinUsername: 'jdavidsandoval',
-		linkHub: 'https://linkdevs.social',
+		linkedin: 'https://www.linkedin.com/in/jdsandovals',
+		linkedinUsername: 'jdsandovals',
+		linkHub: 'https://hub.sandovaldavid.com',
 	},
 
 	// ─── Resume ──────────────────────────────────────────────────

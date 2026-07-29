@@ -1,0 +1,156 @@
+---
+import CodeIcon from '@assets/icons/Code.astro';
+import MailIcon from '@assets/icons/Mail.astro';
+import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
+import GitHubIcon from '@assets/technologies/GitHub.astro';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import {
+	Avatar,
+	Badge,
+	LinkButton,
+	LinkInline,
+	SectionContainer,
+	SocialPill,
+	TitleSection,
+} from '@shared/ui';
+
+interface Props {
+	lang: Language;
+}
+
+const { lang } = Astro.props;
+const tPage = createScopedUiTranslator(lang, 'pages.components');
+const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
+---
+
+<div class="px-4 py-16">
+	<SectionContainer>
+		<TitleSection>
+			<CodeIcon class="size-8" aria-hidden="true" />
+			{tPage('heading')}
+		</TitleSection>
+
+		<div class="space-y-16 mt-8">
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('buttonsHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('buttonsDescription')}</p>
+				<div class="flex flex-wrap gap-4">
+					<LinkButton href="https://github.com">
+						<GitHubIcon class="size-6" aria-hidden="true" />
+						GitHub
+					</LinkButton>
+					<LinkButton href="https://linkedin.com">
+						<LinkedInIcon class="size-6" aria-hidden="true" />
+						LinkedIn
+					</LinkButton>
+					<LinkButton href="mailto:example@email.com">
+						<MailIcon class="size-6" aria-hidden="true" />
+						{tPage('contactLabel')}
+					</LinkButton>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('socialHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('socialDescription')}</p>
+				<div class="flex flex-wrap gap-4">
+					<SocialPill href="https://github.com">
+						<GitHubIcon class="size-4 md:size-6" aria-hidden="true" />
+						GitHub
+					</SocialPill>
+					<SocialPill href="https://linkedin.com">
+						<LinkedInIcon class="size-4 md:size-6" aria-hidden="true" />
+						LinkedIn
+					</SocialPill>
+					<SocialPill href="mailto:example@email.com">
+						<MailIcon class="size-4 md:size-6" aria-hidden="true" />
+						{tPage('contactLabel')}
+					</SocialPill>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('linksHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('linksDescription')}</p>
+				<div class="flex flex-wrap gap-6">
+					<LinkInline href="https://github.com">{tPage('profileLink')}</LinkInline>
+					<LinkInline href="https://linkedin.com">{tPage('networkLink')}</LinkInline>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('avatarsHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('avatarsDescription')}</p>
+				<div class="flex flex-wrap gap-8 items-end">
+					{
+						avatarSizes.map(size => (
+							<div class="flex flex-col items-center gap-2">
+								<Avatar
+									src="/profile/perfil.webp"
+									alt={tPage('profileAlt')}
+									{size}
+								/>
+								<span class="text-sm text-content-muted uppercase">{size}</span>
+							</div>
+						))
+					}
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('badgesHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('badgesDescription')}</p>
+				<div class="flex flex-wrap gap-3">
+					<Badge variant="default">{tPage('badgeExample')}</Badge>
+					<Badge variant="primary">{tPage('anotherBadge')}</Badge>
+					<Badge variant="info">
+						<CodeIcon class="size-3" aria-hidden="true" />
+						TypeScript
+					</Badge>
+					<Badge variant="success">{tPage('completedBadge')}</Badge>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('containersHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('containersDescription')}</p>
+				<SectionContainer class="bg-gray-100 dark:bg-gray-800 p-8">
+					<h3 class="text-xl font-semibold mb-3 text-content-strong">
+						{tPage('containerTitle')}
+					</h3>
+					<p class="text-content">{tPage('containerBody')}</p>
+				</SectionContainer>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('titlesHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('titlesDescription')}</p>
+				<div class="space-y-6">
+					<TitleSection>{tPage('simpleTitle')}</TitleSection>
+					<TitleSection>
+						<GitHubIcon class="size-8" aria-hidden="true" />
+						{tPage('iconTitle')}
+					</TitleSection>
+					<TitleSection>
+						<CodeIcon class="size-8" aria-hidden="true" />
+						{tPage('featuredTitle')}
+					</TitleSection>
+				</div>
+			</section>
+		</div>
+	</SectionContainer>
+</div>

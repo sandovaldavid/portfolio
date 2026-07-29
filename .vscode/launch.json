@@ -2,18 +2,13 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Portfolio: Dev Server + Host Browser",
+			"name": "Portfolio: Dev Server + Browser",
 			"request": "launch",
 			"type": "node-terminal",
-			"command": "bun run dev:host",
-			"serverReadyAction": {
-				"pattern": "Local:\\s+(https?://\\S+)",
-				"uriFormat": "http://localhost:4321",
-				"action": "openExternally"
-			}
+			"command": "bun run dev"
 		},
 		{
-			"name": "Portfolio: Debug in Host Chrome",
+			"name": "Portfolio: Debug in Chrome",
 			"request": "launch",
 			"type": "pwa-chrome",
 			"url": "http://localhost:4321",

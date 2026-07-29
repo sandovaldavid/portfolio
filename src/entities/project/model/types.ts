@@ -1,5 +1,10 @@
 import type { ImageMetadata } from 'astro';
+import type { CollectionEntry } from 'astro:content';
 import type { Technology } from '@shared/config/technology';
+import type { ProjectId } from './metadata';
+
+export type ProjectContentEntry = CollectionEntry<'projects'>;
+export type ProjectContentData = ProjectContentEntry['data'];
 
 /**
  * Architecture evidence rendered by the project case-study widget.
@@ -25,6 +30,7 @@ export interface CaseStudyArchitecture {
  * Repository or demo source used to substantiate a case-study claim.
  */
 export interface CaseStudySource {
+	sourceId: string;
 	label: string;
 	access: string;
 	href?: string;
@@ -56,49 +62,35 @@ export interface CaseStudyEvidence {
 }
 
 /**
- * Case study data for detailed project showcase pages
+ * Localized case-study content for a portfolio project.
  */
 export interface CaseStudy {
-	/** The core problem/challenge (the "boss" faced) */
 	problem: string;
-	/** The strategic approach taken to solve it */
 	approach: string;
-	/** Key trade-offs or constraints accepted */
 	tradeoffs: string;
-	/** Final outcome and measurable results */
 	outcome: string;
-	/** Key learnings ("XP gained") */
 	learnings: string[];
-	/** Project timeline (optional) */
-	timeline?: string;
-	/** My role in the project (optional) */
-	role?: string;
-	/** Verifiable implementation, architecture and delivery evidence (optional) */
+	timeline: string;
+	role: string;
 	evidence?: CaseStudyEvidence;
 }
 
 /**
- * Project represents a portfolio project with details and metadata
+ * Localized project content joined with language-neutral technical metadata.
  */
 export interface ProjectItem {
-	/** URL slug for project detail page */
+	projectId: ProjectId;
 	slug: string;
-	/** Project title */
 	title: string;
-	/** Detailed project description */
 	description: string;
-	/** Live demo URL (optional) */
+	category: string;
+	imageAlt: string;
 	link?: string;
-	/** GitHub repository URL (optional) */
 	github?: string;
-	/** Project preview image — imported asset for Astro optimization */
 	image: ImageMetadata;
-	/** Technologies used in the project */
 	tags: Technology[];
-	/** Optional: emphasizes project in UI */
-	featured?: boolean;
-	/** Optional: category label (i18n key or plain) */
-	category?: string;
-	/** Optional: detailed case study for dedicated project page */
-	caseStudy?: CaseStudy;
+	featured: boolean;
+	caseStudy: CaseStudy;
 }
+
+export type ProjectList = ProjectItem[];

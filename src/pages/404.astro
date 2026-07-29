@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowLeft from '@assets/icons/ArrowLeft.astro';
 import Home from '@assets/icons/Home.astro';
 import QuoteLeft from '@assets/icons/QuoteLeft.astro';
@@ -6,15 +7,22 @@ import QuoteRight from '@assets/icons/QuoteRight.astro';
 import '@app/styles/global.css';
 
 import { SectionContainer, LinkButton, Button } from '@shared/ui';
-import { getLangFromUrl } from '@shared/lib/i18n';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { createScopedUiTranslator, getUiCatalogNamespace, Language } from '@shared/config/i18n';
 
-const lang = getLangFromUrl(Astro.url);
-const tErrors = createScopedUiTranslator(lang, 'errors');
+const defaultLang = Language.ENGLISH;
+const tErrors = createScopedUiTranslator(defaultLang, 'errors');
+const localizedErrors = {
+	[Language.ENGLISH]: getUiCatalogNamespace(Language.ENGLISH, 'errors'),
+	[Language.SPANISH]: getUiCatalogNamespace(Language.SPANISH, 'errors'),
+};
+const localizedHomePaths = {
+	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, ''),
+	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, ''),
+};
 ---
 
 <!doctype html>
-<html {lang}>
+<html lang={defaultLang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -29,10 +37,64 @@ const tErrors = createScopedUiTranslator(lang, 'errors');
 						window.matchMedia('(prefers-color-scheme: dark)').matches)
 			);
 		</script>
+		<script
+			is:inline
+			data-localized-errors={JSON.stringify(localizedErrors)}
+			data-localized-home-paths={JSON.stringify(localizedHomePaths)}
+		>
+			const localizationScript = document.currentScript;
+			const localizedErrors = JSON.parse(
+				localizationScript?.getAttribute('data-localized-errors') ?? '{}'
+			);
+			const localizedHomePaths = JSON.parse(
+				localizationScript?.getAttribute('data-localized-home-paths') ?? '{}'
+			);
+			const locale =
+				window.location.pathname === '/es' || window.location.pathname.startsWith('/es/')
+					? 'es'
+					: 'en';
+			const localizedCopy = localizedErrors[locale];
+
+			if (!localizedCopy || !localizedHomePaths[locale]) {
+				throw new Error(`Missing static 404 localization data for locale: ${locale}`);
+			}
+
+			document.documentElement.lang = locale;
+			document.title = localizedCopy.notFoundPageTitle;
+			document
+				.querySelector('meta[name="description"]')
+				?.setAttribute('content', localizedCopy.notFoundDescription);
+
+			const applyLocalizedNotFoundCopy = () => {
+				const textById = {
+					'not-found-title': localizedCopy.notFoundTitle,
+					'not-found-message': localizedCopy.notFoundMessage,
+					'not-found-home-label': localizedCopy.homeButton,
+					'not-found-back-label': localizedCopy.backButton,
+					'not-found-quote': localizedCopy.notFoundQuote,
+				};
+
+				for (const [id, value] of Object.entries(textById)) {
+					const element = document.getElementById(id);
+					if (element) element.textContent = value;
+				}
+
+				const homeLink = document.querySelector('#not-found-home-link a');
+				homeLink?.setAttribute('href', localizedHomePaths[locale]);
+			};
+
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', applyLocalizedNotFoundCopy, {
+					once: true,
+				});
+			} else {
+				applyLocalizedNotFoundCopy();
+			}
+		</script>
 	</head>
 
 	<body
-		class="min-h-screen flex items-center justify-center bg-neutral-50 dark:bg-neutral-900 text-content-strong"
+		class="min-h-screen flex items-center justify-center bg-channel-background-canvas text-channel-content-strong"
 	>
 		<main class="w-full px-4 py-16">
 			<SectionContainer>
@@ -43,7 +105,7 @@ const tErrors = createScopedUiTranslator(lang, 'errors');
 							aria-hidden="true"
 						>
 							<span
-								class="inline-block bg-linear-to-br from-primary-600 via-primary-500 to-primary-400 dark:from-primary-400 dark:via-primary-500 dark:to-primary-600 bg-clip-text text-transparent"
+								class="inline-block bg-linear-to-br from-channel-accent-primary-hover via-channel-accent-primary to-channel-accent-secondary bg-clip-text text-transparent"
 							>
 								404
 							</span>
@@ -54,51 +116,62 @@ const tErrors = createScopedUiTranslator(lang, 'errors');
 							aria-hidden="true"
 						>
 							<div
-								class="absolute top-1/4 left-1/4 w-32 h-32 md:w-48 md:h-48 bg-primary-500 dark:bg-primary-400 rounded-full animate-blob"
+								class="absolute top-1/4 left-1/4 w-32 h-32 md:w-48 md:h-48 bg-channel-accent-primary rounded-full animate-blob"
 							>
 							</div>
 							<div
-								class="absolute top-1/3 right-1/4 w-32 h-32 md:w-48 md:h-48 bg-primary-600 dark:bg-primary-500 rounded-full animate-blob animation-delay-2000"
+								class="absolute top-1/3 right-1/4 w-32 h-32 md:w-48 md:h-48 bg-channel-accent-primary-hover rounded-full animate-blob animation-delay-2000"
 							>
 							</div>
 							<div
-								class="absolute bottom-1/4 left-1/3 w-32 h-32 md:w-48 md:h-48 bg-primary-400 dark:bg-primary-600 rounded-full animate-blob animation-delay-4000"
+								class="absolute bottom-1/4 left-1/3 w-32 h-32 md:w-48 md:h-48 bg-channel-accent-secondary rounded-full animate-blob animation-delay-4000"
 							>
 							</div>
 						</div>
 					</div>
 
 					<div class="space-y-4">
-						<h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-content-strong">
+						<h1
+							id="not-found-title"
+							class="text-3xl md:text-4xl lg:text-5xl font-bold text-channel-content-strong"
+						>
 							{tErrors('notFoundTitle')}
 						</h1>
-						<p class="text-lg md:text-xl text-content max-w-2xl mx-auto">
+						<p
+							id="not-found-message"
+							class="text-lg md:text-xl text-channel-content-default max-w-2xl mx-auto"
+						>
 							{tErrors('notFoundMessage')}
 						</p>
 					</div>
 
 					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-						<LinkButton href={lang === Language.ENGLISH ? '/' : '/es/'} target="_self">
-							<Home class="size-5" aria-hidden="true" />
-							{tErrors('homeButton')}
-						</LinkButton>
+						<div id="not-found-home-link">
+							<LinkButton href={localizedHomePaths[defaultLang]} target="_self">
+								<Home class="size-5" aria-hidden="true" />
+								<span id="not-found-home-label">{tErrors('homeButton')}</span>
+							</LinkButton>
+						</div>
 						<Button variant="secondary" onclick="history.back()">
 							<ArrowLeft class="size-5" aria-hidden="true" />
-							{tErrors('backButton')}
+							<span id="not-found-back-label">{tErrors('backButton')}</span>
 						</Button>
 					</div>
 
 					<div class="pt-8">
 						<div class="flex items-start justify-center gap-2 max-w-2xl mx-auto">
 							<QuoteLeft
-								class="size-5 shrink-0 text-primary-500 dark:text-primary-400 opacity-60 mt-0.5"
+								class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
 								aria-hidden="true"
 							/>
-							<p class="text-base text-content italic leading-relaxed">
+							<p
+								id="not-found-quote"
+								class="text-base text-channel-content-default italic leading-relaxed"
+							>
 								{tErrors('notFoundQuote')}
 							</p>
 							<QuoteRight
-								class="size-5 shrink-0 text-primary-500 dark:text-primary-400 opacity-60 mt-0.5"
+								class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
 								aria-hidden="true"
 							/>
 						</div>
@@ -133,5 +206,11 @@ const tErrors = createScopedUiTranslator(lang, 'errors');
 
 	.animation-delay-4000 {
 		animation-delay: 4s;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.animate-blob {
+			animation: none;
+		}
 	}
 </style>

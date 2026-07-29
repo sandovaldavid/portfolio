@@ -1,22 +1,24 @@
+import type { CollectionEntry } from 'astro:content';
+import type { ExperienceId } from './metadata';
+
+export type ExperienceContentEntry = CollectionEntry<'experience'>;
+export type ExperienceContentData = ExperienceContentEntry['data'];
+
 /**
- * Experience item representing work or education history
+ * Localized professional experience joined with language-neutral metadata.
  */
 export interface ExperienceItem {
-	/** Date or date range (e.g., "2023 - Present") */
+	experienceId: ExperienceId;
 	date: string;
-	/** Position or role title */
 	title: string;
-	/** Company or organization name */
 	company: string;
-	/** Detailed description of responsibilities and achievements - array of bullet points */
 	description: string[];
-	/** Technologies, languages, and tools used */
 	technologies: string[];
-	/** Optional link to company website or project */
+	startDate: string;
+	endDate: string | null;
+	isCurrent: boolean;
+	featured: boolean;
 	link?: string;
 }
 
-/**
- * List of experience entries
- */
 export type ExperienceList = ExperienceItem[];

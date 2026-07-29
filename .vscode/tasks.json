@@ -2,9 +2,9 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "Portfolio: Start Dev Server on Host",
+			"label": "Portfolio: Start Dev Server",
 			"type": "shell",
-			"command": "bun run dev:host",
+			"command": "bun run dev",
 			"problemMatcher": [],
 			"presentation": {
 				"panel": "dedicated",
@@ -16,7 +16,7 @@
 			}
 		},
 		{
-			"label": "Portfolio: Open Host Browser",
+			"label": "Portfolio: Open Browser",
 			"type": "shell",
 			"command": "code --open-url http://localhost:4321",
 			"problemMatcher": []
@@ -50,7 +50,7 @@
 			"group": "test"
 		},
 		{
-			"label": "Portfolio: Serve Playwright Report on Host",
+			"label": "Portfolio: Serve Playwright Report",
 			"type": "shell",
 			"command": "bun run test:e2e:report",
 			"problemMatcher": [],

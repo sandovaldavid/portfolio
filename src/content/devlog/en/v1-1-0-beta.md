@@ -1,4 +1,5 @@
 ---
+translationKey: v1-1-0-beta
 title: 'v1.1.0-beta — Sprint 1: Foundations'
 summary: 'Fixed theme FOUC, added reduced-motion support, skip-link navigation, status accessibility tokens, and performance baselines.'
 pubDate: 2026-06-19

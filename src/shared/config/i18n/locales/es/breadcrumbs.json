@@ -3,5 +3,9 @@
 	"projects": "Proyectos",
 	"skills": "Inventario de habilidades",
 	"about": "Sobre mí",
-	"research": "Investigación"
+	"research": "Investigación",
+	"blog": "Blog",
+	"devlog": "Bitácora de desarrollo",
+	"components": "Catálogo de componentes",
+	"atena": "Atena"
 }

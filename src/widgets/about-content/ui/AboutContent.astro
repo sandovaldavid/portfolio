@@ -1,7 +1,7 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { PortfolioProfileData } from '@entities/profile';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { getLocalizedPath } from '@shared/lib/i18n';
 import { SectionContainer } from '@shared/ui';
 
 interface Props {
@@ -73,7 +73,7 @@ const tAbout = createScopedUiTranslator(lang, 'sections.about');
 
 	<div class="w-full flex justify-center mt-4">
 		<a
-			href={getLocalizedPath(lang, '/')}
+			href={getRelativeLocaleUrl(lang, '')}
 			class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
 		>
 			{tAbout('returnHome')}

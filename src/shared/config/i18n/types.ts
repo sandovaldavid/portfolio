@@ -1,3 +1,7 @@
+import type { Language } from './languages';
+
+export type LocalizedPathMap = Partial<Record<Language, string>>;
+
 export type StringCatalogShape<T> = T extends string
 	? string
 	: T extends readonly unknown[]

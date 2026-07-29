@@ -4,9 +4,23 @@ const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
 const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
 const vscodeTasks = JSON.parse(readFileSync('.vscode/tasks.json', 'utf8'));
 const vscodeLaunch = JSON.parse(readFileSync('.vscode/launch.json', 'utf8'));
-const expectedPublications = new Map([
-	['4321', '127.0.0.1:4321:4321'],
-	['9323', '127.0.0.1:9323:9323'],
+const expectedForwarding = new Map([
+	[
+		4321,
+		{
+			label: 'Astro development server',
+			protocol: 'http',
+			onAutoForward: 'openBrowserOnce',
+		},
+	],
+	[
+		9323,
+		{
+			label: 'Playwright HTML report',
+			protocol: 'http',
+			onAutoForward: 'notify',
+		},
+	],
 ]);
 const appPorts = Array.isArray(devcontainer.appPort) ? devcontainer.appPort : [];
 const forwardedPorts = Array.isArray(devcontainer.forwardPorts) ? devcontainer.forwardPorts : [];
@@ -26,62 +40,83 @@ const launchConfigurations = Array.isArray(vscodeLaunch.configurations)
 /** @type {string[]} */
 const failures = [];
 
-for (const [port, publication] of expectedPublications) {
-	if (!appPorts.includes(publication)) {
-		failures.push(`appPort must publish ${publication}.`);
+for (const [port, expectedAttributes] of expectedForwarding) {
+	if (!forwardedPorts.includes(port)) {
+		failures.push(`forwardPorts must include container port ${port}.`);
 	}
 
-	if (devcontainer.portsAttributes?.[port]?.onAutoForward !== 'ignore') {
-		failures.push(`port ${port} must disable duplicate VS Code auto-forwarding.`);
+	const attributes = devcontainer.portsAttributes?.[String(port)];
+	if (!attributes) {
+		failures.push(`portsAttributes must configure port ${port}.`);
+		continue;
+	}
+
+	for (const [attribute, expectedValue] of Object.entries(expectedAttributes)) {
+		if (attributes[attribute] !== expectedValue) {
+			failures.push(`port ${port} must set ${attribute} to ${expectedValue}.`);
+		}
+	}
+
+	if (attributes.requireLocalPort !== true) {
+		failures.push(`port ${port} must require the same local port.`);
 	}
 }
 
-if (appPorts.length !== expectedPublications.size) {
-	failures.push('appPort must expose only the reviewed Astro and Playwright loopback ports.');
+if (forwardedPorts.length !== expectedForwarding.size) {
+	failures.push('forwardPorts must contain only the reviewed Astro and Playwright ports.');
 }
 
-if (forwardedPorts.length > 0) {
-	failures.push('forwardPorts must remain empty when Docker publishes development ports.');
+if (appPorts.length > 0) {
+	failures.push('appPort must remain empty when VS Code forwards development ports.');
 }
 
-if (packageJson.scripts?.['dev:host'] !== 'astro dev --host 0.0.0.0') {
-	failures.push('dev:host must make Astro reachable through the Docker loopback publication.');
+const configuredPortAttributes = Object.keys(devcontainer.portsAttributes ?? {});
+if (
+	configuredPortAttributes.length !== expectedForwarding.size ||
+	configuredPortAttributes.some(port => !expectedForwarding.has(Number(port)))
+) {
+	failures.push('portsAttributes must configure only the reviewed forwarded ports.');
+}
+
+if (packageJson.scripts?.dev !== 'astro dev') {
+	failures.push('dev must use the standard Astro server for VS Code forwarding.');
+}
+
+if ('dev:host' in (packageJson.scripts ?? {})) {
+	failures.push('dev:host must remain removed after migrating to VS Code forwarding.');
 }
 
 if (
 	packageJson.scripts?.['test:e2e:report'] !==
-	'playwright show-report playwright-report --host 0.0.0.0 --port 9323'
+	'playwright show-report playwright-report --host 127.0.0.1 --port 9323'
 ) {
-	failures.push('test:e2e:report must serve the local Playwright report on container port 9323.');
+	failures.push('test:e2e:report must serve the local report on container loopback port 9323.');
 }
 
-const hostDevelopmentTask = tasks.find(
-	task => task.label === 'Portfolio: Start Dev Server on Host'
-);
-if (hostDevelopmentTask?.command !== 'bun run dev:host') {
-	failures.push('VS Code must expose a task that starts the reviewed host development command.');
+const developmentTask = tasks.find(task => task.label === 'Portfolio: Start Dev Server');
+if (developmentTask?.command !== 'bun run dev') {
+	failures.push('VS Code must expose a task that starts the forwarded Astro server.');
 }
 
-const hostDevelopmentLaunch = launchConfigurations.find(
-	configuration => configuration.name === 'Portfolio: Dev Server + Host Browser'
+const developmentLaunch = launchConfigurations.find(
+	configuration => configuration.name === 'Portfolio: Dev Server + Browser'
 );
 if (
-	hostDevelopmentLaunch?.type !== 'node-terminal' ||
-	hostDevelopmentLaunch?.command !== 'bun run dev:host' ||
-	hostDevelopmentLaunch?.serverReadyAction?.uriFormat !== 'http://localhost:4321' ||
-	hostDevelopmentLaunch?.serverReadyAction?.action !== 'openExternally'
+	developmentLaunch?.type !== 'node-terminal' ||
+	developmentLaunch?.command !== 'bun run dev' ||
+	developmentLaunch?.serverReadyAction !== undefined
 ) {
 	failures.push(
-		'VS Code must start dev:host and open the published localhost URL in the host browser.'
+		'VS Code must start Astro and rely on port forwarding as the single automatic browser opener.'
 	);
 }
 
 if (failures.length > 0) {
-	console.error('Devcontainer host-port contract validation failed:');
+	console.error('Devcontainer port-forwarding contract validation failed:');
 	for (const failure of failures) console.error(`- ${failure}`);
 	process.exit(1);
 }
 
 console.log(
-	'Devcontainer host-development contract verified: Astro, Playwright reports and VS Code launch actions use host-loopback publications.'
+	'Devcontainer forwarding contract verified: Astro and Playwright reports use fixed VS Code-forwarded localhost ports.'
 );

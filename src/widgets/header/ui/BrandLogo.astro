@@ -9,15 +9,13 @@ const { href = '/', class: className = '' } = Astro.props;
 
 <a
 	{href}
-	class={`brand-logo-link font-pixel-clean text-2xl font-bold text-neutral-900 dark:text-white hover:text-primary-500 dark:hover:text-primary-400 transition-colors whitespace-nowrap flex items-center gap-2 group select-none ${className}`}
+	class={`brand-logo-link font-pixel-clean text-2xl font-bold text-logo-content hover:text-logo-primary-hover transition-colors whitespace-nowrap flex items-center gap-2 group select-none ${className}`}
 >
-	<span class="text-primary-500 prompt-symbol">&gt;</span>
+	<span class="text-logo-primary prompt-symbol">&gt;</span>
 	<span class="logo-typing">&lt;sandovaldavid/&gt;</span>
 </a>
 
 <script>
-	// Re-wire hover animation on first load and after every client-side
-	// navigation (Astro view transitions replace the DOM). Guarded per element.
 	const setupBrandLogo = () => {
 		document.querySelectorAll<HTMLElement>('.brand-logo-link').forEach(link => {
 			if (link.dataset.logoReady === 'true') return;
@@ -28,14 +26,14 @@ const { href = '/', class: className = '' } = Astro.props;
 
 			link.addEventListener('mouseenter', () => {
 				typingElement.style.animation = 'none';
-				void typingElement.offsetWidth; // Force reflow
+				void typingElement.offsetWidth;
 				typingElement.style.animation =
 					'typing-hover 1.2s steps(17) 1 forwards, blink-caret 0.75s step-end infinite, glitch 0.3s steps(2) infinite';
 			});
 
 			link.addEventListener('mouseleave', () => {
 				typingElement.style.animation = 'none';
-				void typingElement.offsetWidth; // Force reflow
+				void typingElement.offsetWidth;
 				typingElement.style.animation = 'blink-caret 0.75s step-end infinite';
 			});
 		});
@@ -70,14 +68,14 @@ const { href = '/', class: className = '' } = Astro.props;
 		100% {
 			opacity: 0.6;
 			transform: scale(0.95);
-			text-shadow: 0 0 2px var(--color-primary-500);
+			text-shadow: 0 0 2px var(--color-logo-primary);
 		}
 		50% {
 			opacity: 1;
 			transform: scale(1.05);
 			text-shadow:
-				0 0 8px var(--color-primary-400),
-				0 0 12px var(--color-primary-500);
+				0 0 8px var(--color-logo-primary-hover),
+				0 0 12px var(--color-logo-primary);
 		}
 	}
 
@@ -112,33 +110,40 @@ const { href = '/', class: className = '' } = Astro.props;
 	@keyframes glitch {
 		0% {
 			text-shadow:
-				1.5px -1px 0 #ff0055,
-				-1.5px 1.2px 0 #00ffaa;
+				1.5px -1px 0 var(--color-logo-effect-magenta),
+				-1.5px 1.2px 0 var(--color-logo-effect-cyan);
 			transform: translate(0.5px, -0.5px);
 		}
 		25% {
 			text-shadow:
-				-1.5px 1.5px 0 #ff0055,
-				1.5px -1.2px 0 #00ffaa;
+				-1.5px 1.5px 0 var(--color-logo-effect-magenta),
+				1.5px -1.2px 0 var(--color-logo-effect-cyan);
 			transform: translate(-0.5px, 0.5px);
 		}
 		50% {
 			text-shadow:
-				1.2px 1.5px 0 #ff0055,
-				-1.2px -1.5px 0 #00ffaa;
+				1.2px 1.5px 0 var(--color-logo-effect-magenta),
+				-1.2px -1.5px 0 var(--color-logo-effect-cyan);
 			transform: translate(0.5px, 0.5px);
 		}
 		75% {
 			text-shadow:
-				-1.2px -1.2px 0 #ff0055,
-				1.2px 1.2px 0 #00ffaa;
+				-1.2px -1.2px 0 var(--color-logo-effect-magenta),
+				1.2px 1.2px 0 var(--color-logo-effect-cyan);
 			transform: translate(-0.5px, -0.5px);
 		}
 		100% {
 			text-shadow:
-				1.5px -1px 0 #ff0055,
-				-1.5px 1.2px 0 #00ffaa;
+				1.5px -1px 0 var(--color-logo-effect-magenta),
+				-1.5px 1.2px 0 var(--color-logo-effect-cyan);
 			transform: translate(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.prompt-symbol,
+		.logo-typing {
+			animation: none;
 		}
 	}
 </style>

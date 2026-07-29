@@ -1,145 +1,148 @@
-# Style Guide — Typography, Color Tokens, Headings & Shadows
+# Portfolio visual and token guide
 
-Prescriptive standard for all UI work in this repository. Established 2026-07-05 from the
-findings in [`reports/style-audit-2026-07/`](./reports/style-audit-2026-07/README.md).
-Enforced by `tests/e2e/typography.spec.ts`.
+This document defines the maintained visual contract implemented by `portfolio-v1`. The portfolio is a Portfolio Retro channel of David Sandoval's personal Identity System; it is not a separate brand.
 
-**Tech context:** Tailwind CSS 4 (`@theme` in `src/app/styles/colors.css`, no
-`tailwind.config.js`). Every `--color-<name>` token generates `text-<name>`, `bg-<name>`,
-`border-<name>` utilities; every `--shadow-<name>` token generates `shadow-<name>` utilities;
-every `--animate-<name>` token generates `animate-<name>` utilities.
+## Token ownership
 
----
+Figma owns designed intent and the documented canonical OKLCH provenance. `src/app/styles/colors.css` owns the production token graph:
 
-## 1. Typography scale
+```text
+Identity Core OKLCH primitives
+  -> shared semantic roles
+    -> Portfolio Retro channel aliases
+      -> component roles and maintained utilities
+        -> components
+```
 
-The browser base size is 16px (no `html { font-size }` override — keep it that way).
+Use the narrowest stable role available. Components must not treat raw color literals or palette ramp steps as their public styling API.
 
-| Role                   | Class                                                         |     Px | Used for                                                                         |
-| ---------------------- | ------------------------------------------------------------- | -----: | -------------------------------------------------------------------------------- |
-| Display                | `text-4xl sm:text-6xl lg:text-7xl`                            |  36–72 | Hero `h1` only                                                                   |
-| Page title (`h1`)      | `text-3xl sm:text-4xl` (up to `md:text-5xl`)                  |  30–48 | Top heading of every sub-page                                                    |
-| Section heading (`h2`) | `text-2xl sm:text-3xl` (home `TitleSection` keeps `text-4xl`) |  24–30 | Section titles                                                                   |
-| Sub-heading (`h3`)     | `text-lg sm:text-xl`                                          |  18–20 | Card titles, panel titles                                                        |
-| **Body copy**          | `text-base`                                                   | **16** | Paragraphs, descriptions, list content — anything the visitor reads              |
-| **Secondary**          | `text-sm`                                                     | **14** | Metadata, dates, nav items, functional captions, dense HUD/terminal reading text |
-| **Caption / label**    | `text-xs`                                                     | **12** | Decorative badges, tags, kickers, kbd hints — **absolute floor**                 |
+## Typography
 
-### Hard rules
+| Role                   | Token or utility         | Use                                         |
+| ---------------------- | ------------------------ | ------------------------------------------- |
+| Body and UI            | `font-sans`              | Default interface and long-form copy        |
+| Terminal and code      | `font-mono`, `font-code` | CLI, source excerpts and technical metadata |
+| Pixel display          | `font-pixel`             | Very short, high-emphasis labels only       |
+| Pixel display, cleaner | `font-pixel-clean`       | Logo and compact retro headings             |
+| Retro tag              | `font-retro-tag`         | Small editorial labels                      |
+| Gaming mono            | `font-gaming-mono`       | Restricted decorative or terminal details   |
 
-1. **Never** use an arbitrary size below 12px: `text-[8px]`, `text-[9px]`, `text-[10px]`,
-   `text-[11px]` are banned. If a label feels too big at `text-xs`, reduce tracking or padding,
-   not the font size.
-2. **Body copy is `text-base`, not `text-sm`.** If a `<p>` holds sentences someone reads,
-   it is body copy.
-3. Responsive steps may go _up_ from the role's floor (`text-sm sm:text-base` for secondary is
-   fine); they may not dip below it on any breakpoint.
+Pixel fonts are a channel treatment. They must not replace readable body typography or make David's identity depend on a game aesthetic.
 
-### Pixel-font (+1 step) rule
+## Color layers
 
-The retro fonts render visually smaller than their nominal size — VT323 (`font-pixel-clean`)
-especially, and Press Start 2P / Silkscreen read dense in uppercase. When **reading text**
-(not a decorative label) is set in a pixel font, use **one step larger** than the role's
-floor: secondary → `text-base`, caption → `text-sm`. Headings already compensate through
-their large sizes.
+### Identity Core primitives
 
-## 2. Color tokens
+The primary, neutral, status, base and scoped retro primitives use the canonical OKLCH values copied from Figma in its documented sRGB working gamut. Their adjacent sRGB comments exist only for traceability and test assertions.
 
-All color comes from the semantic tokens in `src/app/styles/colors.css` (they handle
-light/dark via `light-dark()` — no `dark:` pair needed):
+### Shared semantic roles
 
-| Token                                                               | Utility                                     | Role                                                              |
-| ------------------------------------------------------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
-| `--color-content-strong`                                            | `text-content-strong`                       | Headings, emphasized text                                         |
-| `--color-content`                                                   | `text-content`                              | Body copy (also the `body` default)                               |
-| `--color-content-muted`                                             | `text-content-muted`                        | Secondary/metadata text                                           |
-| `--color-surface` / `--color-surface-highlight`                     | `bg-surface` / `bg-surface-highlight`       | Panels, cards                                                     |
-| `--color-edge-subtle` / `--color-edge-strong`                       | `border-edge-subtle` / `border-edge-strong` | Borders; `--color-edge-strong` also powers the retro shadow scale |
-| `--color-success-500` / `--color-warning-500` / `--color-error-500` | `text-success-500`, …                       | Status UI — never raw `emerald`/`green`/`yellow`/`red`            |
+Semantic roles cover backgrounds, surfaces, content, edges, brand emphasis, status, badges, banners, hero glow, terminal glow and logo parts. They resolve light/dark differences before a component consumes them.
 
-### Hard rules
+### Portfolio Retro channel aliases
 
-1. **No raw palette colors on text**: `text-neutral-*`, `text-gray-*`, `text-black`,
-   `text-white` are banned for content (component-internal contrast like text-on-primary
-   buttons is fine).
-2. **Status is always tokenized** — success/warning/error, including colors built in JS strings.
-3. **No opacity modifiers below `/80` on text at `text-sm` or smaller** — they fall under
-   WCAG AA contrast.
-4. **Exception — terminal aesthetic**: `CLITerminal.astro` and `SplashScreen.astro` use
-   phosphor hexes (`#00b0ff`, `#00ff88`) on an always-dark surface. Allowed there only.
-   Follow-up: promote to `--color-terminal-*` tokens.
+Use these for channel-level composition:
 
-### Token naming convention
+- `channel-background-canvas`;
+- `channel-surface-default`, `channel-surface-highlight`;
+- `channel-content-strong`, `channel-content-default`, `channel-content-muted`;
+- `channel-edge-default`, `channel-edge-subtle`;
+- `channel-accent-primary`, `channel-accent-primary-hover`, `channel-accent-secondary`;
+- `channel-status-online`, `channel-status-success`, `channel-status-warning`, `channel-status-error`.
 
-The name after `--color-` becomes the utility suffix. **Name tokens after the role, never
-after a CSS property.** `--color-text-main` produced the stutter `text-text-main`;
-`--color-border-subtle` produced `border-border-subtle` — that's why they were renamed to
-`content-*` / `edge-*`. Before adding a token, say the generated utilities out loud:
-`text-<name>`, `bg-<name>`, `border-<name>` must all read sensibly.
+The terminal family is explicitly namespaced under `channel-portfolio-terminal-*`. Cyan aliases the Identity Core dark primary primitives; phosphor is a scoped terminal/status primitive. Neither is an additional personal-brand primary.
 
-## 3. Headings
+### Component roles
 
-1. **Exactly one `h1` per page**, and it is the page title. On the home page that's the Hero
-   name; on every sub-page it's the top heading of the main content.
-2. **No skipped levels** in DOM order (h1 → h2 → h3 …).
-3. **A heading is visually ≥ the body text it labels** on every breakpoint — weight/color
-   alone don't establish hierarchy.
-4. Card titles inside a section use the level below the section's heading (page `h1`/section
-   `h2` → card `h3`).
-5. Global CSS (`global.css`) sets heading _font/tracking/case_ only — sizes always live on the
-   element per the scale in §1, so changing a tag never silently changes its size.
+Reusable interactive components consume roles such as:
 
-## 4. Enforcement
+- `button-primary-background`, `button-primary-background-hover`, `button-primary-content`;
+- `button-secondary-background`, `button-secondary-background-hover`, `button-secondary-content`;
+- `button-border`, `button-focus`;
+- `logo-content`, `logo-primary`, `logo-primary-hover`, `logo-effect-*`;
+- `theme-control-*`, `theme-menu-*`, `theme-option-*`;
+- header surface and shadow effects.
 
-- `tests/e2e/typography.spec.ts` gates: ≥12px floor on all visible text, ≥16px on content
-  paragraphs, one `h1`, no level skips, heading ≥ body — across key EN+ES pages, desktop and
-  mobile viewports.
-- Review checklist: new UI must cite which scale role each text element uses.
-- `grep -rn 'text-\[8px\]\|text-\[9px\]\|text-\[10px\]\|text-\[11px\]' src` must stay empty.
-- `grep -rn 'shadow-\[.*var\(--color-edge-strong\)' src` must stay empty.
+## Primary buttons
 
-## 5. Shadow scale
+The shared button implementation is `src/shared/ui/button/button.css`.
 
-The retro 3D offset shadow is the design system's signature. Tokens live in
-`src/app/styles/colors.css` inside `@theme` — Tailwind 4 generates `shadow-retro-*` utilities
-automatically from them.
+- Light default: `#0A5CD6` with white content.
+- Light hover: `#0044CC` with white content.
+- Dark default: `#00B0FF` with `#020408` content.
+- Dark hover: `#00D8FF` with `#020408` content.
+- All four reference pairs exceed WCAG AA `4.5:1` for normal text.
+- Offset depth uses `--shadow-retro-xs` through `--shadow-retro-3xl`; do not add literal `box-shadow` values to button variants.
+- Focus uses the dedicated button focus role and preserves a visible offset from the current canvas.
 
-| Token                | Utility            | Offset            | Used for                                                                     |
-| -------------------- | ------------------ | ----------------- | ---------------------------------------------------------------------------- |
-| `--shadow-retro-xs`  | `shadow-retro-xs`  | `1px 1px 0 0`     | kbd keys, micro-chips, pressed-button residual                               |
-| `--shadow-retro-sm`  | `shadow-retro-sm`  | `1.5px 1.5px 0 0` | small pills, badges, tooltips, mobile nav rest state                         |
-| `--shadow-retro-md`  | `shadow-retro-md`  | `3px 3px 0 0`     | cards (BlogCard, DevlogCard, TechStack), panels, default retro border        |
-| `--shadow-retro-lg`  | `shadow-retro-lg`  | `4px 4px 0 0`     | primary/feature ProjectCard, About section cards, hero avatar, splash button |
-| `--shadow-retro-xl`  | `shadow-retro-xl`  | `5px 5px 0 0`     | hover state of retro-md/lg elements (the lift), CTA buttons                  |
-| `--shadow-retro-2xl` | `shadow-retro-2xl` | `6px 6px 0 0`     | Research panel, Atena main card, interactive primary hover                   |
-| `--shadow-retro-3xl` | `shadow-retro-3xl` | `8px 8px 0 0`     | Hero HUD, CLITerminal — the largest interactive surfaces                     |
+## Logo
 
-### Hard rules
+The header logo identifies David; it does not act as a separate mascot or product identity.
 
-1. **Retro shadows are always `shadow-retro-*`** — never `shadow-[Npx_Npx_0_var(--color-edge-strong)]`
-   arbitrary literals. The token guarantees the offset lands on the same color the border uses,
-   so light/dark never drift out of sync.
-2. **Responsive hover/active ladder is monotonic**: rest at size N, hover at the next size up,
-   active back at size N or below. e.g. `shadow-retro-md hover:shadow-retro-xl active:shadow-retro-xs`.
-   Lifting on hover, settling on press.
-3. **No opacity on retro shadows**: the offset is a solid edge-color block; alpha reduces the
-   retro read. Use `shadow-none` to remove, never `/opacity`.
-4. **Off-scale offsets are forbidden** — no `text-[2px]`-style `shadow-[2.5px_2.5px_…]`. If a
-   surface needs a value between two tokens, pick the **larger** token (not the smaller): an
-   under-shadow looks like a render bug; an over-shadow looks intentional. The half-pixel
-   offsets previously used (1.5px, 2.5px, 3.5px, 4.5px) were normalized to `sm` / `sm` / `md` /
-   `lg` respectively — visually identical on integer-DPR screens and crisper on HiDPI.
+- Base content uses `logo-content`.
+- Prompt/accent uses `logo-primary`.
+- The approved dark bracket base resolves through Identity Core `primary-400-light` (`#3B82F6`), not the previous `primary-800` reference (`#1E40AF`).
+- Glitch colors are isolated as logo effect roles.
+- Typing, pulse and glitch effects must stop under `prefers-reduced-motion: reduce`.
 
-### Documented exceptions (kept as arbitrary shadows)
+## Surfaces, edges and status
 
-These intentionally use a color **other** than `--color-edge-strong` and therefore cannot map to
-the retro scale. Avoid placeholder text that resembles a complete Tailwind class candidate: the
-Tailwind v4 scanner may otherwise generate invalid CSS from documentation-only examples.
+Use channel surface/content/edge roles for ordinary panels and layout. Use status roles only when color communicates state. Do not use success or phosphor as a generic decorative replacement for the primary accent.
 
-- **Primary glow** — `shadow-[Npx_Npx_0_var(--color-primary-500)]` on Skills cards
-  (`src/pages/skills.astro`, `src/pages/es/skills.astro`), ContactSidebar, Footer CTA,
-  ExperienceItem — the blue accent shadow that signals "interactive primary".
-- **Phosphor glow** — `shadow-[0_0_30px_rgba(0,176,255,0.35)]` on the CLITerminal CRT border
-  (`src/features/cli-terminal/ui/CLITerminal.astro:129`).
-- 💡 **Follow-up**: if more than 2 surfaces need the same primary-glow offset, promote it to a
-  `--shadow-glow-*` scale before the arbitrary count grows again.
+Maintained compatibility utilities such as `bg-surface`, `text-content-*` and `border-edge-*` resolve through the same governed token graph. New or substantially edited components should prefer explicit `channel-*` or component roles.
+
+## Terminal channel
+
+The CLI and retro splash use the named terminal family:
+
+- background and raised surfaces;
+- content and muted content;
+- cyan and bright cyan accents;
+- phosphor status/output accent;
+- warning and error states;
+- terminal grid and glow effects.
+
+Terminal consumers must not contain raw HEX, RGB, HSL or OKLCH literals. Approved sRGB references may appear only in `colors.css` provenance comments, tests, documentation or vendor-owned artwork.
+
+## Retro shadows and spacing
+
+Retro shadows use the `shadow-retro-*` utilities backed by tokenized hard offsets. The scale is intentional and should remain visually discrete rather than blurred.
+
+Spacing follows the 4-pixel grid exposed through `--space-*`. Tailwind spacing utilities may be used when they align with that grid.
+
+## Light and dark modes
+
+The document root owns `color-scheme`: `:root` is light and `:root.dark` is dark. Every new component must be checked in:
+
+- light mode;
+- dark mode;
+- English and Spanish routes;
+- desktop and mobile widths;
+- keyboard focus;
+- reduced-motion mode when animation is present.
+
+Do not assume a `dark:` override is sufficient when a named role already resolves the mode difference.
+
+## Accessibility
+
+- Normal text and interactive labels must meet WCAG AA contrast.
+- Focus indicators must remain visible against the current canvas and surface.
+- Color must not be the only carrier of status or action.
+- Motion effects require a reduced-motion fallback.
+- The pull-request smoke suite blocks serious and critical Axe violations.
+
+## Inventory and exceptions
+
+[Portfolio Retro color inventory](design-system/portfolio-retro-color-inventory.md) classifies migrated consumers, intentional artwork/print exceptions, historical records and bounded follow-up work. Update that inventory whenever an exception is added, removed or reclassified.
+
+## Validation
+
+```bash
+bun run check
+bun run test:unit:ci
+bun run build
+bun run test:e2e:smoke
+bun run screenshots:design-system
+```
+
+The pull-request workflow publishes before/after evidence from the exact base and head revisions. A missing, skipped, cancelled or failing run is not a passing visual validation.

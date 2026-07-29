@@ -1,17 +1,18 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
-import { BlogCard } from '@widgets/blog';
 import { getBlogPosts, getBlogSlug } from '@entities/blog';
-import { getLangFromUrl, useTranslations } from '@shared/lib/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { BlogCard } from '@widgets/blog';
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tBlog = createScopedUiTranslator(lang, 'pages.blog');
 const posts = await getBlogPosts(lang);
 ---
 
 <Layout
-	title={t('blog.page-title')}
-	description={t('blog.page-description')}
+	title={tBlog('pageTitle')}
+	description={tBlog('pageDescription')}
 	img_preview="/projects/portfolio.webp"
 	isHome={false}
 >
@@ -21,13 +22,13 @@ const posts = await getBlogPosts(lang);
 				<p
 					class="mb-2 font-retro-tag text-sm font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
 				>
-					{t('blog.label')}
+					{tBlog('label')}
 				</p>
 				<h1 class="mb-4 text-3xl font-bold font-pixel-clean tracking-wide md:text-5xl">
-					{t('blog.heading')}
+					{tBlog('heading')}
 				</h1>
 				<p class="max-w-2xl text-base leading-relaxed text-content-muted">
-					{t('blog.subheading')}
+					{tBlog('subheading')}
 				</p>
 			</header>
 
@@ -36,8 +37,8 @@ const posts = await getBlogPosts(lang);
 					posts.map(post => (
 						<BlogCard
 							post={post}
-							readMoreText={t('blog.read-more')}
-							readMoreLink={`/es/blog/${getBlogSlug(post)}`}
+							readMoreText={tBlog('readMore')}
+							readMoreLink={getRelativeLocaleUrl(lang, `blog/${getBlogSlug(post)}`)}
 						/>
 					))
 				}

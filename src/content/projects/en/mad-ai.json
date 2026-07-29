@@ -1,0 +1,21 @@
+{
+	"projectId": "mad-ai",
+	"locale": "en",
+	"title": "MAD AI",
+	"description": "A modern administrative platform built with Angular 20 and Clean Architecture. It incorporates advanced user and role management, secure authentication, notifications, and server-side rendering (SSR) with Express, all styled with the latest version of Tailwind CSS.",
+	"category": "Full-Stack Development",
+	"imageAlt": "MAD AI administrative platform dashboard preview",
+	"caseStudy": {
+		"problem": "The client needed a scalable administrative dashboard with fine-grained role-based access control, real-time notifications, and server-side rendering — all within a modern, maintainable architecture.",
+		"approach": "Designed a Clean Architecture monorepo with Angular 20 frontend, Django REST backend, and PostgreSQL. Implemented JWT-based auth with role hierarchies, WebSocket notifications via Django Channels, and Express SSR for Angular Universal.",
+		"tradeoffs": "Chose Django over .NET for faster prototyping of the RBAC and notification systems. Accepted higher server costs for the WebSocket infrastructure to deliver real-time updates without polling.",
+		"outcome": "A production-ready administrative platform with granular role management, real-time notifications, and server-side rendering for fast initial loads. Architecture is framework-agnostic and extensible.",
+		"learnings": [
+			"Clean Architecture patterns across full-stack monorepos",
+			"WebSocket-based real-time notification systems with Django Channels",
+			"Angular Universal SSR configuration for dynamic admin dashboards"
+		],
+		"timeline": "Ongoing",
+		"role": "Full-Stack Developer"
+	}
+}

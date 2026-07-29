@@ -4,7 +4,14 @@ import cliEn from './locales/en/cli.json';
 import commonEn from './locales/en/common.json';
 import errorsEn from './locales/en/errors.json';
 import footerEn from './locales/en/footer.json';
+import metadataEn from './locales/en/metadata.json';
 import navigationEn from './locales/en/navigation.json';
+import atenaEn from './locales/en/pages/atena.json';
+import blogEn from './locales/en/pages/blog.json';
+import componentsEn from './locales/en/pages/components.json';
+import devlogEn from './locales/en/pages/devlog.json';
+import researchPageEn from './locales/en/pages/research.json';
+import skillsEn from './locales/en/pages/skills.json';
 import recruiterEn from './locales/en/recruiter.json';
 import aboutEn from './locales/en/sections/about.json';
 import badgesEn from './locales/en/sections/badges.json';
@@ -22,7 +29,14 @@ import cliEs from './locales/es/cli.json';
 import commonEs from './locales/es/common.json';
 import errorsEs from './locales/es/errors.json';
 import footerEs from './locales/es/footer.json';
+import metadataEs from './locales/es/metadata.json';
 import navigationEs from './locales/es/navigation.json';
+import atenaEs from './locales/es/pages/atena.json';
+import blogEs from './locales/es/pages/blog.json';
+import componentsEs from './locales/es/pages/components.json';
+import devlogEs from './locales/es/pages/devlog.json';
+import researchPageEs from './locales/es/pages/research.json';
+import skillsEs from './locales/es/pages/skills.json';
 import recruiterEs from './locales/es/recruiter.json';
 import aboutEs from './locales/es/sections/about.json';
 import badgesEs from './locales/es/sections/badges.json';
@@ -44,10 +58,19 @@ const englishCatalog = {
 	breadcrumbs: breadcrumbsEn,
 	cli: cliEn,
 	footer: footerEn,
+	metadata: metadataEn,
 	theme: themeEn,
 	errors: errorsEn,
 	recruiter: recruiterEn,
 	splash: splashEn,
+	pages: {
+		atena: atenaEn,
+		blog: blogEn,
+		components: componentsEn,
+		devlog: devlogEn,
+		research: researchPageEn,
+		skills: skillsEn,
+	},
 	sections: {
 		hero: heroEn,
 		about: aboutEn,
@@ -67,10 +90,19 @@ const spanishCatalog = {
 	breadcrumbs: breadcrumbsEs,
 	cli: cliEs,
 	footer: footerEs,
+	metadata: metadataEs,
 	theme: themeEs,
 	errors: errorsEs,
 	recruiter: recruiterEs,
 	splash: splashEs,
+	pages: {
+		atena: atenaEs,
+		blog: blogEs,
+		components: componentsEs,
+		devlog: devlogEs,
+		research: researchPageEs,
+		skills: skillsEs,
+	},
 	sections: {
 		hero: heroEs,
 		about: aboutEs,
@@ -90,10 +122,17 @@ export const UI_CATALOG_MODULES = [
 	'breadcrumbs',
 	'cli',
 	'footer',
+	'metadata',
 	'theme',
 	'errors',
 	'recruiter',
 	'splash',
+	'pages.atena',
+	'pages.blog',
+	'pages.components',
+	'pages.devlog',
+	'pages.research',
+	'pages.skills',
 	'sections.hero',
 	'sections.about',
 	'sections.badges',

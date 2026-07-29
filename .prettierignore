@@ -19,11 +19,6 @@ bundle-analysis/
 .claude/
 .github/instructions/
 
-# Historical audits, migration plans, and completed task notes
-docs/FSD-Architecture/
-docs/reports/
-docs/tasks/
-
 # Generated and maintained by Release Please
 CHANGELOG.md
 

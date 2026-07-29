@@ -10,6 +10,6 @@ Claude-specific expectations:
 - keep English and Spanish user-facing content synchronized;
 - add a regression test for behavior changes and Astro navigation lifecycles where relevant;
 - do not invent professional, coverage or performance claims;
-- do not edit frozen historical material unless the task is explicitly archival correction.
+- do not recreate historical plans or audit archives in the repository; synchronize durable rationale and handoffs to Cortex-L7.
 
 Use commands from [package.json](package.json). Start validation with `bun run check` and add the relevant test, build or performance command for the change.

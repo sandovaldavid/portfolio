@@ -1,40 +1,66 @@
-# Repository guidelines for agents
+# Repository operating manual for agents
 
-`AGENTS.md` is the canonical source for shared repository-working rules. Tool-specific files may add only tool or path-specific behavior and must link back here instead of copying these rules.
+`AGENTS.md` is the canonical repository-working contract for human and AI contributors. Tool-specific instruction files may add only tool or path-specific behavior and must link back here instead of copying these rules.
 
 ## 1. Sources of truth
 
 | Concern                            | Canonical source                                                             |
 | ---------------------------------- | ---------------------------------------------------------------------------- |
 | Product and repository overview    | [README.md](README.md)                                                       |
+| Current implementation status      | [docs/STATUS.md](docs/STATUS.md)                                             |
 | Architecture boundaries            | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and `bun run lint:architecture` |
 | Localization and bilingual content | [docs/I18N.md](docs/I18N.md)                                                 |
 | Tool and dependency versions       | [package.json](package.json) and `bun.lock`                                  |
 | Testing                            | [docs/TESTING.md](docs/TESTING.md)                                           |
-| CI behavior                        | [docs/CI.md](docs/CI.md)                                                     |
-| Branches, releases, deployment     | [docs/DELIVERY.md](docs/DELIVERY.md)                                         |
+| CI behavior                        | [docs/CI.md](docs/CI.md) and `.github/workflows/`                            |
+| Branches, releases and deployment  | [docs/DELIVERY.md](docs/DELIVERY.md)                                         |
+| Canonical resume artifact delivery | [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md)                           |
 | Performance budgets                | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and `performance-budgets.json`    |
 | Documentation ownership            | [docs/README.md](docs/README.md)                                             |
 | Contribution flow                  | [CONTRIBUTING.md](CONTRIBUTING.md)                                           |
 
-Do not copy version numbers, thresholds or architecture prose into another active document. Link to the canonical source.
+Executable code and configuration override prose when they disagree. Do not copy versions, thresholds, command definitions or architecture rules into a second active document.
 
-## 2. Before changing code
+## 2. Status discipline
 
-1. Start from an updated `main` branch.
-2. Read the issue, nearby implementation and relevant active documentation.
-3. Keep one coherent concern per short-lived branch and pull request.
-4. Determine the correct FSD layer before creating files.
-5. Identify the regression test and bilingual impact before implementation.
+Classify repository statements using the vocabulary in [docs/STATUS.md](docs/STATUS.md):
 
-Never work directly on `main`. Feature, fix and maintenance branches target `main`; preview deployments provide the repository's staging environment.
+- **Implemented:** present in code or configuration and verifiable through the repository;
+- **In progress:** partially implemented with an active issue or pull request identifying the remaining work;
+- **Blocked:** work or automation cannot proceed because of a named external constraint;
+- **Unconfirmed:** plausible but not verified against the current branch or an authoritative result;
+- **Deprecated:** still present for compatibility but prohibited for new work;
+- **Planned:** approved future work that is not implemented;
+- **Historical:** point-in-time context that no longer defines current behavior;
+- **Discarded:** explicitly rejected or superseded.
 
-## 3. Architecture and code
+Active repository documentation should describe **Implemented** behavior and only the minimum **In progress**, **Blocked**, **Unconfirmed** or **Deprecated** context needed to operate safely. Decisions, alternatives, historical reasoning, plans and session handoffs belong in the `portfolio-v1` project area of Cortex-L7. Never present an issue, roadmap item or vault note as implemented behavior.
+
+## 3. Branch and pull-request model
+
+The current branch roles are:
+
+- `develop`: integration branch and base for ordinary feature, fix, documentation and maintenance pull requests;
+- `main`: default and production branch, updated through a focused promotion pull request from `develop`;
+- `resume-assets`: canonical resume artifact branch consumed by preview and production workflows.
+
+Before changing the repository:
+
+1. update local `develop`;
+2. read the issue, nearby implementation and owning active documentation;
+3. create one short-lived branch from `develop`;
+4. identify architecture, bilingual, accessibility and regression-test impact;
+5. keep one coherent concern per pull request;
+6. open the implementation pull request into `develop`.
+
+Do not work directly on `develop` or `main`. Promotion from `develop` to `main` is a separate release concern governed by [docs/DELIVERY.md](docs/DELIVERY.md). Changes to the public CV payload or its publication path must follow [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md) and must not copy private resume sources into this repository.
+
+## 4. Architecture and code
 
 The enforced dependency direction is:
 
 ```text
-pages → app → widgets → features → entities → shared
+src/pages → app → widgets → features → entities → shared
 ```
 
 Required practices:
@@ -45,44 +71,48 @@ Required practices:
 - use strict TypeScript and prefer `unknown` over `any`;
 - type component props and non-trivial function boundaries;
 - keep Astro route files focused on routing and composition;
-- explain non-obvious decisions, not self-evident syntax.
+- explain non-obvious behavior and trade-offs, not self-evident syntax.
 
-`bun run lint:architecture` is authoritative when prose and implementation disagree.
+`bun run lint:architecture` is authoritative when prose and implementation disagree. A boundary change requires an executable checker update, affected tests and current operational documentation. Maintainers must synchronize durable rationale and rejected alternatives to Cortex-L7 rather than storing planning history in the repository.
 
-## 4. User-facing changes
+## 5. User-facing and localized changes
 
 - Follow [docs/I18N.md](docs/I18N.md) before adding or moving localized content.
 - Classify text as UI copy, structured portfolio content, editorial content or language-neutral data and update only its canonical owner.
 - Update English and Spanish together, including visible copy, accessibility labels and localized metadata.
 - Do not add monolithic locale files, component-local bilingual copy maps, raw HTML translations or a parallel translation runtime.
-- Treat the current flattened dictionaries and mixed-value helpers as temporary compatibility code; do not extend those patterns to new domains.
+- Use only the typed granular scalar catalog API, schema-validated localized content collections and Astro-native locale helpers; missing translations are build defects and must fail loudly.
 - Preserve keyboard navigation, semantic HTML, reduced-motion behavior and light/dark themes.
 - Add browser coverage for interactions, navigation lifecycle or responsive behavior.
-- Do not add seniority, impact or performance claims without verifiable evidence.
+- Do not add seniority, impact, coverage or performance claims without verifiable evidence.
 
-## 5. Testing by change type
+## 6. Validation by change type
 
-| Change              | Minimum validation                                                     |
-| ------------------- | ---------------------------------------------------------------------- |
-| Documentation only  | `bun run check:docs` and `bun run format:check`                        |
-| Pure logic          | Unit tests plus `bun run test:unit:ci`                                 |
-| Astro/UI behavior   | Relevant Playwright regression plus Chromium smoke                     |
-| Architecture        | `bun run lint:architecture` and affected tests                         |
-| Performance/loading | `bun run build`, `bun run performance:check` and relevant browser test |
-| CI/tooling          | `bun run check`, the changed command locally, and final GitHub checks  |
+| Change              | Minimum validation                                                                    |
+| ------------------- | ------------------------------------------------------------------------------------- |
+| Documentation only  | `bun run check:docs` and `bun run format:check`                                       |
+| Pure logic          | relevant unit tests plus `bun run test:unit:ci`                                       |
+| Astro/UI behavior   | relevant Playwright regression plus `bun run test:e2e:smoke`                          |
+| Architecture        | `bun run lint:architecture` and affected tests                                        |
+| Localization        | focused `check:i18n:*`, build, generated-link validation and bilingual smoke coverage |
+| Performance/loading | `bun run build`, `bun run performance:check` and relevant browser test                |
+| CI/tooling          | `bun run check`, the changed command locally and workflow review                      |
 
 Coverage percentages apply only to the scope documented in [docs/testing/UNIT-COVERAGE.md](docs/testing/UNIT-COVERAGE.md).
 
-## 6. Documentation rules
+A missing, skipped, disabled or quota-blocked GitHub Actions run is **not** a successful validation. Record exactly which commands were executed, their environment and their results. When automation is unavailable, local validation is mandatory and the unavailable automation remains **Blocked** or **Unconfirmed**.
+
+## 7. Documentation rules
 
 - Keep the root README concise and recruiter/developer oriented.
 - Update the owning active document instead of repeating guidance elsewhere.
 - Quantitative claims require a versioned configuration, reproducible command or linked artifact methodology.
-- Historical audits and completed migration plans are frozen; use [docs/archive/README.md](docs/archive/README.md) as their entry point.
+- Keep current behavior, installation, configuration, testing, deployment, troubleshooting and contributor contracts in the repository.
+- Move decisions, alternatives, reasoning, historical audits, cross-repository strategy, plans and session handoffs to Cortex-L7.
+- Do not add a repository archive for material that belongs in the vault; Git history remains the public change record.
 - Run `bun run check:docs` after changing links or moving files.
-- Consequential decisions belong in a concise ADR or the nearest owning active document.
 
-## 7. Git and pull requests
+## 8. Git and pull requests
 
 Use Conventional Commits:
 
@@ -90,19 +120,19 @@ Use Conventional Commits:
 <type>(<scope>): <description>
 ```
 
-Common branch prefixes are `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`, `deps/` and `security/`.
+Common branch prefixes are `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`, `deps/`, `security/` and `agent/`.
 
 A pull request should state:
 
 - what changed and why;
-- user/developer impact;
-- validation performed;
-- risks or trade-offs;
-- `Closes #<issue>` when the merge should close an issue.
+- user or developer impact;
+- validation performed, including commands and environment;
+- risks, trade-offs or intentionally deferred work;
+- `Closes #<issue>` only when the merge completes that issue.
 
-Use squash merge so the validated PR title becomes the single commit on `main`. Do not merge unless explicitly requested. Before marking a PR ready, confirm the final head is mergeable and every required check is green.
+Use squash merge so the validated pull-request title becomes the integration commit. Do not merge unless explicitly requested. Before marking a pull request ready, confirm that it targets the intended branch, contains no unrelated changes and has the strongest validation currently available.
 
-## 8. Canonical local gate
+## 9. Canonical local gate
 
 ```bash
 bun install --frozen-lockfile
@@ -111,4 +141,4 @@ bun run test:unit:ci
 bun run build
 ```
 
-Add the relevant Playwright, Lighthouse or performance command based on the change. The exact commands are maintained in [package.json](package.json).
+Add the relevant generated-link, Playwright, Lighthouse, Docker visual or performance command based on the change. Exact command definitions live in [package.json](package.json).

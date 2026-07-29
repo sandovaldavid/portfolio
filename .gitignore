@@ -59,4 +59,4 @@ bundle-analysis/
 # route performance reports
 performance-report/
 
-
+*.local.*

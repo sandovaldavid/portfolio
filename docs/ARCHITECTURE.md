@@ -1,6 +1,6 @@
 # Executable architecture rules
 
-This document is the active source of truth for the repository's pragmatic Feature-Sliced Design boundaries. Historical migration material under `docs/FSD-Architecture/` is archived and does not override these rules.
+This document is the active source of truth for the repository's pragmatic Feature-Sliced Design boundaries. Historical migration plans and architectural alternatives belong in Cortex-L7 and do not override the executable rules below.
 
 ## Dependency direction
 
@@ -21,7 +21,7 @@ src/pages → app → widgets → features → entities → shared
 
 ## Slice isolation and public APIs
 
-The following rules are executable through `bun run lint:architecture` and therefore through `bun run lint`, `bun run check` and CI. The checker parses imports and re-exports in TypeScript, JavaScript and Astro frontmatter, including dynamic imports. Each violation identifies the importing file, source line, module specifier and failed rule.
+The following rules are executable through `bun run lint:architecture` and therefore through `bun run lint`, `bun run check` and the configured quality workflows. The checker parses imports and re-exports in TypeScript, JavaScript and Astro frontmatter, including dynamic imports. Each violation identifies the importing file, source line, module specifier and failed rule.
 
 1. Widgets, features and entities cannot import another slice in the same layer.
 2. Cross-layer relative imports are forbidden.
@@ -36,21 +36,27 @@ Relative imports remain valid inside the same slice.
 
 ## Shared technology vocabulary
 
-Technology labels, icons and tag metadata are shared configuration at `src/shared/config/technology`. They are consumed by projects, pages and widgets but do not have independent domain behavior, so they are not an entity. This removes the former entity-to-entity dependency from `project` to `technology`.
+Technology labels, icons and tag metadata are shared configuration at `src/shared/config/technology`. They are consumed by projects, pages and widgets but do not have independent domain behavior, so they are not an entity. This removes an entity-to-entity dependency from `project` to `technology`.
 
 ## Layout safety
 
-`Layout.astro` defaults to an internal-page layout. Home routes must opt in with the explicit `isHome` prop. Omitting the prop therefore renders the default slot instead of the homepage-only named slots.
+`Layout.astro` defaults to an internal-page layout. Home routes must opt in with the explicit `isHome` prop. Omitting the prop renders the default slot instead of homepage-only named slots.
 
 Playwright regression tests assert that representative English and Spanish internal routes render one unique `<h1>` and do not render homepage sections.
 
 ## Growth policy
 
-The current layers are frozen. Do not add another architectural layer, cross-entity exception or root aggregate barrel unless real product complexity requires it. A change to these boundaries requires:
+The current layers are frozen. Do not add another architectural layer, cross-entity exception or root aggregate barrel unless real product complexity requires it.
+
+A boundary change requires:
 
 1. a concrete use case that cannot be represented by the current layers;
-2. an ADR describing alternatives and trade-offs;
-3. an update to the executable checker and its tests.
+2. rationale and alternatives in the issue or pull request;
+3. an update to the executable checker and its tests;
+4. an update to this operational document;
+5. synchronization of the durable decision, alternatives and consequences to Cortex-L7 by the maintainer.
+
+The repository remains usable without vault access; Cortex-L7 preserves the reasoning rather than replacing the executable contract.
 
 ## Commands
 

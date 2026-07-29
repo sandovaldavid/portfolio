@@ -1,3 +1,21 @@
 {
-	"sectionTitle": "Projects"
+	"sectionTitle": "Projects",
+	"codeButton": "Code",
+	"previewButton": "Preview",
+	"viewAll": "View All Projects",
+	"cardFeature": "Feature",
+	"cardProject": "Project",
+	"caseStudy": "Case Study",
+	"caseStudyBanner": "BOSS FIGHT // CASE STUDY",
+	"back": "[ BACK TO PROJECTS ]",
+	"problem": "THE BOSS // PROBLEM",
+	"approach": "THE STRATEGY // APPROACH",
+	"tradeoffs": "THE SACRIFICE // TRADE-OFFS",
+	"outcome": "VICTORY // OUTCOME",
+	"learnings": "XP GAINED // KEY LEARNINGS",
+	"timeline": "DURATION",
+	"role": "ROLE",
+	"catalogTitle": "Projects Catalog - David Sandoval",
+	"catalogDescription": "Explore all projects built by David Sandoval: scalable web and mobile applications.",
+	"catalogHeading": "Projects Catalog"
 }

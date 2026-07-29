@@ -11,6 +11,7 @@ interface Props {
 	backText: string;
 	codeButtonText: string;
 	previewButtonText: string;
+	caseStudyLabel: string;
 	labelProblem: string;
 	labelApproach: string;
 	labelTradeoffs: string;
@@ -26,6 +27,7 @@ const {
 	backText,
 	codeButtonText,
 	previewButtonText,
+	caseStudyLabel,
 	labelProblem,
 	labelApproach,
 	labelTradeoffs,
@@ -58,7 +60,7 @@ const evidenceDecisionSections = evidence
 			<div
 				class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
 			>
-				BOSS FIGHT // CASE STUDY
+				{caseStudyLabel}
 			</div>
 			<h1 class="mb-4 text-3xl font-bold font-pixel-clean tracking-wide md:text-5xl">
 				{project.title}
@@ -107,7 +109,7 @@ const evidenceDecisionSections = evidence
 				width={1200}
 				height={630}
 				class="h-auto w-full object-cover"
-				alt={`${project.title} project screenshot`}
+				alt={project.imageAlt}
 				loading="eager"
 				decoding="sync"
 			/>
@@ -166,7 +168,7 @@ const evidenceDecisionSections = evidence
 						<div class="grid gap-8 lg:grid-cols-2">
 							<section aria-labelledby="implemented-evidence">
 								<h2
-									id="implemed-evidence"
+									id="implemented-evidence"
 									class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-success-500"
 								>
 									{evidence.implementedLabel}

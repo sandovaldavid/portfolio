@@ -1,4 +1,5 @@
 ---
+translationKey: v1-3-0-beta
 title: 'v1.3.0-beta — Sprint 3: Experience & Polish'
 summary: 'Pixel-font readability improvements, CRT View Transitions, accessibility CI gate, comprehensive component tests, and release automation.'
 pubDate: 2026-06-23

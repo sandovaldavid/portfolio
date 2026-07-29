@@ -1,10 +1,15 @@
 ---
 import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
+import {
+	getDevlogLocalizedPaths,
+	getDevlogPost,
+	getDevlogPosts,
+	getDevlogSlug,
+} from '@entities/devlog';
+import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
 import { DevlogDetail } from '@widgets/devlog';
-import { getDevlogPosts, getDevlogSlug } from '@entities/devlog';
-import { Language } from '@shared/config/i18n';
-import { getLangFromUrl, useTranslations } from '@shared/lib/i18n';
 
 export async function getStaticPaths() {
 	const posts = await getDevlogPosts(Language.ENGLISH);
@@ -13,16 +18,16 @@ export async function getStaticPaths() {
 	}));
 }
 
-const { slug } = Astro.params;
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
-const posts = await getDevlogPosts(lang);
-const post = posts.find(p => getDevlogSlug(p) === slug);
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const slug = Astro.params.slug ?? '';
+const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
+const post = await getDevlogPost(lang, slug);
 
 if (!post) {
 	return Astro.redirect('/404');
 }
 
+const localizedPaths = await getDevlogLocalizedPaths(post);
 const { Content } = await render(post);
 ---
 
@@ -30,9 +35,18 @@ const { Content } = await render(post);
 	title={`${post.data.title} | Devlog | David Sandoval`}
 	description={post.data.summary}
 	img_preview="/projects/portfolio.webp"
-	isHome={false}
+	imageAlt={post.data.title}
+	pageType="devlog"
+	publishedTime={post.data.pubDate}
+	breadcrumbLabel={post.data.title}
+	{localizedPaths}
 >
 	<div class="py-16 md:py-24">
-		<DevlogDetail {post} {Content} backText={t('devlog.back')} backLink="/devlog" />
+		<DevlogDetail
+			{post}
+			{Content}
+			backText={tDevlog('back')}
+			backLink={getRelativeLocaleUrl(lang, 'devlog')}
+		/>
 	</div>
 </Layout>

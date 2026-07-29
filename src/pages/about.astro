@@ -12,6 +12,7 @@ const profile = await getPortfolioProfile(lang);
 	title={profile.data.seo.title}
 	description={profile.data.seo.description}
 	img_preview="/projects/portfolio.webp"
+	pageType="profile"
 >
 	<AboutContent {lang} profile={profile.data} />
 </Layout>

@@ -25,10 +25,10 @@ The versioned configuration owns these guarantees:
 - recovery of inherited Bun, dependency-volume, command-history, Git and generated-path ownership;
 - repair during create, container start and VS Code attach lifecycle events;
 - explicit propagation of the real host workspace path to nested test containers;
-- deterministic publication of Astro port `4321` and Playwright report port `9323` on host loopback;
+- deterministic VS Code forwarding of Astro port `4321` and Playwright report port `9323` to the same local ports;
 - documented Fedora SELinux compatibility for the trusted local development container.
 
-`bun run check:devcontainer` rejects version, Feature, lockfile, shell, user, init, IPC, port-publication, mount, lifecycle, identity, repair-policy or configuration drift. The command also runs as part of `bun run check`.
+`bun run check:devcontainer` rejects version, Feature, lockfile, shell, user, init, IPC, port-forwarding, mount, lifecycle, identity, repair-policy or configuration drift. The command also runs as part of `bun run check`.
 
 ## Intentional project-specific choices
 
@@ -41,7 +41,7 @@ This repository does not copy the generic Astro template literally:
 - the named `node_modules` volume isolates Linux dependencies from the host and from the nested pinned Playwright container.
 - Zsh is the default interactive shell. Bash remains configured as a supported fallback.
 - the host Docker daemon is reused rather than starting a second daemon inside the development container.
-- Astro and the Playwright report are published through Docker on host loopback instead of depending on VS Code port-forwarding tunnels.
+- Astro and the Playwright report use VS Code forwarding rather than Docker port publications, so standard loopback-bound development servers remain accessible without exposing container interfaces.
 
 ## Exact Features
 
@@ -153,7 +153,7 @@ Prerequisites:
 
 Run **Dev Containers: Reopen in Container**.
 
-After changing image arguments, Features, the lockfile, mounts, users, lifecycle commands, `containerEnv`, `appPort`, `portsAttributes`, `init` or `runArgs`, use **Dev Containers: Rebuild Container Without Cache**. Reopening an existing container does not apply those creation-time changes.
+After changing image arguments, Features, the lockfile, mounts, users, lifecycle commands, `containerEnv`, `forwardPorts`, `portsAttributes`, `init` or `runArgs`, use **Dev Containers: Rebuild Container Without Cache**. Reopening an existing container does not reliably replace creation-time settings from a previously created container.
 
 The post-create lifecycle executes:
 
@@ -169,40 +169,37 @@ docker compose version
 
 A stopped host Docker daemon produces a warning; start Docker before Docker-backed tests.
 
-## Host port publication
+## Host port forwarding
 
-The Dev Container publishes:
+The Dev Container asks VS Code to forward:
 
 ```json
-"appPort": [
-  "127.0.0.1:4321:4321",
-  "127.0.0.1:9323:9323"
-]
+"forwardPorts": [4321, 9323]
 ```
 
-These are Docker port publications, not VS Code forwarding tunnels. Both ports are bound only to the host loopback interface and are not exposed to other machines on the LAN. VS Code auto-forwarding is disabled for both ports to avoid duplicate URLs or silently remapped local ports.
+Both ports use `requireLocalPort: true`, so VS Code must preserve the expected local URLs instead of silently selecting different host ports. Astro opens once automatically when detected; the Playwright report produces a notification when its server starts.
 
-| Service                | Container port | Host URL                |
+| Service                | Container port | Forwarded host URL      |
 | ---------------------- | -------------: | ----------------------- |
 | Astro development      |           4321 | `http://localhost:4321` |
 | Playwright HTML report |           9323 | `http://localhost:9323` |
 
-Astro must listen on all container interfaces:
+The forwarding tunnel presents requests to each application as local container traffic. Astro therefore uses its standard development command and does not need to listen on every container interface:
 
 ```bash
-bun run dev -- --host 0.0.0.0
+bun run dev
 ```
 
-Generate a Playwright report and serve it on the published report port:
+Generate a Playwright report and serve it on container loopback:
 
 ```bash
 bun run test:e2e:smoke
 bun run test:e2e:report
 ```
 
-`test:e2e:report` runs the project-local Playwright binary with `--host 0.0.0.0 --port 9323`. It blocks the terminal until stopped with `Ctrl+C`.
+`test:e2e:report` runs the project-local Playwright binary with `--host 127.0.0.1 --port 9323`. It blocks the terminal until stopped with `Ctrl+C`.
 
-If a rebuild fails because either host port is already allocated, identify the owner from a host terminal before retrying:
+If either local port is already allocated, VS Code reports the conflict instead of remapping it. Identify the owner from a host terminal, stop the conflicting process and reload or rebuild the Dev Container:
 
 ```bash
 ss -ltnp '( sport = :4321 or sport = :9323 )'
@@ -292,7 +289,7 @@ Only restore ownership for known generated paths that were previously written by
 ## Daily development
 
 ```bash
-bun run dev -- --host 0.0.0.0
+bun run dev
 bun run check
 bun run test:unit:ci
 bun run build
@@ -332,7 +329,7 @@ The repository includes:
 
 Use this configuration only with trusted repository code. It is not a production runtime definition. A stricter environment should replace the direct bind mount with a Compose mount using explicit SELinux relabeling and remove `label=disable` after host validation.
 
-The development ports are published only to `127.0.0.1`; they are not bound to `0.0.0.0` on the host. Inside the container, the corresponding servers listen on `0.0.0.0` so Docker can route host-loopback traffic to them.
+Development servers stay bound to container loopback. VS Code exposes only the requested forwarded ports to the local development machine, and `requireLocalPort` prevents unexpected URL remapping.
 
 `docker-outside-of-docker` exposes the host Docker daemon to the development user. Processes with access to that socket effectively have host-level container control. Do not run untrusted code inside this environment.
 
@@ -342,7 +339,7 @@ A Playwright, Bun, Feature or shell-tool upgrade is one coordinated change. Upda
 
 1. `package.json` and `bun.lock`;
 2. `.devcontainer/Dockerfile` build arguments;
-3. `.devcontainer/devcontainer.json` build arguments, Feature references and port publication;
+3. `.devcontainer/devcontainer.json` build arguments, Feature references and port forwarding;
 4. `.devcontainer/devcontainer-lock.json`;
 5. shell installer versions and checksums;
 6. Docker test images and reviewed visual baselines;

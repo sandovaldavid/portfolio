@@ -5,11 +5,15 @@ import { Experience } from '@widgets/experience';
 import { Hero } from '@widgets/hero';
 import { Projects } from '@widgets/projects';
 import { Research } from '@widgets/research';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tMetadata = createScopedUiTranslator(lang, 'metadata');
 ---
 
 <Layout
-	title="David Sandoval — Software Engineer"
-	description="Software Engineer building reliable web products with Angular, .NET and TypeScript. Based in Lima and open to remote opportunities across Europe and Latin America."
+	title={tMetadata('siteTitle')}
+	description={tMetadata('siteDescription')}
 	img_preview="/projects/portfolio.webp"
 	isHome
 >

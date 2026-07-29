@@ -1,20 +1,20 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getProjectsData, ProjectCard } from '@entities/project';
-import { getLangFromUrl, getLocalizedPath, useTranslations } from '@shared/lib/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 
 interface Props {
 	showAll?: boolean;
 }
 const { showAll = false } = Astro.props;
 
-const lang = getLangFromUrl(new URL(Astro.request.url));
-const t = useTranslations(lang);
-const PROJECTS = getProjectsData(t);
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+const projects = await getProjectsData(lang);
 
-// Sort so featured come first, then slice if we are on home page
 const projectsToDisplay = showAll
-	? PROJECTS
-	: PROJECTS.filter(project => project.featured).slice(0, 2);
+	? projects
+	: projects.filter(project => project.featured).slice(0, 2);
 ---
 
 <section class="font-sans w-full">
@@ -26,14 +26,11 @@ const projectsToDisplay = showAll
 						project={project}
 						variant="secondary"
 						headingLevel={showAll ? 'h2' : 'h3'}
-						codeButtonText={t('projects.code-button')}
-						previewButtonText={t('projects.preview-button')}
-						caseStudyText={project.caseStudy ? t('projects.case.study') : undefined}
-						caseStudyLink={
-							project.caseStudy
-								? getLocalizedPath(lang, `/projects/${project.slug}`)
-								: undefined
-						}
+						codeButtonText={tProjects('codeButton')}
+						previewButtonText={tProjects('previewButton')}
+						cardTypeText={tProjects(project.featured ? 'cardFeature' : 'cardProject')}
+						caseStudyText={tProjects('caseStudy')}
+						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
 						priority={i < 2}
 					/>
 				</div>
@@ -45,10 +42,10 @@ const projectsToDisplay = showAll
 		!showAll && (
 			<div class="w-full flex justify-center mt-12">
 				<a
-					href={getLocalizedPath(lang, '/projects')}
+					href={getRelativeLocaleUrl(lang, 'projects')}
 					class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
 				>
-					{t('projects.view-all')}
+					{tProjects('viewAll')}
 				</a>
 			</div>
 		)

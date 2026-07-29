@@ -1,155 +1,40 @@
-# Widgets Catalog
+# Widget slice catalog
 
-Every slice under `src/widgets/` (17 total), what it renders, what it depends on, and where it's
-actually used. Generated 2026-07-02 by reading each slice's `index.ts`, imports, and callers —
-see [`docs/tasks/branch-03-project-docs.md`](./tasks/branch-03-project-docs.md). `blog` was added
-afterward by [`docs/tasks/branch-05-blog.md`](./tasks/branch-05-blog.md).
+This catalog is an operational inventory of the current slices under `src/widgets/`. [ARCHITECTURE.md](ARCHITECTURE.md) owns dependency rules; source code and public APIs own exact dependencies and call sites.
 
-> [!NOTE]
-> Two widgets (`badges`, `vision`) exist and are fully implemented but are **not currently
-> imported by any page or layout** — see their entries below. Verified by grepping every
-> `.astro`/`.ts` file under `src/` for each widget's public export name.
+Widgets compose page sections from features, entities and shared primitives. They must not import peer widgets.
 
----
+| Slice                | Current purpose                                                                     | Mount status                                       |
+| -------------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------- |
+| `about-content`      | Standalone About page content built from localized profile data.                    | Mounted by localized About routes.                 |
+| `about-me`           | Home-page profile summary and About link.                                           | Mounted on localized home routes.                  |
+| `badges`             | Certification-badge collection backed by the badge entity.                          | Implemented but not mounted by a production route. |
+| `blog`               | Blog cards and full editorial detail rendering.                                     | Mounted by localized blog routes.                  |
+| `contact-sidebar`    | Persistent social/contact shortcuts.                                                | Composed by the application layout.                |
+| `devlog`             | Devlog cards and full entry rendering.                                              | Mounted by localized devlog routes.                |
+| `experience`         | Localized tabbed professional-experience section.                                   | Mounted on localized home routes.                  |
+| `footer`             | Site footer and social links.                                                       | Composed by the application layout.                |
+| `header`             | Brand, primary navigation, resume action, language control and mobile navigation.   | Composed by the application layout.                |
+| `hero`               | Home-page professional introduction and primary evidence links.                     | Mounted on localized home routes.                  |
+| `project-case-study` | Structured project problem, approach, trade-offs and outcome detail.                | Mounted by localized project detail routes.        |
+| `projects`           | Featured or complete project-card collection.                                       | Mounted by home and project-index routes.          |
+| `recruiter-hud`      | Optional recruiter controls, theme/language access and retro interaction utilities. | Composed by the application layout.                |
+| `research`           | Home-page research summary.                                                         | Mounted on localized home routes.                  |
+| `research-content`   | Standalone research page content.                                                   | Mounted by localized research routes.              |
+| `tech-stack`         | Curated technology overview and skills navigation.                                  | Composed by the home layout.                       |
+| `vision`             | Future-facing portfolio cards.                                                      | Implemented but not mounted by a production route. |
 
-### `about-content`
+“Implemented but not mounted” means source code exists but is not current user-facing behavior. Do not market or document those slices as live features unless a production consumer and regression coverage are added.
 
-- **Purpose**: The full standalone "About" page body — bio card and focus-areas list.
-- **Dependencies**: `@shared/ui`, `@shared/lib/i18n`, `@shared/config/i18n`, `@app/layouts/Layout.astro`
-- **Public API**: `export { AboutContent } from './ui/AboutContent.astro'` (re-exported via `default as`)
-- **Used in**: `src/pages/about.astro`, `src/pages/es/about.astro`
+## Maintenance rules
 
-### `about-me`
+When adding or changing a widget:
 
-- **Purpose**: Homepage teaser card — bio paragraph, profile image, "read more" link to `/about`.
-- **Dependencies**: `@shared/lib/i18n`, `@shared/config/i18n`
-- **Public API**: `export { AboutMe } from './ui'`
-- **Used in**: `src/pages/index.astro`, `src/pages/es/index.astro` (via the `@widgets` barrel)
-
-### `badges` ⚠️ not currently used
-
-- **Purpose**: Horizontally-wrapped list of certification badge links, rendering
-  `CertificationBadge` from the `badge` entity.
-- **Dependencies**: `@entities/badge`, `@shared/lib/i18n`
-- **Public API**: `export { Badges } from './ui'`
-- **Used in**: nothing. `src/pages/components.astro` has a "Badges" demo section, but it renders
-  the generic `Badge` atom from `@shared/ui`, not this widget. No page currently imports
-  `@widgets/badges`.
-
-### `blog`
-
-- **Purpose**: Two components for the blog feature — `BlogCard` (compact list item) and
-  `BlogDetail` (full article view rendering the MDX body via `.prose`).
-- **Dependencies**: `@entities/blog`, `@shared/ui`, `astro:content`
-- **Public API**: `export { BlogCard, BlogDetail } from './ui'`
-- **Used in**: `src/pages/blog.astro` / `es/blog.astro` (`BlogCard`);
-  `src/pages/blog/[slug].astro` / `es/blog/[slug].astro` (`BlogDetail`)
-
-### `contact-sidebar`
-
-- **Purpose**: Fixed floating left-side bar with social icon links (GitHub, LinkedIn, Email, Link Hub).
-- **Dependencies**: `@shared/config/site.config`, `@shared/lib/i18n`
-- **Public API**: `export { ContactSidebar } from './ui/ContactSidebar.astro'`
-- **Used in**: `src/app/layouts/Layout.astro` (via the `@widgets` barrel)
-
-### `devlog`
-
-- **Purpose**: Two components for the devlog feature — `DevlogCard` (compact list item) and
-  `DevlogDetail` (full post view).
-- **Dependencies**: `@entities/devlog`, `@shared/ui`
-- **Public API**: `export { DevlogCard, DevlogDetail } from './ui'`
-- **Used in**: `src/pages/devlog.astro` / `es/devlog.astro` (`DevlogCard`);
-  `src/pages/devlog/[slug].astro` / `es/devlog/[slug].astro` (`DevlogDetail`)
-
-### `experience`
-
-- **Purpose**: Tabbed work-experience section — vertical tab list + role detail panels.
-- **Dependencies**: `@entities/experience`, `@shared/lib/i18n`, `@shared/config/i18n`, `@shared/ui`
-- **Public API**: `export { Experience } from './ui'`
-- **Used in**: `src/pages/index.astro`, `src/pages/es/index.astro` (via the `@widgets` barrel)
-
-### `footer`
-
-- **Purpose**: Site footer — social icon links + copyright year.
-- **Dependencies**: `@shared/config/site.config`, `@shared/lib/i18n`
-- **Public API**: `export { Footer } from './ui'`
-- **Used in**: `src/app/layouts/Layout.astro` (via the `@widgets` barrel)
-
-### `header`
-
-- **Purpose**: Fixed top navigation — brand logo, desktop nav, resume button, language picker, mobile menu.
-- **Dependencies**: `@features/language-picker`, `@shared/config/i18n`, `@shared/config/site.config`, `@shared/lib/i18n`, `@shared/ui`
-- **Public API**: `export { default as Header } from './ui/Header.astro'`
-- **Used in**: `src/app/layouts/Layout.astro` (via the `@widgets` barrel)
-- **Note**: `Header.astro`'s own JSDoc comment lists "Features: ThemeToggle, LanguagePicker", but
-  only `LanguagePicker` is actually imported — the `ThemeToggle` mention is stale (see
-  [`features-catalog.md`](./features-catalog.md) for where theme toggling actually lives today).
-
-### `hero`
-
-- **Purpose**: Homepage hero banner — animated title, subtitle, retro banner strip.
-- **Dependencies**: `@shared/lib/i18n`, `@shared/config/i18n`
-- **Public API**: `export { Hero } from './ui'`
-- **Used in**: `src/pages/index.astro`, `src/pages/es/index.astro` (via the `@widgets` barrel)
-
-### `project-case-study`
-
-- **Purpose**: Full project case-study detail page (problem → approach → trade-offs → outcome).
-- **Dependencies**: `@entities/project`, `@shared/ui`
-- **Public API**: `export { ProjectCaseStudy } from './ui'`
-- **Used in**: `src/pages/projects/[slug].astro`, `src/pages/es/projects/[slug].astro`
-
-### `projects`
-
-- **Purpose**: Responsive grid of project cards, filterable to "featured only" via a `showAll` prop.
-- **Dependencies**: `@entities/project`, `@shared/lib/i18n`
-- **Public API**: `export * from './ui'` → `Projects`
-- **Used in**: `src/pages/index.astro`, `src/pages/es/index.astro` (featured subset, via the
-  `@widgets` barrel); `src/pages/projects.astro`, `src/pages/es/projects.astro` (full listing,
-  imported directly as `ProjectsWidget`)
-
-### `recruiter-hud`
-
-- **Purpose**: Fixed bottom-right gamified HUD — mock "recruit the architect" quest, resume/email
-  CTAs, and a "system cheats" menu (matrix rain, secret stats, autopilot tour, live GitHub stats).
-- **Dependencies**: `@shared/config/i18n`, `@shared/config/site.config`, `@shared/lib/i18n`
-- **Public API**: `export { RecruiterHUD } from './ui/RecruiterHUD.astro'`
-- **Used in**: `src/app/layouts/Layout.astro` (via the `@widgets` barrel)
-
-### `research`
-
-- **Purpose**: Homepage summary card for the BiLSTM/GitHub-mining thesis research.
-- **Dependencies**: `@shared/config/i18n`, `@shared/lib/i18n`
-- **Public API**: `export * from './ui'` → `Research`
-- **Used in**: `src/pages/index.astro`, `src/pages/es/index.astro` (via the `@widgets` barrel)
-
-### `research-content`
-
-- **Purpose**: Full standalone "Research" page — hypothesis, approach, dataset, metrics, pipeline.
-- **Dependencies**: `@shared/lib/i18n`, `@shared/config/i18n`, `@shared/config/site.config`, `@app/layouts/Layout.astro`
-- **Public API**: `export { ResearchContent } from './ui/ResearchContent.astro'`
-- **Used in**: `src/pages/research.astro`, `src/pages/es/research.astro`
-
-### `tech-stack`
-
-- **Purpose**: Two side-by-side cards of core frontend/backend tech pills + link to `/skills`.
-- **Dependencies**: `@shared/config/technology`, `@shared/ui`, `@shared/lib/i18n`, `@shared/config/i18n`
-- **Public API**: `export { TechStack } from './ui'`
-- **Used in**: `src/app/layouts/Layout.astro` (via the `@widgets` barrel)
-
-### `vision` ⚠️ not currently used
-
-- **Purpose**: List of "vision" cards (LeetCode, writing, ML lab) with icon/title/description/link.
-- **Dependencies**: `@shared/lib/i18n`, `@shared/config/i18n`
-- **Public API**: `export * from './ui'` → `Vision`
-- **Used in**: nothing. No page or layout currently imports `@widgets/vision`.
-
----
-
-## Original 7 widgets (2025 migration, for historical reference)
-
-Per the archived [`FSD-Architecture/04-widgets-layer.md`](./FSD-Architecture/04-widgets-layer.md),
-the initial FSD migration covered 7 widgets: `hero`, `header`, `footer`, `about-me`, `experience`,
-`projects`, `badges`. All 7 still exist above; the other 10 (`about-content`, `blog`,
-`contact-sidebar`, `devlog`, `project-case-study`, `recruiter-hud`, `research`, `research-content`,
-`tech-stack`, `vision`) were added afterward and are documented here for the first time.
+1. keep routing in `src/pages` and cross-page shell composition in `src/app`;
+2. import features, entities and shared code through public APIs;
+3. do not import another widget or an app layout from a widget;
+4. load localized structured data through the owning entity and reusable UI copy through granular catalogs;
+5. keep one unique page `<h1>` and preserve semantic heading order;
+6. add browser coverage for changed rendering, responsive behavior or client-navigation lifecycle;
+7. update this inventory only when a slice is added, removed, repurposed or mounted/unmounted;
+8. run `bun run lint:architecture` and the relevant test command.

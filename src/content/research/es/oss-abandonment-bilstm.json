@@ -1,0 +1,76 @@
+{
+	"researchId": "oss-abandonment-bilstm",
+	"locale": "es",
+	"label": "Tesis de Pregrado",
+	"title": "Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuronales BiLSTM",
+	"problem": "Un número significativo de repositorios de Software de Código Abierto (OSS) son abandonados con el tiempo, dejando expuestos a proyectos dependientes ante vulnerabilidades de seguridad, falta de actualizaciones y deuda técnica. La detección temprana del riesgo de abandono es un desafío crítico y poco explorado en la salud de los ecosistemas de software.",
+	"hypothesis": "¿Pueden las redes BiLSTM (Bidirectional Long Short-Term Memory), entrenadas con métricas históricas de actividad de repositorios GitHub (commits, issues, pull requests, patrones de contribuidores), predecir el estado de abandono de un repositorio OSS con mayor precisión que los baselines de ML tradicionales?",
+	"approach": "Mining Software Repositories (MSR) — extracción de secuencias temporales de señales de actividad desde la API de GitHub (GH Archive), ingeniería de características que capturan decaimiento de contribuciones, tasas de resolución de issues y tendencias del bus factor, para luego entrenar modelos BiLSTM que clasifiquen la probabilidad futura de abandono.",
+	"dataset": "Dataset curado de repositorios OSS en GitHub de múltiples dominios, etiquetados por estado de abandono usando umbrales de actividad histórica (frecuencia de commits, fecha del último aporte, antigüedad de issues abiertos).",
+	"status": "En Progreso",
+	"institution": "Universidad Nacional de Piura",
+	"keywords": [
+		"BiLSTM",
+		"Abandono OSS",
+		"MSR",
+		"Deep Learning",
+		"Minería de GitHub",
+		"Salud de Repositorios",
+		"Clasificación de Series Temporales"
+	],
+	"metrics": {
+		"accuracy": "Accuracy de clasificación vs. baselines Logistic Regression y Random Forest",
+		"f1": "F1-Score sobre clases de abandono desbalanceadas",
+		"auc": "AUC-ROC para ranking de probabilidad de abandono",
+		"loss": "Curvas de Binary Cross-Entropy para convergencia del entrenamiento BiLSTM"
+	},
+	"pipelineSteps": [
+		"GitHub API / GH Archive",
+		"Datos Crudos de Actividad",
+		"Ingeniería de Características",
+		"Secuencias Temporales",
+		"Entrenamiento BiLSTM",
+		"Clasificador de Abandono"
+	],
+	"architecture": [
+		{
+			"label": "Entrada",
+			"value": "Serie temporal de señales de actividad del repo (T pasos)"
+		},
+		{
+			"label": "Capa 1",
+			"value": "BiLSTM — 128 unidades forward + backward"
+		},
+		{
+			"label": "Capa 2",
+			"value": "BiLSTM — 64 unidades con dropout (0.3)"
+		},
+		{
+			"label": "Capa 3",
+			"value": "Dense — 32 unidades, activación ReLU"
+		},
+		{
+			"label": "Salida",
+			"value": "Sigmoid — P(abandonado) ∈ [0,1]"
+		},
+		{
+			"label": "Pérdida",
+			"value": "Binary Cross-Entropy + pesos de clase"
+		},
+		{
+			"label": "Optimizador",
+			"value": "Adam (lr=1e-3)"
+		}
+	],
+	"engineeredFeatures": [
+		"Frecuencia de commits (promedio semanal)",
+		"Contribuidores únicos por ventana temporal",
+		"Antigüedad de issues abiertos (días sin resolver)",
+		"Tasa de merge/cierre de PRs",
+		"Días desde el último commit",
+		"Estimación del bus factor",
+		"Tiempo de respuesta a issues",
+		"Cadencia de releases"
+	],
+	"currentStatus": "Entrenamiento activo de modelos BiLSTM y comparación con baselines de ML. Los resultados se publicarán al completar la tesis."
+}

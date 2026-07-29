@@ -1,0 +1,12 @@
+{
+	"experienceId": "atena-software-engineer",
+	"locale": "es",
+	"company": "Atena",
+	"title": "Jr. Software Engineer",
+	"dateLabel": "Ene 2026 – Presente",
+	"achievements": [
+		"Migré módulos críticos a Angular 19 Signals, eliminando la dependencia de Zone.js en componentes de visualización de datos",
+		"Desarrollé y documenté nuevas APIs REST usando .NET 8 y Clean Architecture, con cobertura de pruebas unitarias como parte del contrato de entrega",
+		"Adopté Standalone Components y Lazy Loading para mejorar la entrega del bundle frontend en conexiones de baja latencia"
+	]
+}

@@ -1,0 +1,94 @@
+{
+	"projectId": "yukidoke",
+	"locale": "es",
+	"title": "Yukidoke",
+	"description": "Una plataforma de finanzas personales por hogar construida con Angular 22 y un monolito modular en .NET 10. La beta V1 actual se enfoca en privacidad financiera familiar, contabilidad de partida doble y reglas de negocio autoritativas en la API.",
+	"category": "Software Empresarial",
+	"imageAlt": "Vista previa de la arquitectura de la plataforma financiera familiar Yukidoke",
+	"caseStudy": {
+		"problem": "Las finanzas familiares combinan obligaciones compartidas con información privada. El producto necesitaba modelar tarjetas, deudas e ingresos de varios miembros sin exponer registros privados ni duplicar cálculos financieros entre clientes.",
+		"approach": "Separé la presentación de la autoridad financiera: una SPA Angular 22 controla la interacción y el estado local por feature, mientras un monolito modular ASP.NET Core en .NET 10 controla permisos del hogar, reglas contables y modelos de lectura durables. PostgreSQL almacena los módulos, Keycloak emite la identidad y REST continúa siendo autoritativo cuando el tiempo real no está disponible.",
+		"tradeoffs": "Elegí un monolito modular y una sola base PostgreSQL en lugar de servicios distribuidos para mantener comprensibles las transacciones, migraciones y operaciones de la V1. Los repositorios y el despliegue siguen privados mientras madura el modelo de hogares y los verticales pendientes, por lo que este portafolio documenta evidencia arquitectónica reproducible sin afirmar un lanzamiento público en producción.",
+		"outcome": "La base V1 ya demuestra el stack Angular/.NET anunciado con alcance por hogar, un motor contable compartido, tarjetas, deudas, ingresos, clientes API tipados, concurrencia optimista y estado de notificaciones recuperable. Planning, notificaciones completas, el cutover al stack real y el despliegue público permanecen identificados como trabajo futuro.",
+		"learnings": [
+			"Mantener autenticación, autorización por hogar y visibilidad de registros financieros como límites separados.",
+			"Usar estado durable recuperado por REST como fuente de verdad y tratar SignalR como una optimización incremental.",
+			"Un monolito modular puede conservar límites de dominio y consistencia transaccional sin infraestructura distribuida prematura."
+		],
+		"timeline": "Beta V1 activa",
+		"role": "Ingeniero de producto y full-stack",
+		"evidence": {
+			"statusLabel": "ESTADO ACTUAL",
+			"status": "Beta V1 — migración arquitectónica activa",
+			"statusDetail": "Las capacidades implementadas y el trabajo pendiente se presentan por separado. No se afirma preparación para producción con datos financieros reales de hogares.",
+			"implementedLabel": "IMPLEMENTADO // VERIFICADO EN LA DOCUMENTACIÓN DE LOS REPOSITORIOS",
+			"implemented": [
+				"SPA standalone en Angular 22 con rutas lazy, contexto del hogar, guards por capacidades y stores locales basados en signals.",
+				"Integración Keycloak Authorization Code + PKCE, adjunto protegido de bearer tokens y autenticación mock limitada a loopback para desarrollo.",
+				"Monolito modular .NET 10 con ASP.NET Core Minimal APIs, módulos Users, Households, Accounting, Cards, Debts e Incomes y documento OpenAPI de desarrollo.",
+				"Persistencia PostgreSQL 16 con esquema por módulo, migraciones EF Core, concurrencia optimista y motor contable de partida doble.",
+				"Clientes REST tipados, presentación de ProblemDetails, normalización de paginación y reconciliación de notificaciones con SignalR.",
+				"Infraestructura de pruebas unitarias, integración, funcionales, navegador y accesibilidad documentada en ambos repositorios."
+			],
+			"plannedLabel": "PLANIFICADO // NO PRESENTADO COMO ENTREGADO",
+			"planned": [
+				"Mover cada cálculo y recomendación financiera legacy restante detrás de contratos autoritativos de la API.",
+				"Reestructurar Planning para presupuestos, metas, suscripciones y seguimiento de activos sobre el modelo actual de hogares.",
+				"Completar plantillas durables de notificaciones, localización, navegación de acciones y garantías del backend.",
+				"Finalizar contratos financieros contra el stack real, enforcement de internacionalización y verificación de preparación productiva.",
+				"Publicar un repositorio accesible para reclutadores o una demo pública reproducible después de verificar privacidad y cutover."
+			],
+			"architectureLabel": "ARQUITECTURA // IMPLEMENTACIÓN ACTUAL",
+			"architecture": {
+				"caption": "Forma actual de la V1: Angular es la capa de interacción; Keycloak emite identidad; la API .NET controla autorización del hogar y reglas financieras; PostgreSQL es el sistema de registro durable. Worker y migrator son procesos separados dentro del mismo código de monolito modular.",
+				"client": "SPA Angular 22\nRutas · signal stores · clientes REST tipados",
+				"identity": "Keycloak\nOIDC · Authorization Code + PKCE",
+				"api": "Minimal API .NET 10\nAlcance por hogar · reglas · ProblemDetails",
+				"modules": "Users · Households · Accounting\nCards · Debts · Incomes",
+				"database": "PostgreSQL 16\nEsquema por módulo · migraciones EF Core",
+				"processes": "Worker + Database Migrator\nProcesos en segundo plano · autoridad de migración"
+			},
+			"securityLabel": "DECISIONES DE SEGURIDAD",
+			"security": [
+				"El navegador es un cliente OIDC público y no contiene client secret; el inicio de sesión usa Authorization Code + PKCE.",
+				"Keycloak controla identidad y roles globales, mientras la API y PostgreSQL controlan membresía, permisos y visibilidad por registro.",
+				"Las rutas por hogar ocultan la existencia de recursos a quienes no son miembros y usan concurrencia optimista para escrituras en conflicto.",
+				"La preparación productiva continúa bloqueada hasta verificar privacidad y cobertura de autorización contra el stack real de extremo a extremo."
+			],
+			"testingLabel": "DECISIONES DE PRUEBAS",
+			"testing": [
+				"Angular usa specs Vitest colocados con el código y recorridos Playwright/Axe para comportamiento de navegador y accesibilidad.",
+				"La API usa xUnit y NSubstitute para dominio/aplicación, con Testcontainers para rutas de integración con PostgreSQL y Keycloak reales.",
+				"La documentación registra comandos locales de calidad, pero GitHub Actions deshabilitados u omitidos no se reportan como evidencia aprobada.",
+				"La cobertura completa del frontend contra la API financiera real sigue planificada y no se contabiliza como implementada."
+			],
+			"deploymentLabel": "DECISIONES DE DESPLIEGUE",
+			"deployment": [
+				"El stack de desarrollo de la API es reproducible con Docker Compose para PostgreSQL, Keycloak, migrator, API y worker.",
+				"El frontend configura endpoints de desarrollo, staging y producción; el desarrollo local puede usar json-server o la API .NET.",
+				"El migrator es el único proceso autorizado para aplicar migraciones EF Core; la API y el worker permanecen como procesos de aplicación stateless.",
+				"No se enlaza un despliegue público como listo para producción porque la verificación operativa y de privacidad está incompleta."
+			],
+			"limitationsLabel": "LIMITACIONES DE ACCESO Y EVIDENCIA",
+			"limitations": [
+				"Ambos repositorios de código son privados, por lo que revisores públicos no pueden inspeccionar directamente commits, pruebas o ADRs.",
+				"No se presenta una demo en vivo accesible para reclutadores como lista para producción.",
+				"El diagrama resume la implementación actual documentada; los módulos planificados se enumeran por separado.",
+				"Los resultados son cualitativos y respaldados por los repositorios; aquí no se afirman métricas de adopción, ingresos, rendimiento o cobertura."
+			],
+			"sourcesLabel": "REPOSITORIOS FUENTE",
+			"sources": [
+				{
+					"sourceId": "yukidoke-web",
+					"label": "Yukidoke Web — cliente Angular",
+					"access": "Repositorio privado; actualmente no hay acceso público."
+				},
+				{
+					"sourceId": "yukidoke-api",
+					"label": "Yukidoke API — backend .NET",
+					"access": "Repositorio privado; actualmente no hay acceso público."
+				}
+			]
+		}
+	}
+}

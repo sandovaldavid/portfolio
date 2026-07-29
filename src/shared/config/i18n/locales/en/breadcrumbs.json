@@ -3,5 +3,9 @@
 	"projects": "Projects",
 	"skills": "Skills inventory",
 	"about": "About me",
-	"research": "Research"
+	"research": "Research",
+	"blog": "Blog",
+	"devlog": "Development log",
+	"components": "Component catalog",
+	"atena": "Atena"
 }

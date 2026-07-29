@@ -2,6 +2,7 @@
 import Analytics from '@vercel/analytics/astro';
 import { ClientRouter } from 'astro:transitions';
 import { Font } from 'astro:assets';
+import { getPathByLocale, getRelativeLocaleUrl, pathHasLocale } from 'astro:i18n';
 import '@app/styles/global.css';
 import '@app/styles/print.css';
 import BriefCaseIcon from '@assets/icons/Briefcase.astro';
@@ -16,36 +17,66 @@ import { TechStack } from '@widgets/tech-stack';
 import { CLITerminal } from '@features/cli-terminal';
 import { SplashScreen } from '@features/splash-screen';
 import { SectionContainer, TitleSection } from '@shared/ui';
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getLangFromUrl } from '@shared/lib/i18n';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import {
+	createScopedUiTranslator,
+	getLanguageFromLocale,
+	Language,
+	type LocalizedPathMap,
+} from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 
-const langCode = getLangFromUrl(new URL(Astro.request.url));
-const canonicalPath =
-	langCode === 'en' ? Astro.url.pathname : Astro.url.pathname.replace(/^\/es/, '') || '/';
-const enUrl = new URL(getRelativeLocaleUrl('en', canonicalPath), siteConfig.url).toString();
-const esUrl = new URL(getRelativeLocaleUrl('es', canonicalPath), siteConfig.url).toString();
+type PageType = 'website' | 'profile' | 'project' | 'blog' | 'devlog' | 'research';
 
 interface Props {
 	title: string;
 	description: string;
 	img_preview: string;
+	imageAlt?: string;
 	isHome?: boolean;
-	article?: boolean;
+	pageType?: PageType;
+	publishedTime?: Date | string;
+	modifiedTime?: Date | string;
+	breadcrumbLabel?: string;
 	keywords?: string;
+	localizedPaths?: LocalizedPathMap;
 }
+
 const {
 	description,
 	title,
 	img_preview,
+	imageAlt,
 	isHome = false,
-	article = false,
-	keywords = 'Software Engineer, .NET 8, Angular 19, BiLSTM, Machine Learning, OSS, Portfolio, Peru, Astro',
+	pageType = 'website',
+	publishedTime,
+	modifiedTime,
+	breadcrumbLabel,
+	keywords = 'Software Engineer, Backend, .NET 8, Angular 19, TypeScript, Peru, Remote, Portfolio, Astro',
+	localizedPaths,
 } = Astro.props;
-const lang = langCode === 'en' ? Language.ENGLISH : Language.SPANISH;
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const pathname = Astro.url.pathname;
+const pathnameSegments = pathname.split('/').filter(Boolean);
+const localePath = getPathByLocale(lang);
+const hasLocalePrefix = pathHasLocale(pathname) && pathnameSegments[0] === localePath;
+const routeSegments = hasLocalePrefix ? pathnameSegments.slice(1) : pathnameSegments;
+const routeWithoutLocale = routeSegments.join('/');
+const hasTrailingSlash = routeWithoutLocale.length > 0 && pathname.endsWith('/');
+const routePath = hasTrailingSlash ? `${routeWithoutLocale}/` : routeWithoutLocale;
+const ordinaryLocalizedPaths: LocalizedPathMap = {
+	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, routePath),
+	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, routePath),
+};
+const resolvedLocalizedPaths = localizedPaths ?? ordinaryLocalizedPaths;
+const enPath = resolvedLocalizedPaths[Language.ENGLISH];
+const esPath = resolvedLocalizedPaths[Language.SPANISH];
+const enUrl = enPath ? new URL(enPath, siteConfig.url).toString() : undefined;
+const esUrl = esPath ? new URL(esPath, siteConfig.url).toString() : undefined;
+
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const tBreadcrumbs = createScopedUiTranslator(lang, 'breadcrumbs');
+const tMetadata = createScopedUiTranslator(lang, 'metadata');
 const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const tResearchSection = createScopedUiTranslator(lang, 'sections.research');
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
@@ -54,31 +85,46 @@ const tTechStack = createScopedUiTranslator(lang, 'sections.techStack');
 
 const canonicalUrl = new URL(Astro.url.pathname, siteConfig.url).toString();
 const ogImageUrl = new URL(img_preview, siteConfig.url).toString();
-const ogLocale = langCode === 'en' ? 'en_US' : 'es_PE';
-const ogType = article ? 'article' : 'website';
+const resolvedImageAlt = imageAlt ?? tAccessibility('portfolioPreviewAlt');
+const ogLocale = lang === Language.ENGLISH ? 'en_US' : 'es_PE';
+const alternateOgLocale = lang === Language.ENGLISH ? 'es_PE' : 'en_US';
+const hasAlternateLocale = lang === Language.ENGLISH ? Boolean(esUrl) : Boolean(enUrl);
+const isArticlePage = pageType === 'blog' || pageType === 'devlog' || pageType === 'research';
+const ogType = isArticlePage ? 'article' : 'website';
+
+const toIsoDate = (value: Date | string | undefined): string | undefined => {
+	if (!value) return undefined;
+	return (value instanceof Date ? value : new Date(value)).toISOString();
+};
+const publishedIso = toIsoDate(publishedTime);
+const modifiedIso = toIsoDate(modifiedTime);
+const structuredTitle = breadcrumbLabel ?? title;
 
 const breadcrumbLabels: Record<string, string> = {
 	projects: tBreadcrumbs('projects'),
 	skills: tBreadcrumbs('skills'),
 	about: tBreadcrumbs('about'),
 	research: tBreadcrumbs('research'),
-	atena: 'Atena',
+	blog: tBreadcrumbs('blog'),
+	devlog: tBreadcrumbs('devlog'),
+	components: tBreadcrumbs('components'),
+	atena: tBreadcrumbs('atena'),
 };
-const breadcrumbSegments = Astro.url.pathname.replace(/^\/es/, '').split('/').filter(Boolean);
 const breadcrumbItems: { name: string; url: string }[] = [];
-if (breadcrumbSegments.length > 0) {
+if (routeSegments.length > 0) {
 	breadcrumbItems.push({
 		name: tBreadcrumbs('home'),
-		url: langCode === 'en' ? '/' : '/es/',
+		url: getRelativeLocaleUrl(lang, ''),
 	});
-	breadcrumbSegments.forEach((segment, i) => {
-		const url =
-			langCode === 'en'
-				? '/' + breadcrumbSegments.slice(0, i + 1).join('/')
-				: '/es/' + breadcrumbSegments.slice(0, i + 1).join('/');
+	routeSegments.forEach((segment, i) => {
+		const segmentPath = routeSegments.slice(0, i + 1).join('/');
+		const isCurrentPage = i === routeSegments.length - 1;
 		breadcrumbItems.push({
-			name: breadcrumbLabels[segment] || segment,
-			url,
+			name:
+				isCurrentPage && breadcrumbLabel
+					? breadcrumbLabel
+					: breadcrumbLabels[segment] || segment,
+			url: getRelativeLocaleUrl(lang, segmentPath),
 		});
 	});
 }
@@ -96,19 +142,22 @@ const breadcrumbSchema =
 			}
 		: null;
 
-const personSchema = {
-	'@context': 'https://schema.org',
+const personId = `${siteConfig.url}/#person`;
+const websiteId = `${siteConfig.url}/#website`;
+const personEntity = {
 	'@type': 'Person',
+	'@id': personId,
 	name: siteConfig.fullName,
 	givenName: 'Juan David',
 	familyName: 'Sandoval Salvador',
 	alternateName: siteConfig.handle,
+	description: tMetadata('personDescription'),
 	url: siteConfig.url,
 	image: `${siteConfig.url}/profile/perfil.webp`,
 	sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
-	jobTitle: 'Software Engineer',
+	jobTitle: tMetadata('personJobTitle'),
 	worksFor: { '@type': 'Organization', name: siteConfig.currentCompany },
-	address: { '@type': 'PostalAddress', addressLocality: 'Lima', addressCountry: 'PE' },
+	address: { '@type': 'PostalAddress', addressCountry: 'PE' },
 	email: siteConfig.email,
 	knowsAbout: [
 		'.NET 8',
@@ -123,33 +172,68 @@ const personSchema = {
 		'PostgreSQL',
 	],
 };
+const personSchema = {
+	'@context': 'https://schema.org',
+	...personEntity,
+};
 const websiteSchema = {
 	'@context': 'https://schema.org',
 	'@type': 'WebSite',
-	name: siteConfig.defaultTitle,
+	'@id': websiteId,
+	name: siteConfig.name,
 	url: siteConfig.url,
-	description: siteConfig.defaultDescription,
-	inLanguage: [langCode],
-	author: { '@type': 'Person', name: siteConfig.fullName },
+	description: tMetadata('siteDescription'),
+	inLanguage: lang,
+	author: { '@id': personId },
 };
-const articleSchema = article
-	? {
-			'@context': 'https://schema.org',
-			'@type': 'ScholarlyArticle',
-			name: title,
-			description: description,
-			url: canonicalUrl,
-			author: {
-				'@type': 'Person',
-				name: siteConfig.fullName,
-				url: siteConfig.url,
-			},
-		}
-	: null;
+const structuredTypeByPage: Partial<Record<PageType, string>> = {
+	blog: 'BlogPosting',
+	devlog: 'TechArticle',
+	research: 'ScholarlyArticle',
+	project: 'SoftwareSourceCode',
+};
+const structuredType = structuredTypeByPage[pageType];
+const structuredPageSchema =
+	pageType === 'profile'
+		? {
+				'@context': 'https://schema.org',
+				'@type': 'ProfilePage',
+				'@id': canonicalUrl,
+				name: structuredTitle,
+				description,
+				url: canonicalUrl,
+				inLanguage: lang,
+				mainEntity: { '@id': personId },
+			}
+		: structuredType
+			? {
+					'@context': 'https://schema.org',
+					'@type': structuredType,
+					'@id': canonicalUrl,
+					name: structuredTitle,
+					description,
+					url: canonicalUrl,
+					inLanguage: lang,
+					image: {
+						'@type': 'ImageObject',
+						url: ogImageUrl,
+						caption: resolvedImageAlt,
+					},
+					author: { '@id': personId },
+					...(isArticlePage
+						? {
+								headline: structuredTitle,
+								mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalUrl },
+								...(publishedIso ? { datePublished: publishedIso } : {}),
+								...(modifiedIso ? { dateModified: modifiedIso } : {}),
+							}
+						: {}),
+				}
+			: null;
 ---
 
 <!doctype html>
-<html lang={langCode}>
+<html {lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -163,7 +247,6 @@ const articleSchema = article
 
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<link rel="manifest" href="/site.webmanifest" />
-		<meta name="theme-color" content="#0096ff" />
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -175,10 +258,13 @@ const articleSchema = article
 		<meta property="og:image" content={ogImageUrl} />
 		<meta property="og:image:width" content="1200" />
 		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content={tAccessibility('portfolioPreviewAlt')} />
+		<meta property="og:image:alt" content={resolvedImageAlt} />
 		<meta property="og:url" content={canonicalUrl} />
-		<meta property="og:site_name" content={siteConfig.defaultTitle} />
+		<meta property="og:site_name" content={siteConfig.name} />
 		<meta property="og:locale" content={ogLocale} />
+		{hasAlternateLocale && <meta property="og:locale:alternate" content={alternateOgLocale} />}
+		{publishedIso && <meta property="article:published_time" content={publishedIso} />}
+		{modifiedIso && <meta property="article:modified_time" content={modifiedIso} />}
 
 		<meta name="twitter:card" content={siteConfig.twitterCard} />
 		<meta name="twitter:site" content={`@${siteConfig.handle}`} />
@@ -186,21 +272,24 @@ const articleSchema = article
 		<meta name="twitter:title" content={title} />
 		<meta name="twitter:description" content={description} />
 		<meta name="twitter:image" content={ogImageUrl} />
+		<meta name="twitter:image:alt" content={resolvedImageAlt} />
 
-		<link rel="alternate" hreflang="en" href={enUrl} />
-		<link rel="alternate" hreflang="es" href={esUrl} />
-		<link rel="alternate" hreflang="x-default" href={enUrl} />
+		{enUrl && <link rel="alternate" hreflang="en" href={enUrl} />}
+		{esUrl && <link rel="alternate" hreflang="es" href={esUrl} />}
+		{enUrl && <link rel="alternate" hreflang="x-default" href={enUrl} />}
 
 		<link
 			rel="alternate"
 			type="application/rss+xml"
-			title={`${siteConfig.name} — Blog (EN)`}
+			hreflang="en"
+			title={tMetadata('rssEnglishDiscoveryTitle')}
 			href="/rss.xml"
 		/>
 		<link
 			rel="alternate"
 			type="application/rss+xml"
-			title={`${siteConfig.name} — Blog (ES)`}
+			hreflang="es"
+			title={tMetadata('rssSpanishDiscoveryTitle')}
 			href="/es/rss.xml"
 		/>
 
@@ -222,11 +311,11 @@ const articleSchema = article
 			)
 		}
 		{
-			articleSchema && (
+			structuredPageSchema && (
 				<script
 					is:inline
 					type="application/ld+json"
-					set:html={JSON.stringify(articleSchema)}
+					set:html={JSON.stringify(structuredPageSchema)}
 				/>
 			)
 		}
@@ -336,7 +425,7 @@ const articleSchema = article
 				}
 			</main>
 			<Footer />
-			<RecruiterHUD />
+			<RecruiterHUD localizedPaths={resolvedLocalizedPaths} />
 			<CLITerminal />
 			<ContactSidebar />
 			{isHome && <SplashScreen />}

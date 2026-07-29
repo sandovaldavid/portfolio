@@ -1,16 +1,13 @@
 ---
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
-import ExperienceItem from './ExperienceItem.astro';
 import { getExperienceData } from '@entities/experience';
-import { getLangFromUrl, useTranslationsList } from '@shared/lib/i18n';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import ExperienceItem from './ExperienceItem.astro';
 
-const langCode = getLangFromUrl(new URL(Astro.request.url));
-const lang = langCode === 'en' ? Language.ENGLISH : Language.SPANISH;
-const tList = useTranslationsList(lang);
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
-const EXPERIENCE = getExperienceData(tList);
+const EXPERIENCE = await getExperienceData(lang);
 ---
 
 <section class="font-sans">
@@ -27,11 +24,12 @@ const EXPERIENCE = getExperienceData(tList);
 					EXPERIENCE.map((exp, idx) => (
 						<button
 							role="tab"
-							id={`exp-tab-${idx}`}
-							aria-controls={`exp-panel-${idx}`}
+							id={`exp-tab-${exp.experienceId}`}
+							aria-controls={`exp-panel-${exp.experienceId}`}
 							aria-selected={idx === 0 ? 'true' : 'false'}
 							tabindex={idx === 0 ? 0 : -1}
 							data-index={idx}
+							data-experience-id={exp.experienceId}
 							data-active={idx === 0 ? 'true' : 'false'}
 							class="group relative pl-4 md:pl-6 pr-4 py-3 rounded-none text-left whitespace-nowrap md:whitespace-normal border-2 border-transparent data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg text-content-muted data-[active=true]:text-content-strong hover:text-content-strong transition-all duration-100 font-bold uppercase tracking-wider text-sm font-gaming-mono cursor-pointer"
 						>
@@ -69,10 +67,11 @@ const EXPERIENCE = getExperienceData(tList);
 					EXPERIENCE.map((exp, idx) => (
 						<div
 							role="tabpanel"
-							id={`exp-panel-${idx}`}
-							aria-labelledby={`exp-tab-${idx}`}
+							id={`exp-panel-${exp.experienceId}`}
+							aria-labelledby={`exp-tab-${exp.experienceId}`}
 							class={`[grid-area:1/1] transition-opacity duration-300 ${idx === 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
 							data-active={idx === 0}
+							data-experience-id={exp.experienceId}
 						>
 							<ExperienceItem {...exp} />
 						</div>
@@ -84,15 +83,16 @@ const EXPERIENCE = getExperienceData(tList);
 
 	<script>
 		// ARIA-compliant tabs. Bundled + astro:page-load so the tabs stay
-		// interactive after client-side navigation (the previous is:inline
-		// version silently died once the DOM was swapped).
+		// interactive after client-side navigation.
 		const setupExperienceTabs = () => {
 			const tablist = document.getElementById('experience-tablist');
 			if (!tablist || tablist.dataset.tabsReady === 'true') return;
 			tablist.dataset.tabsReady = 'true';
 
 			const tabs = Array.from(tablist.querySelectorAll<HTMLElement>('[role="tab"]'));
-			const panels = Array.from(document.querySelectorAll<HTMLElement>('[role="tabpanel"]'));
+			const panels = tabs
+				.map(tab => document.getElementById(tab.getAttribute('aria-controls') ?? ''))
+				.filter((panel): panel is HTMLElement => panel instanceof HTMLElement);
 
 			const updatePanelAnimations = (index: number) => {
 				panels.forEach((panel, i) => {
@@ -146,7 +146,6 @@ const EXPERIENCE = getExperienceData(tList);
 				});
 			});
 
-			// Set initial active state without focusing (prevents scroll jump).
 			activateTab(0, { focus: false });
 			updatePanelAnimations(0);
 		};

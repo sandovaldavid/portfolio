@@ -1,0 +1,18 @@
+{
+	"pageTitle": "Research — BiLSTM OSS Abandonment | David Sandoval",
+	"pageDescription": "Thesis research: predicting OSS repository abandonment using BiLSTM neural networks, Mining Software Repositories, deep learning and GitHub activity data.",
+	"backButton": "Back to portfolio",
+	"problemLabel": "Problem statement",
+	"hypothesisLabel": "Research hypothesis",
+	"approachLabel": "Methodology (MSR)",
+	"datasetLabel": "Dataset",
+	"metricsLabel": "Evaluation metrics",
+	"architectureLabel": "Model architecture",
+	"pipelineLabel": "Data pipeline",
+	"keywordsLabel": "Keywords",
+	"statusLabel": "Current status",
+	"contactLabel": "Interested? Reach out",
+	"engineeredFeaturesLabel": "Engineered features",
+	"contactCta": "Collaborations, questions or opportunities.",
+	"contactButton": "Contact"
+}

@@ -2,37 +2,59 @@
 
 ## Runtime
 
-- Bun is pinned to `1.3.14` through the `packageManager` field in `package.json`.
-- Every GitHub Actions workflow and the development container must use the same Bun version.
+- Bun is pinned through the `packageManager` field in `package.json`.
+- The Dev Container, test container and GitHub workflow setup must use the same Bun version.
 - `bun.lock` is committed and automated environments install dependencies with `bun install --frozen-lockfile`.
 - Compatibility-sensitive browser tooling uses exact versions. The Playwright package, development image and test image must remain aligned.
 - `bun run check:devcontainer` enforces the versioned development-environment contract.
+
+`package.json` and `bun.lock` are the exact version sources. Active documentation records behavior and alignment rules rather than duplicating every dependency patch version.
 
 See [DEVCONTAINER.md](DEVCONTAINER.md) for setup, rebuild and validation commands.
 
 ## Astro framework contract
 
-The application targets Astro 7 with its matching official integrations and Vite 8. `package.json` and `bun.lock` are the only exact version sources; active documentation records supported major-version behavior rather than duplicating patch numbers.
+The application currently targets Astro 7 with compatible official integrations and Vite 8.
 
-The Astro 7 migration deliberately applies these decisions:
+The implemented framework-specific decisions are:
 
-- keep the built-in English-default and `/es` i18n routing contract;
-- retain `Astro.currentLocale` and `astro:i18n` as the supported locale APIs for the remaining i18n roadmap;
-- accept the default Sätteri Markdown and MDX processing because the repository does not configure remark, rehype or recma plugins;
-- preserve Astro 6 whitespace behavior with `compressHTML: true` until visual review proves that the JSX whitespace default is safe for the existing templates;
-- keep experimental SVG optimization because Astro 7 still documents it behind `experimental.svgOptimizer`;
-- do not add a `src/fetch.ts` advanced-routing entrypoint because the static portfolio does not require a custom request pipeline.
+- built-in English-default and `/es` i18n routing;
+- `Astro.currentLocale` and `astro:i18n` for locale detection and ordinary URL generation;
+- default Markdown/MDX processing because no remark, rehype or recma plugins are configured;
+- `compressHTML: true` to preserve the currently tested whitespace behavior;
+- experimental SVG optimization while the repository configuration and tests require it;
+- no custom `src/fetch.ts` request pipeline because the site uses static output.
 
-Any future Astro major upgrade must review the official migration guide, regenerate `bun.lock`, run the complete quality suite and record only repository-specific decisions here.
+A future Astro major upgrade must review the official migration guides, regenerate `bun.lock`, run the complete applicable quality suite and update only repository-specific operational contracts.
 
 ## Dependency classification
 
 Packages required by the generated application remain in `dependencies`. Build, formatting, type-checking, testing and repository-maintenance tools belong in `devDependencies`.
 
-The repository uses compatible version ranges for routine dependencies and exact versions for compatibility-sensitive packages. Dependency updates must include the regenerated lockfile and pass the complete CI suite.
+Use compatible version ranges for routine dependencies and exact versions for compatibility-sensitive packages. Dependency updates must include the regenerated lockfile and pass the strongest available relevant validation.
 
-## Releases
+## Automation availability
 
-The canonical package identifier is `portfolio-v1`. Automated prerelease pull requests are intentionally disabled because production delivery is tied to validated `main` commits, not package publication.
+Workflow definitions use the repository setup action and frozen dependency installation. Their configured versions must match the repository and containers.
 
-Create stable tags and GitHub Releases manually only for meaningful public milestones according to [DELIVERY.md](DELIVERY.md). Historical `porfolio-dev-*` and beta tags remain immutable repository history.
+A disabled, missing or quota-blocked workflow run is not version evidence or a successful check. Local output must identify the actual Bun, Astro and Playwright versions used. See [CI.md](CI.md).
+
+## Branch and release relationship
+
+- `develop` is the integration branch for ordinary dependency and toolchain updates.
+- `main` is the production branch and receives a focused promotion from `develop`.
+- The canonical package identifier is `portfolio-v1`.
+- The package is private and is not published to npm.
+- Production delivery is tied to the current `main` deployment contract, not package publication.
+- Stable `vX.Y.Z` tags and GitHub Releases are produced by Release Please on `main`; see the "Release policy" section of [DELIVERY.md](DELIVERY.md).
+
+## Coordinated updates
+
+A Bun, Playwright, Dev Container Feature or other compatibility-sensitive upgrade must update all applicable owners together:
+
+1. `package.json` and `bun.lock`;
+2. `.github/actions/setup-bun/action.yml` and affected workflows;
+3. `.devcontainer` image arguments, Features and lockfile;
+4. `Dockerfile.test` and visual baselines when browser rendering changes;
+5. executable version checks;
+6. this document and [DEVCONTAINER.md](DEVCONTAINER.md) when the operating contract changes.

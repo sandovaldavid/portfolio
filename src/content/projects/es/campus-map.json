@@ -1,0 +1,21 @@
+{
+	"projectId": "campus-map",
+	"locale": "es",
+	"title": "UNP Campus Map",
+	"description": "Una plataforma centralizada y orientada a la ubicación que ayuda a los estudiantes de la Universidad Nacional de Piura a encontrar rápidamente facultades, pabellones y recursos académicos. Construido con Next.js 14 y MySQL.",
+	"category": "Desarrollo Full-Stack",
+	"imageAlt": "Vista previa del directorio interactivo UNP Campus Map",
+	"caseStudy": {
+		"problem": "Los estudiantes de la Universidad Nacional de Piura no tenían una forma centralizada de localizar facultades, pabellones u oficinas administrativas. Los nuevos estudiantes pasaban días perdidos en un campus extenso. La información existente estaba dispersa en PDFs estáticos y de boca en boca.",
+		"approach": "Construí una SPA orientada a ubicaciones con Next.js 14 App Router y un motor de geolocalización con MySQL. Diseñé un mapa interactivo con marcadores alojados en Cloudinary, búsqueda por facultad y divulgación progresiva de recursos del campus.",
+		"tradeoffs": "Elegí Cloudinary para imágenes en lugar de assets locales para mantener el bundle ligero y permitir transformaciones bajo demanda. Decidí no implementar GPS en tiempo real para enfocarme primero en el caso de uso principal del directorio.",
+		"outcome": "Reduje el tiempo de orientación en el campus de días a minutos. Actualmente es el directorio de referencia para ubicaciones de facultades, espacios para eventos y oficinas administrativas.",
+		"learnings": [
+			"Patrones de obtención de datos de App Router (server components + API routes)",
+			"Indexación geoespacial para consultas de ubicación a escala de campus",
+			"Transformaciones de imágenes Cloudinary para marcadores responsivos"
+		],
+		"timeline": "3 meses",
+		"role": "Desarrollador independiente"
+	}
+}

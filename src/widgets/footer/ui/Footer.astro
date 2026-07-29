@@ -1,6 +1,6 @@
 ---
-import { getLangFromUrl, getLocalizedPath } from '@shared/lib/i18n';
-import { createScopedUiTranslator } from '@shared/config/i18n';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 import MailIcon from '@assets/icons/Mail.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
@@ -8,7 +8,7 @@ import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
 import CodeIcon from '@assets/icons/Code.astro';
 
-const lang = getLangFromUrl(new URL(Astro.request.url));
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const tFooter = createScopedUiTranslator(lang, 'footer');
 const tNavigation = createScopedUiTranslator(lang, 'navigation');
 
@@ -89,7 +89,7 @@ const socialLinks = [
 			<span class="text-content-muted">v2.0.0</span>
 			<span aria-hidden="true">·</span>
 			<a
-				href={getLocalizedPath(lang, '/devlog')}
+				href={getRelativeLocaleUrl(lang, 'devlog')}
 				class="underline decoration-dotted underline-offset-2 hover:text-primary-500 transition-colors"
 			>
 				{tNavigation('devlog')}

@@ -1,0 +1,21 @@
+{
+	"projectId": "auctions",
+	"locale": "es",
+	"title": "Auctions",
+	"description": "El Sitio de Subastas es una aplicación web donde los usuarios pueden crear, pujar y gestionar subastas en línea. Proporciona una plataforma para que los usuarios enumeren artículos para la venta, realicen ofertas competitivas e interactúen con la comunidad de subastas a través de comentarios y listas de seguimiento.",
+	"category": "Desarrollo Full-Stack",
+	"imageAlt": "Vista previa de la interfaz de publicaciones y pujas de Auctions",
+	"caseStudy": {
+		"problem": "Construir una plataforma de subastas Django desde cero requería implementar lógica de pujas competitivas, gestión de listas de seguimiento, hilos de comentarios y filtrado por categorías, todo con autenticación adecuada y restricciones de integridad de datos.",
+		"approach": "Diseñé una arquitectura de modelos Django con modelos separados de Listing, Bid, Comment y Watchlist conectados mediante foreign keys. Implementé lógica de validación de pujas que previene ofertas inferiores, cierre automático de listados vencidos y descubrimiento por categoría.",
+		"tradeoffs": "Elegí plantillas Django renderizadas del lado del servidor en lugar de una SPA JavaScript para lanzar más rápido y reducir la complejidad de un proyecto monolítico educativo. Acepté la menor interactividad a cambio de simplicidad en despliegue y pruebas.",
+		"outcome": "Una plataforma de subastas completamente funcional con autenticación de usuarios, gestión de pujas, listas de seguimiento, comentarios y navegación por categorías. Todos los mecanismos de subasta funcionan correctamente con validación e integridad de datos.",
+		"learnings": [
+			"Relaciones del ORM de Django y optimización de consultas entre modelos relacionados",
+			"Lógica de pujas transaccional con validación segura para concurrencia",
+			"Patrones de manejo de formularios renderizados del servidor para aplicaciones CRUD"
+		],
+		"timeline": "1 mes",
+		"role": "Desarrollador independiente"
+	}
+}

@@ -1,4 +1,5 @@
 ---
+translationKey: v1-0-0-launch
 title: 'v1.0.0 — Portfolio Launch & Audit'
 summary: 'Initial production release after a 70+ page audit covering accessibility, performance, SEO, bundle size, and architecture. Complete site rebuild with Astro 5, Tailwind 4, and FSD architecture.'
 pubDate: 2026-06-15

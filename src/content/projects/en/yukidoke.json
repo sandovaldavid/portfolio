@@ -1,0 +1,94 @@
+{
+	"projectId": "yukidoke",
+	"locale": "en",
+	"title": "Yukidoke",
+	"description": "A household-scoped personal-finance platform built with Angular 22 and a .NET 10 modular monolith. The current V1 beta focuses on privacy-aware household finance, a double-entry ledger and API-owned business rules.",
+	"category": "Enterprise Software",
+	"imageAlt": "Yukidoke household-finance platform architecture preview",
+	"caseStudy": {
+		"problem": "Household finances combine shared obligations with private information. The product needed to model cards, debts and income for several family members without exposing one member's private records or duplicating financial calculations across clients.",
+		"approach": "I separated presentation from financial authority: an Angular 22 SPA owns interaction and feature-local state, while an ASP.NET Core .NET 10 modular monolith owns household permissions, accounting rules and durable read models. PostgreSQL stores module data, Keycloak issues identity, and REST remains authoritative when realtime delivery is unavailable.",
+		"tradeoffs": "I chose a modular monolith and one PostgreSQL database instead of distributed services to keep V1 transactions, migrations and local operations understandable. The repositories and deployment remain private while the household model and remaining verticals mature, so this portfolio documents reproducible architecture evidence rather than claiming a public production launch.",
+		"outcome": "The V1 foundation now demonstrates the advertised Angular/.NET stack with household scoping, a shared ledger engine, cards, debts, income, typed API clients, optimistic concurrency and recoverable notification state. Planning, complete notifications, real-stack cutover and public deployment remain explicitly tracked as future work.",
+		"learnings": [
+			"Keep authentication, household authorization and per-record financial visibility as separate boundaries.",
+			"Use REST-recovered durable state as the source of truth and treat SignalR as an incremental optimization.",
+			"A modular monolith can preserve domain boundaries and transactional consistency without premature distributed infrastructure."
+		],
+		"timeline": "Active V1 beta",
+		"role": "Product and full-stack engineer",
+		"evidence": {
+			"statusLabel": "CURRENT STATUS",
+			"status": "V1 beta — active architecture migration",
+			"statusDetail": "Implemented capabilities and remaining work are reported separately. Production readiness for real household financial data is not claimed.",
+			"implementedLabel": "IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION",
+			"implemented": [
+				"Angular 22 standalone SPA with lazy routes, household context, capability guards and feature-local signal stores.",
+				"Keycloak Authorization Code + PKCE integration, guarded bearer-token attachment and loopback-only development mock authentication.",
+				".NET 10 ASP.NET Core Minimal API modular monolith with Users, Households, Accounting, Cards, Debts and Incomes modules plus a development OpenAPI document.",
+				"PostgreSQL 16 schema-per-module persistence, EF Core migrations, optimistic concurrency and a double-entry ledger engine.",
+				"Typed REST clients, ProblemDetails presentation, pagination normalization and SignalR notification reconciliation.",
+				"Unit, integration, functional, browser and accessibility test infrastructure documented across the two repositories."
+			],
+			"plannedLabel": "PLANNED // NOT PRESENTED AS SHIPPED",
+			"planned": [
+				"Move every remaining legacy financial calculation and recommendation behind API-authoritative contracts.",
+				"Rework Planning capabilities for budgets, goals, subscriptions and asset tracking on the current household model.",
+				"Complete durable notification templates, localization, action routing and backend delivery guarantees.",
+				"Finish real-stack financial contract tests, internationalization enforcement and production-readiness verification.",
+				"Publish a recruiter-accessible repository or reproducible public demo after privacy and cutover criteria are verified."
+			],
+			"architectureLabel": "ARCHITECTURE // CURRENT IMPLEMENTATION",
+			"architecture": {
+				"caption": "Current V1 shape: Angular is the interaction layer; Keycloak issues identity; the .NET API owns household authorization and financial rules; PostgreSQL is the durable system of record. Worker and migrator are separate processes in the same modular-monolith codebase.",
+				"client": "Angular 22 SPA\nRoutes · signal stores · typed REST clients",
+				"identity": "Keycloak\nOIDC · Authorization Code + PKCE",
+				"api": ".NET 10 Minimal API\nHousehold scope · rules · ProblemDetails",
+				"modules": "Users · Households · Accounting\nCards · Debts · Incomes",
+				"database": "PostgreSQL 16\nSchema per module · EF Core migrations",
+				"processes": "Worker + Database Migrator\nBackground shell · migration authority"
+			},
+			"securityLabel": "SECURITY DECISIONS",
+			"security": [
+				"The browser is a public OIDC client and contains no client secret; login uses Authorization Code + PKCE.",
+				"Keycloak owns identity and global roles, while the API and PostgreSQL own household membership, permissions and per-record visibility.",
+				"Household-scoped routes conceal resource existence from non-members and use optimistic concurrency for conflicting writes.",
+				"Production readiness remains blocked until privacy enforcement and real-stack authorization coverage are verified end to end."
+			],
+			"testingLabel": "TESTING DECISIONS",
+			"testing": [
+				"Angular uses colocated Vitest specs plus Playwright and Axe journeys for browser behavior and accessibility.",
+				"The API uses xUnit and NSubstitute for domain/application tests, with Testcontainers for real PostgreSQL and Keycloak integration paths.",
+				"Repository documentation records local quality commands, but disabled or skipped GitHub Actions are not reported as passing evidence.",
+				"Complete frontend-to-real-API financial contract coverage is still planned and is not counted as implemented."
+			],
+			"deploymentLabel": "DEPLOYMENT DECISIONS",
+			"deployment": [
+				"The API development stack is reproducible with Docker Compose for PostgreSQL, Keycloak, the migrator, API and worker.",
+				"The frontend has development, staging and production endpoint configuration, while local development can use json-server or the .NET API.",
+				"The migrator is the only process allowed to apply EF Core migrations; the API and worker remain stateless application processes.",
+				"A public production deployment is intentionally not linked because operational and privacy verification is incomplete."
+			],
+			"limitationsLabel": "ACCESS AND EVIDENCE LIMITATIONS",
+			"limitations": [
+				"Both source repositories are currently private, so public reviewers cannot inspect commits, tests or ADRs directly.",
+				"No recruiter-accessible live demo is presented as production-ready.",
+				"The architecture diagram summarizes the documented current implementation; planned modules are listed separately.",
+				"Outcomes are qualitative and repository-backed; no adoption, revenue, performance or coverage percentage is claimed here."
+			],
+			"sourcesLabel": "SOURCE REPOSITORIES",
+			"sources": [
+				{
+					"sourceId": "yukidoke-web",
+					"label": "Yukidoke Web — Angular client",
+					"access": "Private repository; public access is not currently available."
+				},
+				{
+					"sourceId": "yukidoke-api",
+					"label": "Yukidoke API — .NET backend",
+					"access": "Private repository; public access is not currently available."
+				}
+			]
+		}
+	}
+}

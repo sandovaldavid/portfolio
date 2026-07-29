@@ -1,2 +1,2 @@
 export { LanguagePicker } from './ui';
-export type { Language, LanguagePickerProps } from './model';
+export type { Language, LanguagePickerProps, LocalizedPathMap } from './model';

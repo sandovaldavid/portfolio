@@ -1,4 +1,5 @@
 ---
+translationKey: v1-0-0-launch
 title: 'v1.0.0 — Lanzamiento y Auditoría'
 summary: 'Lanzamiento inicial de producción tras una auditoría de 70+ páginas que cubre accesibilidad, rendimiento, SEO, tamaño de bundle y arquitectura. Reconstrucción completa del sitio con Astro 5, Tailwind 4 y arquitectura FSD.'
 pubDate: 2026-06-15

@@ -13,18 +13,6 @@ const activeRoots = [
 	'.github/instructions',
 	'docs',
 ];
-const excludedDirectories = new Set([
-	'docs/reports',
-	'docs/tasks',
-	'docs/FSD-Architecture',
-	'docs/archive',
-]);
-const includedArchivedIndexes = new Set([
-	'docs/archive/README.md',
-	'docs/reports/README.md',
-	'docs/tasks/README.md',
-	'docs/FSD-Architecture/README.md',
-]);
 
 /**
  * @param {string} path
@@ -41,24 +29,13 @@ function toPosix(path) {
 function collectMarkdown(path) {
 	const absolute = resolve(repositoryRoot, path);
 	if (!existsSync(absolute)) return [];
-	const repositoryPath = toPosix(relative(repositoryRoot, absolute));
 
 	if (statSync(absolute).isFile()) {
 		return extname(absolute) === '.md' ? [absolute] : [];
 	}
 
-	if (excludedDirectories.has(repositoryPath)) {
-		return [...includedArchivedIndexes]
-			.filter(
-				index =>
-					index.startsWith(`${repositoryPath}/`) &&
-					existsSync(resolve(repositoryRoot, index))
-			)
-			.map(index => resolve(repositoryRoot, index));
-	}
-
 	return readdirSync(absolute, { withFileTypes: true }).flatMap(entry =>
-		collectMarkdown(join(repositoryPath, entry.name))
+		collectMarkdown(join(toPosix(relative(repositoryRoot, absolute)), entry.name))
 	);
 }
 
@@ -134,5 +111,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-	`[check:docs] ${markdownFiles.length} active Markdown files checked; all relative links resolve.`
+	`[check:docs] ${markdownFiles.length} maintained Markdown files checked; all relative links resolve.`
 );

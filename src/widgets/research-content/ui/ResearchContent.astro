@@ -1,10 +1,10 @@
 ---
-import { useTranslations, useTranslationsList } from '@shared/lib/i18n';
-import { Language } from '@shared/config/i18n';
-import { siteConfig } from '@shared/config/site.config';
 import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
+import { getResearchContent } from '@entities/research';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { siteConfig } from '@shared/config/site.config';
 
 interface Props {
 	lang: Language;
@@ -12,40 +12,32 @@ interface Props {
 }
 
 const { lang, backHref = '/#research' } = Astro.props;
-const t = useTranslations(lang);
-const tList = useTranslationsList(lang);
-
-const keywords = tList('research.thesis.keywords') as string[];
-const pipelineSteps = tList('research.pipeline-steps') as string[];
-const archDetails = tList('research.arch-details') as unknown as Array<{
-	label: string;
-	value: string;
-}>;
-const features = tList('research.engineered-features') as string[];
+const research = await getResearchContent(lang);
+const tPage = createScopedUiTranslator(lang, 'pages.research');
 
 const labels = {
-	problem: t('research.labels.problem'),
-	hypothesis: t('research.labels.hypothesis'),
-	approach: t('research.labels.approach'),
-	dataset: t('research.labels.dataset'),
-	metrics: t('research.labels.metrics'),
-	arch: t('research.labels.arch'),
-	pipeline: t('research.labels.pipeline'),
-	keywords: t('research.labels.keywords'),
-	status: t('research.labels.status'),
-	contact: t('research.labels.contact'),
+	problem: tPage('problemLabel'),
+	hypothesis: tPage('hypothesisLabel'),
+	approach: tPage('approachLabel'),
+	dataset: tPage('datasetLabel'),
+	metrics: tPage('metricsLabel'),
+	architecture: tPage('architectureLabel'),
+	pipeline: tPage('pipelineLabel'),
+	keywords: tPage('keywordsLabel'),
+	status: tPage('statusLabel'),
+	contact: tPage('contactLabel'),
+	engineeredFeatures: tPage('engineeredFeaturesLabel'),
 };
 
 const metrics = [
-	{ prefix: 'ACC', text: t('research.thesis.metrics.accuracy') },
-	{ prefix: 'F1', text: t('research.thesis.metrics.f1') },
-	{ prefix: 'AUC', text: t('research.thesis.metrics.auc') },
-	{ prefix: 'LOSS', text: t('research.thesis.metrics.loss') },
+	{ prefix: 'ACC', text: research.metrics.accuracy },
+	{ prefix: 'F1', text: research.metrics.f1 },
+	{ prefix: 'AUC', text: research.metrics.auc },
+	{ prefix: 'LOSS', text: research.metrics.loss },
 ];
 ---
 
 <div class="w-full max-w-5xl mx-auto px-4 font-mono">
-	<!-- Back button -->
 	<a
 		href={backHref}
 		class="inline-flex items-center gap-2 mb-8 text-xs font-bold uppercase tracking-wider text-content-muted hover:text-primary-500 transition-colors group"
@@ -55,10 +47,9 @@ const metrics = [
 			aria-hidden="true"
 			focusable="false"
 		/>
-		{t('research.back-button')}
+		{tPage('backButton')}
 	</a>
 
-	<!-- Header -->
 	<div
 		class="border-2 border-black dark:border-white bg-primary-500 px-6 py-5 mb-8 shadow-retro-2xl"
 	>
@@ -68,27 +59,24 @@ const metrics = [
 				<p
 					class="font-gaming-mono text-sm uppercase tracking-wider text-white dark:text-black/90 mb-1 font-bold"
 				>
-					{t('research.thesis.institution')} · {t('research.thesis.label')}
+					{research.institution} · {research.label}
 				</p>
 				<h1
 					class="font-pixel-clean text-xl sm:text-3xl font-bold text-white dark:text-black uppercase leading-snug"
 				>
-					{t('research.thesis.title')}
+					{research.title}
 				</h1>
 			</div>
 			<span
 				class="shrink-0 font-gaming-mono text-xs bg-white dark:bg-black text-primary-600 dark:text-primary-400 px-2.5 py-1 font-bold uppercase tracking-wider animate-pulse whitespace-nowrap self-start"
 			>
-				{t('research.thesis.status')}
+				{research.status}
 			</span>
 		</div>
 	</div>
 
-	<!-- Main grid -->
 	<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-		<!-- Left column (3/5) -->
 		<div class="lg:col-span-3 flex flex-col gap-6">
-			<!-- Problem -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
@@ -96,11 +84,10 @@ const metrics = [
 					▸ {labels.problem}
 				</h2>
 				<p class="text-base leading-relaxed text-content-strong">
-					{t('research.thesis.problem')}
+					{research.problem}
 				</p>
 			</div>
 
-			<!-- Hypothesis -->
 			<div class="border-2 border-primary-500/40 bg-primary-500/5 p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
@@ -108,11 +95,10 @@ const metrics = [
 					▸ {labels.hypothesis}
 				</h2>
 				<p class="text-base leading-relaxed italic text-content-strong">
-					"{t('research.thesis.hypothesis')}"
+					“{research.hypothesis}”
 				</p>
 			</div>
 
-			<!-- Methodology -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
@@ -120,10 +106,9 @@ const metrics = [
 					▸ {labels.approach}
 				</h2>
 				<p class="text-base leading-relaxed text-content-strong mb-4">
-					{t('research.thesis.approach')}
+					{research.approach}
 				</p>
 
-				<!-- Pipeline flow -->
 				<div class="mt-4">
 					<p
 						class="font-gaming-mono text-sm text-content-muted uppercase tracking-wider mb-2 font-bold"
@@ -132,13 +117,18 @@ const metrics = [
 					</p>
 					<div class="flex flex-wrap items-center gap-1">
 						{
-							pipelineSteps.map((step, i) => (
+							research.pipelineSteps.map((step, index) => (
 								<>
 									<span class="font-gaming-mono text-xs sm:text-sm uppercase border border-primary-500/50 text-primary-500 px-2.5 py-1.5 bg-primary-500/5 font-bold">
 										{step}
 									</span>
-									{i < pipelineSteps.length - 1 && (
-										<span class="text-primary-500 font-bold text-xs">→</span>
+									{index < research.pipelineSteps.length - 1 && (
+										<span
+											class="text-primary-500 font-bold text-xs"
+											aria-hidden="true"
+										>
+											→
+										</span>
 									)}
 								</>
 							))
@@ -147,28 +137,26 @@ const metrics = [
 				</div>
 			</div>
 
-			<!-- Feature engineering -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
 				>
-					▸ {t('research.labels.engineered-features')}
+					▸ {labels.engineeredFeatures}
 				</h2>
 				<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 					{
-						features.map((feat, i) => (
+						research.engineeredFeatures.map((feature, index) => (
 							<div class="flex items-start gap-2 text-sm text-content-strong">
 								<span class="font-pixel-clean text-xs font-bold bg-primary-500/20 text-primary-600 dark:text-primary-400 px-1.5 py-0.5 shrink-0 mt-0.5 min-w-[28px] text-center">
-									F{String(i + 1).padStart(2, '0')}
+									F{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="leading-snug">{feat}</span>
+								<span class="leading-snug">{feature}</span>
 							</div>
 						))
 					}
 				</div>
 			</div>
 
-			<!-- Dataset -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
@@ -176,23 +164,21 @@ const metrics = [
 					▸ {labels.dataset}
 				</h2>
 				<p class="text-base leading-relaxed text-content-strong">
-					{t('research.thesis.dataset')}
+					{research.dataset}
 				</p>
 			</div>
 		</div>
 
-		<!-- Right column (2/5) -->
 		<div class="lg:col-span-2 flex flex-col gap-6">
-			<!-- Model Architecture -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
 				>
-					▸ {labels.arch}
+					▸ {labels.architecture}
 				</h2>
 				<div class="flex flex-col gap-2">
 					{
-						archDetails.map(item => (
+						research.architecture.map(item => (
 							<div class="border border-edge-subtle p-2.5 text-sm flex justify-between items-start gap-4">
 								<span class="font-bold text-primary-500 uppercase tracking-wider shrink-0 text-xs sm:text-sm font-gaming-mono">
 									{item.label}
@@ -206,7 +192,6 @@ const metrics = [
 				</div>
 			</div>
 
-			<!-- Metrics -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
@@ -227,7 +212,6 @@ const metrics = [
 				</div>
 			</div>
 
-			<!-- Status -->
 			<div class="border-2 border-status-success-border bg-status-success-bg p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-status-success-text uppercase tracking-wider mb-3"
@@ -239,15 +223,15 @@ const metrics = [
 					></span>
 					<span
 						class="font-gaming-mono text-xs sm:text-sm font-bold text-status-success-text uppercase"
-						>{t('research.thesis.status')}</span
 					>
+						{research.status}
+					</span>
 				</div>
 				<p class="text-base text-content-muted leading-relaxed">
-					{t('research.current-status')}
+					{research.currentStatus}
 				</p>
 			</div>
 
-			<!-- Keywords -->
 			<div class="border-2 border-edge-subtle bg-surface p-5">
 				<h2
 					class="font-gaming-mono text-xl sm:text-2xl font-bold text-content-muted uppercase tracking-wider mb-3"
@@ -256,9 +240,9 @@ const metrics = [
 				</h2>
 				<div class="flex flex-wrap gap-1.5">
 					{
-						keywords.map(kw => (
+						research.keywords.map(keyword => (
 							<span class="font-gaming-mono text-xs sm:text-sm uppercase border border-badge-brand-outline-border text-badge-brand-text px-2 py-0.5 hover:bg-badge-brand-outline-bg-hover transition-colors cursor-default font-bold">
-								{kw}
+								{keyword}
 							</span>
 						))
 					}
@@ -267,12 +251,10 @@ const metrics = [
 		</div>
 	</div>
 
-	<!-- Contact CTA — horizontal bar (full width, outside grid like header) -->
 	<div
 		class="border-2 border-black dark:border-white bg-primary-500 px-6 py-4 mt-8 shadow-retro-2xl"
 	>
 		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-			<!-- Left: icon + label + description -->
 			<div class="flex items-center gap-3 flex-1 min-w-0">
 				<span
 					class="shrink-0 font-gaming-mono text-lg text-white dark:text-black"
@@ -285,17 +267,16 @@ const metrics = [
 						{labels.contact}
 					</h2>
 					<p class="text-sm text-white/90 dark:text-black/90 leading-snug">
-						{t('research.contact-cta')}
+						{tPage('contactCta')}
 					</p>
 				</div>
 			</div>
-			<!-- Right: CTA button -->
 			<a
-				href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(t('research.contact-button'))}`}
+				href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(tPage('contactButton'))}`}
 				class="shrink-0 flex items-center justify-center gap-1.5 px-5 py-2 bg-white dark:bg-black text-primary-500 dark:text-primary-400 font-gaming-mono text-xs sm:text-sm font-bold uppercase tracking-wider hover:bg-white/90 dark:hover:bg-black/90 hover:-translate-x-px hover:-translate-y-px transition-all whitespace-nowrap self-start sm:self-center"
 			>
 				<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
-				{t('research.contact-button')}
+				{tPage('contactButton')}
 			</a>
 		</div>
 	</div>

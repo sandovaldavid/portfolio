@@ -1,17 +1,18 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
-import { DevlogCard } from '@widgets/devlog';
 import { getDevlogPosts, getDevlogSlug } from '@entities/devlog';
-import { getLangFromUrl, useTranslations } from '@shared/lib/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { DevlogCard } from '@widgets/devlog';
 
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
 const posts = await getDevlogPosts(lang);
 ---
 
 <Layout
-	title={t('devlog.page-title')}
-	description={t('devlog.page-description')}
+	title={tDevlog('pageTitle')}
+	description={tDevlog('pageDescription')}
 	img_preview="/projects/portfolio.webp"
 	isHome={false}
 >
@@ -21,13 +22,13 @@ const posts = await getDevlogPosts(lang);
 				<p
 					class="mb-2 font-retro-tag text-sm font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
 				>
-					{t('devlog.label')}
+					{tDevlog('label')}
 				</p>
 				<h1 class="mb-4 text-3xl font-bold font-pixel-clean tracking-wide md:text-5xl">
-					{t('devlog.heading')}
+					{tDevlog('heading')}
 				</h1>
 				<p class="max-w-2xl text-base leading-relaxed text-content-muted">
-					{t('devlog.subheading')}
+					{tDevlog('subheading')}
 				</p>
 			</header>
 
@@ -36,8 +37,11 @@ const posts = await getDevlogPosts(lang);
 					posts.map(post => (
 						<DevlogCard
 							post={post}
-							readMoreText={t('devlog.read-more')}
-							readMoreLink={`/devlog/${getDevlogSlug(post)}`}
+							readMoreText={tDevlog('readMore')}
+							readMoreLink={getRelativeLocaleUrl(
+								lang,
+								`devlog/${getDevlogSlug(post)}`
+							)}
 						/>
 					))
 				}

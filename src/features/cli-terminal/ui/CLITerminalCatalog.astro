@@ -1,13 +1,19 @@
 ---
-import { getLangFromUrl } from '@shared/lib/i18n';
-import { createScopedUiTranslator, getUiCatalogNamespace, Language } from '@shared/config/i18n';
+import {
+	createScopedUiTranslator,
+	getLanguageFromLocale,
+	getUiCatalogNamespace,
+	Language,
+} from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 
-const lang = getLangFromUrl(new URL(Astro.request.url));
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const tCli = createScopedUiTranslator(lang, 'cli');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+const tRecruiter = createScopedUiTranslator(lang, 'recruiter');
 const runtimeCopy = getUiCatalogNamespace(lang, 'cli');
 const resumeUrl = lang === Language.ENGLISH ? siteConfig.resume.en : siteConfig.resume.es;
+const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(tRecruiter('emailSubject'))}`;
 
 const navigationShortcuts: [string, string][] = [
 	['j', tCli('shortcuts.scrollDown')],
@@ -38,19 +44,51 @@ const sectionNames = [
 	tCli('sections.technologies'),
 ];
 const easterRows = [
-	{ label: tCli('easter.coffeeLabel'), value: tCli('easter.coffeeValue'), color: '#00ff88' },
-	{ label: tCli('easter.bugsLabel'), value: tCli('easter.bugsValue'), color: '#f87171' },
-	{ label: tCli('easter.tabsLabel'), value: tCli('easter.tabsValue'), color: '#facc15' },
-	{ label: tCli('easter.commitLabel'), value: tCli('easter.commitValue'), color: '#00b0ff' },
-	{ label: tCli('easter.editorLabel'), value: tCli('easter.editorValue'), color: '#00ff88' },
-	{ label: tCli('easter.vimLabel'), value: tCli('easter.vimValue'), color: '#00ff88' },
+	{
+		label: tCli('easter.coffeeLabel'),
+		value: tCli('easter.coffeeValue'),
+		color: 'var(--color-channel-portfolio-terminal-phosphor)',
+	},
+	{
+		label: tCli('easter.bugsLabel'),
+		value: tCli('easter.bugsValue'),
+		color: 'var(--color-channel-portfolio-terminal-error)',
+	},
+	{
+		label: tCli('easter.tabsLabel'),
+		value: tCli('easter.tabsValue'),
+		color: 'var(--color-channel-portfolio-terminal-warning)',
+	},
+	{
+		label: tCli('easter.commitLabel'),
+		value: tCli('easter.commitValue'),
+		color: 'var(--color-channel-portfolio-terminal-cyan)',
+	},
+	{
+		label: tCli('easter.editorLabel'),
+		value: tCli('easter.editorValue'),
+		color: 'var(--color-channel-portfolio-terminal-phosphor)',
+	},
+	{
+		label: tCli('easter.vimLabel'),
+		value: tCli('easter.vimValue'),
+		color: 'var(--color-channel-portfolio-terminal-phosphor)',
+	},
 	{
 		label: tCli('easter.debugLabel'),
 		value: tCli('easter.debugValue'),
-		color: 'rgba(255,255,255,0.7)',
+		color: 'var(--color-channel-portfolio-terminal-content-muted)',
 	},
-	{ label: tCli('easter.deployLabel'), value: tCli('easter.deployValue'), color: '#facc15' },
-	{ label: tCli('easter.teamLabel'), value: tCli('easter.teamValue'), color: '#00ff88' },
+	{
+		label: tCli('easter.deployLabel'),
+		value: tCli('easter.deployValue'),
+		color: 'var(--color-channel-portfolio-terminal-warning)',
+	},
+	{
+		label: tCli('easter.teamLabel'),
+		value: tCli('easter.teamValue'),
+		color: 'var(--color-channel-portfolio-terminal-phosphor)',
+	},
 ];
 ---
 
@@ -73,51 +111,66 @@ const easterRows = [
 		role="dialog"
 		aria-modal="true"
 		aria-label={tAccessibility('terminalDialog')}
-		class="fixed inset-0 z-[200] bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4"
+		class="fixed inset-0 z-[200] bg-channel-overlay backdrop-blur-sm hidden items-center justify-center p-4"
 	>
 		<div class="w-full max-w-2xl">
 			<div
-				class="bg-[#0a0a0a] border-2 border-[#00b0ff] shadow-[0_0_30px_rgba(0,176,255,0.35)] font-mono"
+				class="bg-channel-portfolio-terminal-surface border-2 border-channel-portfolio-terminal-cyan shadow-terminal-glow font-mono"
 			>
 				<div
-					class="flex items-center gap-2 px-4 py-2.5 bg-[#111] border-b border-[#00b0ff]/40 select-none"
+					class="flex items-center gap-2 px-4 py-2.5 bg-channel-portfolio-terminal-surface-raised border-b border-channel-portfolio-terminal-cyan/40 select-none"
 				>
 					<button
 						id="cli-close-dot"
+						type="button"
 						aria-label={tAccessibility('closeTerminal')}
-						class="w-3 h-3 rounded-full bg-red-500 hover:brightness-125 cursor-pointer"
+						class="w-3 h-3 rounded-full bg-channel-status-error hover:brightness-125 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-content"
 					></button>
-					<div class="w-3 h-3 rounded-full bg-yellow-500" aria-hidden="true"></div>
-					<div class="w-3 h-3 rounded-full bg-[#00ff88]" aria-hidden="true"></div>
-					<span class="ml-3 text-xs text-[#00b0ff]/70 tracking-widest uppercase">
+					<div class="w-3 h-3 rounded-full bg-channel-status-warning" aria-hidden="true">
+					</div>
+					<div
+						class="w-3 h-3 rounded-full bg-channel-portfolio-terminal-phosphor"
+						aria-hidden="true"
+					>
+					</div>
+					<span
+						class="ml-3 text-xs text-channel-portfolio-terminal-cyan tracking-widest uppercase"
+					>
 						portfolio@sandovaldavid:~
 					</span>
-					<span class="ml-auto text-xs text-[#00b0ff]/60 hidden sm:block">
+					<span
+						class="ml-auto text-xs text-channel-portfolio-terminal-content-muted hidden sm:block"
+					>
 						[{tCli('terminal.escapeHint')}]
 					</span>
 				</div>
 				<div
 					id="cli-output"
+					tabindex="0"
 					class="h-96 overflow-y-auto p-4 space-y-0.5"
 					aria-live="polite"
 					aria-relevant="additions"
 				>
 				</div>
-				<div class="flex items-center border-t border-[#00b0ff]/30 px-4 py-3 bg-[#0a0a0a]">
+				<div
+					class="flex items-center border-t border-channel-portfolio-terminal-cyan/30 px-4 py-3 bg-channel-portfolio-terminal-surface"
+				>
 					<span
-						class="text-[#00b0ff] mr-2 text-sm font-bold select-none"
+						class="text-channel-portfolio-terminal-cyan mr-2 text-sm font-bold select-none"
 						aria-hidden="true">$</span
 					>
 					<input
 						id="cli-input"
 						type="text"
-						class="flex-1 bg-transparent text-sm text-white outline-none placeholder:text-white/40 caret-[#00b0ff]"
+						class="flex-1 bg-transparent text-sm text-channel-portfolio-terminal-content outline-none placeholder:text-channel-portfolio-terminal-content-muted caret-channel-portfolio-terminal-cyan"
 						placeholder={tCli('terminal.placeholder')}
 						autocomplete="off"
 						spellcheck="false"
 						aria-label={tAccessibility('terminalInput')}
 					/>
-					<span class="text-xs text-white/40 uppercase tracking-widest hidden sm:block">
+					<span
+						class="text-xs text-channel-portfolio-terminal-content-muted uppercase tracking-widest hidden sm:block"
+					>
 						{tCli('terminal.tabHint')}
 					</span>
 				</div>
@@ -130,22 +183,23 @@ const easterRows = [
 		role="dialog"
 		aria-modal="true"
 		aria-label={tCli('shortcuts.title')}
-		class="fixed inset-0 z-[200] bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4"
+		class="fixed inset-0 z-[200] bg-channel-overlay backdrop-blur-sm hidden items-center justify-center p-4"
 	>
 		<div
-			class="w-full max-w-lg bg-surface border-2 border-black dark:border-white shadow-retro-3xl font-mono"
+			class="w-full max-w-lg bg-channel-surface-default border-2 border-channel-edge-default shadow-retro-3xl font-mono"
 		>
 			<div
-				class="flex items-center justify-between px-5 py-3 border-b-2 border-dashed border-edge-subtle"
+				class="flex items-center justify-between px-5 py-3 border-b-2 border-dashed border-channel-edge-subtle"
 			>
 				<span
-					class="text-primary-500 dark:text-primary-400 font-pixel-clean text-xs font-bold tracking-wider uppercase"
+					class="text-channel-accent-primary font-pixel-clean text-xs font-bold tracking-wider uppercase"
 				>
 					{tCli('shortcuts.title')}
 				</span>
 				<button
 					id="shortcuts-close"
-					class="px-1.5 py-0.5 border border-black dark:border-white text-xs font-bold hover:bg-red-500 hover:text-white dark:hover:text-black transition-colors cursor-pointer"
+					type="button"
+					class="px-1.5 py-0.5 border border-channel-edge-default text-xs font-bold hover:bg-channel-status-error hover:text-button-primary-content transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 					aria-label={tCli('shortcuts.closeOverlay')}
 				>
 					<span aria-hidden="true">×</span>
@@ -153,84 +207,48 @@ const easterRows = [
 			</div>
 
 			<div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-				<div>
-					<div
-						class="text-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-edge-subtle"
-					>
-						{tCli('shortcuts.navigationHeading')}
-					</div>
-					<div class="space-y-2">
-						{
-							navigationShortcuts.map(([key, label]) => (
-								<div class="flex items-center gap-2.5">
-									<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-black dark:border-white bg-neutral-100 dark:bg-neutral-800 text-xs font-bold shadow-retro-sm">
-										{key}
-									</kbd>
-									<span class="text-content-muted">{label}</span>
-								</div>
-							))
-						}
-					</div>
-				</div>
-
-				<div>
-					<div
-						class="text-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-edge-subtle"
-					>
-						{tCli('shortcuts.sectionsHeading')}
-					</div>
-					<div class="space-y-2">
-						{
-							sectionShortcuts.map(([key, label]) => (
-								<div class="flex items-center gap-2.5">
-									<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-black dark:border-white bg-neutral-100 dark:bg-neutral-800 text-xs font-bold shadow-retro-sm">
-										{key}
-									</kbd>
-									<span class="text-content-muted">{label}</span>
-								</div>
-							))
-						}
-					</div>
-				</div>
-
-				<div>
-					<div
-						class="text-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-edge-subtle"
-					>
-						{tCli('shortcuts.actionsHeading')}
-					</div>
-					<div class="space-y-2">
-						{
-							actionShortcuts.map(([key, label]) => (
-								<div class="flex items-center gap-2.5">
-									<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-black dark:border-white bg-neutral-100 dark:bg-neutral-800 text-xs font-bold shadow-retro-sm">
-										{key}
-									</kbd>
-									<span class="text-content-muted">{label}</span>
-								</div>
-							))
-						}
-					</div>
-				</div>
+				{
+					[
+						[tCli('shortcuts.navigationHeading'), navigationShortcuts],
+						[tCli('shortcuts.sectionsHeading'), sectionShortcuts],
+						[tCli('shortcuts.actionsHeading'), actionShortcuts],
+					].map(([heading, shortcuts]) => (
+						<div>
+							<div class="text-channel-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-channel-edge-subtle">
+								{heading}
+							</div>
+							<div class="space-y-2">
+								{(shortcuts as [string, string][]).map(([key, label]) => (
+									<div class="flex items-center gap-2.5">
+										<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-channel-edge-default bg-channel-surface-highlight text-xs font-bold shadow-retro-sm">
+											{key}
+										</kbd>
+										<span class="text-channel-content-muted">{label}</span>
+									</div>
+								))}
+							</div>
+						</div>
+					))
+				}
 
 				<div class="opacity-60">
 					<div
-						class="text-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-edge-subtle"
+						class="text-channel-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-channel-edge-subtle"
 					>
 						{tCli('shortcuts.secretHeading')}
 					</div>
 					<div class="space-y-2">
 						<div class="flex items-center gap-2.5">
 							<kbd
-								class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-black/40 dark:border-white/30 bg-neutral-100/50 dark:bg-neutral-800/50 text-xs font-bold opacity-50"
+								class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-channel-edge-default/40 bg-channel-surface-highlight/50 text-xs font-bold opacity-50"
 							>
 								??
 							</kbd>
-							<span class="text-content-muted/80 text-xs italic">
+							<span class="text-channel-content-muted/80 text-xs italic">
 								{tCli('shortcuts.secretHint')}
 							</span>
 						</div>
-						<div class="text-sm text-content-muted italic pl-1">
+						<div class="text-sm text-channel-content-muted italic pl-1">
 							{tCli('shortcuts.secretMessage')}
 						</div>
 					</div>
@@ -238,7 +256,7 @@ const easterRows = [
 			</div>
 
 			<div
-				class="px-5 py-2.5 border-t-2 border-dashed border-edge-subtle text-sm text-content-muted/80 text-center uppercase tracking-widest"
+				class="px-5 py-2.5 border-t-2 border-dashed border-channel-edge-subtle text-sm text-channel-content-muted/80 text-center uppercase tracking-widest"
 			>
 				{tCli('shortcuts.footer')}
 			</div>
@@ -250,66 +268,73 @@ const easterRows = [
 		role="dialog"
 		aria-modal="true"
 		aria-label={tAccessibility('secretMode')}
-		class="fixed inset-0 z-[300] bg-black/95 hidden items-center justify-center p-4"
+		class="fixed inset-0 z-[300] bg-channel-overlay hidden items-center justify-center p-4"
 	>
-		<div
-			class="absolute inset-0 pointer-events-none opacity-25"
-			style="background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,176,255,0.05) 2px, rgba(0,176,255,0.05) 4px);"
-		>
-		</div>
+		<div class="terminal-grid absolute inset-0 pointer-events-none opacity-25"></div>
 		<div class="w-full max-w-md font-mono space-y-4 relative z-10">
-			<div class="border-2 border-red-500 bg-red-950/30 px-6 py-4 text-center">
-				<div class="text-red-400 font-bold tracking-[0.4rem] text-xl animate-pulse">
+			<div
+				class="border-2 border-channel-portfolio-terminal-error bg-channel-portfolio-terminal-error/10 px-6 py-4 text-center"
+			>
+				<div
+					class="text-channel-portfolio-terminal-error font-bold tracking-[0.4rem] text-xl animate-pulse"
+				>
 					{tCli('easter.classified')}
 				</div>
-				<div class="text-error-500/80 text-xs mt-1.5 tracking-widest">
+				<div
+					class="text-channel-portfolio-terminal-error/80 text-xs mt-1.5 tracking-widest"
+				>
 					{tCli('easter.protocol')}
 				</div>
-				<div class="text-error-500/80 text-xs mt-0.5">
+				<div class="text-channel-portfolio-terminal-error/80 text-xs mt-0.5">
 					{tCli('easter.clearance')}
 				</div>
 			</div>
 
 			<div
 				id="egg-loading"
-				class="bg-black/60 border border-[#00b0ff]/30 p-4 text-xs space-y-1 min-h-[9rem] overflow-hidden"
+				class="bg-channel-portfolio-terminal-surface/60 border border-channel-portfolio-terminal-cyan/30 p-4 text-xs space-y-1 min-h-[9rem] overflow-hidden"
 			>
 			</div>
 
-			<div id="egg-stats" class="hidden border-2 border-[#00ff88] bg-[#00ff88]/5 p-4">
-				<div class="text-[#00ff88] font-bold tracking-widest text-xs mb-3 uppercase">
+			<div
+				id="egg-stats"
+				class="hidden border-2 border-channel-portfolio-terminal-phosphor bg-channel-portfolio-terminal-phosphor/5 p-4"
+			>
+				<div
+					class="text-channel-portfolio-terminal-phosphor font-bold tracking-widest text-xs mb-3 uppercase"
+				>
 					{tCli('easter.statsTitle')}
 				</div>
 				<div class="space-y-2 text-xs">
 					{
 						easterRows.map(({ label, value, color }) => (
 							<div class="flex justify-between gap-4">
-								<span class="text-white/50 shrink-0">{label}</span>
+								<span class="text-channel-portfolio-terminal-content/50 shrink-0">
+									{label}
+								</span>
 								<span style={`color: ${color}`}>{value}</span>
 							</div>
 						))
 					}
 				</div>
-				<div
-					class="mt-4 pt-3 border-t border-[#00ff88]/20 text-xs text-[#00ff88]/40 text-center"
-				>
+				<p class="mt-4 text-xs text-channel-portfolio-terminal-content/70">
 					{tCli('easter.footer')}
+				</p>
+				<div class="mt-4 grid grid-cols-2 gap-2">
+					<a
+						href={emailHref}
+						class="px-3 py-2 text-center border border-channel-portfolio-terminal-phosphor text-channel-portfolio-terminal-phosphor hover:bg-channel-portfolio-terminal-phosphor/10"
+					>
+						{tCli('easter.hire')}
+					</a>
+					<button
+						id="egg-close"
+						type="button"
+						class="px-3 py-2 border border-channel-portfolio-terminal-cyan text-channel-portfolio-terminal-cyan hover:bg-channel-portfolio-terminal-cyan/10"
+					>
+						{tCli('easter.close')}
+					</button>
 				</div>
-			</div>
-
-			<div class="flex gap-3">
-				<a
-					href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(siteConfig.emailSubjectRecruiter)}`}
-					class="flex-1 py-2.5 border-2 border-[#00ff88] bg-[#00ff88]/10 text-[#00ff88] text-xs uppercase tracking-widest font-bold hover:bg-[#00ff88]/20 transition-colors cursor-pointer text-center"
-				>
-					{tCli('easter.hire')}
-				</a>
-				<button
-					id="egg-close"
-					class="flex-1 py-2.5 border-2 border-white/20 text-white/40 text-xs uppercase tracking-widest hover:border-white/50 hover:text-white/60 transition-colors cursor-pointer"
-				>
-					{tCli('easter.close')}
-				</button>
 			</div>
 		</div>
 	</div>
@@ -322,39 +347,35 @@ const easterRows = [
 	document.addEventListener('astro:page-load', setupCliTerminal);
 </script>
 
-<style is:global>
-	.pf-glitch {
-		animation: pf-glitch-anim 0.45s linear;
+<style>
+	.terminal-grid {
+		background: repeating-linear-gradient(
+			0deg,
+			transparent,
+			transparent 2px,
+			var(--color-channel-portfolio-terminal-grid) 2px,
+			var(--color-channel-portfolio-terminal-grid) 4px
+		);
 	}
 
-	@keyframes pf-glitch-anim {
-		0% {
-			filter: none;
-			transform: translate(0);
-		}
-		15% {
-			filter: hue-rotate(90deg) brightness(1.4);
-			transform: translate(-3px, 1px);
-		}
-		30% {
-			filter: hue-rotate(180deg) saturate(2);
-			transform: translate(3px, -2px);
-		}
-		50% {
-			filter: hue-rotate(270deg) brightness(0.8);
-			transform: translate(-2px, 2px);
-		}
-		70% {
-			filter: hue-rotate(360deg) contrast(1.5);
-			transform: translate(2px, -1px);
-		}
-		85% {
-			filter: invert(0.08);
-			transform: translate(-1px, 1px);
-		}
-		100% {
-			filter: none;
-			transform: translate(0);
+	:global(body.matrix-mode)::before {
+		content: '';
+		position: fixed;
+		inset: 0;
+		z-index: 40;
+		pointer-events: none;
+		background: repeating-linear-gradient(
+			90deg,
+			transparent,
+			transparent 24px,
+			var(--color-channel-portfolio-terminal-grid) 25px
+		);
+		opacity: 0.4;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.animate-pulse {
+			animation: none;
 		}
 	}
 </style>

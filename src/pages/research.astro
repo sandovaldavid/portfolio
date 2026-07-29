@@ -1,19 +1,17 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
 import { ResearchContent } from '@widgets/research-content';
-import { useTranslations } from '@shared/lib/i18n';
-import { Language } from '@shared/config/i18n';
 
 const lang = Language.ENGLISH;
-const t = useTranslations(lang);
+const tPage = createScopedUiTranslator(lang, 'pages.research');
 ---
 
 <Layout
-	title={t('research.page-title')}
-	description={t('research.page-description')}
+	title={tPage('pageTitle')}
+	description={tPage('pageDescription')}
 	img_preview="/projects/portfolio.webp"
-	isHome={false}
-	article={true}
+	pageType="research"
 >
 	<ResearchContent {lang} backHref="/#research" />
 </Layout>

@@ -1,0 +1,21 @@
+{
+	"projectId": "auctions",
+	"locale": "en",
+	"title": "Auctions",
+	"description": "The Auction Site is a web application where users can create, bid on, and manage online auctions. It provides a platform for users to list items for sale, place competitive bids, and interact with the auction community through comments and watchlists.",
+	"category": "Full-Stack Development",
+	"imageAlt": "Auctions web application listing and bidding interface preview",
+	"caseStudy": {
+		"problem": "Building a Django auction platform from scratch required implementing competitive bidding logic, watchlist management, comment threading, and category-based filtering — all with proper authentication and data integrity constraints.",
+		"approach": "Designed a Django model architecture with separate Listing, Bid, Comment, and Watchlist models connected through foreign keys. Implemented bid validation logic preventing underbidding, auto-closing of expired listings, and category-based discoverability.",
+		"tradeoffs": "Chose server-rendered Django templates over a JavaScript SPA to ship faster and reduce complexity for a monolith educational project. Accepted trade-off in interactivity for simplicity of deployment and testing.",
+		"outcome": "A fully functional auction platform with user authentication, bid management, watchlists, comments, and category browsing. All core auction mechanics work correctly with proper validation and data integrity.",
+		"learnings": [
+			"Django ORM relationships and query optimization across related models",
+			"Transactional bid logic with concurrency-safe validation",
+			"Server-rendered form handling patterns for CRUD-heavy applications"
+		],
+		"timeline": "1 month",
+		"role": "Solo Developer"
+	}
+}

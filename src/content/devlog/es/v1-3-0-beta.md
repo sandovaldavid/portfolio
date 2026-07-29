@@ -1,4 +1,5 @@
 ---
+translationKey: v1-3-0-beta
 title: 'v1.3.0-beta — Sprint 3: Experiencia y Pulido'
 summary: 'Mejoras de legibilidad de fuentes pixel, transiciones CRT, puerta CI de accesibilidad, pruebas integrales de componentes y automatización de releases.'
 pubDate: 2026-06-23

@@ -1,1 +1,1 @@
-export type { Language, LanguagePickerProps } from './types';
+export type { Language, LanguagePickerProps, LocalizedPathMap } from './types';

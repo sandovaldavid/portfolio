@@ -2,7 +2,7 @@ name: Continuous Integration
 
 on:
     pull_request:
-        branches: [main]
+        branches: [develop, main]
 
 permissions:
     contents: read
@@ -24,8 +24,26 @@ jobs:
             - name: Setup repository
               uses: ./.github/actions/setup-bun
 
-            - name: Run repository quality checks
-              run: bun run check
+            - name: Check tracked-file formatting
+              run: bun run format:check
+
+            - name: Validate documentation links
+              run: bun run check:docs
+
+            - name: Validate Dev Container contracts
+              run: bun run check:devcontainer
+
+            - name: Validate localization contracts
+              run: bun run check:i18n
+
+            - name: Run lint and architecture checks
+              run: bun run lint
+
+            - name: Run Astro typecheck
+              run: bun run typecheck:astro
+
+            - name: Run tooling typecheck
+              run: bun run typecheck:tooling
 
             - name: Validate squash-merge title
               env:
@@ -141,10 +159,64 @@ jobs:
                   if-no-files-found: warn
                   retention-days: 7
 
+    design-system-evidence:
+        name: Portfolio Retro Visual Evidence
+        runs-on: ubuntu-latest
+        needs: build
+        outputs:
+            evidence-url: ${{ steps.upload-evidence.outputs.artifact-url }}
+        steps:
+            - name: Checkout pull request head
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
+
+            - name: Setup repository
+              uses: ./.github/actions/setup-bun
+
+            - name: Checkout exact pull request base
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.pull_request.base.sha }}
+                  path: baseline
+                  persist-credentials: false
+
+            - name: Install and build baseline
+              working-directory: baseline
+              run: |
+                  bun install --frozen-lockfile
+                  bun run build
+
+            - name: Download pull request build
+              uses: actions/download-artifact@v8
+              with:
+                  name: pr-build-output
+                  path: dist
+
+            - name: Install Chromium
+              run: bunx playwright install --with-deps chromium
+
+            - name: Capture exact base and head evidence
+              env:
+                  DESIGN_SYSTEM_BEFORE_DIR: baseline
+                  DESIGN_SYSTEM_AFTER_DIR: .
+                  DESIGN_SYSTEM_EVIDENCE_DIR: design-system-evidence
+              run: bun run screenshots:design-system
+
+            - name: Upload before and after evidence
+              id: upload-evidence
+              if: always()
+              uses: actions/upload-artifact@v7
+              with:
+                  name: portfolio-retro-color-evidence
+                  path: design-system-evidence/
+                  if-no-files-found: warn
+                  retention-days: 7
+
     summary:
         name: PR Summary Report
         runs-on: ubuntu-latest
-        needs: [validate, test-unit, build, smoke]
+        needs: [validate, test-unit, build, smoke, design-system-evidence]
         if: always()
         steps:
             - name: Write proportional CI summary
@@ -159,6 +231,7 @@ jobs:
                     echo "| Unit tests | ${{ needs.test-unit.result }} |"
                     echo "| Production build and bundle report | ${{ needs.build.result }} |"
                     echo "| Chromium smoke and axe | ${{ needs.smoke.result }} |"
+                    echo "| Portfolio Retro before/after evidence | ${{ needs.design-system-evidence.result }} |"
                     echo
-                    echo "Full desktop-browser and Lighthouse suites run after integration into main; extended device and visual suites run on the scheduled/manual pipeline."
+                    echo "Full desktop-browser and Lighthouse suites run after integration into main; extended device and maintained visual suites run on the scheduled/manual pipeline."
                   } >> "$GITHUB_STEP_SUMMARY"

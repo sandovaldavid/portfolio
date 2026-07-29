@@ -1,10 +1,8 @@
 ---
 import { CertificationBadge, getBadgesData } from '@entities/badge';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { getLangFromUrl } from '@shared/lib/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 
-const langCode = getLangFromUrl(new URL(Astro.request.url));
-const lang = langCode === 'en' ? Language.ENGLISH : Language.SPANISH;
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const tBadges = createScopedUiTranslator(lang, 'sections.badges');
 const badges = getBadgesData(key => tBadges(key as Parameters<typeof tBadges>[0]));
 ---

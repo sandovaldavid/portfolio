@@ -1,107 +1,17 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { ComponentsShowcase } from '@widgets/components-showcase';
 
-// Import all UI components
-import {
-	LinkButton,
-	LinkInline,
-	SectionContainer,
-	TitleSection,
-	Avatar,
-	Badge,
-	SocialPill,
-} from '@shared/ui';
-
-// Import icons
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
-import MailIcon from '@assets/icons/Mail.astro';
+const lang = Language.ENGLISH;
+const tPage = createScopedUiTranslator(lang, 'pages.components');
 ---
 
 <Layout
-	title="UI Components - David Sandoval Portfolio"
-	description="Showcase of reusable UI components built with FSD architecture"
+	title={tPage('pageTitle')}
+	description={tPage('pageDescription')}
 	img_preview="/projects/portfolio.webp"
 	isHome={false}
 >
-	<main class="px-4 py-16">
-		<SectionContainer>
-			<TitleSection>UI Components Showcase</TitleSection>
-
-			<div class="space-y-16 mt-8">
-				<!-- Buttons Section -->
-				<section>
-					<h2 class="text-2xl font-bold mb-4 text-content-strong">Buttons</h2>
-					<div class="flex flex-wrap gap-4">
-						<LinkButton href="https://github.com">
-							<GitHubIcon class="size-6" />
-							GitHub
-						</LinkButton>
-						<LinkButton href="https://linkedin.com">
-							<LinkedInIcon class="size-6" />
-							LinkedIn
-						</LinkButton>
-						<LinkButton href="mailto:example@email.com">
-							<MailIcon class="size-6" />
-							Email
-						</LinkButton>
-					</div>
-				</section>
-
-				<!-- Links Section -->
-				<section>
-					<h2 class="text-2xl font-bold mb-4 text-content-strong">Links</h2>
-					<div class="flex flex-wrap gap-4">
-						<LinkInline href="#">Inline Link Example</LinkInline>
-						<LinkInline href="#">Another Link</LinkInline>
-					</div>
-				</section>
-
-				<!-- Avatar Section -->
-				<section>
-					<h2 class="text-2xl font-bold mb-4 text-content-strong">Avatar</h2>
-					<div class="flex flex-wrap gap-4 items-center">
-						<Avatar src="/profile/perfil.webp" alt="Profile" size="sm" />
-						<Avatar src="/profile/perfil.webp" alt="Profile" size="md" />
-						<Avatar src="/profile/perfil.webp" alt="Profile" size="lg" />
-					</div>
-				</section>
-
-				<!-- Badges Section -->
-				<section>
-					<h2 class="text-2xl font-bold mb-4 text-content-strong">Badges</h2>
-					<div class="flex flex-wrap gap-4">
-						<Badge>Badge Example</Badge>
-						<Badge>Another Badge</Badge>
-						<Badge>Technology</Badge>
-					</div>
-				</section>
-
-				<!-- Social Pills Section -->
-				<section>
-					<h2 class="text-2xl font-bold mb-4 text-content-strong">Social Pills</h2>
-					<div class="flex flex-wrap gap-4">
-						<SocialPill href="https://github.com">
-							<GitHubIcon class="size-4" />
-							GitHub
-						</SocialPill>
-						<SocialPill href="https://linkedin.com">
-							<LinkedInIcon class="size-4" />
-							LinkedIn
-						</SocialPill>
-					</div>
-				</section>
-
-				<!-- Containers Section -->
-				<section>
-					<h2 class="text-2xl font-bold mb-4 text-content-strong">Containers</h2>
-					<SectionContainer class="bg-gray-100 dark:bg-gray-800 p-4">
-						<p class="text-content">
-							This is a SectionContainer component with some example content.
-						</p>
-					</SectionContainer>
-				</section>
-			</div>
-		</SectionContainer>
-	</main>
+	<ComponentsShowcase {lang} />
 </Layout>

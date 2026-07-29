@@ -1,0 +1,12 @@
+{
+	"experienceId": "chirasoft-fullstack-developer",
+	"locale": "en",
+	"company": "Chirasoft",
+	"title": "Fullstack Developer Freelance",
+	"dateLabel": "May 2025 – Jul 2025",
+	"achievements": [
+		"Migrated an educational institutional site from WordPress to Angular, improving performance, maintainability, and user experience",
+		"Contributed to the comprehensive development of an e-commerce platform, from frontend to backend business logic",
+		"Implemented responsive design patterns and optimized component architecture for scalability"
+	]
+}

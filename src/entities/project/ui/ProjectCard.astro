@@ -10,6 +10,7 @@ interface Props {
 	project: ProjectItem;
 	codeButtonText: string;
 	previewButtonText: string;
+	cardTypeText: string;
 	caseStudyText?: string;
 	caseStudyLink?: string;
 	variant?: 'primary' | 'secondary';
@@ -22,6 +23,7 @@ const {
 	project,
 	codeButtonText,
 	previewButtonText,
+	cardTypeText,
 	caseStudyText,
 	caseStudyLink,
 	variant = 'secondary',
@@ -29,7 +31,7 @@ const {
 	headingLevel = 'h3',
 } = Astro.props;
 const Heading = headingLevel;
-const { image, title, description, tags, link, github, category } = project;
+const { image, imageAlt, title, description, tags, link, github, category } = project;
 const isPrimary = variant === 'primary';
 ---
 
@@ -47,7 +49,7 @@ const isPrimary = variant === 'primary';
 			decoding={priority ? 'sync' : 'async'}
 			loading={priority ? 'eager' : 'lazy'}
 			fetchpriority={priority ? 'high' : 'auto'}
-			alt={`${title} project image`}
+			alt={imageAlt}
 		/>
 		<div
 			class="absolute inset-0 bg-linear-to-b from-transparent via-background/80 to-background"
@@ -66,7 +68,7 @@ const isPrimary = variant === 'primary';
 				aria-hidden="true"></span>
 			<span
 				class="ml-auto font-retro-tag text-xs uppercase tracking-wider text-content-muted font-bold"
-				>{isPrimary ? 'Feature' : 'Project'}</span
+				>{cardTypeText}</span
 			>
 		</div>
 
