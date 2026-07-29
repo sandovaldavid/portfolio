@@ -4,12 +4,12 @@ This catalog is an operational inventory of the current slices under `src/featur
 
 Features may import `entities` and `shared` only. They must not import widgets, pages or peer features.
 
-| Slice             | Current purpose                                                                                             | Status                                                                                                                         |
-| ----------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `cli-terminal`    | Keyboard shortcuts, CLI overlay, navigation commands and optional recruiter-oriented terminal interactions. | **Implemented** and composed by the application layout.                                                                        |
-| `language-picker` | Renders verified locale targets supplied by the owning route/layout and preserves query/fragment state.     | **Implemented** and used by header/recruiter navigation surfaces.                                                              |
-| `splash-screen`   | Optional session-scoped retro boot overlay for home routes with client-navigation lifecycle handling.       | **Implemented** and composed by the application layout.                                                                        |
-| `theme-toggle`    | Standalone light/dark/system theme control backed by browser storage.                                       | **Implemented but unmounted**; do not describe it as the live theme control without adding a consumer and regression coverage. |
+| Slice             | Current purpose                                                                                             | Status                                                                      |
+| ----------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `cli-terminal`    | Keyboard shortcuts, CLI overlay, navigation commands and optional recruiter-oriented terminal interactions. | **Implemented** and composed by the application layout.                     |
+| `language-picker` | Renders verified locale targets supplied by the owning route/layout and preserves query/fragment state.     | **Implemented** and used by header/recruiter navigation surfaces.           |
+| `splash-screen`   | Optional session-scoped retro boot overlay for home routes with client-navigation lifecycle handling.       | **Implemented** and composed by the application layout.                     |
+| `theme-toggle`    | Standalone light/dark/system theme control backed by browser storage.                                       | **Implemented** and mounted in `RecruiterHUD`, next to the language picker. |
 
 The portfolio uses Astro components and vanilla browser scripts rather than framework hydration directives for these slices.
 

@@ -46,7 +46,7 @@ async function fetchFeed(page: import('@playwright/test').Page, path: string) {
 
 test.describe('RSS — EN feed (/rss.xml)', () => {
 	const PATH = '/rss.xml';
-	const EXPECTED_CHANNEL_TITLE = 'David Sandoval — Blog';
+	const EXPECTED_CHANNEL_TITLE = 'David Sandoval — Software Engineering Blog';
 	const DRAFT_TITLE = 'RSS Draft Exclusion Fixture';
 	const EN_POST_LINK_PREFIX = '/blog/';
 	const ES_POST_LINK_PREFIX = '/es/blog/';
@@ -122,7 +122,7 @@ test.describe('RSS — EN feed (/rss.xml)', () => {
 
 test.describe('RSS — ES feed (/es/rss.xml)', () => {
 	const PATH = '/es/rss.xml';
-	const EXPECTED_CHANNEL_TITLE = 'David Sandoval — Blog';
+	const EXPECTED_CHANNEL_TITLE = 'David Sandoval — Blog de ingeniería de software';
 	const DRAFT_TITLE = 'RSS Draft Exclusion Fixture';
 	const ES_POST_LINK_PREFIX = '/es/blog/';
 
@@ -195,13 +195,16 @@ test.describe('RSS — ES feed (/es/rss.xml)', () => {
 });
 
 test.describe('RSS — EN and ES feeds are structurally consistent', () => {
-	test('both feeds share the same channel title and RSS version', async ({ page }) => {
+	test('both feeds share the same RSS version and each has a localized channel title', async ({
+		page,
+	}) => {
 		const { parsed: en } = await fetchFeed(page, '/rss.xml');
 		const { parsed: es } = await fetchFeed(page, '/es/rss.xml');
 		expect(en.isRss && es.isRss).toBe(true);
 		expect(en.version).toBe('2.0');
 		expect(es.version).toBe('2.0');
-		expect(en.channelTitle).toBe(es.channelTitle);
+		expect(en.channelTitle).toBe('David Sandoval — Software Engineering Blog');
+		expect(es.channelTitle).toBe('David Sandoval — Blog de ingeniería de software');
 	});
 
 	test('EN and ES feeds list symmetric post counts', async ({ page }) => {
