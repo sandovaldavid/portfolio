@@ -105,7 +105,7 @@ jobs:
                       body=$(mktemp)
 
                       for attempt in $(seq 1 30); do
-                          if curl --fail --silent --show-error \
+                          if curl --fail --silent --show-error --location \
                               --dump-header "$headers" \
                               --output "$body" \
                               "$url"; then
