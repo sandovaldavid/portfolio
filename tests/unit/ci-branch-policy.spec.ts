@@ -34,12 +34,13 @@ describe('develop integration and main promotion policy', () => {
 		expect(protectionPolicy).not.toContain('Promotion Source');
 	});
 
-	it('keeps post-merge quality and production restricted to main', () => {
-		expect(mainQualityWorkflow).toMatch(/push:\n\s+branches: \[main\]/);
+	it('gates main with the full Main Quality suite pre-merge and deploys directly on push', () => {
+		expect(mainQualityWorkflow).toMatch(/pull_request:\n\s+branches: \[main\]/);
 		expect(mainQualityWorkflow).not.toContain('branches: [develop, main]');
-		expect(productionWorkflow).toContain('workflows: [Main Quality]');
-		expect(productionWorkflow).toContain('branches: [main]');
-		expect(productionWorkflow).toContain("github.event.workflow_run.head_branch == 'main'");
+		expect(mainQualityWorkflow).not.toMatch(/push:\n\s+branches: \[main\]/);
+		expect(productionWorkflow).toMatch(/push:\n\s+branches: \[main\]/);
+		expect(productionWorkflow).not.toContain('workflows: [Main Quality]');
+		expect(productionWorkflow).toContain("github.event_name == 'push'");
 	});
 
 	it('documents the real stable checks and removes obsolete protection guidance', () => {
@@ -52,6 +53,24 @@ describe('develop integration and main promotion policy', () => {
 		expect(protectionPolicy).not.toContain('validate-pr.yml');
 		expect(protectionPolicy).toContain(
 			'Do not configure `Deploy to Vercel Production` as a required pull-request check.'
+		);
+	});
+
+	it('documents merge commits for main promotions and their extra required checks', () => {
+		const mainQualityChecks = [
+			'Main Build & Unit Quality',
+			'Full Desktop Browser Suite',
+			'Main Lighthouse',
+		] as const;
+
+		for (const check of mainQualityChecks) {
+			expect(ciPolicy, check).toContain(check);
+			expect(protectionPolicy, check).toContain(check);
+		}
+
+		expect(deliveryPolicy).toContain('real merge commit');
+		expect(protectionPolicy).toContain(
+			'allow both squash and merge methods at repository level'
 		);
 	});
 });
