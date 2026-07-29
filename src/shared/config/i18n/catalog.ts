@@ -155,7 +155,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 	return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
-function flattenCatalog(node: unknown, prefix = ''): Record<string, string> {
+export function flattenCatalog(node: unknown, prefix = ''): Record<string, string> {
 	if (!isRecord(node)) {
 		throw new TypeError(`UI catalog namespace "${prefix || '<root>'}" must be an object.`);
 	}
@@ -195,15 +195,16 @@ export class MissingUiTranslationError extends Error {
 	}
 }
 
-export function validateUiCatalogs(): true {
-	const moduleNames = new Set(UI_CATALOG_MODULES);
-	if (moduleNames.size !== UI_CATALOG_MODULES.length) {
+export function assertUniqueModules(modules: readonly string[]): void {
+	if (new Set(modules).size !== modules.length) {
 		throw new Error('UI catalog module namespaces must be unique.');
 	}
+}
 
-	const englishKeys = Object.keys(englishFlatCatalog).sort();
-	const spanishKeys = Object.keys(spanishFlatCatalog).sort();
-
+export function assertKeyParity(
+	englishKeys: readonly string[],
+	spanishKeys: readonly string[]
+): void {
 	if (englishKeys.length !== spanishKeys.length) {
 		throw new Error('English and Spanish UI catalogs must contain the same number of keys.');
 	}
@@ -213,14 +214,28 @@ export function validateUiCatalogs(): true {
 			throw new Error(`UI catalog key parity failed at "${englishKey}".`);
 		}
 	}
+}
 
-	for (const [locale, catalog] of Object.entries(uiCatalogs)) {
+export function assertNoMissingTranslations(
+	catalogs: Readonly<Record<string, Readonly<Record<string, string>>>>
+): void {
+	for (const [locale, catalog] of Object.entries(catalogs)) {
 		for (const [key, value] of Object.entries(catalog)) {
 			if (value.trim().length === 0) {
 				throw new MissingUiTranslationError(locale as Language, key);
 			}
 		}
 	}
+}
+
+export function validateUiCatalogs(): true {
+	assertUniqueModules(UI_CATALOG_MODULES);
+
+	const englishKeys = Object.keys(englishFlatCatalog).sort();
+	const spanishKeys = Object.keys(spanishFlatCatalog).sort();
+	assertKeyParity(englishKeys, spanishKeys);
+
+	assertNoMissingTranslations(uiCatalogs);
 
 	return true;
 }
