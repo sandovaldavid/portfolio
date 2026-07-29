@@ -59,7 +59,7 @@ describe('develop integration and main promotion policy', () => {
 	it('documents merge commits for main promotions and their extra required checks', () => {
 		const mainQualityChecks = [
 			'Main Build & Unit Quality',
-			'Full Desktop Browser Suite',
+			'Main Chromium Suite',
 			'Main Lighthouse',
 		] as const;
 

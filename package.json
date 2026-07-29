@@ -50,6 +50,8 @@
 		"lighthouse": "lhci autorun",
 		"lighthouse:collect": "lhci collect",
 		"lighthouse:assert": "lhci assert",
+		"lighthouse:collect:extended": "lhci collect --config=.lighthouserc.extended.json",
+		"lighthouse:assert:extended": "lhci assert --config=.lighthouserc.extended.json",
 		"bundle:analyze": "node scripts/analyze-bundle.js",
 		"performance:check": "node scripts/check-route-performance.mjs",
 		"bundle:visualize": "ANALYZE_BUNDLE=true bun run build && bun run bundle:analyze"
