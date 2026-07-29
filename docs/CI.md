@@ -19,15 +19,15 @@ Pull-request quality, security and preview workflows cover both long-lived base 
 
 ## Configured workflows
 
-| Trigger                                                               | Workflow                      | Implemented purpose                                                                                                                                             |
-| --------------------------------------------------------------------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Pull request to `develop` or `main`                                   | `Continuous Integration`      | Promotion-source policy, repository checks, unit tests, production build, route budgets, Chromium smoke/Axe gates and exact base/head Portfolio Retro evidence. |
-| Pull request to `develop` or `main`                                   | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                                                              |
-| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`                      | Security and code-quality analysis for integration and production changes.                                                                                      |
-| Push to `main` or manual run                                          | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, full desktop browser suite and Lighthouse.                                 |
-| Weekly or manual                                                      | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link and bundle audits.                                                                                    |
-| Dev Container changes or manual run                                   | `Build Dev Container`         | Validates the versioned development environment.                                                                                                                |
-| Successful `Main Quality` push run; manual/resume dispatch            | `Deploy to Vercel Production` | Deploys the validated `main` revision or the explicitly selected current `main` revision.                                                                       |
+| Trigger                                                               | Workflow                      | Implemented purpose                                                                                                                    |
+| --------------------------------------------------------------------- | ----------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| Pull request to `develop` or `main`                                   | `Continuous Integration`      | Repository checks, unit tests, production build, route budgets, Chromium smoke/Axe gates and exact base/head Portfolio Retro evidence. |
+| Pull request to `develop` or `main`                                   | `Deploy to Vercel Preview`    | Builds and deploys the exact pull-request head to a Vercel preview when credentials are available.                                     |
+| Pull request to `develop` or `main`; push to `main`; scheduled/manual | `CodeQL`                      | Security and code-quality analysis for integration and production changes.                                                             |
+| Push to `main` or manual run                                          | `Main Quality`                | Repository checks, scoped coverage, build, generated-link validation, route budgets, full desktop browser suite and Lighthouse.        |
+| Weekly or manual                                                      | `Scheduled Extended Quality`  | Extended desktop/mobile, visual, coverage, generated-link and bundle audits.                                                           |
+| Dev Container changes or manual run                                   | `Build Dev Container`         | Validates the versioned development environment.                                                                                       |
+| Successful `Main Quality` push run; manual/resume dispatch            | `Deploy to Vercel Production` | Deploys the validated `main` revision or the explicitly selected current `main` revision.                                              |
 
 Workflow YAML is **Implemented** configuration. A workflow result is evidence only when a run exists for the exact commit and completes successfully.
 
@@ -37,14 +37,11 @@ Ordinary feature, fix, documentation and maintenance branches start from current
 
 The stable required checks are:
 
-- `Promotion Source`;
 - `Code Quality & Commits`;
 - `Unit Tests (Vitest)`;
 - `Build & Bundle Analysis`;
 - `Playwright Chromium Smoke`;
 - `Analyze Security`.
-
-`Promotion Source` succeeds for every pull request whose base is `develop`; keeping it present on both branch lifecycles gives the promotion policy one stable job name.
 
 `PR Summary Report`, `Portfolio Retro Visual Evidence` and `Deploy to Vercel Preview` are informative. They should not be required because summary generation is derivative, the evidence job is change-specific and preview availability depends on hosted secrets and Vercel availability.
 
@@ -60,11 +57,10 @@ The maintained matrix covers English/light desktop, Spanish/dark desktop, Englis
 
 A focused `develop` -> `main` pull request is the production promotion boundary. Do not add unrelated implementation work directly to the promotion branch.
 
-The `Promotion Source` job rejects a pull request targeting `main` unless its head branch is exactly `develop`. Configure this job as a required check on `main`; branch protection alone does not encode the source-branch relationship.
+No workflow job restricts pull requests into `main` by source branch: ordinary promotions come from `develop`, but a hotfix may go directly to `main`, and [Release Please](DELIVERY.md) opens its own release pull requests from a branch that is never `develop`.
 
 Promotion pull requests use the same required quality and security checks as `develop`:
 
-- `Promotion Source`;
 - `Code Quality & Commits`;
 - `Unit Tests (Vitest)`;
 - `Build & Bundle Analysis`;

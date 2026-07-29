@@ -12,25 +12,6 @@ concurrency:
     cancel-in-progress: true
 
 jobs:
-    promotion-source:
-        name: Promotion Source
-        runs-on: ubuntu-latest
-        steps:
-            - name: Enforce develop-only promotion to main
-              shell: bash
-              env:
-                  BASE_REF: ${{ github.base_ref }}
-                  HEAD_REF: ${{ github.head_ref }}
-              run: |
-                  set -euo pipefail
-
-                  if [ "$BASE_REF" = "main" ] && [ "$HEAD_REF" != "develop" ]; then
-                    echo "::error::Pull requests into main must use develop as the source branch."
-                    exit 1
-                  fi
-
-                  echo "Accepted pull request route: ${HEAD_REF} -> ${BASE_REF}"
-
     validate:
         name: Code Quality & Commits
         runs-on: ubuntu-latest
@@ -235,7 +216,7 @@ jobs:
     summary:
         name: PR Summary Report
         runs-on: ubuntu-latest
-        needs: [promotion-source, validate, test-unit, build, smoke, design-system-evidence]
+        needs: [validate, test-unit, build, smoke, design-system-evidence]
         if: always()
         steps:
             - name: Write proportional CI summary
@@ -246,7 +227,6 @@ jobs:
                     echo
                     echo "| Gate | Result |"
                     echo "|---|---|"
-                    echo "| Promotion source policy | ${{ needs.promotion-source.result }} |"
                     echo "| Code quality and squash title | ${{ needs.validate.result }} |"
                     echo "| Unit tests | ${{ needs.test-unit.result }} |"
                     echo "| Production build and bundle report | ${{ needs.build.result }} |"

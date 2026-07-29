@@ -46,8 +46,7 @@ A disabled, missing or quota-blocked workflow run is not version evidence or a s
 - The canonical package identifier is `portfolio-v1`.
 - The package is private and is not published to npm.
 - Production delivery is tied to the current `main` deployment contract, not package publication.
-- Create stable tags and GitHub Releases manually only for meaningful public milestones according to [DELIVERY.md](DELIVERY.md).
-- Historical `porfolio-dev-*` and beta tags are immutable repository history.
+- Stable `vX.Y.Z` tags and GitHub Releases are produced by Release Please on `main`; see the "Release policy" section of [DELIVERY.md](DELIVERY.md).
 
 ## Coordinated updates
 
