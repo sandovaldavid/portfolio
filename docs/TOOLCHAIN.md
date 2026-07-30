@@ -43,7 +43,7 @@ A disabled, missing or quota-blocked workflow run is not version evidence or a s
 
 - `develop` is the integration branch for ordinary dependency and toolchain updates.
 - `main` is the production branch and receives a focused promotion from `develop`.
-- The canonical package identifier is `portfolio-v1`.
+- The canonical package identifier is `portfolio`.
 - The package is private and is not published to npm.
 - Production delivery is tied to the current `main` deployment contract, not package publication.
 - Stable `vX.Y.Z` tags and GitHub Releases are produced by Release Please on `main`; see the "Release policy" section of [DELIVERY.md](DELIVERY.md).

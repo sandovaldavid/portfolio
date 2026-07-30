@@ -46,7 +46,7 @@ It reports each file's byte count and SHA-256 digest for review evidence.
 2. A focused promotion pull request updates `sandovaldavid/resume@main`.
 3. Successful CI for the exact current `main` commit authorizes the private stable publisher.
 4. The publisher builds and validates both PDFs.
-5. Only the PDFs and manifest are committed to `portfolio-v1@resume-assets`.
+5. Only the PDFs and manifest are committed to `portfolio@resume-assets`.
 6. The publisher sends `resume-assets-updated` to this repository.
 7. The portfolio production workflow checks out `main`, overlays the validated asset payload and deploys it.
 8. Production verifies the canonical URLs, PDF headers and signatures.

@@ -36,7 +36,7 @@ This repository does not copy the generic Astro template literally:
 
 - `mcr.microsoft.com/playwright` remains the base image because the repository executes Playwright directly inside the development container and requires browser binaries compatible with the exact project client.
 - `pwuser` remains the non-root identity supplied by that image. The Dockerfile normalizes it before Dev Containers applies host-specific remapping and ends with `USER pwuser`.
-- `/workspaces/portfolio-v1` remains the canonical workspace because the Dev Container, validation workflow and repository scripts share that contract.
+- `/workspaces/portfolio` remains the canonical workspace because the Dev Container, validation workflow and repository scripts share that contract.
 - `waitFor` remains `postStartCommand`. A first creation still completes `postCreateCommand`; later starts block VS Code attachment until writable state and Git signing have been refreshed.
 - the named `node_modules` volume isolates Linux dependencies from the host and from the nested pinned Playwright container.
 - Zsh is the default interactive shell. Bash remains configured as a supported fallback.
@@ -135,7 +135,7 @@ No private key is copied into the repository, image or container filesystem. Mis
 
 ## Workspace and dependencies
 
-The repository source is bind-mounted at `/workspaces/portfolio-v1`. The host checkout remains the source of truth for code, documentation and Git state.
+The repository source is bind-mounted at `/workspaces/portfolio`. The host checkout remains the source of truth for code, documentation and Git state.
 
 On native Linux, the bind mount preserves numeric host ownership. Dev Containers may remap `pwuser` during creation. The startup lifecycle refuses to recursively change repository ownership when the running UID and workspace owner do not match.
 
@@ -210,7 +210,7 @@ ss -ltnp '( sport = :4321 or sport = :9323 )'
 Inside a newly rebuilt container run:
 
 ```bash
-test "$(id -u)" = "$(stat -c '%u' /workspaces/portfolio-v1)"
+test "$(id -u)" = "$(stat -c '%u' /workspaces/portfolio)"
 test "$TERM" = "xterm-256color"
 test "$ZSH_HISTORY_FILE" = "/commandhistory/.zsh_history"
 test "$(stat -c '%a' "$ZSH_HISTORY_FILE")" = "600"
@@ -267,7 +267,7 @@ bun install --frozen-lockfile
 If the disposable dependency volume remains corrupted, close the container and remove only that volume from the host:
 
 ```bash
-docker volume rm portfolio-v1-devcontainer-node_modules
+docker volume rm portfolio-devcontainer-node_modules
 ```
 
 Then rebuild. Do not delete the repository or recursively change ownership of tracked source.

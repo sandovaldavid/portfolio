@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "portfolio-v1",
+      "name": "portfolio",
       "dependencies": {
         "@astrojs/mdx": "7.0.3",
         "@astrojs/rss": "^4.0.19",

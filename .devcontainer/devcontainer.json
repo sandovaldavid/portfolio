@@ -1,5 +1,5 @@
 {
-	"name": "Portfolio-v1",
+	"name": "Portfolio",
 
 	"build": {
 		"dockerfile": "Dockerfile",
@@ -52,8 +52,8 @@
 		}
 	},
 
-	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/portfolio-v1,type=bind",
-	"workspaceFolder": "/workspaces/portfolio-v1",
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspaces/portfolio,type=bind",
+	"workspaceFolder": "/workspaces/portfolio",
 
 	"mounts": [
 		"source=${localWorkspaceFolderBasename}-devcontainer-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume",

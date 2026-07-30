@@ -69,7 +69,7 @@ Now that the configuration is complete, here is how to test the workflows:
     ```
 
 5. **Watch GitHub Actions run:**
-    - Go to: https://github.com/sandovaldavid/portfolio-v1/actions
+    - Go to: https://github.com/sandovaldavid/portfolio/actions
     - You should see: `Validate PR` workflow running
     - ESLint, Prettier check, and build should all pass
     - Preview deployment should start automatically
