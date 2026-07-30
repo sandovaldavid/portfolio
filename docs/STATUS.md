@@ -7,7 +7,7 @@ This document classifies repository-level statements as of **2026-07-30**. It is
 | Status          | Meaning                                                                                     |
 | --------------- | ------------------------------------------------------------------------------------------- |
 | **Implemented** | Present in the current `develop` source or versioned configuration and directly verifiable. |
-| **In progress** | Partially implemented; an open issue or pull request identifies concrete remaining work.    |
+| **In progress** | Partially implemented; an open issue identifies concrete remaining work.                    |
 | **Planned**     | Approved future work with no current implementation.                                        |
 | **Blocked**     | Work or automation cannot proceed because of a named external constraint.                   |
 | **Deprecated**  | Still present for compatibility but prohibited for new work.                                |
@@ -15,23 +15,23 @@ This document classifies repository-level statements as of **2026-07-30**. It is
 | **Discarded**   | Explicitly rejected or superseded.                                                          |
 | **Unconfirmed** | Not verified against the current branch, repository settings or an authoritative result.    |
 
+A concrete active pull request may also establish **In progress** work when no separate issue exists.
+
 ## Implemented
 
-| Area                      | Verified repository evidence                                                                                                                                                                                                                                                                         |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Repository identity       | The canonical repository is `sandovaldavid/portfolio`, the private package name on `develop` is `portfolio`, and the Cortex-L7 project area is `portfolio`. The former `portfolio-v1` identifier is retained only as historical provenance, redirect or alias.                                         |
-| Static site               | Astro build scripts and static route implementation.                                                                                                                                                                                                                                                 |
-| Toolchain                 | Bun is pinned through `packageManager`; dependencies and scripts are defined in `package.json` and resolved by `bun.lock`.                                                                                                                                                                           |
-| Architecture              | Pragmatic Feature-Sliced Design with executable import-boundary checks.                                                                                                                                                                                                                              |
-| Localization architecture | English-default and `/es` routing, granular typed UI catalogs, localized profile/experience/research/project/editorial content and Astro-native route helpers.                                                                                                                                       |
-| Localization enforcement  | Source catalog/content/copy checks, generated-route checks, bilingual browser coverage and unit regressions that prohibit the removed legacy runtime.                                                                                                                                                |
-| Testing                   | Vitest unit tests, Playwright browser suites, Axe accessibility gates and pinned-Docker visual comparison.                                                                                                                                                                                           |
-| Performance               | Route-level budgets, bundle reporting and Lighthouse commands.                                                                                                                                                                                                                                       |
-| Development environment   | Versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.                                                                                                                                                                                       |
-| Workflow definitions      | Pull-request CI, CodeQL and preview workflows for `develop` and `main`; pre-merge `Main Quality`, scheduled quality and production deployment definitions.                                                                                                                                           |
-| Branch roles              | `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.                                                                                                                                                             |
-| Resume asset delivery     | The isolated branch contains both canonical PDFs plus provenance manifest; strict source/destination validation and a successful Preview verify consumption.                                                                                                                                         |
-| Release automation        | Release Please (`config/release-please-config.json`, `config/release-please-manifest.json`, `.github/workflows/release-please.yml`) runs on `main` only, producing plain `vX.Y.Z` tags and an auto-generated `CHANGELOG.md`; baseline `v1.0.0` is commit `72d8c852a8a518922e705409f4785484e999d53e`. |
+- **Repository identity:** the canonical repository is `sandovaldavid/portfolio`, the private package name on `develop` is `portfolio`, and the Cortex-L7 project area is `portfolio`. The former `portfolio-v1` identifier is retained only as historical provenance, redirect or alias.
+- **Static site:** Astro build scripts and static route implementation.
+- **Toolchain:** Bun is pinned through `packageManager`; dependencies and scripts are defined in `package.json` and resolved by `bun.lock`.
+- **Architecture:** pragmatic Feature-Sliced Design with executable import-boundary checks.
+- **Localization architecture:** English-default and `/es` routing, granular typed UI catalogs, localized profile/experience/research/project/editorial content and Astro-native route helpers.
+- **Localization enforcement:** source catalog/content/copy checks, generated-route checks, bilingual browser coverage and unit regressions that prohibit the removed legacy runtime.
+- **Testing:** Vitest unit tests, Playwright browser suites, Axe accessibility gates and pinned-Docker visual comparison.
+- **Performance:** route-level budgets, bundle reporting and Lighthouse commands.
+- **Development environment:** versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.
+- **Workflow definitions:** pull-request CI, CodeQL and preview workflows for `develop` and `main`; pre-merge `Main Quality`, scheduled quality and production deployment definitions.
+- **Branch roles:** `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.
+- **Resume asset delivery:** the isolated branch contains both canonical PDFs plus provenance manifest; strict source/destination validation and a successful Preview verify consumption.
+- **Release automation:** Release Please (`config/release-please-config.json`, `config/release-please-manifest.json`, `.github/workflows/release-please.yml`) runs on `main` only, producing plain `vX.Y.Z` tags and an auto-generated `CHANGELOG.md`; baseline `v1.0.0` is commit `72d8c852a8a518922e705409f4785484e999d53e`.
 
 The localization runtime no longer contains monolithic locale dictionaries, the flattened mixed-value translator, `useTranslations()`, `useTranslationsList()`, duplicated Atena/Skills/Components route implementations or the six-file hardcoded-copy debt baseline.
 
