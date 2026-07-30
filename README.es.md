@@ -85,7 +85,7 @@ Añade validación de enlaces generados, navegador, rendimiento o visual según 
 - [Reglas para agentes](AGENTS.md)
 - [Flujo de contribución](CONTRIBUTING.md)
 
-Las decisiones, alternativas, auditorías históricas, planes y handoffs de sesión se mantienen en el área `portfolio-v1` de Cortex-L7 en lugar de la documentación activa del repositorio.
+Las decisiones, alternativas, auditorías históricas, planes y handoffs de sesión se mantienen en el área `portfolio` de Cortex-L7 en lugar de la documentación activa del repositorio.
 
 ## Licencia
 
