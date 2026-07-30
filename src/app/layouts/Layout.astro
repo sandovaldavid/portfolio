@@ -373,17 +373,6 @@ const structuredPageSchema =
 									<slot name="experience" />
 								</SectionContainer>
 								<SectionContainer
-									id="research"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<BrainIcon class="size-12" />
-										{tResearchSection('sectionTitle')}
-									</TitleSection>
-									<slot name="research" />
-								</SectionContainer>
-
-								<SectionContainer
 									id="projects"
 									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
 								>
@@ -392,6 +381,17 @@ const structuredPageSchema =
 										{tProjects('sectionTitle')}
 									</TitleSection>
 									<slot name="projects" />
+								</SectionContainer>
+
+								<SectionContainer
+									id="research"
+									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
+								>
+									<TitleSection className="mb-0">
+										<BrainIcon class="size-12" />
+										{tResearchSection('sectionTitle')}
+									</TitleSection>
+									<slot name="research" />
 								</SectionContainer>
 
 								<SectionContainer

@@ -44,7 +44,7 @@ A budget increase requires an explanation in the pull request. Update the thresh
 
 ### Selective prefetch
 
-Global `prefetchAll` is disabled. Only the likely recruiter journey is marked with `data-astro-prefetch="hover"`: selected work, blog and about. Experience, research and technology anchors do not trigger speculative route fetches. Playwright verifies the policy in English and Spanish.
+Global `prefetchAll` is disabled. Only the likely recruiter journey is marked with `data-astro-prefetch="hover"`: selected work, blog and about. Experience and research anchors do not trigger speculative route fetches. Playwright verifies the policy in English and Spanish.
 
 ### Fonts
 
