@@ -30,7 +30,10 @@ const homeSectionUrl = (section: string) => `${homeUrl}#${section}`;
 // evidence (projects), with research as a secondary specialization. The Stack
 // section remains on the homepage but is intentionally not a top-level nav
 // destination — technology lists support project evidence rather than
-// competing with it in the primary navigation hierarchy.
+// competing with it in the primary navigation hierarchy. Same-page anchors
+// (experience/projects/research/about-me) stay grouped together in page
+// order; blog is the only destination that leaves the homepage, so it goes
+// last rather than interrupting the anchor sequence.
 const navItems = [
 	{
 		title: tNavigation('experience'),
@@ -52,18 +55,18 @@ const navItems = [
 		url: homeSectionUrl('research'),
 	},
 	{
-		title: tNavigation('blog'),
-		label: 'blog',
-		icon: 'blog',
-		prefetch: true,
-		url: getRelativeLocaleUrl(lang, 'blog'),
-	},
-	{
 		title: tNavigation('about'),
 		label: 'about-me',
 		icon: 'about-me',
 		prefetch: true,
 		url: homeSectionUrl('about-me'),
+	},
+	{
+		title: tNavigation('blog'),
+		label: 'blog',
+		icon: 'blog',
+		prefetch: true,
+		url: getRelativeLocaleUrl(lang, 'blog'),
 	},
 ];
 ---
