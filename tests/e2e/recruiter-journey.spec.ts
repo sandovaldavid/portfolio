@@ -124,7 +124,7 @@ test.describe('Recruiter journey — keyboard operability', () => {
 			await page.keyboard.press('Tab');
 			await expect(page.locator('header a.brand-logo-link')).toBeFocused();
 
-			for (const sectionId of ['experience', 'projects', 'research', 'blog', 'about-me']) {
+			for (const sectionId of ['experience', 'projects', 'research', 'about-me', 'blog']) {
 				await page.keyboard.press('Tab');
 				await expect(
 					page.locator(`header a[data-section-id="${sectionId}"]:not(#mobile-menu a)`)

@@ -17,12 +17,14 @@ Portafolio bilingüe y static-first para presentar experiencia profesional, evid
 
 ## Implementación actual
 
+- **Identidad del repositorio:** `sandovaldavid/portfolio` y el paquete privado `portfolio` son los identificadores canónicos. `portfolio-v1` se conserva únicamente como redirección o alias histórico en registros fechados.
 - **Entrega:** Astro genera un sitio estático; JavaScript se utiliza para interacciones progresivas y el ciclo de navegación cliente.
 - **Arquitectura:** las dependencias siguen `src/pages → app → widgets → features → entities → shared` y `bun run lint:architecture` valida sus límites.
 - **Localización:** inglés no usa prefijo y español utiliza `/es`; catálogos granulares, Content Collections localizadas, metadata y validaciones de rutas generadas hacen ejecutable el contrato bilingüe.
 - **Calidad:** el repositorio versiona checks, pruebas unitarias, Playwright, Axe, presupuestos por ruta y comandos de Lighthouse.
 - **Entorno de desarrollo:** un Dev Container con Playwright y Bun fijados soporta la validación local completa.
 - **Despliegue:** `develop` es la rama de integración; `main` es la rama por defecto y de producción. La promoción a `main` se realiza mediante una PR separada.
+- **Entrega del CV:** los PDF validados en inglés y español se suministran mediante la rama aislada `resume-assets`; las fuentes editables permanecen en el repositorio privado correspondiente.
 
 El runtime legacy de localización fue eliminado y no debe reintroducirse. El ownership actual y sus validaciones están documentados en [docs/I18N.md](docs/I18N.md) y [docs/I18N-ENFORCEMENT.md](docs/I18N-ENFORCEMENT.md).
 
@@ -79,6 +81,7 @@ Añade validación de enlaces generados, navegador, rendimiento o visual según 
 - [Testing](docs/TESTING.md)
 - [Política de CI](docs/CI.md)
 - [Entrega y releases](docs/DELIVERY.md)
+- [Entrega canónica de los artefactos del CV](docs/RESUME-DELIVERY.md)
 - [Toolchain](docs/TOOLCHAIN.md)
 - [Metodología de rendimiento](docs/PERFORMANCE.md)
 - [Dev Container](docs/DEVCONTAINER.md)

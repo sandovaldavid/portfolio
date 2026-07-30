@@ -70,7 +70,7 @@ Promotion pull requests use the same required quality and security checks as `de
 - `Main Chromium Suite`;
 - `Main Lighthouse`.
 
-`Main Chromium Suite` runs Chromium only, and `Main Lighthouse` audits a single run scoped to the `performance` category — this is the fast pre-merge gate, not the full cross-browser/multi-category sweep. Firefox, WebKit, the mobile matrix, and the full four-category/three-run Lighthouse audit (`accessibility`, `best-practices`, `seo`) run weekly in `Scheduled Extended Quality` instead; accessibility is not re-audited there via Lighthouse either, since `tests/e2e/a11y.spec.ts` already covers it directly with axe-core.
+`Main Chromium Suite` runs Chromium only, and `Main Lighthouse` audits one run scoped to the `performance` category — this is the fast pre-merge gate, not the full cross-browser and multi-category sweep. Firefox, WebKit, the mobile matrix and the full three-run Lighthouse audit for `performance`, `accessibility`, `best-practices` and `seo` run weekly in `Scheduled Extended Quality`. Axe remains the primary accessibility interaction gate; the scheduled Lighthouse accessibility category is complementary page-level evidence.
 
 The stable job names are an external contract with GitHub rulesets. Do not rename them without coordinating the hosted required-check configuration.
 
