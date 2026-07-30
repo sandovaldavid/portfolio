@@ -52,7 +52,14 @@ interface ProjectDocument {
 }
 
 const locales = ['en', 'es'] as const;
-const expectedIds = ['auctions', 'campus-map', 'fluentreads', 'mad-ai', 'yukidoke'] as const;
+const expectedIds = [
+	'auctions',
+	'campus-map',
+	'fluentreads',
+	'kioku',
+	'mad-ai',
+	'yukidoke',
+] as const;
 
 function loadProjects(locale: (typeof locales)[number]) {
 	const directory = `src/content/projects/${locale}`;
@@ -142,12 +149,13 @@ describe('localized project and case-study content', () => {
 
 		expect(slugs.sort()).toEqual([...expectedIds]);
 		expect(new Set(slugs).size).toBe(expectedIds.length);
-		expect(orders.sort((left, right) => right - left)).toEqual([50, 40, 30, 20, 10]);
+		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10]);
 		expect(metadata).toContain('technologyIds:');
 		expect(metadata).toContain('evidenceSourceUrls:');
 		expect(metadata).toContain(
 			"'yukidoke-web': 'https://github.com/sandovaldavid/yukidoke-web'"
 		);
+		expect(metadata).toContain("kioku: 'https://github.com/sandovaldavid/kioku'");
 
 		for (const entry of [...entries.en, ...entries.es]) {
 			expect(JSON.stringify(entry)).not.toContain('https://');

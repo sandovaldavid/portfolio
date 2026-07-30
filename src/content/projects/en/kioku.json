@@ -1,0 +1,85 @@
+{
+	"projectId": "kioku",
+	"locale": "en",
+	"title": "Kioku",
+	"description": "A local-first .NET MCP server that turns AI-agent project knowledge — decisions, plans, bugs and sessions — into durable Markdown records inside an Obsidian vault, with a generated tool contract, retrieval evaluation and multi-agent handoff evidence.",
+	"category": "Backend Development",
+	"imageAlt": "Kioku MCP server architecture and multi-agent handoff preview",
+	"caseStudy": {
+		"problem": "AI coding agents lose context when a session or process ends: decisions, plans, bugs and project knowledge often stay trapped inside one conversation instead of becoming durable, reusable records. I needed a way for one agent to hand a project off to another agent — or to a future session of itself — without relying on shared conversation history.",
+		"approach": "I designed Kioku as a local-first Model Context Protocol server that reads and writes structured project knowledge — sessions, plans, ADRs, bugs and queries — as Markdown and YAML frontmatter inside an Obsidian vault. The server exposes this knowledge through typed MCP tools, prompts and resources behind a layered .NET architecture: an MCP adapter maps protocol calls to application contracts, application contracts drive workflow services, and workflow services depend on domain and infrastructure ports implemented against the filesystem, hybrid retrieval and an optional Ollama-backed embedding pipeline. Architecture guard tests enforce the dependency direction and keep the server one deployable assembly instead of splitting it prematurely.",
+		"tradeoffs": "I kept the project as a single Kioku.Mcp.Server assembly and used architecture guard tests to hold boundaries instead of splitting into multiple deployable services before there was a concrete reason to. The stable main branch still exposes an older 128-tool surface across 19 tool classes; active development narrows this to a generated, capability-gated contract — 43 tools by default and 59 with every capability enabled — to keep the protocol schema smaller for clients with limited context budgets. That redesign is unreleased, so this case study reports stable and active-development evidence separately instead of blending them into one number.",
+		"outcome": "The stable release, version 2.3.0, ships as a published NuGet tool named kioku-mcp-server, with automated server tests, CI across three operating systems, a documented retrieval-evaluation suite and release history. On the active development branch, a reproducible multi-process demo shows one agent creating a session, plan, ADR and bug, exiting, and a second agent — through an independent MCP connection and process — retrieving that project context and continuing the work, which is the persistence and handoff behavior the project set out to prove. Recent pull requests report all server tests passing locally; that is PR-reported validation rather than an independently rerun result for this case study.",
+		"learnings": [
+			"Durable, human-readable Markdown records survive session and process boundaries better than provider-specific conversation history.",
+			"Architecture guard tests keep a single-assembly server honest about its own dependency direction as the tool surface grows and changes.",
+			"Publishing retrieval-evaluation and benchmark methodology alongside results matters as much as the numbers themselves — a metric without its environment and dataset is not reusable evidence."
+		],
+		"timeline": "Stable 2.3.0 · active development",
+		"role": "Backend engineer and maintainer",
+		"evidence": {
+			"statusLabel": "CURRENT STATUS",
+			"status": "Release 2.3.0 stable — active development on a narrower contract",
+			"statusDetail": "Stable and active-development capabilities are reported separately below. Features that exist only on the active development branch are explicitly labeled as unreleased.",
+			"implementedLabel": "IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION",
+			"implemented": [
+				"Public .NET 10 MCP server published as the kioku-mcp-server NuGet tool, release 2.3.0.",
+				"Local stdio and HTTP transport, with optional embeddings and generation through a local Ollama instance.",
+				"128 MCP tools across 19 tool classes, 10 prompts and 2 resources on the audited stable main branch.",
+				"Automated server tests, multi-OS CI on Ubuntu, Windows and macOS, formatting and vulnerability checks, and a documented release and changelog history.",
+				"A retrieval-evaluation suite with Precision@k, Recall@k, MRR and NDCG@k on a 27-note bilingual fixture vault with 22 scored queries and 2 no-answer probes."
+			],
+			"plannedLabel": "PLANNED // NOT PRESENTED AS SHIPPED",
+			"planned": [
+				"Promote the active-development layered architecture — MCP adapter, application contracts, workflow services, domain and infrastructure ports — to a stable release.",
+				"Publish the narrower generated tool contract, 43 default and 59 all-capabilities tools, as the new stable public surface, replacing the older 128-tool design.",
+				"Promote the reproducible multi-agent handoff demo from development evidence to release-documented behavior.",
+				"Reconcile active-development benchmark results with a stable-release environment and dataset before quoting them outside a development context."
+			],
+			"architectureLabel": "ARCHITECTURE // ACTIVE DEVELOPMENT",
+			"architecture": {
+				"caption": "Active development shape: an MCP adapter translates protocol calls into application contracts, application contracts drive workflow services, and workflow services depend on domain and infrastructure ports implemented against the Obsidian vault and an optional local Ollama embedding pipeline. Architecture guard tests enforce this direction and keep the server one deployable assembly.",
+				"client": "MCP Client (AI Agent)\nstdio · Streamable HTTP",
+				"identity": "Application Contracts\nUse-case boundaries",
+				"api": "MCP Adapter\nTools · prompts · resources",
+				"modules": "Workflow Services\nSessions · docs · queries",
+				"database": "Domain & Infrastructure Ports\nRepository abstractions",
+				"processes": "Infrastructure Implementation\nObsidian vault (Markdown/YAML) · optional Ollama embeddings"
+			},
+			"securityLabel": "SECURITY DECISIONS",
+			"security": [
+				"Kioku is local-first: the Obsidian vault is the source of truth and stays fully readable and editable without the server running.",
+				"CI runs dependency vulnerability scanning alongside build, formatting and test gates on every change.",
+				"Optional embeddings and generation run through a local Ollama instance instead of a required external service, so vault content stays on the user's machine by default."
+			],
+			"testingLabel": "TESTING DECISIONS",
+			"testing": [
+				"Native server tests run on Ubuntu, Windows and macOS with a 40% line-coverage gate enforced in CI.",
+				"Filesystem sandbox tests, installed-tool stdio smoke tests and native single-file Streamable HTTP smoke tests validate the packaged tool, not only the source tree.",
+				"Architecture guard tests enforce constructor shape, dependency direction, DI registration and cancellation propagation instead of relying on manual review alone.",
+				"Recent merged pull requests report 708 out of 708 server tests passing locally; that is PR-reported validation and is not independently re-verified for this case study."
+			],
+			"deploymentLabel": "DEPLOYMENT DECISIONS",
+			"deployment": [
+				"The server ships as a NuGet global tool, kioku-mcp-server, so it installs and runs locally without a hosted backend.",
+				"Release 2.3.0 and its changelog are published from the stable main branch; active development on develop carries substantial unreleased work.",
+				"The Obsidian bridge plugin was extracted into its own repository, sandovaldavid/kioku-obsidian, with independent versioning, keeping the server's release cadence separate from the plugin's."
+			],
+			"limitationsLabel": "ACCESS AND EVIDENCE LIMITATIONS",
+			"limitations": [
+				"The layered architecture, narrower tool contract and multi-agent handoff demo described above live on the active development branch and are not part of release 2.3.0 until promoted.",
+				"Benchmark and retrieval numbers come from one documented machine, dataset and Ollama model configuration; they are not a cross-hardware SLA.",
+				"Recent test-pass counts are PR-reported rather than independently rerun for this case study, and GitHub Actions status was not available at review time.",
+				"No external adoption, production workload or commercial impact is claimed for this project."
+			],
+			"sourcesLabel": "SOURCE & EVIDENCE",
+			"sources": [
+				{
+					"sourceId": "kioku",
+					"label": "Kioku — MCP server for Obsidian",
+					"access": "Public repository; source, releases, tests and generated documentation are directly inspectable."
+				}
+			]
+		}
+	}
+}
