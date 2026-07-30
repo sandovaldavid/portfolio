@@ -41,9 +41,11 @@ Before promotion:
 - confirm that documentation and `docs/STATUS.md` describe the promoted state;
 - record any unavailable GitHub automation as **Blocked**, never as passed.
 
-Ordinary promotions originate from `develop`, but pull requests into `main` are not restricted to that source branch: a hotfix may go directly to `main` when the situation warrants it, and Release Please's own release pull requests (see "Release policy" below) never originate from `develop` either. Required status checks (`Code Quality & Commits`, `Unit Tests (Vitest)`, `Build & Bundle Analysis`, `Main Build & Unit Quality`, `Full Desktop Browser Suite`, `Main Lighthouse`) gate every merge into `main` regardless of source branch — the full `Main Quality` suite runs as a pull-request check against `main`, not only after merge.
+Ordinary promotions originate from `develop`, but pull requests into `main` are not restricted to that source branch: a hotfix may go directly to `main` when the situation warrants it, and Release Please's own release pull requests (see "Release policy" below) never originate from `develop` either. Required status checks (`Code Quality & Commits`, `Unit Tests (Vitest)`, `Build & Bundle Analysis`, `Playwright Chromium Smoke`, `Analyze Security`, `Main Build & Unit Quality`, `Main Chromium Suite`, `Main Lighthouse`) gate every merge into `main` according to the hosted ruleset. The full `Main Quality` suite runs as a pull-request check against `main`, not only after merge.
 
-The `develop` → `main` promotion pull request is merged with a real merge commit, not a squash. `main` allows both merge methods (squash for single-purpose pull requests such as hotfixes or Dependabot updates; merge for promotions), so that develop's individual commit history stays a real ancestor of `main` — squashing every promotion would otherwise make each later `main` → `develop` sync introduce duplicate, unrelated commits for content `develop` already has.
+The `develop` → `main` promotion pull request is merged with a real merge commit, not a squash. `main` allows both merge methods (squash for single-purpose pull requests such as hotfixes, Dependabot updates or Release Please; merge for promotions), so that `develop`'s individual commit history stays a real ancestor of `main`. Squashing every promotion would otherwise make each later `main` → `develop` reconciliation introduce duplicate, unrelated commits for content `develop` already contains.
+
+Promotion merge commits, direct hotfixes and release commits can make `main` numerically ahead of `develop` even when `main` already contains the complete integrated `develop` tree. Compare ancestry and changed files rather than treating ahead/behind counts alone as drift. Reconcile `main` into `develop` only when a main-only source or operational change must be included in future integration work.
 
 ## Preview deployments
 
@@ -84,11 +86,13 @@ This repository is a private package and a public website, not a published npm l
 
 - Production deployment is independent from GitHub Releases.
 - `main` is the single source of truth for releases. [Release Please](https://github.com/googleapis/release-please) (`.github/workflows/release-please.yml`) runs only on pushes to `main`; it does not run on `develop`, which avoids conflicting release state when `develop` is promoted.
-- Release Please opens or updates a release pull request against `main` derived from Conventional Commit history since the last release. Merging that pull request (squash, since it is a single-purpose pull request) is what cuts the Git tag and the GitHub Release. This is not a bypass of review.
+- Release Please opens or updates a release pull request against `main` derived from Conventional Commit history since the last release. Merging that pull request with squash is what cuts the Git tag and the GitHub Release. This is not a bypass of review.
 - Tags and releases use plain stable semantic versions, e.g. `v1.0.0`, `v2.0.0` (`include-component-in-tag: false` in `config/release-please-config.json`). Do not hand-create ad hoc beta or `porfolio-dev-*`-style tags.
 - `CHANGELOG.md` is generated and maintained by Release Please from Conventional Commit history. Do not hand-edit it.
-- Promotions from `develop` to `main` use a real merge commit (see "Promotion to main" above), so Release Please replays every individual Conventional Commit that lived on `develop` since the last release — accuracy no longer depends on a single promotion pull request title or footer summarizing the whole batch.
+- Promotions from `develop` to `main` use a real merge commit (see "Promotion to main" above), so Release Please replays every individual Conventional Commit that lived on `develop` since the last release. Accuracy no longer depends on a single promotion pull-request title or footer summarizing the whole batch.
 - `v1.0.0` (commit `72d8c852a8a518922e705409f4785484e999d53e`) is the release baseline as of 2026-07-29. The previous `porfolio-dev-*` and `vX.Y.Z-beta.0` tags/releases (2026-06-21 through 2026-07-05) were deleted: they were pre-release artifacts of a discontinued dual-branch (`main` + `develop`) Release Please setup and are **Discarded**, not preserved historical evidence.
+
+An open Release Please pull request is **In progress**, not a published release. Treat a stale, conflicted or non-mergeable release branch as **Blocked** until it is refreshed or regenerated and the exact head passes the required `main` checks.
 
 ## Repository settings contract
 
@@ -97,11 +101,11 @@ Verify these GitHub-hosted settings before relying on them:
 1. `main` remains the default and production branch;
 2. ordinary work is based on and merged into `develop`;
 3. `develop` requires pull requests, current branches and the documented quality/security checks;
-4. `main` requires a promotion pull request whose source is `develop` and the documented quality/security checks;
+4. `main` accepts reviewed `develop` promotions, direct hotfixes and Release Please pull requests, with no source-branch-name restriction;
 5. required check names match [CI.md](CI.md);
 6. preview deployment is informative rather than required;
-7. squash merge is the permitted integration method;
-8. merged short-lived branches are deleted automatically;
+7. squash merge and merge commits are enabled, with merge commits reserved for `develop` → `main` promotions;
+8. automatic deletion of merged branches is disabled so long-lived branches survive; short-lived branches are deleted explicitly after merge;
 9. direct pushes, force pushes and deletion of long-lived branches are blocked;
 10. the Production environment accepts only `main` deployments.
 
