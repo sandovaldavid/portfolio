@@ -40,7 +40,7 @@ const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
 const mounts = Array.isArray(devcontainer.mounts) ? devcontainer.mounts : [];
 /** @type {string[]} */
 const runArgs = Array.isArray(devcontainer.runArgs) ? devcontainer.runArgs : [];
-const workspaceFolder = '/workspaces/portfolio-v1';
+const workspaceFolder = '/workspaces/portfolio';
 const dependencyVolumeMount =
 	'source=${localWorkspaceFolderBasename}-devcontainer-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume';
 const historyVolumeMount =
@@ -86,7 +86,7 @@ expect(
 	'the development image must normalize pwuser to the standard Linux UID/GID before runtime remapping.'
 );
 expect(
-	dockerfile.includes('USER pwuser') && dockerfile.includes('WORKDIR /workspaces/portfolio-v1'),
+	dockerfile.includes('USER pwuser') && dockerfile.includes('WORKDIR /workspaces/portfolio'),
 	'the development image must finish as pwuser in the canonical workspace.'
 );
 expect(

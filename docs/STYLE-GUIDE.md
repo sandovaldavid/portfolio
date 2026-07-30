@@ -1,6 +1,6 @@
 # Portfolio visual and token guide
 
-This document defines the maintained visual contract implemented by `portfolio-v1`. The portfolio is a Portfolio Retro channel of David Sandoval's personal Identity System; it is not a separate brand.
+This document defines the maintained visual contract implemented by `portfolio`. The portfolio is a Portfolio Retro channel of David Sandoval's personal Identity System; it is not a separate brand.
 
 ## Token ownership
 

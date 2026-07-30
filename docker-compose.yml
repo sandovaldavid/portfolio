@@ -3,7 +3,7 @@ services:
         build:
             context: .
             dockerfile: Dockerfile.test
-        image: portfolio-v1-test:latest
+        image: portfolio-test:latest
         init: true
         ipc: host
         user: '${HOST_UID:-1000}:${HOST_GID:-1000}'
