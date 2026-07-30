@@ -17,5 +17,23 @@
 	"role": "ROLE",
 	"catalogTitle": "Projects Catalog - David Sandoval",
 	"catalogDescription": "Explore all projects built by David Sandoval: scalable web and mobile applications.",
-	"catalogHeading": "Projects Catalog"
+	"catalogHeading": "Projects Catalog",
+	"lifecycle": {
+		"active": "Active",
+		"maintained": "Maintained",
+		"experimental": "Experimental",
+		"archived": "Archived",
+		"deprecated": "Deprecated"
+	},
+	"sourceAccess": {
+		"public": "Public source",
+		"private": "Private source"
+	},
+	"demoAccess": {
+		"live": "Live demo",
+		"preview": "Preview",
+		"video": "Video demo",
+		"screenshots": "Screenshots",
+		"unavailable": "No public demo"
+	}
 }

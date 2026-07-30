@@ -17,6 +17,19 @@
 		],
 		"timeline": "Estable 2.3.0 · desarrollo activo",
 		"role": "Ingeniero backend y mantenedor",
+		"status": {
+			"lifecycleLabel": "CICLO DE VIDA",
+			"lifecycle": "Activo — release estable más desarrollo activo",
+			"sourceLabel": "ACCESO AL CÓDIGO",
+			"source": "Repositorio público; código fuente, releases y tests son directamente inspeccionables.",
+			"demoLabel": "ACCESO A DEMO",
+			"demo": "Sin demo en vivo alojada; una demo reproducible de traspaso multi-agente está documentada en el repositorio.",
+			"limitationsLabel": "LIMITACIONES",
+			"limitations": [
+				"La arquitectura, el contrato de tools y la evidencia de demo no publicados viven en la rama de desarrollo activo, no en la release 2.3.0.",
+				"No se afirma adopción externa ni escala de producción para este proyecto."
+			]
+		},
 		"evidence": {
 			"statusLabel": "ESTADO ACTUAL",
 			"status": "Release 2.3.0 estable — desarrollo activo sobre un contrato más reducido",

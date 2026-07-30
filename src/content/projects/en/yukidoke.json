@@ -17,6 +17,19 @@
 		],
 		"timeline": "Active V1 beta",
 		"role": "Product and full-stack engineer",
+		"status": {
+			"lifecycleLabel": "LIFECYCLE",
+			"lifecycle": "Active — V1 beta in progress",
+			"sourceLabel": "SOURCE ACCESS",
+			"source": "Private repositories; source is not publicly inspectable.",
+			"demoLabel": "DEMO ACCESS",
+			"demo": "No public demo; production readiness for real household data is not claimed.",
+			"limitationsLabel": "LIMITATIONS",
+			"limitations": [
+				"Both source repositories are private, so public reviewers cannot inspect commits, tests or ADRs directly.",
+				"No adoption, revenue or production-scale claim is made for this project."
+			]
+		},
 		"evidence": {
 			"statusLabel": "CURRENT STATUS",
 			"status": "V1 beta — active architecture migration",

@@ -1,7 +1,12 @@
 import type { ImageMetadata } from 'astro';
 import type { CollectionEntry } from 'astro:content';
 import type { Technology } from '@shared/config/technology';
-import type { ProjectId } from './metadata';
+import type {
+	ProjectDemoAccess,
+	ProjectId,
+	ProjectLifecycle,
+	ProjectSourceAccess,
+} from './metadata';
 
 export type ProjectContentEntry = CollectionEntry<'projects'>;
 export type ProjectContentData = ProjectContentEntry['data'];
@@ -62,6 +67,21 @@ export interface CaseStudyEvidence {
 }
 
 /**
+ * Recruiter-facing lifecycle, access and limitation summary required for every project.
+ * Proportional evidence contract: unlike `CaseStudyEvidence`, this is mandatory and concise.
+ */
+export interface CaseStudyStatus {
+	lifecycleLabel: string;
+	lifecycle: string;
+	sourceLabel: string;
+	source: string;
+	demoLabel: string;
+	demo: string;
+	limitationsLabel: string;
+	limitations: string[];
+}
+
+/**
  * Localized case-study content for a portfolio project.
  */
 export interface CaseStudy {
@@ -72,6 +92,7 @@ export interface CaseStudy {
 	learnings: string[];
 	timeline: string;
 	role: string;
+	status: CaseStudyStatus;
 	evidence?: CaseStudyEvidence;
 }
 
@@ -90,6 +111,9 @@ export interface ProjectItem {
 	image: ImageMetadata;
 	tags: Technology[];
 	featured: boolean;
+	lifecycle: ProjectLifecycle;
+	sourceAccess: ProjectSourceAccess;
+	demoAccess: ProjectDemoAccess;
 	caseStudy: CaseStudy;
 }
 

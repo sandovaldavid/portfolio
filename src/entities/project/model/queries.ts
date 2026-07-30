@@ -66,6 +66,9 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 		image: metadata.image,
 		tags: metadata.technologyIds.map(id => PROJECT_TECHNOLOGIES[id]),
 		featured: metadata.featured,
+		lifecycle: metadata.lifecycle,
+		sourceAccess: metadata.sourceAccess,
+		demoAccess: metadata.demoAccess,
 		caseStudy: {
 			problem: caseStudy.problem,
 			approach: caseStudy.approach,
@@ -74,6 +77,10 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 			learnings: [...caseStudy.learnings],
 			timeline: caseStudy.timeline,
 			role: caseStudy.role,
+			status: {
+				...caseStudy.status,
+				limitations: [...caseStudy.status.limitations],
+			},
 			...(evidence ? { evidence } : {}),
 		},
 		...link,

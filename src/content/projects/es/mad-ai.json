@@ -16,6 +16,19 @@
 			"Configuración de Angular Universal SSR para dashboards administrativos dinámicos"
 		],
 		"timeline": "En curso",
-		"role": "Desarrollador Full-Stack"
+		"role": "Desarrollador Full-Stack",
+		"status": {
+			"lifecycleLabel": "CICLO DE VIDA",
+			"lifecycle": "Mantenido — estable, sin desarrollo activo",
+			"sourceLabel": "ACCESO AL CÓDIGO",
+			"source": "Repositorio público; el código fuente es directamente inspeccionable.",
+			"demoLabel": "ACCESO A DEMO",
+			"demo": "Actualmente no hay demo pública ni vista previa alojada enlazada para este proyecto.",
+			"limitationsLabel": "LIMITACIONES",
+			"limitations": [
+				"\"Lista para producción\" describe la documentación propia del repositorio y no se ha verificado de forma independiente contra un despliegue en vivo.",
+				"No se afirma adopción, uso por clientes ni uso en producción para este proyecto."
+			]
+		}
 	}
 }

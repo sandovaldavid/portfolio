@@ -100,6 +100,17 @@ const research = defineCollection({
 	}),
 });
 
+const projectStatus = z.object({
+	lifecycleLabel: nonEmptyString,
+	lifecycle: nonEmptyString,
+	sourceLabel: nonEmptyString,
+	source: nonEmptyString,
+	demoLabel: nonEmptyString,
+	demo: nonEmptyString,
+	limitationsLabel: nonEmptyString,
+	limitations: z.array(nonEmptyString).min(1),
+});
+
 const projectEvidence = z.object({
 	statusLabel: nonEmptyString,
 	status: nonEmptyString,
@@ -155,6 +166,7 @@ const projects = defineCollection({
 			learnings: z.array(nonEmptyString).min(1),
 			timeline: nonEmptyString,
 			role: nonEmptyString,
+			status: projectStatus,
 			evidence: projectEvidence.optional(),
 		}),
 	}),

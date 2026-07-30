@@ -29,12 +29,22 @@ export const PROJECT_TECHNOLOGIES = {
 
 export type ProjectTechnologyId = keyof typeof PROJECT_TECHNOLOGIES;
 
+/** Recruiter-facing lifecycle classification, verified against repository activity. */
+export type ProjectLifecycle = 'active' | 'maintained' | 'experimental' | 'archived' | 'deprecated';
+/** Whether the project's source is publicly inspectable. */
+export type ProjectSourceAccess = 'public' | 'private';
+/** What kind of demo evidence, if any, is publicly reachable. */
+export type ProjectDemoAccess = 'live' | 'preview' | 'video' | 'screenshots' | 'unavailable';
+
 interface ProjectMetadata {
 	slug: string;
 	image: ImageMetadata;
 	technologyIds: readonly ProjectTechnologyId[];
 	featured: boolean;
 	order: number;
+	lifecycle: ProjectLifecycle;
+	sourceAccess: ProjectSourceAccess;
+	demoAccess: ProjectDemoAccess;
 	link?: string;
 	github?: string;
 	evidenceSourceUrls?: Readonly<Record<string, string>>;
@@ -47,6 +57,9 @@ const projectMetadata = {
 		technologyIds: ['angular', 'typescript', 'rxjs', 'csharp', 'postgresql'],
 		featured: true,
 		order: 50,
+		lifecycle: 'active',
+		sourceAccess: 'private',
+		demoAccess: 'unavailable',
 		evidenceSourceUrls: {
 			'yukidoke-web': 'https://github.com/sandovaldavid/yukidoke-web',
 			'yukidoke-api': 'https://github.com/sandovaldavid/yukidoke-api',
@@ -59,18 +72,23 @@ const projectMetadata = {
 		technologyIds: ['csharp', 'markdown'],
 		featured: true,
 		order: 45,
+		lifecycle: 'active',
+		sourceAccess: 'public',
+		demoAccess: 'unavailable',
 		evidenceSourceUrls: {
 			kioku: 'https://github.com/sandovaldavid/kioku',
 		},
 	},
 	'campus-map': {
 		slug: 'campus-map',
-		link: 'https://mapa-unp.sandovaldavid.com',
 		github: 'https://github.com/sandovaldavid/unp-campus-map',
 		image: campusMapImg,
 		technologyIds: ['tailwind', 'cloudinary', 'nextjs', 'javascript', 'mysql'],
 		featured: true,
 		order: 40,
+		lifecycle: 'maintained',
+		sourceAccess: 'public',
+		demoAccess: 'unavailable',
 	},
 	'mad-ai': {
 		slug: 'mad-ai',
@@ -87,6 +105,9 @@ const projectMetadata = {
 		],
 		featured: true,
 		order: 30,
+		lifecycle: 'maintained',
+		sourceAccess: 'public',
+		demoAccess: 'unavailable',
 	},
 	fluentreads: {
 		slug: 'fluentreads',
@@ -96,15 +117,20 @@ const projectMetadata = {
 		technologyIds: ['astro', 'react', 'tailwind', 'typescript'],
 		featured: false,
 		order: 20,
+		lifecycle: 'maintained',
+		sourceAccess: 'public',
+		demoAccess: 'live',
 	},
 	auctions: {
 		slug: 'auctions',
-		link: 'https://auctions.sandovaldavid.com',
 		github: 'https://github.com/sandovaldavid/auctions',
 		image: auctionsImg,
 		technologyIds: ['django', 'python', 'bootstrap', 'javascript', 'postgresql'],
 		featured: false,
 		order: 10,
+		lifecycle: 'maintained',
+		sourceAccess: 'public',
+		demoAccess: 'unavailable',
 	},
 } as const satisfies Record<string, ProjectMetadata>;
 

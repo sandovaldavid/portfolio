@@ -16,6 +16,19 @@
 			"Angular Universal SSR configuration for dynamic admin dashboards"
 		],
 		"timeline": "Ongoing",
-		"role": "Full-Stack Developer"
+		"role": "Full-Stack Developer",
+		"status": {
+			"lifecycleLabel": "LIFECYCLE",
+			"lifecycle": "Maintained — stable, not under active development",
+			"sourceLabel": "SOURCE ACCESS",
+			"source": "Public repository; source is directly inspectable.",
+			"demoLabel": "DEMO ACCESS",
+			"demo": "No public demo or hosted preview is currently linked for this project.",
+			"limitationsLabel": "LIMITATIONS",
+			"limitations": [
+				"\"Production-ready\" describes the repository's own documentation and has not been independently verified against a live deployment.",
+				"No adoption, client or production-usage claim is made for this project."
+			]
+		}
 	}
 }

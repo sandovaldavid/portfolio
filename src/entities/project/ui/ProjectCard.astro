@@ -2,8 +2,8 @@
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkIcon from '@assets/icons/Link.astro';
 import BookIcon from '@assets/icons/BookOpen.astro';
-import { LinkButton, TechPill } from '@shared/ui';
-import type { ProjectItem } from '../model';
+import { Badge, LinkButton, TechPill } from '@shared/ui';
+import type { ProjectItem, ProjectLifecycle, ProjectSourceAccess } from '../model';
 import { Image } from 'astro:assets';
 
 interface Props {
@@ -11,6 +11,8 @@ interface Props {
 	codeButtonText: string;
 	previewButtonText: string;
 	cardTypeText: string;
+	lifecycleText: string;
+	sourceAccessText: string;
 	caseStudyText?: string;
 	caseStudyLink?: string;
 	variant?: 'primary' | 'secondary';
@@ -24,6 +26,8 @@ const {
 	codeButtonText,
 	previewButtonText,
 	cardTypeText,
+	lifecycleText,
+	sourceAccessText,
 	caseStudyText,
 	caseStudyLink,
 	variant = 'secondary',
@@ -31,8 +35,34 @@ const {
 	headingLevel = 'h3',
 } = Astro.props;
 const Heading = headingLevel;
-const { image, imageAlt, title, description, tags, link, github, category } = project;
+const {
+	image,
+	imageAlt,
+	title,
+	description,
+	tags,
+	link,
+	github,
+	category,
+	lifecycle,
+	sourceAccess,
+} = project;
 const isPrimary = variant === 'primary';
+
+const LIFECYCLE_BADGE_VARIANT: Record<
+	ProjectLifecycle,
+	'success' | 'info' | 'warning' | 'default'
+> = {
+	active: 'success',
+	maintained: 'info',
+	experimental: 'warning',
+	archived: 'default',
+	deprecated: 'default',
+};
+const SOURCE_BADGE_VARIANT: Record<ProjectSourceAccess, 'success' | 'default'> = {
+	public: 'success',
+	private: 'default',
+};
 ---
 
 <article class="font-mono group h-full" style={`animation: var(--animate-fade-in);`}>
@@ -84,6 +114,21 @@ const isPrimary = variant === 'primary';
 					</p>
 				)
 			}
+			<ul
+				class="flex flex-row flex-wrap gap-2"
+				aria-label={`${lifecycleText}, ${sourceAccessText}`}
+			>
+				<li>
+					<Badge variant={LIFECYCLE_BADGE_VARIANT[lifecycle]} size="sm">
+						{lifecycleText}
+					</Badge>
+				</li>
+				<li>
+					<Badge variant={SOURCE_BADGE_VARIANT[sourceAccess]} size="sm">
+						{sourceAccessText}
+					</Badge>
+				</li>
+			</ul>
 			<Heading
 				class={isPrimary
 					? 'text-content-strong text-3xl font-bold font-pixel-clean tracking-wide'
