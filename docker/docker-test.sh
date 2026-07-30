@@ -2,7 +2,8 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+cd "$REPO_ROOT"
 
 export CI="${CI:-true}"
 export RUN_VISUAL_TESTS="${RUN_VISUAL_TESTS:-}"
@@ -18,11 +19,11 @@ if [[ "${DEVCONTAINER:-}" == "true" ]]; then
 		exit 1
 	fi
 else
-	export HOST_WORKSPACE_FOLDER="$SCRIPT_DIR"
+	export HOST_WORKSPACE_FOLDER="$REPO_ROOT"
 fi
 
-if [[ ! -f "$SCRIPT_DIR/package.json" ]]; then
-	echo "Repository package.json is missing: $SCRIPT_DIR/package.json" >&2
+if [[ ! -f "$REPO_ROOT/package.json" ]]; then
+	echo "Repository package.json is missing: $REPO_ROOT/package.json" >&2
 	exit 1
 fi
 

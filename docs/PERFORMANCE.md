@@ -11,7 +11,7 @@ The gate covers equivalent English and Spanish recruiter journeys:
 - `/projects` and `/es/projects` — project evidence;
 - `/blog` and `/es/blog` — long-form engineering content.
 
-Lighthouse additionally audits representative article detail pages through `.lighthouserc.json`.
+Lighthouse additionally audits representative article detail pages through `config/lighthouse/lighthouserc.json`.
 
 ## Measured metrics
 
@@ -24,7 +24,7 @@ Lighthouse additionally audits representative article detail pages through `.lig
 - **Font preload count:** explicit `font` preloads in route HTML.
 - **Critical request count:** the HTML document plus unique scripts, stylesheets, font preloads and images.
 
-The thresholds live in `performance-budgets.json`. Reports are written to `performance-report/route-budgets.json` and `performance-report/route-budgets.md` and uploaded by CI.
+The thresholds live in `config/performance-budgets.json`. Reports are written to `performance-report/route-budgets.json` and `performance-report/route-budgets.md` and uploaded by CI.
 
 These are build-artifact measurements, not field telemetry. Gzip estimates are reproducible across CI runs but do not claim exact CDN transfer bytes. Lighthouse remains the browser-level performance gate.
 

@@ -129,7 +129,7 @@ The pull-request description must state:
 
 `.github/actions/setup-bun/action.yml` owns the pinned Bun setup, dependency cache and frozen installation used by workflows.
 
-Only dependency and `.astro` caches are used. `dist/` is rebuilt and transferred as a short-lived artifact; it is not an incremental cache. The visual Docker route separately pins Playwright and Bun in `Dockerfile.test`.
+Only dependency and `.astro` caches are used. `dist/` is rebuilt and transferred as a short-lived artifact; it is not an incremental cache. The visual Docker route separately pins Playwright and Bun in `docker/Dockerfile.test`.
 
 ## Failure artifacts
 

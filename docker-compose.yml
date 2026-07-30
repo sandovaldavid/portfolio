@@ -2,7 +2,7 @@ services:
     playwright:
         build:
             context: .
-            dockerfile: Dockerfile.test
+            dockerfile: docker/Dockerfile.test
         image: portfolio-test:latest
         init: true
         ipc: host
