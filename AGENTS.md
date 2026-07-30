@@ -21,6 +21,18 @@
 
 Executable code and configuration override prose when they disagree. Do not copy versions, thresholds, command definitions or architecture rules into a second active document.
 
+### Repository identity and historical naming
+
+The canonical technical identifiers are:
+
+- GitHub repository: `sandovaldavid/portfolio`;
+- private package: `portfolio`;
+- Cortex-L7 project and workspace: `portfolio` and `20-execution/portfolio/`.
+
+`portfolio-v1` is a **Historical** identifier preserved only where dated provenance, redirects, aliases, issues, pull requests, releases or Git history require it. Do not reintroduce it into current commands, paths, configuration or active documentation, and do not silently rewrite historical records that need the former name to remain understandable.
+
+Before changing branch or delivery documentation, compare `develop` and `main` by ancestry and changed files. A promotion merge, hotfix or Release Please commit can make `main` numerically ahead while still containing the integrated `develop` tree. Reconcile `main` back into `develop` only when a main-only operational or source change must become part of future integration work; commit counts alone are not evidence of drift.
+
 ## 2. Status discipline
 
 Classify repository statements using the vocabulary in [docs/STATUS.md](docs/STATUS.md):
