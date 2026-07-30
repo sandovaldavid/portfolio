@@ -33,7 +33,7 @@ test.describe('Recruiter-first homepage hierarchy', () => {
 				.locator('header a[data-section-id]:not(#mobile-menu a)')
 				.evaluateAll(links => links.map(link => (link as HTMLElement).dataset.sectionId));
 
-			expect(navLabels).toEqual(['experience', 'projects', 'research', 'blog', 'about-me']);
+			expect(navLabels).toEqual(['experience', 'projects', 'research', 'about-me', 'blog']);
 			await expect(page.locator('header a[data-section-id="technologies"]')).toHaveCount(0);
 		});
 	}
