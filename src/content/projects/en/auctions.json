@@ -16,6 +16,19 @@
 			"Server-rendered form handling patterns for CRUD-heavy applications"
 		],
 		"timeline": "1 month",
-		"role": "Solo Developer"
+		"role": "Solo Developer",
+		"status": {
+			"lifecycleLabel": "LIFECYCLE",
+			"lifecycle": "Maintained — stable, not under active development",
+			"sourceLabel": "SOURCE ACCESS",
+			"source": "Public repository; source is directly inspectable.",
+			"demoLabel": "DEMO ACCESS",
+			"demo": "No public demo; the previously hosted preview domain no longer resolves.",
+			"limitationsLabel": "LIMITATIONS",
+			"limitations": [
+				"The live preview link is no longer available; only the source repository can currently be verified.",
+				"This was a solo educational project; no production-usage or adoption claim is made."
+			]
+		}
 	}
 }

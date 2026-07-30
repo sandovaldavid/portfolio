@@ -118,6 +118,50 @@ const evidenceDecisionSections = evidence
 		{
 			caseStudy && (
 				<div class="space-y-12">
+					<section
+						class="border-2 border-black bg-surface p-6 shadow-retro-md dark:border-white"
+						aria-label={`${caseStudy.status.lifecycleLabel}, ${caseStudy.status.sourceLabel}, ${caseStudy.status.demoLabel}`}
+					>
+						<dl class="grid gap-4 sm:grid-cols-3">
+							<div>
+								<dt class="font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+									{caseStudy.status.lifecycleLabel}
+								</dt>
+								<dd class="mt-1 text-sm font-bold text-content-strong">
+									{caseStudy.status.lifecycle}
+								</dd>
+							</div>
+							<div>
+								<dt class="font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+									{caseStudy.status.sourceLabel}
+								</dt>
+								<dd class="mt-1 text-sm font-bold text-content-strong">
+									{caseStudy.status.source}
+								</dd>
+							</div>
+							<div>
+								<dt class="font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+									{caseStudy.status.demoLabel}
+								</dt>
+								<dd class="mt-1 text-sm font-bold text-content-strong">
+									{caseStudy.status.demo}
+								</dd>
+							</div>
+						</dl>
+						<div class="mt-5 border-t border-neutral-300 pt-4 dark:border-neutral-700">
+							<div class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-error-500">
+								{caseStudy.status.limitationsLabel}
+							</div>
+							<ul class="space-y-2">
+								{caseStudy.status.limitations.map(item => (
+									<li class="text-sm leading-relaxed text-content-muted">
+										{item}
+									</li>
+								))}
+							</ul>
+						</div>
+					</section>
+
 					{evidence && (
 						<section
 							class="border-2 border-black bg-surface p-6 shadow-retro-md dark:border-white"

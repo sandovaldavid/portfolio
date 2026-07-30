@@ -37,6 +37,19 @@ async function expectColorRole(
 }
 
 async function expectNoBlockingAxeViolations(page: Page) {
+	// Freeze entrance animations/transitions (e.g. project card fade-in) so axe measures
+	// final rendered colors instead of a transient, partially-transparent mid-animation frame.
+	await page.addStyleTag({
+		content: `
+			*, *::before, *::after {
+				animation-delay: -1ms !important;
+				animation-duration: 0s !important;
+				animation-iteration-count: 1 !important;
+				transition-duration: 0s !important;
+				transition-delay: 0s !important;
+			}
+		`,
+	});
 	const results = await new AxeBuilder({ page }).withTags([...WCAG_TAGS]).analyze();
 	const blockingViolations = results.violations.filter(
 		violation => violation.impact === 'critical' || violation.impact === 'serious'

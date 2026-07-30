@@ -16,6 +16,19 @@
 			"Patrones de manejo de formularios renderizados del servidor para aplicaciones CRUD"
 		],
 		"timeline": "1 mes",
-		"role": "Desarrollador independiente"
+		"role": "Desarrollador independiente",
+		"status": {
+			"lifecycleLabel": "CICLO DE VIDA",
+			"lifecycle": "Mantenido — estable, sin desarrollo activo",
+			"sourceLabel": "ACCESO AL CÓDIGO",
+			"source": "Repositorio público; el código fuente es directamente inspeccionable.",
+			"demoLabel": "ACCESO A DEMO",
+			"demo": "Sin demo pública; el dominio de vista previa que se alojaba anteriormente ya no resuelve.",
+			"limitationsLabel": "LIMITACIONES",
+			"limitations": [
+				"El enlace de vista previa en vivo ya no está disponible; actualmente solo puede verificarse el repositorio de código.",
+				"Este fue un proyecto educativo individual; no se afirma uso en producción ni adopción."
+			]
+		}
 	}
 }

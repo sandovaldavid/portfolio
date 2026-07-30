@@ -10,11 +10,15 @@ export type {
 	CaseStudyArchitecture,
 	CaseStudyEvidence,
 	CaseStudySource,
+	CaseStudyStatus,
 	ProjectContentData,
 	ProjectContentEntry,
+	ProjectDemoAccess,
 	ProjectId,
 	ProjectItem,
+	ProjectLifecycle,
 	ProjectList,
+	ProjectSourceAccess,
 	ProjectTechnologyId,
 } from './model';
 export { ProjectCard } from './ui';

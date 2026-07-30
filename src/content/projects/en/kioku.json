@@ -17,6 +17,19 @@
 		],
 		"timeline": "Stable 2.3.0 · active development",
 		"role": "Backend engineer and maintainer",
+		"status": {
+			"lifecycleLabel": "LIFECYCLE",
+			"lifecycle": "Active — stable release plus active development",
+			"sourceLabel": "SOURCE ACCESS",
+			"source": "Public repository; source, releases and tests are directly inspectable.",
+			"demoLabel": "DEMO ACCESS",
+			"demo": "No hosted live demo; a reproducible multi-agent handoff demo is documented in the repository.",
+			"limitationsLabel": "LIMITATIONS",
+			"limitations": [
+				"Unreleased architecture, tool contract and demo evidence live on the active development branch, not release 2.3.0.",
+				"No external adoption or production-scale claim is made for this project."
+			]
+		},
 		"evidence": {
 			"statusLabel": "CURRENT STATUS",
 			"status": "Release 2.3.0 stable — active development on a narrower contract",

@@ -16,6 +16,19 @@
 			"SEO optimization strategies for e-commerce product pages"
 		],
 		"timeline": "2 months",
-		"role": "Solo Developer"
+		"role": "Solo Developer",
+		"status": {
+			"lifecycleLabel": "LIFECYCLE",
+			"lifecycle": "Maintained — stable, not under active development",
+			"sourceLabel": "SOURCE ACCESS",
+			"source": "Public repository; source is directly inspectable.",
+			"demoLabel": "DEMO ACCESS",
+			"demo": "Live demo available at the hosted preview deployment.",
+			"limitationsLabel": "LIMITATIONS",
+			"limitations": [
+				"Reported Lighthouse scores are point-in-time measurements from development, not a continuously monitored budget.",
+				"No adoption, sales or production-usage claim is made for this project."
+			]
+		}
 	}
 }

@@ -17,6 +17,19 @@
 		],
 		"timeline": "Beta V1 activa",
 		"role": "Ingeniero de producto y full-stack",
+		"status": {
+			"lifecycleLabel": "CICLO DE VIDA",
+			"lifecycle": "Activo — beta V1 en progreso",
+			"sourceLabel": "ACCESO AL CÓDIGO",
+			"source": "Repositorios privados; el código fuente no es públicamente inspeccionable.",
+			"demoLabel": "ACCESO A DEMO",
+			"demo": "Sin demo pública; no se afirma preparación para producción con datos reales de hogares.",
+			"limitationsLabel": "LIMITACIONES",
+			"limitations": [
+				"Ambos repositorios de código son privados, por lo que revisores públicos no pueden inspeccionar commits, tests o ADRs directamente.",
+				"No se afirma adopción, ingresos ni escala de producción para este proyecto."
+			]
+		},
 		"evidence": {
 			"statusLabel": "ESTADO ACTUAL",
 			"status": "Beta V1 — migración arquitectónica activa",
