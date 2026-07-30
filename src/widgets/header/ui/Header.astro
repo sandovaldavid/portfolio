@@ -26,6 +26,11 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const homeUrl = getRelativeLocaleUrl(lang, '');
 const homeSectionUrl = (section: string) => `${homeUrl}#${section}`;
 
+// Recruiter-first order: current experience, then the strongest engineering
+// evidence (projects), with research as a secondary specialization. The Stack
+// section remains on the homepage but is intentionally not a top-level nav
+// destination — technology lists support project evidence rather than
+// competing with it in the primary navigation hierarchy.
 const navItems = [
 	{
 		title: tNavigation('experience'),
@@ -34,17 +39,17 @@ const navItems = [
 		url: homeSectionUrl('experience'),
 	},
 	{
-		title: tNavigation('research'),
-		label: 'research',
-		icon: 'research',
-		url: homeSectionUrl('research'),
-	},
-	{
 		title: tNavigation('projects'),
 		label: 'projects',
 		icon: 'projects',
 		prefetch: true,
 		url: homeSectionUrl('projects'),
+	},
+	{
+		title: tNavigation('research'),
+		label: 'research',
+		icon: 'research',
+		url: homeSectionUrl('research'),
 	},
 	{
 		title: tNavigation('blog'),
@@ -59,12 +64,6 @@ const navItems = [
 		icon: 'about-me',
 		prefetch: true,
 		url: homeSectionUrl('about-me'),
-	},
-	{
-		title: tNavigation('stack'),
-		label: 'technologies',
-		icon: 'technologies',
-		url: homeSectionUrl('technologies'),
 	},
 ];
 ---
