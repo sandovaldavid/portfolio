@@ -4,11 +4,15 @@ test.describe('Recruiter evidence, access and status contract', () => {
 	test('homepage featured cards expose lifecycle and source-access badges', async ({ page }) => {
 		await page.goto('/');
 
-		const yukidokeCard = page.locator('article', { has: page.getByRole('heading', { name: 'Yukidoke' }) });
+		const yukidokeCard = page.locator('article', {
+			has: page.getByRole('heading', { name: 'Yukidoke' }),
+		});
 		await expect(yukidokeCard.getByText('Active', { exact: true })).toBeVisible();
 		await expect(yukidokeCard.getByText('Private source', { exact: true })).toBeVisible();
 
-		const kiokuCard = page.locator('article', { has: page.getByRole('heading', { name: 'Kioku' }) });
+		const kiokuCard = page.locator('article', {
+			has: page.getByRole('heading', { name: 'Kioku' }),
+		});
 		await expect(kiokuCard.getByText('Active', { exact: true })).toBeVisible();
 		await expect(kiokuCard.getByText('Public source', { exact: true })).toBeVisible();
 	});
@@ -41,7 +45,9 @@ test.describe('Recruiter evidence, access and status contract', () => {
 	test('/projects/fluentreads keeps its verified live demo link', async ({ page }) => {
 		await page.goto('/projects/fluentreads');
 
-		await expect(page.getByText('Live demo available at the hosted preview deployment.')).toBeVisible();
+		await expect(
+			page.getByText('Live demo available at the hosted preview deployment.')
+		).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Preview' })).toHaveAttribute(
 			'href',
 			'https://fluentreads.vercel.app'
