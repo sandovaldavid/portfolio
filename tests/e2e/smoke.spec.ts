@@ -11,6 +11,8 @@ const CRITICAL_ROUTES = [
 	'/es/projects',
 	'/projects/yukidoke',
 	'/es/projects/yukidoke',
+	'/projects/kioku',
+	'/es/projects/kioku',
 ] as const;
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;
 
