@@ -41,7 +41,7 @@ Project definitions and retained diagnostics are configured in `playwright.confi
 ## Performance
 
 - **Route budgets** measure emitted assets referenced by representative English and Spanish routes. See [PERFORMANCE.md](PERFORMANCE.md).
-- **Lighthouse CI** provides browser-level performance, accessibility, best-practices and SEO audits. Thresholds are owned by `.lighthouserc.json`.
+- **Lighthouse CI** provides browser-level performance, accessibility, best-practices and SEO audits. Thresholds are owned by `config/lighthouse/lighthouserc.json`.
 - **Rollup visualizer** is an opt-in composition audit, not a blocking size metric.
 
 ```bash

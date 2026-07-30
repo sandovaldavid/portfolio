@@ -229,7 +229,7 @@ bun run check
 bun run test:unit:ci
 bun run build
 bun run test:e2e:smoke
-VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker-test.sh
+VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker/docker-test.sh
 git status --short
 ```
 

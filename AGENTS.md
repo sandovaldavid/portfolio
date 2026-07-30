@@ -4,20 +4,20 @@
 
 ## 1. Sources of truth
 
-| Concern                            | Canonical source                                                             |
-| ---------------------------------- | ---------------------------------------------------------------------------- |
-| Product and repository overview    | [README.md](README.md)                                                       |
-| Current implementation status      | [docs/STATUS.md](docs/STATUS.md)                                             |
-| Architecture boundaries            | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and `bun run lint:architecture` |
-| Localization and bilingual content | [docs/I18N.md](docs/I18N.md)                                                 |
-| Tool and dependency versions       | [package.json](package.json) and `bun.lock`                                  |
-| Testing                            | [docs/TESTING.md](docs/TESTING.md)                                           |
-| CI behavior                        | [docs/CI.md](docs/CI.md) and `.github/workflows/`                            |
-| Branches, releases and deployment  | [docs/DELIVERY.md](docs/DELIVERY.md)                                         |
-| Canonical resume artifact delivery | [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md)                           |
-| Performance budgets                | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and `performance-budgets.json`    |
-| Documentation ownership            | [docs/README.md](docs/README.md)                                             |
-| Contribution flow                  | [CONTRIBUTING.md](CONTRIBUTING.md)                                           |
+| Concern                            | Canonical source                                                                 |
+| ---------------------------------- | -------------------------------------------------------------------------------- |
+| Product and repository overview    | [README.md](README.md)                                                           |
+| Current implementation status      | [docs/STATUS.md](docs/STATUS.md)                                                 |
+| Architecture boundaries            | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and `bun run lint:architecture`     |
+| Localization and bilingual content | [docs/I18N.md](docs/I18N.md)                                                     |
+| Tool and dependency versions       | [package.json](package.json) and `bun.lock`                                      |
+| Testing                            | [docs/TESTING.md](docs/TESTING.md)                                               |
+| CI behavior                        | [docs/CI.md](docs/CI.md) and `.github/workflows/`                                |
+| Branches, releases and deployment  | [docs/DELIVERY.md](docs/DELIVERY.md)                                             |
+| Canonical resume artifact delivery | [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md)                               |
+| Performance budgets                | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and `config/performance-budgets.json` |
+| Documentation ownership            | [docs/README.md](docs/README.md)                                                 |
+| Contribution flow                  | [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)                               |
 
 Executable code and configuration override prose when they disagree. Do not copy versions, thresholds, command definitions or architecture rules into a second active document.
 

@@ -9,7 +9,7 @@ English is the primary repository documentation language. Spanish is maintained 
 | [README.md](../README.md)                                                                            | Recruiter/developer overview, live resources and quick start                |
 | [README.es.md](../README.es.md)                                                                      | Spanish repository overview                                                 |
 | [AGENTS.md](../AGENTS.md)                                                                            | Shared operating rules for human and AI contributors                        |
-| [CONTRIBUTING.md](../CONTRIBUTING.md)                                                                | Contribution workflow and pull-request expectations                         |
+| [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md)                                                | Contribution workflow and pull-request expectations                         |
 | [STATUS.md](STATUS.md)                                                                               | Verified current state and status classification                            |
 | [ARCHITECTURE.md](ARCHITECTURE.md)                                                                   | Current FSD boundaries and executable architecture policy                   |
 | [DEVCONTAINER.md](DEVCONTAINER.md)                                                                   | Reproducible development environment and troubleshooting                    |

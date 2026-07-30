@@ -152,9 +152,9 @@ bun run lighthouse:collect
 bun run lighthouse:assert
 ```
 
-Thresholds are owned by `.lighthouserc.json`; do not duplicate or weaken them in prose. This is the fast, `performance`-only, single-run config used by the `Main Quality` pre-merge gate.
+Thresholds are owned by `config/lighthouse/lighthouserc.json`; do not duplicate or weaken them in prose. This is the fast, `performance`-only, single-run config used by the `Main Quality` pre-merge gate.
 
-For the full four-category (`performance`, `accessibility`, `best-practices`, `seo`), three-run audit used only by the weekly `Scheduled Extended Quality` workflow, use the `:extended` scripts and `.lighthouserc.extended.json` instead:
+For the full four-category (`performance`, `accessibility`, `best-practices`, `seo`), three-run audit used only by the weekly `Scheduled Extended Quality` workflow, use the `:extended` scripts and `config/lighthouse/lighthouserc.extended.json` instead:
 
 ```bash
 bun run build
@@ -171,7 +171,7 @@ bun run build
 bun run performance:check
 ```
 
-Configuration lives in `performance-budgets.json`; methodology lives in [PERFORMANCE.md](PERFORMANCE.md).
+Configuration lives in `config/performance-budgets.json`; methodology lives in [PERFORMANCE.md](PERFORMANCE.md).
 
 ## Bundle inspection
 

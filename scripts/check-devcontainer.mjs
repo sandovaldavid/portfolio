@@ -16,7 +16,7 @@ const shellBash = readFileSync('.devcontainer/config/shell.bash', 'utf8');
 const starshipConfig = readFileSync('.devcontainer/config/starship.toml', 'utf8');
 const gitConfigAtena = readFileSync('.devcontainer/config/gitconfig-atena', 'utf8');
 const dockerCompose = readFileSync('docker-compose.yml', 'utf8');
-const dockerTestScript = readFileSync('docker-test.sh', 'utf8');
+const dockerTestScript = readFileSync('docker/docker-test.sh', 'utf8');
 const runPlaywrightScript = readFileSync('scripts/run-playwright.mjs', 'utf8');
 const prettierIgnore = readFileSync('.prettierignore', 'utf8');
 const eslintConfig = readFileSync('eslint.config.js', 'utf8');
@@ -417,7 +417,7 @@ expect(
 	'the devcontainer workflow must prove the direct Playwright runner repairs stale output.'
 );
 expect(
-	devcontainerWorkflow.includes('VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker-test.sh'),
+	devcontainerWorkflow.includes('VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker/docker-test.sh'),
 	'the devcontainer workflow must prove Docker can mount the real host workspace.'
 );
 expect(
