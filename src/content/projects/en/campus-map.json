@@ -16,6 +16,19 @@
 			"Cloudinary image transformations for responsive map markers"
 		],
 		"timeline": "3 months",
-		"role": "Solo Developer"
+		"role": "Solo Developer",
+		"status": {
+			"lifecycleLabel": "LIFECYCLE",
+			"lifecycle": "Maintained — stable, not under active development",
+			"sourceLabel": "SOURCE ACCESS",
+			"source": "Public repository; source is directly inspectable.",
+			"demoLabel": "DEMO ACCESS",
+			"demo": "No public demo; the previously hosted preview domain no longer resolves.",
+			"limitationsLabel": "LIMITATIONS",
+			"limitations": [
+				"The live preview link is no longer available; only the source repository can currently be verified.",
+				"Outcomes described here are qualitative and not backed by usage or adoption metrics."
+			]
+		}
 	}
 }

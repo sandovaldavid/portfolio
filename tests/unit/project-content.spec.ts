@@ -32,6 +32,17 @@ interface ProjectEvidenceDocument {
 	sources: EvidenceSourceDocument[];
 }
 
+interface ProjectStatusDocument {
+	lifecycleLabel: string;
+	lifecycle: string;
+	sourceLabel: string;
+	source: string;
+	demoLabel: string;
+	demo: string;
+	limitationsLabel: string;
+	limitations: string[];
+}
+
 interface ProjectDocument {
 	projectId: string;
 	locale: 'en' | 'es';
@@ -47,9 +58,14 @@ interface ProjectDocument {
 		learnings: string[];
 		timeline: string;
 		role: string;
+		status: ProjectStatusDocument;
 		evidence?: ProjectEvidenceDocument;
 	};
 }
+
+const LIFECYCLES = ['active', 'maintained', 'experimental', 'archived', 'deprecated'];
+const SOURCE_ACCESS_VALUES = ['public', 'private'];
+const DEMO_ACCESS_VALUES = ['live', 'preview', 'video', 'screenshots', 'unavailable'];
 
 const locales = ['en', 'es'] as const;
 const expectedIds = [
@@ -84,6 +100,7 @@ describe('localized project and case-study content', () => {
 		expect(config).toContain("base: './src/content/projects'");
 		expect(config).toContain('projectId: stableContentId');
 		expect(config).toContain('imageAlt: nonEmptyString');
+		expect(config).toContain('status: projectStatus');
 		expect(config).toContain('evidence: projectEvidence.optional()');
 		expect(config).toContain(
 			'export const collections = { blog, devlog, portfolioProfile, experience, research, projects }'
@@ -113,6 +130,14 @@ describe('localized project and case-study content', () => {
 			expect(english?.caseStudy.learnings).toHaveLength(
 				spanish?.caseStudy.learnings.length ?? -1
 			);
+			expect(english, projectId).toHaveProperty('caseStudy.status');
+			expect(spanish, projectId).toHaveProperty('caseStudy.status');
+			expect(Object.keys(english?.caseStudy.status ?? {}).sort()).toEqual(
+				Object.keys(spanish?.caseStudy.status ?? {}).sort()
+			);
+			expect(english?.caseStudy.status.limitations).toHaveLength(
+				spanish?.caseStudy.status.limitations.length ?? -1
+			);
 			expect(Boolean(english?.caseStudy.evidence)).toBe(Boolean(spanish?.caseStudy.evidence));
 
 			if (english?.caseStudy.evidence && spanish?.caseStudy.evidence) {
@@ -139,7 +164,40 @@ describe('localized project and case-study content', () => {
 			expect(nonEmpty(entry.caseStudy.timeline)).toBe(true);
 			expect(nonEmpty(entry.caseStudy.role)).toBe(true);
 			expect(entry.caseStudy.learnings.every(nonEmpty)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.lifecycleLabel)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.lifecycle)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.sourceLabel)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.source)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.demoLabel)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.demo)).toBe(true);
+			expect(nonEmpty(entry.caseStudy.status.limitationsLabel)).toBe(true);
+			expect(entry.caseStudy.status.limitations.length).toBeGreaterThan(0);
+			expect(entry.caseStudy.status.limitations.every(nonEmpty)).toBe(true);
 		}
+	});
+
+	it('gives every project a verifiable lifecycle, access and limitations contract', () => {
+		const metadata = readSource('src/entities/project/model/metadata.ts');
+		const lifecycles = [...metadata.matchAll(/lifecycle: '([^']+)'/g)].map(match => match[1]);
+		const sourceAccesses = [...metadata.matchAll(/sourceAccess: '([^']+)'/g)].map(
+			match => match[1]
+		);
+		const demoAccesses = [...metadata.matchAll(/demoAccess: '([^']+)'/g)].map(
+			match => match[1]
+		);
+
+		expect(lifecycles).toHaveLength(expectedIds.length);
+		expect(sourceAccesses).toHaveLength(expectedIds.length);
+		expect(demoAccesses).toHaveLength(expectedIds.length);
+		expect(lifecycles.every(value => LIFECYCLES.includes(value))).toBe(true);
+		expect(sourceAccesses.every(value => SOURCE_ACCESS_VALUES.includes(value))).toBe(true);
+		expect(demoAccesses.every(value => DEMO_ACCESS_VALUES.includes(value))).toBe(true);
+
+		// Verified 2026-07-30: mapa-unp.sandovaldavid.com and auctions.sandovaldavid.com no
+		// longer resolve (NXDOMAIN), so their dead preview links were removed rather than
+		// presented as a live demo.
+		expect(metadata).not.toContain('mapa-unp.sandovaldavid.com');
+		expect(metadata).not.toContain('auctions.sandovaldavid.com');
 	});
 
 	it('keeps URLs, images, technology IDs, ordering and feature state language-neutral', () => {

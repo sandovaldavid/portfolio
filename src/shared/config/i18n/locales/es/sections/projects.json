@@ -17,5 +17,23 @@
 	"role": "ROL",
 	"catalogTitle": "Catálogo de Proyectos - David Sandoval",
 	"catalogDescription": "Explora todos los proyectos desarrollados por David Sandoval: aplicaciones web y móviles escalables.",
-	"catalogHeading": "Catálogo de Proyectos"
+	"catalogHeading": "Catálogo de Proyectos",
+	"lifecycle": {
+		"active": "Activo",
+		"maintained": "Mantenido",
+		"experimental": "Experimental",
+		"archived": "Archivado",
+		"deprecated": "Obsoleto"
+	},
+	"sourceAccess": {
+		"public": "Código público",
+		"private": "Código privado"
+	},
+	"demoAccess": {
+		"live": "Demo en vivo",
+		"preview": "Vista previa",
+		"video": "Demo en video",
+		"screenshots": "Capturas de pantalla",
+		"unavailable": "Sin demo pública"
+	}
 }
