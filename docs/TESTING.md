@@ -101,6 +101,27 @@ The Docker visual command must leave `tests/e2e/visual.spec.ts-snapshots/` uncha
 
 Playwright retains first-retry traces, failure screenshots and videos. CI uploads HTML, JSON and JUnit diagnostics even when tests fail.
 
+## Recruiter journey
+
+The recruiter-facing routes and content contracts are protected across several focused suites rather than one monolith, all run by `bun run test:e2e:smoke`:
+
+- `tests/e2e/recruiter-journey.spec.ts` — identity/role first scan, the two featured public/private projects and their lifecycle/source-access evidence (#207), the correct localized resume artifact, GitHub/LinkedIn/email against the canonical registry, and that none of it requires dismissing the retro splash, opening the CLI or opening the Recruiter HUD; keyboard-only traversal of the skip link and primary nav; rendering under `prefers-reduced-motion: reduce`. English and Spanish, desktop and mobile.
+- `tests/e2e/homepage-hierarchy.spec.ts` — the recruiter-first section order (experience → projects → research → about → technologies) and that the primary nav matches it.
+- `tests/e2e/smoke.spec.ts` — serious/critical Axe violations on the primary routes, including both featured project case studies.
+- `tests/e2e/metadata-localization.spec.ts` — canonical URL, hreflang alternates and structured data (including a project detail route) per locale.
+- `tests/e2e/kioku-case-study.spec.ts` / `tests/e2e/yukidoke-case-study.spec.ts` — each project's own bilingual evidence detail.
+
+### Manual first-scan checklist
+
+Automation cannot judge whether a human reviewer forms the right impression in the first few seconds. Before a release that changes the homepage, projects, or recruiter-facing copy, manually confirm on one desktop and one mobile viewport, in English and Spanish:
+
+1. Role and current context ("Software Engineer", current employer) are visible without scrolling.
+2. Kioku and Yukidoke are the first two projects shown, and it is clear which one has public source and which does not.
+3. The next action (resume, GitHub, LinkedIn, email) is obvious without reading the whole page.
+4. Nothing about the retro splash, CLI or Recruiter HUD demands attention before the above.
+
+Record the outcome (pass/fail and any notes) in the pull request that changed the reviewed surface, not as a repository artifact.
+
 ## Portfolio Retro before/after evidence
 
 The PR workflow builds the exact base SHA and downloads the exact head build, then runs:
