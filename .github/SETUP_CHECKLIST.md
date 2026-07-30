@@ -13,7 +13,7 @@
 
 - [x] **Vercel Project Linked**
     - Organization: `devsolution`
-    - Project: `portfolio-v1`
+    - Project: `portfolio`
     - Configuration file: `.vercel/project.json`
 
 - [x] **Code Quality Tools Configured**
