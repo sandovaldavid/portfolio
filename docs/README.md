@@ -2,6 +2,8 @@
 
 English is the primary repository documentation language. Spanish is maintained for the root project guide and user-facing content.
 
+Active documentation uses `portfolio` as the repository, package and Cortex-L7 project identifier. `portfolio-v1` is retained only in explicitly **Historical** records, aliases, redirects or dated provenance where changing the old name would obscure what occurred. A redirect from the former repository URL preserves discoverability; it does not make the former name current.
+
 ## Active operational documentation
 
 | Document                                                                                             | Owns                                                                        |

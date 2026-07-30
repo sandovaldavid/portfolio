@@ -1,6 +1,6 @@
 # Current implementation status
 
-This document classifies repository-level statements as of **2026-07-29**. It is an operational snapshot, not a roadmap. Code, configuration and executable checks remain authoritative.
+This document classifies repository-level statements as of **2026-07-30**. It is an operational snapshot, not a roadmap. Code, configuration and executable checks remain authoritative.
 
 ## Status vocabulary
 
@@ -15,30 +15,31 @@ This document classifies repository-level statements as of **2026-07-29**. It is
 | **Discarded**   | Explicitly rejected or superseded.                                                          |
 | **Unconfirmed** | Not verified against the current branch, repository settings or an authoritative result.    |
 
+A concrete active pull request may also establish **In progress** work when no separate issue exists.
+
 ## Implemented
 
-| Area                      | Verified repository evidence                                                                                                                                                                                                                                                                         |
-| ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Static site               | Astro build scripts and static route implementation.                                                                                                                                                                                                                                                 |
-| Toolchain                 | Bun is pinned through `packageManager`; dependencies and scripts are defined in `package.json` and resolved by `bun.lock`.                                                                                                                                                                           |
-| Architecture              | Pragmatic Feature-Sliced Design with executable import-boundary checks.                                                                                                                                                                                                                              |
-| Localization architecture | English-default and `/es` routing, granular typed UI catalogs, localized profile/experience/research/project/editorial content and Astro-native route helpers.                                                                                                                                       |
-| Localization enforcement  | Source catalog/content/copy checks, generated-route checks, bilingual browser coverage and unit regressions that prohibit the removed legacy runtime.                                                                                                                                                |
-| Testing                   | Vitest unit tests, Playwright browser suites, Axe accessibility gates and pinned-Docker visual comparison.                                                                                                                                                                                           |
-| Performance               | Route-level budgets, bundle reporting and Lighthouse commands.                                                                                                                                                                                                                                       |
-| Development environment   | Versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.                                                                                                                                                                                       |
-| Workflow definitions      | Pull-request CI, CodeQL and preview workflows for `develop` and `main`; post-integration quality, scheduled quality and production deployment definitions.                                                                                                                                           |
-| Branch roles              | `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.                                                                                                                                                             |
-| Resume asset delivery     | The isolated branch contains both canonical PDFs plus provenance manifest; strict source/destination validation and a successful Preview verify consumption.                                                                                                                                         |
-| Release automation        | Release Please (`config/release-please-config.json`, `config/release-please-manifest.json`, `.github/workflows/release-please.yml`) runs on `main` only, producing plain `vX.Y.Z` tags and an auto-generated `CHANGELOG.md`; baseline `v1.0.0` is commit `72d8c852a8a518922e705409f4785484e999d53e`. |
+- **Repository identity:** the canonical repository is `sandovaldavid/portfolio`, the private package name on `develop` is `portfolio`, and the Cortex-L7 project area is `portfolio`. The former `portfolio-v1` identifier is retained only as historical provenance, redirect or alias.
+- **Static site:** Astro build scripts and static route implementation.
+- **Toolchain:** Bun is pinned through `packageManager`; dependencies and scripts are defined in `package.json` and resolved by `bun.lock`.
+- **Architecture:** pragmatic Feature-Sliced Design with executable import-boundary checks.
+- **Localization architecture:** English-default and `/es` routing, granular typed UI catalogs, localized profile/experience/research/project/editorial content and Astro-native route helpers.
+- **Localization enforcement:** source catalog/content/copy checks, generated-route checks, bilingual browser coverage and unit regressions that prohibit the removed legacy runtime.
+- **Testing:** Vitest unit tests, Playwright browser suites, Axe accessibility gates and pinned-Docker visual comparison.
+- **Performance:** route-level budgets, bundle reporting and Lighthouse commands.
+- **Development environment:** versioned Dev Container with pinned Bun and Playwright, non-root user, Docker access and lifecycle validation.
+- **Workflow definitions:** pull-request CI, CodeQL and preview workflows for `develop` and `main`; pre-merge `Main Quality`, scheduled quality and production deployment definitions.
+- **Branch roles:** `develop` is the current integration base; `main` is the default and production branch; `resume-assets` supplies canonical CV artifacts.
+- **Resume asset delivery:** the isolated branch contains both canonical PDFs plus provenance manifest; strict source/destination validation and a successful Preview verify consumption.
+- **Release automation:** Release Please (`config/release-please-config.json`, `config/release-please-manifest.json`, `.github/workflows/release-please.yml`) runs on `main` only, producing plain `vX.Y.Z` tags and an auto-generated `CHANGELOG.md`; baseline `v1.0.0` is commit `72d8c852a8a518922e705409f4785484e999d53e`.
 
 The localization runtime no longer contains monolithic locale dictionaries, the flattened mixed-value translator, `useTranslations()`, `useTranslationsList()`, duplicated Atena/Skills/Components route implementations or the six-file hardcoded-copy debt baseline.
 
 ## In progress
 
-No repository work is currently classified as **In progress**. Issues #180 and #182 are closed after merged PRs #181, #183 and #184 delivered their versioned branch-policy and resume-delivery contracts.
+Release Please pull request [#194](https://github.com/sandovaldavid/portfolio/pull/194) remains open against `main` and proposes the next `2.0.0` release. Its generated version and changelog are not implemented repository state until the pull request is refreshed against current `main`, passes the required checks, merges and creates the corresponding tag and GitHub Release.
 
-Any future item belongs here only when current source is partially implemented and an open issue or pull request identifies the concrete remaining work.
+No other partially implemented source change is classified in this snapshot.
 
 ## Planned
 
@@ -50,7 +51,9 @@ No localization compatibility runtime remains. Reintroducing monolithic locale f
 
 ## Blocked
 
-No repository work or configured pull-request validation is currently classified as **Blocked**. A future unavailable, cancelled, skipped or quota-limited workflow must be recorded here rather than represented as passed.
+GitHub reported release pull request #194 as open and non-mergeable during this audit. The branch was generated before the completed `portfolio-v1` → `portfolio` cleanup and later `main` promotions, so its current diff still proposes obsolete package-name state. Publication of `v2.0.0` is **Blocked** until Release Please refreshes the branch or the stale pull request is closed and regenerated, after which the exact head must pass the configured `main` checks.
+
+A future unavailable, cancelled, skipped or quota-limited workflow must also be recorded here rather than represented as passed.
 
 ## Unconfirmed
 
@@ -74,7 +77,9 @@ The following policies no longer define current work:
 
 ## Historical
 
-Point-in-time audits, completed branch plans, the completed i18n roadmap, the resolved branch-policy alignment and the recovered resume-asset incident do not define current behavior. Their durable context belongs in Cortex-L7, while Git history, merged pull requests, closed issues and `CHANGELOG.md` remain public historical evidence.
+The repository rename from `portfolio-v1` to `portfolio` was completed through pull requests #219 and #221 and promoted through #220 and #222. The former identifier remains valid only where a dated URL, redirect, alias, issue, pull request, release or historical record needs it for provenance; active operational documentation and configuration use `portfolio`.
+
+Point-in-time audits, completed branch plans, the completed i18n roadmap, the resolved branch-policy alignment and the recovered resume-asset incident do not define current behavior. Their durable context belongs in Cortex-L7, while Git history, merged pull requests, closed issues and generated release history remain public historical evidence.
 
 ## Update rule
 

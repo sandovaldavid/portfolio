@@ -17,6 +17,7 @@ A bilingual, static-first portfolio for presenting software-engineering experien
 
 ## Current implementation
 
+- **Repository identity:** `sandovaldavid/portfolio` and the private package name `portfolio` are canonical. `portfolio-v1` is retained only as a historical redirect or alias in dated records.
 - **Delivery:** Astro generates a static site; JavaScript is used for progressive interactions and client-navigation lifecycle behavior.
 - **Architecture:** dependencies follow `src/pages → app → widgets → features → entities → shared` and are checked by `bun run lint:architecture`.
 - **Localization:** English is unprefixed and Spanish uses `/es`; granular UI catalogs, localized Content Collections, metadata and generated-route checks enforce the bilingual contract.
