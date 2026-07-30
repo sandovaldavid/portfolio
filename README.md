@@ -1,7 +1,7 @@
 # David Sandoval — Software Engineering Portfolio
 
 [![Live portfolio](https://img.shields.io/badge/live-sandovaldavid.com-0096ff)](https://sandovaldavid.com)
-[![CI workflow](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml/badge.svg)](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml)
+[![CI workflow](https://github.com/sandovaldavid/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sandovaldavid/portfolio/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 A bilingual, static-first portfolio for presenting software-engineering experience, project evidence, research and technical writing.
@@ -54,8 +54,8 @@ Astro route files are framework entry points. Product code consumes lower layers
 Use the Bun version declared by `packageManager` in [package.json](package.json).
 
 ```bash
-git clone https://github.com/sandovaldavid/portfolio-v1.git
-cd portfolio-v1
+git clone https://github.com/sandovaldavid/portfolio.git
+cd portfolio
 git switch develop
 bun install --frozen-lockfile
 bun run dev

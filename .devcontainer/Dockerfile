@@ -5,7 +5,7 @@ ARG BUN_VERSION=1.3.14
 ARG DEVCONTAINER_UID=1000
 ARG DEVCONTAINER_GID=1000
 
-LABEL org.opencontainers.image.source="https://github.com/sandovaldavid/portfolio-v1"
+LABEL org.opencontainers.image.source="https://github.com/sandovaldavid/portfolio"
 LABEL org.opencontainers.image.description="Reproducible development container for Portfolio V1"
 LABEL org.opencontainers.image.licenses="MIT"
 
@@ -51,4 +51,4 @@ WORKDIR /home/pwuser
 RUN curl -fsSL https://bun.com/install | bash -s "bun-v${BUN_VERSION}" \
 	&& test "$(bun --version)" = "${BUN_VERSION}"
 
-WORKDIR /workspaces/portfolio-v1
+WORKDIR /workspaces/portfolio

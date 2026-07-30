@@ -1,6 +1,6 @@
 # Portfolio Retro color inventory
 
-This document owns the current production inventory for the `portfolio-v1` color architecture. Figma remains the authority for designed intent; `src/app/styles/colors.css` is the authority for implemented behavior; Cortex-L7 owns durable decisions, investigation history and handoffs.
+This document owns the current production inventory for the `portfolio` color architecture. Figma remains the authority for designed intent; `src/app/styles/colors.css` is the authority for implemented behavior; Cortex-L7 owns durable decisions, investigation history and handoffs.
 
 ## Canonical architecture
 

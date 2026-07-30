@@ -7,8 +7,8 @@ Contributions are welcome. Keep changes focused, reproducible and aligned with t
 Use the Bun version declared in [package.json](package.json).
 
 ```bash
-git clone https://github.com/sandovaldavid/portfolio-v1.git
-cd portfolio-v1
+git clone https://github.com/sandovaldavid/portfolio.git
+cd portfolio
 git switch develop
 bun install --frozen-lockfile
 bun run dev

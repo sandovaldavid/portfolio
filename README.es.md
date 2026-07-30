@@ -1,7 +1,7 @@
 # David Sandoval — Portafolio de Ingeniería de Software
 
 [![Portafolio](https://img.shields.io/badge/live-sandovaldavid.com-0096ff)](https://sandovaldavid.com)
-[![Workflow de CI](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml/badge.svg)](https://github.com/sandovaldavid/portfolio-v1/actions/workflows/ci.yml)
+[![Workflow de CI](https://github.com/sandovaldavid/portfolio/actions/workflows/ci.yml/badge.svg)](https://github.com/sandovaldavid/portfolio/actions/workflows/ci.yml)
 [![Licencia MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
 Portafolio bilingüe y static-first para presentar experiencia profesional, evidencia de proyectos, investigación y contenido técnico.
@@ -53,8 +53,8 @@ Las rutas Astro son entry points del framework. El código consume capas inferio
 Usa la versión de Bun declarada en `packageManager` dentro de [package.json](package.json).
 
 ```bash
-git clone https://github.com/sandovaldavid/portfolio-v1.git
-cd portfolio-v1
+git clone https://github.com/sandovaldavid/portfolio.git
+cd portfolio
 git switch develop
 bun install --frozen-lockfile
 bun run dev

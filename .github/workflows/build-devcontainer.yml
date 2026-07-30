@@ -79,7 +79,7 @@ jobs:
                   cacheFrom: ${{ env.IMAGE_NAME }}
                   push: ${{ github.event_name == 'push' && 'always' || 'never' }}
                   runCmd: |
-                      test "$PWD" = "/workspaces/portfolio-v1"
+                      test "$PWD" = "/workspaces/portfolio"
 
                       echo "Verify Linux workspace identity alignment"
                       test "$(id -u)" = "$(stat -c '%u' "$PWD")"
