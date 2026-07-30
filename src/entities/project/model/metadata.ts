@@ -2,6 +2,7 @@ import type { ImageMetadata } from 'astro';
 import { TAGS } from '@shared/config/technology';
 
 import yukidokeImg from '@assets/projects/project-11-yukidoke.svg';
+import kiokuImg from '@assets/projects/project-12-kioku.svg';
 import campusMapImg from '@assets/projects/project-08-campus-map.webp';
 import madaiImg from '@assets/projects/project-10-MAD-AI.webp';
 import fluentreadsImg from '@assets/projects/project-09-fluentreads.webp';
@@ -23,6 +24,7 @@ export const PROJECT_TECHNOLOGIES = {
 	astro: TAGS.ASTRO,
 	react: TAGS.REACT,
 	bootstrap: TAGS.BOOTSTRAP,
+	markdown: TAGS.MARKDOWN,
 } as const;
 
 export type ProjectTechnologyId = keyof typeof PROJECT_TECHNOLOGIES;
@@ -48,6 +50,17 @@ const projectMetadata = {
 		evidenceSourceUrls: {
 			'yukidoke-web': 'https://github.com/sandovaldavid/yukidoke-web',
 			'yukidoke-api': 'https://github.com/sandovaldavid/yukidoke-api',
+		},
+	},
+	kioku: {
+		slug: 'kioku',
+		github: 'https://github.com/sandovaldavid/kioku',
+		image: kiokuImg,
+		technologyIds: ['csharp', 'markdown'],
+		featured: true,
+		order: 45,
+		evidenceSourceUrls: {
+			kioku: 'https://github.com/sandovaldavid/kioku',
 		},
 	},
 	'campus-map': {
