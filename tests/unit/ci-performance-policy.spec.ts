@@ -9,10 +9,10 @@ const mainQualityWorkflow = readSource('.github/workflows/main-quality.yml');
 const scheduledWorkflow = readSource('.github/workflows/scheduled-quality.yml');
 const setupPlaywrightAction = readSource('.github/actions/setup-playwright/action.yml');
 const packageJson = readJson('package.json') as { scripts: Record<string, string> };
-const fastLighthouseConfig = readJson('.lighthouserc.json') as {
+const fastLighthouseConfig = readJson('config/lighthouse/lighthouserc.json') as {
 	ci: { collect: { numberOfRuns: number; settings: { onlyCategories: string[] } } };
 };
-const extendedLighthouseConfig = readJson('.lighthouserc.extended.json') as {
+const extendedLighthouseConfig = readJson('config/lighthouse/lighthouserc.extended.json') as {
 	ci: { collect: { numberOfRuns: number; settings: { onlyCategories: string[] } } };
 };
 
@@ -48,10 +48,10 @@ describe('Main Quality pre-merge gate stays fast', () => {
 			expect.arrayContaining(['performance', 'accessibility', 'best-practices', 'seo'])
 		);
 		expect(packageJson.scripts['lighthouse:collect:extended']).toContain(
-			'.lighthouserc.extended.json'
+			'config/lighthouse/lighthouserc.extended.json'
 		);
 		expect(packageJson.scripts['lighthouse:assert:extended']).toContain(
-			'.lighthouserc.extended.json'
+			'config/lighthouse/lighthouserc.extended.json'
 		);
 		expect(scheduledWorkflow).toContain('lighthouse:collect:extended');
 		expect(scheduledWorkflow).toContain('lighthouse:assert:extended');

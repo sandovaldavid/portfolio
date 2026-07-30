@@ -7,7 +7,7 @@ const activeRoots = [
 	'README.md',
 	'README.es.md',
 	'AGENTS.md',
-	'CONTRIBUTING.md',
+	'.github/CONTRIBUTING.md',
 	'CLAUDE.md',
 	'.github/copilot-instructions.md',
 	'.github/instructions',

@@ -10,7 +10,7 @@ on:
             - '.husky/pre-commit'
             - '.prettierignore'
             - 'docker-compose.yml'
-            - 'docker-test.sh'
+            - 'docker/**'
             - 'eslint.config.js'
             - 'package.json'
             - 'bun.lock'
@@ -26,7 +26,7 @@ on:
             - '.husky/pre-commit'
             - '.prettierignore'
             - 'docker-compose.yml'
-            - 'docker-test.sh'
+            - 'docker/**'
             - 'eslint.config.js'
             - 'package.json'
             - 'bun.lock'
@@ -197,7 +197,7 @@ jobs:
                       sudo chmod -R go-rwx test-results
                       bun run test:e2e:smoke
 
-                      VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker-test.sh
+                      VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker/docker-test.sh
                       docker --version
                       docker compose version
                       docker info

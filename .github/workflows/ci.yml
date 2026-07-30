@@ -49,7 +49,7 @@ jobs:
               env:
                   PR_TITLE: ${{ github.event.pull_request.title }}
                   PR_NUMBER: ${{ github.event.pull_request.number }}
-              run: echo "${PR_TITLE} (#${PR_NUMBER})" | bunx commitlint
+              run: echo "${PR_TITLE} (#${PR_NUMBER})" | bunx commitlint --config config/commitlint.config.js
 
     test-unit:
         name: Unit Tests (Vitest)

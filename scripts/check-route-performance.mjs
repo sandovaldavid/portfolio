@@ -7,7 +7,7 @@ import { gzipSync } from 'node:zlib';
 
 const ROOT = process.cwd();
 const DIST_DIR = path.join(ROOT, 'dist');
-const CONFIG_FILE = path.join(ROOT, 'performance-budgets.json');
+const CONFIG_FILE = path.join(ROOT, 'config', 'performance-budgets.json');
 const OUTPUT_DIR = path.join(ROOT, 'performance-report');
 const OUTPUT_JSON = path.join(OUTPUT_DIR, 'route-budgets.json');
 const OUTPUT_MARKDOWN = path.join(OUTPUT_DIR, 'route-budgets.md');
@@ -199,7 +199,7 @@ if (!existsSync(DIST_DIR)) {
 	process.exit(1);
 }
 if (!existsSync(CONFIG_FILE)) {
-	console.error('[performance] performance-budgets.json not found.');
+	console.error('[performance] config/performance-budgets.json not found.');
 	process.exit(1);
 }
 

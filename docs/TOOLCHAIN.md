@@ -55,6 +55,6 @@ A Bun, Playwright, Dev Container Feature or other compatibility-sensitive upgrad
 1. `package.json` and `bun.lock`;
 2. `.github/actions/setup-bun/action.yml` and affected workflows;
 3. `.devcontainer` image arguments, Features and lockfile;
-4. `Dockerfile.test` and visual baselines when browser rendering changes;
+4. `docker/Dockerfile.test` and visual baselines when browser rendering changes;
 5. executable version checks;
 6. this document and [DEVCONTAINER.md](DEVCONTAINER.md) when the operating contract changes.

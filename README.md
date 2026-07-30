@@ -85,7 +85,7 @@ Add generated-link, browser, performance or visual validation according to [docs
 - [Performance methodology](docs/PERFORMANCE.md)
 - [Dev Container](docs/DEVCONTAINER.md)
 - [Agent guidelines](AGENTS.md)
-- [Contribution workflow](CONTRIBUTING.md)
+- [Contribution workflow](.github/CONTRIBUTING.md)
 
 Decisions, alternatives, historical audits, plans and session handoffs are maintained in the `portfolio` project area of Cortex-L7 instead of the active repository documentation.
 
