@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures';
 
 const PRIORITY_LINKS = ['projects', 'blog', 'about-me'] as const;
-const NON_PRIORITY_LINKS = ['experience', 'research', 'technologies'] as const;
+const NON_PRIORITY_LINKS = ['experience', 'research'] as const;
 const ROUTES = ['/', '/es/'] as const;
 
 test.describe('Selective prefetch and font loading', () => {
