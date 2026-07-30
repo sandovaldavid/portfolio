@@ -34,7 +34,7 @@ Classify repository statements using the vocabulary in [docs/STATUS.md](docs/STA
 - **Historical:** point-in-time context that no longer defines current behavior;
 - **Discarded:** explicitly rejected or superseded.
 
-Active repository documentation should describe **Implemented** behavior and only the minimum **In progress**, **Blocked**, **Unconfirmed** or **Deprecated** context needed to operate safely. Decisions, alternatives, historical reasoning, plans and session handoffs belong in the `portfolio-v1` project area of Cortex-L7. Never present an issue, roadmap item or vault note as implemented behavior.
+Active repository documentation should describe **Implemented** behavior and only the minimum **In progress**, **Blocked**, **Unconfirmed** or **Deprecated** context needed to operate safely. Decisions, alternatives, historical reasoning, plans and session handoffs belong in the `portfolio` project area of Cortex-L7. Never present an issue, roadmap item or vault note as implemented behavior.
 
 ## 3. Branch and pull-request model
 
