@@ -4,17 +4,15 @@
 
 ## Sources of truth
 
-| Concern                            | Canonical source                                    |
-| ---------------------------------- | --------------------------------------------------- |
-| Project overview                   | [README.md](README.md)                              |
-| Development environment            | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)          |
-| Localization and bilingual content | [docs/I18N.md](docs/I18N.md)                        |
-| Testing and quality                | [docs/TESTING.md](docs/TESTING.md)                  |
-| Branches, deployment and releases  | [docs/DELIVERY.md](docs/DELIVERY.md)                |
-| Documentation ownership            | [docs/README.md](docs/README.md)                    |
-| Contribution flow                  | [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)  |
-| Commands and dependency versions   | [package.json](package.json) and `bun.lock`         |
-| Automated behavior                 | `.github/workflows/`, scripts, tests and config     |
+- Project overview: [README.md](README.md).
+- Development environment: [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md).
+- Localization and bilingual content: [docs/I18N.md](docs/I18N.md).
+- Testing and quality: [docs/TESTING.md](docs/TESTING.md).
+- Branches, deployment and releases: [docs/DELIVERY.md](docs/DELIVERY.md).
+- Documentation ownership: [docs/README.md](docs/README.md).
+- Contribution flow: [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md).
+- Commands and dependency versions: [package.json](package.json) and `bun.lock`.
+- Automated behavior: `.github/workflows/`, scripts, tests and config.
 
 Executable source and configuration override prose when they disagree.
 
@@ -106,15 +104,13 @@ Detailed design rationale and inventories belong in Cortex-L7, not `docs/`.
 
 ## Validation by change type
 
-| Change              | Minimum validation                                                                    |
-| ------------------- | ------------------------------------------------------------------------------------- |
-| Documentation       | `bun run format:check` and `bun run check:docs`                                       |
-| Pure logic          | focused tests plus `bun run test:unit:ci`                                             |
-| Astro or UI         | focused Playwright regression plus `bun run test:e2e:smoke`                           |
-| Architecture        | `bun run lint:architecture` and affected tests                                        |
-| Localization        | `bun run check:i18n`, build, generated links and bilingual smoke coverage             |
-| Performance/loading | build, `bun run performance:check` and applicable browser or Lighthouse validation    |
-| CI or tooling       | `bun run check`, the changed command and workflow review                              |
+- Documentation: `bun run format:check` and `bun run check:docs`.
+- Pure logic: focused tests plus `bun run test:unit:ci`.
+- Astro or UI: focused Playwright regression plus `bun run test:e2e:smoke`.
+- Architecture: `bun run lint:architecture` and affected tests.
+- Localization: `bun run check:i18n`, build, generated links and bilingual smoke coverage.
+- Performance or loading: build, `bun run performance:check` and applicable browser or Lighthouse validation.
+- CI or tooling: `bun run check`, the changed command and workflow review.
 
 Coverage percentages apply only to `unitCoverageScope` in `vitest.config.ts`; they are not whole-repository coverage.
 
