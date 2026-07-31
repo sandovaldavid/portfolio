@@ -4,7 +4,7 @@ applyTo: 'src/app/**'
 
 # App layer
 
-Follow [AGENTS.md](../../AGENTS.md) and [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md).
+Follow [AGENTS.md](../../AGENTS.md).
 
 - Keep global layouts, styles and application composition here.
 - Import lower layers only; do not place domain behavior in `app`.
