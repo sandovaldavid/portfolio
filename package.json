@@ -27,7 +27,7 @@
 		"check:i18n": "bun run check:i18n:catalogs && bun run check:i18n:content && bun run check:i18n:hardcoded",
 		"check": "bun run format:check && bun run check:docs && bun run check:devcontainer && bun run check:i18n && bun run lint && bun run typecheck",
 		"check:links": "node scripts/check-built-links.mjs && bun run check:i18n:routes",
-		"screenshots": "node docs/testing/capture-screenshots.mjs",
+		"screenshots": "node scripts/capture-screenshots.mjs",
 		"screenshots:design-system": "node scripts/capture-design-system-evidence.mjs",
 		"test": "node scripts/run-playwright.mjs",
 		"test:docker": "bash docker/docker-test.sh",
