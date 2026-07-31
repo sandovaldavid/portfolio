@@ -1,73 +1,66 @@
 # Repository operating manual for agents
 
-`AGENTS.md` is the canonical repository-working contract for human and AI contributors. Tool-specific instruction files may add only tool or path-specific behavior and must link back here instead of copying these rules.
+`AGENTS.md` is the canonical working contract for human and AI contributors. Tool-specific instructions may add only path-specific behavior and must link back here.
 
-## 1. Sources of truth
+## Sources of truth
 
-| Concern                            | Canonical source                                                                 |
-| ---------------------------------- | -------------------------------------------------------------------------------- |
-| Product and repository overview    | [README.md](README.md)                                                           |
-| Current implementation status      | [docs/STATUS.md](docs/STATUS.md)                                                 |
-| Architecture boundaries            | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) and `bun run lint:architecture`     |
-| Localization and bilingual content | [docs/I18N.md](docs/I18N.md)                                                     |
-| Tool and dependency versions       | [package.json](package.json) and `bun.lock`                                      |
-| Testing                            | [docs/TESTING.md](docs/TESTING.md)                                               |
-| CI behavior                        | [docs/CI.md](docs/CI.md) and `.github/workflows/`                                |
-| Branches, releases and deployment  | [docs/DELIVERY.md](docs/DELIVERY.md)                                             |
-| Canonical resume artifact delivery | [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md)                               |
-| Performance budgets                | [docs/PERFORMANCE.md](docs/PERFORMANCE.md) and `config/performance-budgets.json` |
-| Documentation ownership            | [docs/README.md](docs/README.md)                                                 |
-| Contribution flow                  | [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)                               |
+| Concern                            | Canonical source                                    |
+| ---------------------------------- | --------------------------------------------------- |
+| Project overview                   | [README.md](README.md)                              |
+| Development environment            | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md)          |
+| Localization and bilingual content | [docs/I18N.md](docs/I18N.md)                        |
+| Testing and quality                | [docs/TESTING.md](docs/TESTING.md)                  |
+| Branches, deployment and releases  | [docs/DELIVERY.md](docs/DELIVERY.md)                |
+| Documentation ownership            | [docs/README.md](docs/README.md)                    |
+| Contribution flow                  | [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)  |
+| Commands and dependency versions   | [package.json](package.json) and `bun.lock`         |
+| Automated behavior                 | `.github/workflows/`, scripts, tests and config     |
 
-Executable code and configuration override prose when they disagree. Do not copy versions, thresholds, command definitions or architecture rules into a second active document.
+Executable source and configuration override prose when they disagree.
 
-### Repository identity and historical naming
+## Repository identity
 
 The canonical technical identifiers are:
 
-- GitHub repository: `sandovaldavid/portfolio`;
+- repository: `sandovaldavid/portfolio`;
 - private package: `portfolio`;
-- Cortex-L7 project and workspace: `portfolio` and `20-execution/portfolio/`.
+- Cortex-L7 project: `portfolio` under `20-execution/portfolio/`.
 
-`portfolio-v1` is a **Historical** identifier preserved only where dated provenance, redirects, aliases, issues, pull requests, releases or Git history require it. Do not reintroduce it into current commands, paths, configuration or active documentation, and do not silently rewrite historical records that need the former name to remain understandable.
+`portfolio-v1` is historical. Preserve it only where dated provenance, redirects, aliases, issues, pull requests, releases or Git history require the former name.
 
-Before changing branch or delivery documentation, compare `develop` and `main` by ancestry and changed files. A promotion merge, hotfix or Release Please commit can make `main` numerically ahead while still containing the integrated `develop` tree. Reconcile `main` back into `develop` only when a main-only operational or source change must become part of future integration work; commit counts alone are not evidence of drift.
+## Status discipline
 
-## 2. Status discipline
+Use these classifications when reporting repository state:
 
-Classify repository statements using the vocabulary in [docs/STATUS.md](docs/STATUS.md):
-
-- **Implemented:** present in code or configuration and verifiable through the repository;
-- **In progress:** partially implemented with an active issue or pull request identifying the remaining work;
-- **Blocked:** work or automation cannot proceed because of a named external constraint;
-- **Unconfirmed:** plausible but not verified against the current branch or an authoritative result;
+- **Implemented:** present and directly verifiable in code or configuration;
+- **In progress:** partially implemented with an active issue or pull request;
+- **Blocked:** a named constraint prevents completion or validation;
+- **Unconfirmed:** not verified against an authoritative source;
 - **Deprecated:** still present for compatibility but prohibited for new work;
-- **Planned:** approved future work that is not implemented;
-- **Historical:** point-in-time context that no longer defines current behavior;
-- **Discarded:** explicitly rejected or superseded.
+- **Planned:** approved future work not yet implemented;
+- **Historical:** point-in-time context that no longer defines behavior;
+- **Discarded:** rejected or superseded.
 
-Active repository documentation should describe **Implemented** behavior and only the minimum **In progress**, **Blocked**, **Unconfirmed** or **Deprecated** context needed to operate safely. Decisions, alternatives, historical reasoning, plans and session handoffs belong in the `portfolio` project area of Cortex-L7. Never present an issue, roadmap item or vault note as implemented behavior.
+Active documentation should describe implemented operation. Decisions, alternatives, historical reasoning, inventories, plans and session handoffs belong in Cortex-L7.
 
-## 3. Branch and pull-request model
+## Branch and pull-request model
 
-The current branch roles are:
-
-- `develop`: integration branch and base for ordinary feature, fix, documentation and maintenance pull requests;
-- `main`: default and production branch, updated through a focused promotion pull request from `develop`;
-- `resume-assets`: canonical resume artifact branch consumed by preview and production workflows.
+- `develop` is the integration base for ordinary work.
+- `main` is the default and production branch.
+- `resume-assets` contains only the validated public CV payload.
 
 Before changing the repository:
 
-1. update local `develop`;
-2. read the issue, nearby implementation and owning active documentation;
-3. create one short-lived branch from `develop`;
-4. identify architecture, bilingual, accessibility and regression-test impact;
-5. keep one coherent concern per pull request;
-6. open the implementation pull request into `develop`.
+1. update `develop` and create one short-lived branch;
+2. read the issue, nearby source, tests and the smallest owning document;
+3. identify localization, accessibility, responsive and regression impact;
+4. implement one coherent concern;
+5. run the strongest applicable validation;
+6. open the pull request into `develop`.
 
-Do not work directly on `develop` or `main`. Promotion from `develop` to `main` is a separate release concern governed by [docs/DELIVERY.md](docs/DELIVERY.md). Changes to the public CV payload or its publication path must follow [docs/RESUME-DELIVERY.md](docs/RESUME-DELIVERY.md) and must not copy private resume sources into this repository.
+Do not push directly to `develop` or `main`. Production promotion is a separate `develop` to `main` pull request governed by [docs/DELIVERY.md](docs/DELIVERY.md).
 
-## 4. Architecture and code
+## Architecture
 
 The enforced dependency direction is:
 
@@ -75,56 +68,69 @@ The enforced dependency direction is:
 src/pages → app → widgets → features → entities → shared
 ```
 
-Required practices:
+Required rules:
 
-- consume slices through semantic aliases and public `index.ts` APIs;
-- do not import peer slices from `widgets`, `features` or `entities`;
-- avoid catch-all aliases, deep imports and root layer barrels;
-- use strict TypeScript and prefer `unknown` over `any`;
-- type component props and non-trivial function boundaries;
-- keep Astro route files focused on routing and composition;
-- explain non-obvious behavior and trade-offs, not self-evident syntax.
+- dependencies point only downward;
+- widgets, features and entities do not import peer slices;
+- consumers use semantic aliases and slice `index.ts` public APIs;
+- cross-layer and cross-slice relative imports are forbidden;
+- shared code remains domain-agnostic;
+- route files remain focused on routing, data resolution and composition;
+- the catch-all alias, retired aliases, root layer barrels and deep imports are forbidden.
 
-`bun run lint:architecture` is authoritative when prose and implementation disagree. A boundary change requires an executable checker update, affected tests and current operational documentation. Maintainers must synchronize durable rationale and rejected alternatives to Cortex-L7 rather than storing planning history in the repository.
+`bun run lint:architecture` and `scripts/check-architecture.mjs` are authoritative. A boundary change requires a checker change, tests and durable rationale synchronized to Cortex-L7.
 
-## 5. User-facing and localized changes
+## Localization and content
 
-- Follow [docs/I18N.md](docs/I18N.md) before adding or moving localized content.
-- Classify text as UI copy, structured portfolio content, editorial content or language-neutral data and update only its canonical owner.
-- Update English and Spanish together, including visible copy, accessibility labels and localized metadata.
-- Do not add monolithic locale files, component-local bilingual copy maps, raw HTML translations or a parallel translation runtime.
-- Use only the typed granular scalar catalog API, schema-validated localized content collections and Astro-native locale helpers; missing translations are build defects and must fail loudly.
-- Preserve keyboard navigation, semantic HTML, reduced-motion behavior and light/dark themes.
-- Add browser coverage for interactions, navigation lifecycle or responsive behavior.
-- Do not add seniority, impact, coverage or performance claims without verifiable evidence.
+Follow [docs/I18N.md](docs/I18N.md).
 
-## 6. Validation by change type
+- Update English and Spanish together for shared UI, accessibility and metadata copy.
+- Use typed granular catalogs for reusable scalar UI text.
+- Use localized Content Collections for structured and editorial content.
+- Keep URLs, assets, ordering and stable IDs language-neutral.
+- Do not add component-local bilingual maps, monolithic locale files, raw HTML translations, silent fallback or a parallel translation runtime.
+- Do not invent seniority, impact, metrics or outcomes without verifiable evidence.
+
+## Design and accessibility
+
+David is the brand. The Portfolio Retro style is a channel expression, not a separate identity.
+
+- Figma owns designed intent; production styles own implemented behavior.
+- Components consume semantic or component roles rather than raw color literals.
+- Preserve light and dark modes, English and Spanish, desktop and mobile behavior, keyboard access and reduced motion.
+- Body and interface copy must remain readable; pixel typography is a limited accent.
+- Color cannot be the only carrier of state or action.
+- Add browser coverage for visible interaction or responsive changes.
+
+Detailed design rationale and inventories belong in Cortex-L7, not `docs/`.
+
+## Validation by change type
 
 | Change              | Minimum validation                                                                    |
 | ------------------- | ------------------------------------------------------------------------------------- |
-| Documentation only  | `bun run check:docs` and `bun run format:check`                                       |
-| Pure logic          | relevant unit tests plus `bun run test:unit:ci`                                       |
-| Astro/UI behavior   | relevant Playwright regression plus `bun run test:e2e:smoke`                          |
+| Documentation       | `bun run format:check` and `bun run check:docs`                                       |
+| Pure logic          | focused tests plus `bun run test:unit:ci`                                             |
+| Astro or UI         | focused Playwright regression plus `bun run test:e2e:smoke`                           |
 | Architecture        | `bun run lint:architecture` and affected tests                                        |
-| Localization        | focused `check:i18n:*`, build, generated-link validation and bilingual smoke coverage |
-| Performance/loading | `bun run build`, `bun run performance:check` and relevant browser test                |
-| CI/tooling          | `bun run check`, the changed command locally and workflow review                      |
+| Localization        | `bun run check:i18n`, build, generated links and bilingual smoke coverage             |
+| Performance/loading | build, `bun run performance:check` and applicable browser or Lighthouse validation    |
+| CI or tooling       | `bun run check`, the changed command and workflow review                              |
 
-Coverage percentages apply only to the scope documented in [docs/testing/UNIT-COVERAGE.md](docs/testing/UNIT-COVERAGE.md).
+Coverage percentages apply only to `unitCoverageScope` in `vitest.config.ts`; they are not whole-repository coverage.
 
-A missing, skipped, disabled or quota-blocked GitHub Actions run is **not** a successful validation. Record exactly which commands were executed, their environment and their results. When automation is unavailable, local validation is mandatory and the unavailable automation remains **Blocked** or **Unconfirmed**.
+A missing, skipped, cancelled, disabled or quota-blocked workflow is not a pass. Record exact commands, environment and results.
 
-## 7. Documentation rules
+## Documentation rules
 
 - Keep the root README concise and recruiter/developer oriented.
-- Update the owning active document instead of repeating guidance elsewhere.
-- Quantitative claims require a versioned configuration, reproducible command or linked artifact methodology.
-- Keep current behavior, installation, configuration, testing, deployment, troubleshooting and contributor contracts in the repository.
-- Move decisions, alternatives, reasoning, historical audits, cross-repository strategy, plans and session handoffs to Cortex-L7.
-- Do not add a repository archive for material that belongs in the vault; Git history remains the public change record.
-- Run `bun run check:docs` after changing links or moving files.
+- Keep only the five operational documents indexed by [docs/README.md](docs/README.md).
+- Do not add folder catalogs, dependency inventories, test snapshots, color inventories or point-in-time status reports.
+- Update executable configuration instead of duplicating versions, thresholds or route matrices in prose.
+- Move decisions, alternatives, architecture reasoning, historical audits, cross-repository strategy, plans and handoffs to Cortex-L7.
+- Do not create a repository archive for removed documentation; Git history preserves it.
+- Run `bun run check:docs` after moving or deleting files.
 
-## 8. Git and pull requests
+## Git and pull requests
 
 Use Conventional Commits:
 
@@ -132,19 +138,18 @@ Use Conventional Commits:
 <type>(<scope>): <description>
 ```
 
-Common branch prefixes are `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`, `deps/`, `security/` and `agent/`.
-
 A pull request should state:
 
-- what changed and why;
+- the verified problem and chosen solution;
 - user or developer impact;
-- validation performed, including commands and environment;
-- risks, trade-offs or intentionally deferred work;
+- validation commands, environment and results;
+- risks and intentionally deferred work;
+- screenshots for visible changes;
 - `Closes #<issue>` only when the merge completes that issue.
 
-Use squash merge so the validated pull-request title becomes the integration commit. Do not merge unless explicitly requested. Before marking a pull request ready, confirm that it targets the intended branch, contains no unrelated changes and has the strongest validation currently available.
+Use squash merge for ordinary focused changes. Do not merge unless explicitly authorized.
 
-## 9. Canonical local gate
+## Canonical local gate
 
 ```bash
 bun install --frozen-lockfile
@@ -153,4 +158,4 @@ bun run test:unit:ci
 bun run build
 ```
 
-Add the relevant generated-link, Playwright, Lighthouse, Docker visual or performance command based on the change. Exact command definitions live in [package.json](package.json).
+Add generated-link, Playwright, Lighthouse, Docker visual or performance commands according to [docs/TESTING.md](docs/TESTING.md).
