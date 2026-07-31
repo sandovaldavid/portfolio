@@ -11,4 +11,4 @@ Shared rules live in [AGENTS.md](../../AGENTS.md). Files in this directory conta
 - `07-ui-segment.instructions.md` — Astro UI implementation details.
 - `08-model-segment.instructions.md` — deterministic model and data logic.
 
-Update [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md) and the executable checker when a boundary changes; do not redefine boundaries here.
+Update the architecture section in [AGENTS.md](../../AGENTS.md), the executable checker and its tests when a boundary changes. Preserve detailed rationale in Cortex-L7 instead of redefining it here.
