@@ -17,30 +17,13 @@ Portafolio bilingüe y static-first para presentar experiencia profesional, evid
 
 ## Implementación actual
 
-- **Identidad del repositorio:** `sandovaldavid/portfolio` y el paquete privado `portfolio` son los identificadores canónicos. `portfolio-v1` se conserva únicamente como redirección o alias histórico en registros fechados.
-- **Entrega:** Astro genera un sitio estático; JavaScript se utiliza para interacciones progresivas y el ciclo de navegación cliente.
+- **Identidad del repositorio:** `sandovaldavid/portfolio` y el paquete privado `portfolio` son canónicos. `portfolio-v1` se conserva únicamente como procedencia histórica o redirección.
+- **Entrega:** Astro genera un sitio estático con interacciones progresivas del lado del cliente.
 - **Arquitectura:** las dependencias siguen `src/pages → app → widgets → features → entities → shared` y `bun run lint:architecture` valida sus límites.
-- **Localización:** inglés no usa prefijo y español utiliza `/es`; catálogos granulares, Content Collections localizadas, metadata y validaciones de rutas generadas hacen ejecutable el contrato bilingüe.
-- **Calidad:** el repositorio versiona checks, pruebas unitarias, Playwright, Axe, presupuestos por ruta y comandos de Lighthouse.
-- **Entorno de desarrollo:** un Dev Container con Playwright y Bun fijados soporta la validación local completa.
-- **Despliegue:** `develop` es la rama de integración; `main` es la rama por defecto y de producción. La promoción a `main` se realiza mediante una PR separada.
-- **Entrega del CV:** los PDF validados en inglés y español se suministran mediante la rama aislada `resume-assets`; las fuentes editables permanecen en el repositorio privado correspondiente.
-
-El runtime legacy de localización fue eliminado y no debe reintroducirse. El ownership actual y sus validaciones están documentados en [docs/I18N.md](docs/I18N.md) y [docs/I18N-ENFORCEMENT.md](docs/I18N-ENFORCEMENT.md).
-
-## Controles de calidad
-
-| Área                        | Contrato del repositorio                                 |
-| --------------------------- | -------------------------------------------------------- |
-| Formato, lint y tipos       | `bun run check`                                          |
-| Enlaces documentales        | `bun run check:docs`                                     |
-| Comportamiento unitario     | `bun run test:unit:ci` y el comando de cobertura acotada |
-| Salida de producción        | `bun run build` y `bun run check:links`                  |
-| Navegadores y accesibilidad | comandos smoke, desktop, extended y visual de Playwright |
-| Rendimiento                 | presupuestos por ruta y comandos de Lighthouse           |
-| Entorno de desarrollo       | `bun run check:devcontainer`                             |
-
-Los workflows de GitHub automatizan gates seleccionados de promoción, producción y auditoría programada. Un workflow ausente, deshabilitado o bloqueado por cuota no constituye evidencia de validación; cada PR debe indicar los comandos realmente ejecutados.
+- **Localización:** inglés no usa prefijo y español utiliza `/es`; catálogos tipados, Content Collections localizadas y validaciones de rutas garantizan la paridad.
+- **Calidad:** Vitest, Playwright, Axe, enlaces generados, presupuestos por ruta y Lighthouse están versionados en el repositorio.
+- **Despliegue:** `develop` es la rama de integración y `main` es la rama de producción.
+- **Entrega del CV:** los PDF públicos validados se suministran mediante `resume-assets`; las fuentes editables permanecen privadas.
 
 ## Arquitectura
 
@@ -48,11 +31,11 @@ Los workflows de GitHub automatizan gates seleccionados de promoción, producci�
 src/pages → src/app → src/widgets → src/features → src/entities → src/shared
 ```
 
-Las rutas Astro son entry points del framework. El código consume capas inferiores mediante aliases semánticos y APIs públicas por slice. Consulta [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+Las rutas Astro son puntos de entrada. Las capas dependen solo hacia abajo, los slices pares permanecen aislados y los consumidores usan aliases semánticos y APIs públicas `index.ts`. `scripts/check-architecture.mjs` es el contrato ejecutable detallado.
 
 ## Desarrollo local
 
-Usa la versión de Bun declarada en `packageManager` dentro de [package.json](package.json).
+Usa la versión de Bun declarada en [package.json](package.json).
 
 ```bash
 git clone https://github.com/sandovaldavid/portfolio.git
@@ -70,25 +53,17 @@ bun run test:unit:ci
 bun run build
 ```
 
-Añade validación de enlaces generados, navegador, rendimiento o visual según [docs/TESTING.md](docs/TESTING.md).
-
 ## Documentación
 
-- [Ownership documental y vocabulario de estados](docs/README.md)
-- [Estado actual de implementación](docs/STATUS.md)
-- [Arquitectura](docs/ARCHITECTURE.md)
+- [Límite e índice documental](docs/README.md)
+- [Desarrollo y troubleshooting](docs/DEVELOPMENT.md)
 - [Internacionalización](docs/I18N.md)
-- [Testing](docs/TESTING.md)
-- [Política de CI](docs/CI.md)
-- [Entrega y releases](docs/DELIVERY.md)
-- [Entrega canónica de los artefactos del CV](docs/RESUME-DELIVERY.md)
-- [Toolchain](docs/TOOLCHAIN.md)
-- [Metodología de rendimiento](docs/PERFORMANCE.md)
-- [Dev Container](docs/DEVCONTAINER.md)
-- [Reglas para agentes](AGENTS.md)
+- [Testing y calidad](docs/TESTING.md)
+- [Ramas, despliegue y releases](docs/DELIVERY.md)
+- [Manual operativo para agentes](AGENTS.md)
 - [Flujo de contribución](.github/CONTRIBUTING.md)
 
-Las decisiones, alternativas, auditorías históricas, planes y handoffs de sesión se mantienen en el área `portfolio` de Cortex-L7 en lugar de la documentación activa del repositorio.
+Las decisiones detalladas, alternativas, razonamiento arquitectónico, inventarios, auditorías históricas, planes y handoffs viven en el proyecto `portfolio` de Cortex-L7. El código, la configuración, las pruebas y los workflows siguen siendo la autoridad del comportamiento actual.
 
 ## Licencia
 

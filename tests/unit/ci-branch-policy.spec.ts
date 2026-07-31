@@ -8,7 +8,6 @@ const codeqlWorkflow = readSource('.github/workflows/codeql.yml');
 const previewWorkflow = readSource('.github/workflows/deploy-preview.yml');
 const mainQualityWorkflow = readSource('.github/workflows/main-quality.yml');
 const productionWorkflow = readSource('.github/workflows/deploy-production.yml');
-const ciPolicy = readSource('docs/CI.md');
 const deliveryPolicy = readSource('docs/DELIVERY.md');
 const protectionPolicy = readSource('.github/BRANCH_PROTECTION.md');
 
@@ -45,7 +44,7 @@ describe('develop integration and main promotion policy', () => {
 
 	it('documents the real stable checks and removes obsolete protection guidance', () => {
 		for (const check of requiredChecks) {
-			expect(ciPolicy, check).toContain(check);
+			expect(deliveryPolicy, check).toContain(check);
 			expect(protectionPolicy, check).toContain(check);
 		}
 
@@ -64,7 +63,7 @@ describe('develop integration and main promotion policy', () => {
 		] as const;
 
 		for (const check of mainQualityChecks) {
-			expect(ciPolicy, check).toContain(check);
+			expect(deliveryPolicy, check).toContain(check);
 			expect(protectionPolicy, check).toContain(check);
 		}
 
