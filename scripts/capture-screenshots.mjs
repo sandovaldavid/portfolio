@@ -5,17 +5,23 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { chromium } from '@playwright/test';
 
+/** @typedef {import('@playwright/test').Page} Page */
+/** @typedef {{ width: number, height: number, name: string, directory: string }} Device */
+/** @typedef {{ url: string, name: string }} Route */
+
 const scriptDirectory = path.dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = path.resolve(scriptDirectory, '..');
 const outputRoot = path.join(repositoryRoot, 'test-results', 'manual-screenshots');
 const baseUrl = 'http://localhost:4321';
 
+/** @type {Record<string, Device>} */
 const devices = {
 	mobile: { width: 390, height: 844, name: 'iPhone 12 Pro', directory: 'mobile' },
 	tablet: { width: 1024, height: 1366, name: 'iPad Pro', directory: 'tablet' },
 	desktop: { width: 1920, height: 1080, name: 'Desktop', directory: 'desktop' },
 };
 
+/** @type {Route[]} */
 const routes = [
 	{ url: '/', name: 'home-en' },
 	{ url: '/about', name: 'about-en' },
@@ -25,10 +31,17 @@ const routes = [
 	{ url: '/es/projects', name: 'projects-es' },
 ];
 
+/** @param {string} directory */
 function ensureDirectory(directory) {
 	if (!existsSync(directory)) mkdirSync(directory, { recursive: true });
 }
 
+/**
+ * @param {Page} page
+ * @param {Device} device
+ * @param {Route} route
+ * @returns {Promise<boolean>}
+ */
 async function captureScreenshot(page, device, route) {
 	await page.setViewportSize({ width: device.width, height: device.height });
 
