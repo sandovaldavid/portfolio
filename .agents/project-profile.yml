@@ -1,0 +1,55 @@
+version: 1
+
+project:
+  id: portfolio
+  repository: sandovaldavid/portfolio
+  base_branch: develop
+  contract: AGENTS.md
+  archetype: astro-site
+
+primary_agent: project-maintainer
+
+specialists:
+  - architecture-reviewer
+  - quality-gate-runner
+  - ux-accessibility-reviewer
+  - evidence-content-reviewer
+  - docs-memory-synchronizer
+
+required_global_skills:
+  - kioku-project-workflow
+  - kioku-vault
+
+project_skills:
+  - astro-developer
+  - context-map
+  - conventional-commits
+  - ui-ux-design-system
+  - webapp-testing
+  - playwright-generate-test
+  - web-perf
+
+mcp_profiles:
+  - astro
+  - frontend-debugging
+  - design
+  - github
+  - knowledge
+
+companions:
+  - repository: sandovaldavid/hub
+    branch: develop
+    concerns: [identity, links, public-claims]
+  - repository: sandovaldavid/resume
+    branch: develop
+    concerns: [professional-evidence, bilingual-content]
+
+validation:
+  source: AGENTS.md
+  rule: Select commands by change type; use the canonical local gate for broad changes.
+
+safety:
+  direct_push: deny
+  merge: deny
+  destructive_git: deny
+  publish_private_context: deny
