@@ -4,6 +4,12 @@ on:
     pull_request:
         branches: [develop, main]
         types: [opened, synchronize, reopened]
+        paths-ignore:
+            - 'docs/**'
+            - '*.md'
+            - '.agents/**'
+            - '.claude/**'
+            - '.vscode/**'
 
 permissions:
     contents: read
