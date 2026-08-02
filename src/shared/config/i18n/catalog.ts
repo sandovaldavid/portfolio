@@ -14,13 +14,11 @@ import researchPageEn from './locales/en/pages/research.json';
 import skillsEn from './locales/en/pages/skills.json';
 import recruiterEn from './locales/en/recruiter.json';
 import aboutEn from './locales/en/sections/about.json';
-import badgesEn from './locales/en/sections/badges.json';
 import experienceEn from './locales/en/sections/experience.json';
 import heroEn from './locales/en/sections/hero.json';
 import projectsEn from './locales/en/sections/projects.json';
 import researchEn from './locales/en/sections/research.json';
 import techStackEn from './locales/en/sections/tech-stack.json';
-import visionEn from './locales/en/sections/vision.json';
 import splashEn from './locales/en/splash.json';
 import themeEn from './locales/en/theme.json';
 import accessibilityEs from './locales/es/accessibility.json';
@@ -39,13 +37,11 @@ import researchPageEs from './locales/es/pages/research.json';
 import skillsEs from './locales/es/pages/skills.json';
 import recruiterEs from './locales/es/recruiter.json';
 import aboutEs from './locales/es/sections/about.json';
-import badgesEs from './locales/es/sections/badges.json';
 import experienceEs from './locales/es/sections/experience.json';
 import heroEs from './locales/es/sections/hero.json';
 import projectsEs from './locales/es/sections/projects.json';
 import researchEs from './locales/es/sections/research.json';
 import techStackEs from './locales/es/sections/tech-stack.json';
-import visionEs from './locales/es/sections/vision.json';
 import splashEs from './locales/es/splash.json';
 import themeEs from './locales/es/theme.json';
 import { Language } from './languages';
@@ -74,11 +70,9 @@ const englishCatalog = {
 	sections: {
 		hero: heroEn,
 		about: aboutEn,
-		badges: badgesEn,
 		experience: experienceEn,
 		projects: projectsEn,
 		research: researchEn,
-		vision: visionEn,
 		techStack: techStackEn,
 	},
 } as const;
@@ -106,11 +100,9 @@ const spanishCatalog = {
 	sections: {
 		hero: heroEs,
 		about: aboutEs,
-		badges: badgesEs,
 		experience: experienceEs,
 		projects: projectsEs,
 		research: researchEs,
-		vision: visionEs,
 		techStack: techStackEs,
 	},
 } as const satisfies StringCatalogShape<typeof englishCatalog>;
@@ -135,11 +127,9 @@ export const UI_CATALOG_MODULES = [
 	'pages.skills',
 	'sections.hero',
 	'sections.about',
-	'sections.badges',
 	'sections.experience',
 	'sections.projects',
 	'sections.research',
-	'sections.vision',
 	'sections.techStack',
 ] as const;
 

@@ -9,9 +9,7 @@ describe('home section localization migration', () => {
 			'src/widgets/hero/ui/Hero.astro',
 			'src/widgets/about-me/ui/AboutMe.astro',
 			'src/widgets/research/ui/Research.astro',
-			'src/widgets/vision/ui/Vision.astro',
 			'src/widgets/tech-stack/ui/TechStack.astro',
-			'src/widgets/badges/ui/Badges.astro',
 		];
 
 		for (const file of migratedFiles) {
@@ -27,11 +25,9 @@ describe('home section localization migration', () => {
 			for (const module of [
 				'hero',
 				'about',
-				'badges',
 				'experience',
 				'projects',
 				'research',
-				'vision',
 				'tech-stack',
 			]) {
 				expect(
@@ -41,7 +37,6 @@ describe('home section localization migration', () => {
 		}
 
 		const catalog = readSource('src/shared/config/i18n/catalog.ts');
-		expect(catalog).toContain("'sections.badges'");
 		expect(catalog).toContain("'sections.experience'");
 		expect(catalog).toContain("'sections.projects'");
 	});

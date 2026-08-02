@@ -1,2 +1,2 @@
-export type { BlogPost, BlogPostMeta } from './types';
+export type { BlogPost } from './types';
 export { getBlogLocalizedPaths, getBlogPost, getBlogPosts, getBlogSlug } from './queries';

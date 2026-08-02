@@ -2,7 +2,6 @@ import type { CollectionEntry } from 'astro:content';
 import type { ExperienceId } from './metadata';
 
 export type ExperienceContentEntry = CollectionEntry<'experience'>;
-export type ExperienceContentData = ExperienceContentEntry['data'];
 
 /**
  * Localized professional experience joined with language-neutral metadata.
