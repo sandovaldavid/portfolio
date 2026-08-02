@@ -51,12 +51,9 @@ function escapeHtml(value: string): string {
 		.replace(/'/g, '&#039;');
 }
 
+// ponytail: single-pass regex replace; ceiling is simple flat key substitution, upgrade path is full template parser if nested syntax needed.
 function formatCopy(template: string, variables: Record<string, string> = {}): string {
-	let value = template;
-	for (const [name, replacement] of Object.entries(variables)) {
-		value = value.replaceAll(`{${name}}`, replacement);
-	}
-	return value;
+	return template.replace(/\{(\w+)\}/g, (match, name) => variables[name] ?? match);
 }
 
 function isEditableTarget(target: EventTarget | null): boolean {

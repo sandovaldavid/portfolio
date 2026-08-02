@@ -22,6 +22,8 @@ const prettierIgnore = readFileSync('.prettierignore', 'utf8');
 const eslintConfig = readFileSync('eslint.config.js', 'utf8');
 const preCommitHook = readFileSync('.husky/pre-commit', 'utf8');
 const devcontainerWorkflow = readFileSync('.github/workflows/build-devcontainer.yml', 'utf8');
+const vscodeTasks = JSON.parse(readFileSync('.vscode/tasks.json', 'utf8'));
+const vscodeLaunch = JSON.parse(readFileSync('.vscode/launch.json', 'utf8'));
 
 /** @type {string[]} */
 const failures = [];
@@ -423,6 +425,73 @@ expect(
 expect(
 	devcontainerWorkflow.includes('sh .husky/pre-commit'),
 	'the devcontainer workflow must execute the real pre-commit hook.'
+);
+
+const expectedForwarding = new Map([
+	[
+		4321,
+		{ label: 'Astro development server', protocol: 'http', onAutoForward: 'openBrowserOnce' },
+	],
+	[9323, { label: 'Playwright HTML report', protocol: 'http', onAutoForward: 'notify' }],
+]);
+const appPorts = Array.isArray(devcontainer.appPort) ? devcontainer.appPort : [];
+const forwardedPorts = Array.isArray(devcontainer.forwardPorts) ? devcontainer.forwardPorts : [];
+/** @type {{ label?: string; command?: string }[]} */
+const tasks = Array.isArray(vscodeTasks.tasks) ? vscodeTasks.tasks : [];
+/**
+ * @type {{
+ *   name?: string;
+ *   type?: string;
+ *   command?: string;
+ *   serverReadyAction?: unknown;
+ * }[]}
+ */
+const launchConfigurations = Array.isArray(vscodeLaunch.configurations)
+	? vscodeLaunch.configurations
+	: [];
+
+for (const [port, expectedAttributes] of expectedForwarding) {
+	expect(forwardedPorts.includes(port), `forwardPorts must include container port ${port}.`);
+	const attributes = devcontainer.portsAttributes?.[String(port)];
+	expect(Boolean(attributes), `portsAttributes must configure port ${port}.`);
+	if (attributes) {
+		for (const [attribute, expectedValue] of Object.entries(expectedAttributes)) {
+			expect(
+				attributes[attribute] === expectedValue,
+				`port ${port} must set ${attribute} to ${expectedValue}.`
+			);
+		}
+	}
+	expect(attributes?.requireLocalPort === true, `port ${port} must require the same local port.`);
+}
+expect(
+	forwardedPorts.length === expectedForwarding.size,
+	'forwardPorts must contain only reviewed ports.'
+);
+expect(appPorts.length === 0, 'appPort must remain empty when VS Code forwards development ports.');
+const configuredPortAttributes = Object.keys(devcontainer.portsAttributes ?? {});
+expect(
+	configuredPortAttributes.length === expectedForwarding.size &&
+		configuredPortAttributes.every(port => expectedForwarding.has(Number(port))),
+	'portsAttributes must configure only the reviewed forwarded ports.'
+);
+expect(packageJson.scripts?.dev === 'astro dev', 'dev must use the standard Astro server.');
+expect(!('dev:host' in (packageJson.scripts ?? {})), 'dev:host must remain removed.');
+expect(
+	packageJson.scripts?.['test:e2e:report'] ===
+		'playwright show-report playwright-report --host 127.0.0.1 --port 9323',
+	'test:e2e:report must serve local report on loopback port 9323.'
+);
+const developmentTask = tasks.find(task => task.label === 'Portfolio: Start Dev Server');
+expect(developmentTask?.command === 'bun run dev', 'VS Code must expose a task starting Astro.');
+const developmentLaunch = launchConfigurations.find(
+	configuration => configuration.name === 'Portfolio: Dev Server + Browser'
+);
+expect(
+	developmentLaunch?.type === 'node-terminal' &&
+		developmentLaunch?.command === 'bun run dev' &&
+		developmentLaunch?.serverReadyAction === undefined,
+	'VS Code launch must rely on port forwarding.'
 );
 
 if (failures.length > 0) {
