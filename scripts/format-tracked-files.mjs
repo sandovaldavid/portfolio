@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync } from 'node:fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const mode = process.argv[2];
@@ -35,7 +35,13 @@ if (filesResult.status !== 0) {
 const trackedFiles = filesResult.stdout
 	.split('\0')
 	.filter(Boolean)
-	.filter(file => existsSync(file));
+	.filter(file => {
+		try {
+			return existsSync(file) && !lstatSync(file).isSymbolicLink();
+		} catch {
+			return false;
+		}
+	});
 
 if (trackedFiles.length === 0) {
 	console.log('No tracked files available for Prettier.');
