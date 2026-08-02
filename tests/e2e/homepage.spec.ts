@@ -80,7 +80,7 @@ test.describe('Homepage', () => {
 
 		const html = page.locator('html');
 		await expect(html).toHaveClass(/snap-y/);
-		await expect(html).toHaveClass(/snap-mandatory/);
+		await expect(html).toHaveClass(/snap-proximity/);
 
 		const sections = page.locator('main section, footer');
 		const count = await sections.count();
