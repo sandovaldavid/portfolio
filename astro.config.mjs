@@ -3,7 +3,6 @@ import { defineConfig, fontProviders, svgoOptimizer } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import { visualizer } from 'rollup-plugin-visualizer';
 
-import robotsTxt from 'astro-robots-txt';
 import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 
@@ -16,7 +15,8 @@ export default defineConfig({
 			plugins: ['preset-default', 'removeXMLNS'],
 		}),
 	},
-	integrations: [robotsTxt(), mdx(), sitemap()],
+	// ponytail: robots.txt is static public output; no integration needed.
+	integrations: [mdx(), sitemap()],
 	site: 'https://sandovaldavid.com',
 	// Keep the Astro 6 whitespace contract while adopting Astro 7's Rust compiler.
 	compressHTML: true,
