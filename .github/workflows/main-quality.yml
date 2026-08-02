@@ -44,6 +44,14 @@ jobs:
             - name: Run risk-based unit coverage
               run: bun run test:unit:coverage
 
+            - name: Restore Astro cache
+              uses: actions/cache@v6
+              with:
+                  path: .astro
+                  key: ${{ runner.os }}-astro-main-${{ hashFiles('bun.lock', 'src/**', 'astro.config.mjs') }}
+                  restore-keys: |
+                      ${{ runner.os }}-astro-main-
+
             - name: Build production output
               run: bun run build
 
