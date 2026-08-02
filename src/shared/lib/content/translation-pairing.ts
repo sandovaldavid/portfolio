@@ -12,6 +12,7 @@ interface TranslationEntry {
  * Rejects duplicate translation identities within the same locale and collection.
  * The same identity is intentionally allowed once in English and once in Spanish.
  */
+// ponytail: linear Map collection iteration; ceiling is in-memory Astro collections (<10k items), upgrade path is indexed database query.
 export function assertUniqueTranslationKeys<T extends TranslationEntry>(
 	entries: readonly T[],
 	collectionName: string

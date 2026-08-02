@@ -8,9 +8,9 @@
  * @example
  * const text = interpolate('Hola {{name}}', { name: 'David' });
  */
+// ponytail: single-pass regex template replace; ceiling is simple key-value maps, upgrade path is Intl.MessageFormat if pluralization/gender needed.
 export function interpolate(template: string, vars: Record<string, string | number>): string {
-	return Object.entries(vars).reduce(
-		(result, [key, value]) => result.replaceAll(`{{${key}}}`, String(value)),
-		template
+	return template.replace(/\{\{([^}]+)\}\}/g, (match, key) =>
+		key in vars ? String(vars[key]) : match
 	);
 }
