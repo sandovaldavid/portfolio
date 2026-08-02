@@ -8,6 +8,7 @@
 		"dev": "astro dev",
 		"build": "astro check --minimumFailingSeverity hint && astro build",
 		"preview": "astro preview",
+		"prepare": "husky",
 		"astro": "astro",
 		"format": "node scripts/format-tracked-files.mjs --write",
 		"format:check": "node scripts/format-tracked-files.mjs --check",
