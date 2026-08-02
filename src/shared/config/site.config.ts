@@ -12,23 +12,14 @@ export const siteConfig = {
 	name: 'David Sandoval',
 	fullName: 'Juan David Sandoval Salvador',
 	handle: 'sandovaldavid',
-	role: 'Software Engineer',
-	location: 'Peru (UTC-5)',
 	currentCompany: 'Atena',
-	availability: true,
 
 	// ─── Site / SEO ──────────────────────────────────────────────
 	url: 'https://sandovaldavid.com',
-	/** Used for canonical and og:url — appended with Astro.url.pathname */
-	get canonicalBase() {
-		return this.url;
-	},
-	defaultImage: '/projects/portfolio.webp',
 	twitterCard: 'summary_large_image' as const,
 
 	// ─── Contact ─────────────────────────────────────────────────
 	email: 'hello@sandovaldavid.com',
-	emailSubjectRecruiter: 'Software engineering opportunity',
 
 	// ─── Social Networks ─────────────────────────────────────────
 	social: {
@@ -45,9 +36,3 @@ export const siteConfig = {
 		es: 'https://sandovaldavid.com/resume/david-sandoval-resume-es.pdf',
 	},
 } as const;
-
-/** Shorthand getters for the most-used values */
-export const siteUrl = siteConfig.url;
-export const siteEmail = siteConfig.email;
-export const siteSocial = siteConfig.social;
-export const siteName = siteConfig.name;

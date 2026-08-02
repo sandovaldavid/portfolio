@@ -4,7 +4,7 @@ applyTo: 'src/widgets/**'
 
 # Widgets layer
 
-Follow [AGENTS.md](../../AGENTS.md) and [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md).
+Follow [AGENTS.md](../../AGENTS.md).
 
 - Compose page-level sections from features, entities and shared primitives.
 - Do not import another widget slice.

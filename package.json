@@ -8,6 +8,7 @@
 		"dev": "astro dev",
 		"build": "astro check --minimumFailingSeverity hint && astro build",
 		"preview": "astro preview",
+		"prepare": "husky",
 		"astro": "astro",
 		"format": "node scripts/format-tracked-files.mjs --write",
 		"format:check": "node scripts/format-tracked-files.mjs --check",
@@ -27,7 +28,7 @@
 		"check:i18n": "bun run check:i18n:catalogs && bun run check:i18n:content && bun run check:i18n:hardcoded",
 		"check": "bun run format:check && bun run check:docs && bun run check:devcontainer && bun run check:i18n && bun run lint && bun run typecheck",
 		"check:links": "node scripts/check-built-links.mjs && bun run check:i18n:routes",
-		"screenshots": "node docs/testing/capture-screenshots.mjs",
+		"screenshots": "node scripts/capture-screenshots.mjs",
 		"screenshots:design-system": "node scripts/capture-design-system-evidence.mjs",
 		"test": "node scripts/run-playwright.mjs",
 		"test:docker": "bash docker/docker-test.sh",
@@ -63,7 +64,6 @@
 		"@tailwindcss/vite": "^4.3.3",
 		"@vercel/analytics": "^2.0.1",
 		"astro": "^7.1.3",
-		"astro-robots-txt": "1.0.0",
 		"tailwindcss": "^4.3.3"
 	},
 	"devDependencies": {
@@ -83,7 +83,6 @@
 		"eslint-plugin-astro": "~3.0.1",
 		"globals": "^17.8.0",
 		"husky": "^9.1.7",
-		"lightningcss": "1.33.0",
 		"prettier": "^3.9.6",
 		"prettier-plugin-astro": "^0.14.1",
 		"rollup-plugin-visualizer": "^7.0.1",

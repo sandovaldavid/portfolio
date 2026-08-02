@@ -4,7 +4,7 @@ applyTo: 'src/entities/**'
 
 # Entities layer
 
-Follow [AGENTS.md](../../AGENTS.md) and [docs/ARCHITECTURE.md](../../docs/ARCHITECTURE.md).
+Follow [AGENTS.md](../../AGENTS.md).
 
 - Keep domain data, types, queries and entity presentation together.
 - Depend only on shared code; do not import peer entities.

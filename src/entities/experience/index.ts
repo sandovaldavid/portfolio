@@ -5,7 +5,6 @@ export {
 	isExperienceId,
 } from './model';
 export type {
-	ExperienceContentData,
 	ExperienceContentEntry,
 	ExperienceId,
 	ExperienceItem,

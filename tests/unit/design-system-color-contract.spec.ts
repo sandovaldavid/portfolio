@@ -14,7 +14,6 @@ const cliRuntime = readSource('src/features/cli-terminal/model/runtime.ts');
 const recruiterHud = readSource('src/widgets/recruiter-hud/ui/RecruiterHUD.astro');
 const themeToggle = readSource('src/features/theme-toggle/ui/ThemeToggle.astro');
 const notFound = readSource('src/pages/404.astro');
-const inventory = readSource('docs/design-system/portfolio-retro-color-inventory.md');
 
 function collectFiles(directory: string): string[] {
 	return readdirSync(directory).flatMap(entry => {
@@ -175,7 +174,6 @@ describe('Portfolio Retro color architecture', () => {
 	it('removes raw color literals from production consumers except governed artwork and print CSS', () => {
 		const excludedRoots = ['src/assets/'];
 		const excludedFiles = new Set(['src/app/styles/colors.css', 'src/app/styles/print.css']);
-		// HTML entities such as `&#039;` are escaped text, not authored color literals.
 		const rawColor = /(?<!&)#[0-9a-f]{3,8}\b|\b(?:rgb|rgba|hsl|hsla|oklab|oklch|lab|lch)\(/i;
 		const offenders = collectFiles('src')
 			.filter(path => /\.(astro|css|ts|tsx|js|mjs)$/.test(path))
@@ -187,7 +185,7 @@ describe('Portfolio Retro color architecture', () => {
 		expect(offenders).toEqual([]);
 	});
 
-	it('uses named roles in high-risk consumers and keeps the header derived effects tokenized', () => {
+	it('uses named roles in high-risk consumers and keeps header effects tokenized', () => {
 		for (const [source, expectedToken] of [
 			[splash, 'bg-channel-portfolio-terminal-background'],
 			[cliCatalog, 'border-channel-portfolio-terminal-cyan'],
@@ -200,18 +198,5 @@ describe('Portfolio Retro color architecture', () => {
 			expect(source).toContain(expectedToken);
 		}
 		expect(header).not.toMatch(/rgba?\(|#[0-9a-f]{3,8}\b/i);
-	});
-
-	it('documents migrated, intentional, historical and follow-up inventory classes', () => {
-		for (const classification of [
-			'`Migrated`',
-			'`Intentional exception`',
-			'`Historical`',
-			'`Follow-up`',
-		]) {
-			expect(inventory).toContain(classification);
-		}
-		expect(inventory).toContain('sRGB reference');
-		expect(inventory).toContain('before/after');
 	});
 });

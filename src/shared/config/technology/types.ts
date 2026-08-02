@@ -12,11 +12,6 @@ export interface Technology {
 }
 
 /**
- * Map of technology keys to their definitions
- */
-export type TechnologyKey = keyof typeof import('./data').TAGS;
-
-/**
  * Technology tag configuration type
  */
 export type TechnologyTags = Record<string, Technology>;

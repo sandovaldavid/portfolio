@@ -1,118 +1,87 @@
-# Branch, release and deployment policy
+# Delivery
 
-## Branch roles
-
-The current repository model is:
-
-- `develop`: integration branch and base for ordinary feature, fix, documentation and maintenance work;
-- `main`: default and production branch;
-- `resume-assets`: canonical English and Spanish CV artifacts consumed by deployment workflows.
+## Branch model
 
 ```text
 short-lived branch -> develop -> main -> production
 ```
 
-This model is **Implemented** by the active branch history and pull-request workflow. The previous main-only trunk policy is **Discarded** for current work.
+- `develop` is the integration base for ordinary work.
+- `main` is the default and production branch.
+- `resume-assets` is the isolated handoff for validated public CV files.
 
-The `resume-assets` payload, provenance rules, validation command and non-destructive recovery procedure are defined in [RESUME-DELIVERY.md](RESUME-DELIVERY.md).
+Ordinary changes start from current `develop`, target `develop` and use a focused Conventional Commit pull-request title. Do not push directly to either long-lived source branch.
 
-## Ordinary development
+## Pull requests into develop
 
-1. Update `develop`.
-2. Create a short-lived `feat/`, `fix/`, `docs/`, `refactor/`, `perf/`, `test/`, `chore/`, `ci/`, `deps/`, `security/` or `agent/` branch from it.
-3. Open the pull request into `develop`.
-4. Keep one coherent concern per pull request.
-5. Run the canonical local gate and every change-specific validation.
-6. Require the configured pull-request quality and security checks when GitHub Actions are available.
-7. Use a Conventional Commit pull-request title and squash merge after review and explicit authorization.
-8. Delete the short-lived source branch after merge.
+The stable required checks are:
 
-Do not push directly to `develop` or `main`.
+- `Code Quality & Commits`;
+- `Unit Tests (Vitest)`;
+- `Build & Bundle Analysis`;
+- `Playwright Chromium Smoke`;
+- `Analyze Security`.
+
+Preview deployment and before/after visual evidence are informative because they depend on hosted services or change-specific review needs.
+
+Single-purpose pull requests into `develop` use squash merge. Delete their short-lived source branch explicitly after merge.
 
 ## Promotion to main
 
-Promotion is a focused pull request from `develop` to `main`. Its purpose is to release the integrated state rather than mix additional implementation work into the promotion diff.
+Production promotion is a focused `develop` to `main` pull request. It must not contain unrelated implementation work.
 
-Before promotion:
+Pull requests into `main` run the checks above plus:
 
-- confirm that `develop` contains the intended integrated commits;
-- review open issues and pull requests for blockers;
-- run the strongest available local validation on the promoted head;
-- confirm that documentation and `docs/STATUS.md` describe the promoted state;
-- record any unavailable GitHub automation as **Blocked**, never as passed.
+- `Main Build & Unit Quality`;
+- `Main Chromium Suite`;
+- `Main Lighthouse`.
 
-Ordinary promotions originate from `develop`, but pull requests into `main` are not restricted to that source branch: a hotfix may go directly to `main` when the situation warrants it, and Release Please's own release pull requests (see "Release policy" below) never originate from `develop` either. Required status checks (`Code Quality & Commits`, `Unit Tests (Vitest)`, `Build & Bundle Analysis`, `Playwright Chromium Smoke`, `Analyze Security`, `Main Build & Unit Quality`, `Main Chromium Suite`, `Main Lighthouse`) gate every merge into `main` according to the hosted ruleset. The full `Main Quality` suite runs as a pull-request check against `main`, not only after merge.
+The promotion uses a real merge commit so the integrated commits remain ancestors of `main`. Squash remains appropriate for direct hotfixes, dependency updates and Release Please pull requests.
 
-The `develop` → `main` promotion pull request is merged with a real merge commit, not a squash. `main` allows both merge methods (squash for single-purpose pull requests such as hotfixes, Dependabot updates or Release Please; merge for promotions), so that `develop`'s individual commit history stays a real ancestor of `main`. Squashing every promotion would otherwise make each later `main` → `develop` reconciliation introduce duplicate, unrelated commits for content `develop` already contains.
+`main` may be numerically ahead because of promotion merge commits, hotfixes or releases. Compare ancestry and changed files before treating ahead/behind counts as drift.
 
-Promotion merge commits, direct hotfixes and release commits can make `main` numerically ahead of `develop` even when `main` already contains the complete integrated `develop` tree. Compare ancestry and changed files rather than treating ahead/behind counts alone as drift. Reconcile `main` into `develop` only when a main-only source or operational change must be included in future integration work.
+## Preview and production
 
-## Preview deployments
+`Deploy to Vercel Preview` builds the exact pull-request head for changes targeting `develop` or `main` when credentials are available.
 
-`Deploy to Vercel Preview` is configured for pull requests targeting `develop` and `main`.
+`main` is the only normal production source. A push to `main` triggers the production workflow, which verifies the selected revision, installs the canonical resume assets and deploys through the Vercel production environment.
 
-The workflow:
+Workflow YAML is implemented configuration. Current rulesets, required checks, secrets, quotas and environment protections remain external settings until verified in GitHub.
 
-1. checks out the exact pull-request head SHA;
-2. checks out canonical files from `resume-assets`;
-3. validates provenance, filenames, PDF structure and the isolated asset directory before and after installation;
-4. installs the pinned repository toolchain;
-5. pulls the Vercel preview environment;
-6. builds and deploys without production flags;
-7. updates one stable pull-request comment with the preview URL and source SHA.
+## Resume assets
 
-Preview deployment is informative rather than a required branch check because it depends on hosted credentials and Vercel availability. Its absence, cancellation or failure must not be represented as successful evidence.
+The private `sandovaldavid/resume` repository owns editable resume content and PDF generation. This repository delivers only the validated public payload from `resume-assets`:
 
-## Production deployments
+```text
+public/resume/
+├── david-sandoval-resume.pdf
+├── david-sandoval-resume-es.pdf
+└── manifest.json
+```
 
-`main` is the only production source.
+The manifest identifies the authoritative source commit. Private source files and intermediate build output must never be copied into this public repository.
 
-The normal production path starts immediately on push to `main`. `Main Quality` no longer gates deployment as a post-merge workflow: it is a required pull-request check on `main` itself, so anything that reaches `main` already passed the full suite before merge. The deployment workflow checks out and verifies the exact pushed SHA before building and deploying with the Vercel production environment.
+Validate or install a checked-out payload with:
 
-Two explicit dispatch paths rebuild the current `main` tip:
+```bash
+node scripts/validate-resume-assets.mjs .resume-assets/public/resume
+bash scripts/install-resume-assets.sh
+```
 
-- `resume-assets-updated`, which refreshes canonical CV files from `resume-assets`;
-- a maintainer-initiated `workflow_dispatch` recovery deployment.
+Preview, main-quality and production workflows must use the same branch, filenames, manifest and installer. Recovery must preserve all three files as one provenance-matched payload; do not synthesize a source commit or bypass PDF validation.
 
-The workflow verifies both canonical resume URLs after deployment.
+## Releases
 
-`Deploy to Vercel Production` is a post-merge control and must not be configured as a required pre-merge status check on `main`.
+Production deployment is independent from GitHub Releases.
 
-Workflow definitions are **Implemented**. Their current enablement, quota, secrets and environment protection are **Unconfirmed** until inspected in GitHub. An unavailable run is **Blocked**, not a successful production gate.
+Release Please runs only from pushes to `main`. It opens or updates a reviewed release pull request, maintains `CHANGELOG.md` and creates plain stable `vX.Y.Z` tags after merge.
 
-## Release policy
-
-This repository is a private package and a public website, not a published npm library.
-
-- Production deployment is independent from GitHub Releases.
-- `main` is the single source of truth for releases. [Release Please](https://github.com/googleapis/release-please) (`.github/workflows/release-please.yml`) runs only on pushes to `main`; it does not run on `develop`, which avoids conflicting release state when `develop` is promoted.
-- Release Please opens or updates a release pull request against `main` derived from Conventional Commit history since the last release. Merging that pull request with squash is what cuts the Git tag and the GitHub Release. This is not a bypass of review.
-- Tags and releases use plain stable semantic versions, e.g. `v1.0.0`, `v2.0.0` (`include-component-in-tag: false` in `config/release-please-config.json`). Do not hand-create ad hoc beta or `porfolio-dev-*`-style tags.
-- `CHANGELOG.md` is generated and maintained by Release Please from Conventional Commit history. Do not hand-edit it.
-- Promotions from `develop` to `main` use a real merge commit (see "Promotion to main" above), so Release Please replays every individual Conventional Commit that lived on `develop` since the last release. Accuracy no longer depends on a single promotion pull-request title or footer summarizing the whole batch.
-- `v1.0.0` (commit `72d8c852a8a518922e705409f4785484e999d53e`) is the release baseline as of 2026-07-29. The previous `porfolio-dev-*` and `vX.Y.Z-beta.0` tags/releases (2026-06-21 through 2026-07-05) were deleted: they were pre-release artifacts of a discontinued dual-branch (`main` + `develop`) Release Please setup and are **Discarded**, not preserved historical evidence.
-
-An open Release Please pull request is **In progress**, not a published release. Treat a stale, conflicted or non-mergeable release branch as **Blocked** until it is refreshed or regenerated and the exact head passes the required `main` checks.
-
-## Repository settings contract
-
-Verify these GitHub-hosted settings before relying on them:
-
-1. `main` remains the default and production branch;
-2. ordinary work is based on and merged into `develop`;
-3. `develop` requires pull requests, current branches and the documented quality/security checks;
-4. `main` accepts reviewed `develop` promotions, direct hotfixes and Release Please pull requests, with no source-branch-name restriction;
-5. required check names match [CI.md](CI.md);
-6. preview deployment is informative rather than required;
-7. squash merge and merge commits are enabled, with merge commits reserved for `develop` → `main` promotions;
-8. automatic deletion of merged branches is disabled so long-lived branches survive; short-lived branches are deleted explicitly after merge;
-9. direct pushes, force pushes and deletion of long-lived branches are blocked;
-10. the Production environment accepts only `main` deployments.
-
-These settings are **Unconfirmed** until inspected because they live outside the versioned tree. Record intentional deviations in this document and synchronize durable rationale to Cortex-L7.
+Do not hand-edit generated release state or create ad hoc beta tags. A stale, conflicted or non-mergeable release pull request is blocked until refreshed or regenerated against current `main` and validated on its exact head.
 
 ## Rollback
 
-For a faulty integration in `develop`, revert the squash commit through a pull request into `develop`.
+Revert a faulty integration through a pull request into the affected long-lived branch. After a production revert, reconcile `develop` when the main-only change must be reflected in future integration work. Do not rewrite shared history.
 
-For a faulty production promotion, revert the relevant squash or promotion commit through a pull request into `main`, then reconcile `develop` so both long-lived branches retain a consistent history. Do not rewrite shared branch history.
+## Evidence
+
+Before merge or promotion, record the exact commit, commands and hosted results. Missing, cancelled, skipped or quota-blocked automation is not successful validation.

@@ -16,14 +16,6 @@ export const LANGUAGE_LABELS = {
 } as const;
 
 /**
- * Language flags for UI components
- */
-export const LANGUAGE_FLAGS = {
-	[Language.ENGLISH]: 'US',
-	[Language.SPANISH]: 'ES',
-} as const;
-
-/**
  * Default language for the application
  */
 export const DEFAULT_LANGUAGE = Language.ENGLISH;

@@ -68,7 +68,7 @@ export default [
 		},
 	},
 	{
-		files: ['src/**/*.{js,mjs}', 'docs/testing/capture-screenshots.mjs'],
+		files: ['src/**/*.{js,mjs}', 'scripts/capture-screenshots.mjs'],
 		languageOptions: {
 			globals: globals.browser,
 		},

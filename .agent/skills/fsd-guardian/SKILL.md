@@ -5,7 +5,7 @@ description: "Validate component placement, slice APIs and imports against the p
 
 # FSD Guardian
 
-Read the repository [AGENTS.md](../../../AGENTS.md) and [architecture contract](../../../docs/ARCHITECTURE.md) before changing product structure. Those files and `bun run lint:architecture` are authoritative; this skill is only an execution aid.
+Read the repository [AGENTS.md](../../../AGENTS.md) before changing product structure. That file and `bun run lint:architecture` are authoritative; this skill is only an execution aid.
 
 ## Current dependency direction
 
@@ -75,8 +75,8 @@ Create only the segments the slice needs:
 4. Move shared behavior downward instead of adding a cross-layer exception.
 5. Add or update types and localized content in their canonical owners.
 6. Add regression coverage for behavior or import rules.
-7. Update [docs/ARCHITECTURE.md](../../../docs/ARCHITECTURE.md) only when the operational contract changes.
-8. Put durable rationale, rejected alternatives and migration history in Cortex-L7 rather than adding repository planning documents.
+7. Update the architecture section in [AGENTS.md](../../../AGENTS.md), the checker and its tests only when the operational contract changes.
+8. Put durable rationale, rejected alternatives and migration history in Cortex-L7.
 
 ## Validation
 

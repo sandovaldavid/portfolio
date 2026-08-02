@@ -36,11 +36,6 @@ __pycache__/
 coverage/
 
 # testing artifacts
-docs/testing/screenshots/
-docs/testing/lighthouse/
-docs/test-reports/lighthouse/
-docs/test-reports/playwright/
-docs/test-reports/coverage/
 playwright-report/
 test-results/
 test-results.json

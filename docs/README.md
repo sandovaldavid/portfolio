@@ -1,84 +1,61 @@
-# Documentation index and ownership
+# Repository documentation
 
-English is the primary repository documentation language. Spanish is maintained for the root project guide and user-facing content.
+This directory contains only the operational documentation needed to understand, develop, validate and deliver the portfolio.
 
-Active documentation uses `portfolio` as the repository, package and Cortex-L7 project identifier. `portfolio-v1` is retained only in explicitly **Historical** records, aliases, redirects or dated provenance where changing the old name would obscure what occurred. A redirect from the former repository URL preserves discoverability; it does not make the former name current.
+## Active documents
 
-## Active operational documentation
+- [DEVELOPMENT.md](DEVELOPMENT.md) — local setup, Dev Container usage and troubleshooting.
+- [I18N.md](I18N.md) — English/Spanish ownership and localization rules.
+- [TESTING.md](TESTING.md) — quality gates, browser tests and performance checks.
+- [DELIVERY.md](DELIVERY.md) — branches, pull requests, deployment, releases and resume assets.
 
-| Document                                                                                             | Owns                                                                        |
-| ---------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| [README.md](../README.md)                                                                            | Recruiter/developer overview, live resources and quick start                |
-| [README.es.md](../README.es.md)                                                                      | Spanish repository overview                                                 |
-| [AGENTS.md](../AGENTS.md)                                                                            | Shared operating rules for human and AI contributors                        |
-| [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md)                                                | Contribution workflow and pull-request expectations                         |
-| [STATUS.md](STATUS.md)                                                                               | Verified current state and status classification                            |
-| [ARCHITECTURE.md](ARCHITECTURE.md)                                                                   | Current FSD boundaries and executable architecture policy                   |
-| [DEVCONTAINER.md](DEVCONTAINER.md)                                                                   | Reproducible development environment and troubleshooting                    |
-| [I18N.md](I18N.md)                                                                                   | English/Spanish content ownership and localization rules                    |
-| [I18N-CATALOGS.md](I18N-CATALOGS.md)                                                                 | Current granular UI catalog and localized-content API                       |
-| [I18N-METADATA.md](I18N-METADATA.md)                                                                 | SEO, social, RSS, JSON-LD and accessibility metadata                        |
-| [I18N-ENFORCEMENT.md](I18N-ENFORCEMENT.md)                                                           | Executable locale parity, copy and route quality gates                      |
-| [TESTING.md](TESTING.md)                                                                             | Test strategy and local commands                                            |
-| [testing/UNIT-COVERAGE.md](testing/UNIT-COVERAGE.md)                                                 | Measured Vitest coverage scope                                              |
-| [CI.md](CI.md)                                                                                       | Configured workflows, local evidence and automation availability            |
-| [DELIVERY.md](DELIVERY.md)                                                                           | Integration, promotion, production and release policy                       |
-| [RESUME-DELIVERY.md](RESUME-DELIVERY.md)                                                             | Canonical CV artifact provenance, validation and recovery                   |
-| [TOOLCHAIN.md](TOOLCHAIN.md)                                                                         | Runtime and dependency classification policy                                |
-| [PERFORMANCE.md](PERFORMANCE.md)                                                                     | Route-budget methodology and loading contracts                              |
-| [STYLE-GUIDE.md](STYLE-GUIDE.md)                                                                     | Maintained visual tokens, typography and semantic styling rules             |
-| [design-system/portfolio-retro-color-inventory.md](design-system/portfolio-retro-color-inventory.md) | Portfolio Retro color layers, production migration inventory and exceptions |
-| [features-catalog.md](features-catalog.md)                                                           | Current feature slices                                                      |
-| [widgets-catalog.md](widgets-catalog.md)                                                             | Current widget slices                                                       |
-| [tools.md](tools.md)                                                                                 | Maintained developer-tool usage notes                                       |
+The root [README.md](../README.md) explains the project, [AGENTS.md](../AGENTS.md) owns repository-working rules and [.github/CONTRIBUTING.md](../.github/CONTRIBUTING.md) owns the contributor workflow.
 
-Catalogs describe current slices but do not redefine architecture rules.
+## Sources of truth
 
-The [branch-protection guide](../.github/BRANCH_PROTECTION.md) owns the desired hosted rulesets and stable required-check names. Its settings remain **Unconfirmed** until verified in GitHub settings.
+Executable sources override prose:
+
+- `package.json` and `bun.lock` own commands and dependency versions;
+- configuration files own thresholds and framework behavior;
+- `.github/workflows/` owns automated validation and deployment behavior;
+- `scripts/` and tests own executable repository contracts;
+- `src/` owns implemented architecture and product behavior;
+- Figma owns designed intent, while production styles own rendered behavior.
+
+Do not add catalogs that restate folders, components, features, widgets, tests, colors or dependencies. Inspect the corresponding source and public APIs instead.
 
 ## Repository and Cortex-L7 boundary
 
-### The repository owns
+The repository keeps only current operational information required to work safely without private context:
 
-- implemented behavior and current architecture;
-- public contracts and canonical source locations;
-- installation, configuration and development instructions;
-- test commands, expected gates and troubleshooting;
-- workflow definitions, deployment behavior and release procedure;
-- conventions required by contributors and coding agents.
+- setup and troubleshooting;
+- implemented architecture rules summarized in `README.md` and `AGENTS.md`;
+- localization ownership;
+- testing and delivery procedures;
+- contributor and agent conventions.
 
-### Cortex-L7 owns
+Cortex-L7 keeps:
 
-- decisions and rejected alternatives;
-- reasoning, consequences and historical context;
-- private evidence and knowledge that should not be published;
+- decisions, alternatives and consequences;
+- detailed architecture reasoning;
+- historical audits and migration context;
+- design-system investigations and inventories;
 - cross-repository strategy;
-- plans, backlogs that are not GitHub issues and session handoffs;
-- consolidated context from completed audits and migrations.
+- plans, bugs and session handoffs.
 
-A repository document may link to a public issue or pull request for current work, but it must remain usable without access to the private vault. Git history, merged pull requests, closed issues and `CHANGELOG.md` remain the public historical record.
+Git history, issues, pull requests and releases remain the public historical record. Do not create an archive inside `docs/` for material moved to Cortex-L7.
 
-## Status classification
+## Naming
 
-Use the definitions in [STATUS.md](STATUS.md):
+`portfolio` is the canonical repository, package and Cortex-L7 project identifier. `portfolio-v1` is retained only as historical provenance, redirect or alias where rewriting it would obscure what happened.
 
-- **Implemented** for verifiable current behavior;
-- **In progress** for partially implemented work with a concrete active issue or PR;
-- **Blocked** for a named external constraint;
-- **Unconfirmed** for facts not verified against current authoritative state;
-- **Deprecated** for compatibility code that must not gain new consumers;
-- **Planned**, **Historical** and **Discarded** for context that belongs in GitHub planning/history or Cortex-L7 rather than active behavior documentation.
+## Change rule
 
-Do not describe an issue, roadmap item, previous audit or vault decision as implemented functionality.
+Update the smallest owning document and run:
 
-## Ownership and update policy
+```bash
+bun run format:check
+bun run check:docs
+```
 
-1. Update the owning document instead of copying guidance elsewhere.
-2. `package.json`, `bun.lock` and executable configuration own versions, commands and thresholds.
-3. Quantitative statements require a reproducible command, versioned configuration or artifact methodology.
-4. Tool-specific instruction files may contain only tool/path deltas and must reference [AGENTS.md](../AGENTS.md).
-5. Keep only operational consequences of a decision in repository documentation; synchronize durable rationale and alternatives to Cortex-L7.
-6. Update [STATUS.md](STATUS.md) when an item changes classification.
-7. Run `bun run check:docs` after adding, removing or moving documentation.
-
-Any pull request changing behavior must update the owning document in the same change when the operational contract changes.
+A document should be added only when a contributor cannot safely derive the required operational contract from the existing five documents and executable configuration.

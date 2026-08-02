@@ -8,8 +8,8 @@ const root = fileURLToPath(new URL('.', import.meta.url));
  * Risk-based unit coverage scope.
  *
  * These files contain deterministic logic that can be exercised without Astro's runtime or a
- * browser. The percentages do not represent whole-repository coverage. See
- * docs/testing/UNIT-COVERAGE.md for the inventory, exclusions and change policy.
+ * browser. The percentages do not represent whole-repository coverage; the executable scope below
+ * is authoritative.
  */
 const unitCoverageScope = [
 	'src/shared/lib/i18n/**/*.ts',
