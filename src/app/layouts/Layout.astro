@@ -15,6 +15,7 @@ import { Header } from '@widgets/header';
 import { RecruiterHUD } from '@widgets/recruiter-hud';
 import { TechStack } from '@widgets/tech-stack';
 import { CLITerminal } from '@features/cli-terminal';
+import { SectionScrollController } from '@features/section-scroll';
 import { SplashScreen } from '@features/splash-screen';
 import { SectionContainer, TitleSection } from '@shared/ui';
 import {
@@ -429,6 +430,7 @@ const structuredPageSchema =
 			<CLITerminal />
 			<ContactSidebar />
 			{isHome && <SplashScreen />}
+			<SectionScrollController enabled={isHome} />
 		</div>
 	</body>
 </html>

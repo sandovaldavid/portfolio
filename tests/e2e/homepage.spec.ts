@@ -74,6 +74,22 @@ test.describe('Homepage', () => {
 		await page.goto('/');
 		await expect(html).not.toHaveClass(/dark/);
 	});
+
+	test('navigates section by section on wheel scroll', async ({ page }) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.goto('/');
+
+		// Initial scroll position should be at top
+		const initialScrollY = await page.evaluate(() => window.scrollY);
+		expect(initialScrollY).toBe(0);
+
+		// Dispatch a wheel event to scroll down to next section
+		await page.mouse.wheel(0, 100);
+		await page.waitForTimeout(650);
+
+		const scrolledY = await page.evaluate(() => window.scrollY);
+		expect(scrolledY).toBeGreaterThan(0);
+	});
 });
 
 test.describe('Page Load Performance', () => {
