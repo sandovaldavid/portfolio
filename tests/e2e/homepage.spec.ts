@@ -74,6 +74,21 @@ test.describe('Homepage', () => {
 		await page.goto('/');
 		await expect(html).not.toHaveClass(/dark/);
 	});
+
+	test('enforces section scroll snapping on the homepage', async ({ page }) => {
+		await page.goto('/');
+
+		const html = page.locator('html');
+		await expect(html).toHaveClass(/snap-y/);
+		await expect(html).toHaveClass(/snap-mandatory/);
+
+		const sections = page.locator('main section, footer');
+		const count = await sections.count();
+		expect(count).toBeGreaterThan(0);
+		for (let i = 0; i < count; i++) {
+			await expect(sections.nth(i)).toHaveClass(/snap-start/);
+		}
+	});
 });
 
 test.describe('Page Load Performance', () => {

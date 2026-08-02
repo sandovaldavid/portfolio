@@ -99,6 +99,9 @@ li,
 
 /* Respect user motion preference (WCAG 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-snap-type: none !important;
+	}
 	*,
 	*::before,
 	*::after {
