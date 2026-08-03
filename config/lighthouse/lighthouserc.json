@@ -3,14 +3,14 @@
 		"collect": {
 			"url": [
 				"http://localhost:4321/",
-				"http://localhost:4321/about",
-				"http://localhost:4321/projects",
-				"http://localhost:4321/blog",
+				"http://localhost:4321/about/",
+				"http://localhost:4321/projects/",
+				"http://localhost:4321/blog/",
 				"http://localhost:4321/blog/building-this-portfolio-with-astro-and-fsd/",
 				"http://localhost:4321/es/",
-				"http://localhost:4321/es/about",
-				"http://localhost:4321/es/projects",
-				"http://localhost:4321/es/blog",
+				"http://localhost:4321/es/about/",
+				"http://localhost:4321/es/projects/",
+				"http://localhost:4321/es/blog/",
 				"http://localhost:4321/es/blog/building-this-portfolio-with-astro-and-fsd/"
 			],
 			"outputPath": "./lighthouse-report",

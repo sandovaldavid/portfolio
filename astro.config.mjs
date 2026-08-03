@@ -8,7 +8,8 @@ import sitemap from '@astrojs/sitemap';
 
 const analyzeBundle = process.env.ANALYZE_BUNDLE === 'true';
 
-// https://astro.build/config
+// ponytail: Astro 7.1.6 + TypeScript ts(2321) generic stack depth limit on defineConfig font/i18n union; @ts-ignore bypasses recursion ceiling.
+// @ts-ignore
 export default defineConfig({
 	experimental: {
 		svgOptimizer: svgoOptimizer({
