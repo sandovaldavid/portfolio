@@ -22,26 +22,24 @@ const { title, summary, pubDate, version, tags } = post.data;
 			{backText}
 		</LinkInline>
 
-		<div class="mb-3 flex items-center gap-2 font-mono text-xs text-content-muted">
+		<div class="mb-3 flex items-center gap-2 text-caption text-content-muted">
 			<time datetime={pubDate.toISOString()}>[{pubDate.toISOString().split('T')[0]}]</time>
-			<span
-				class="font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400"
-			>
+			<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 				{version}
 			</span>
 			{
 				tags.map(tag => (
-					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">
+					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
 						{tag}
 					</span>
 				))
 			}
 		</div>
 
-		<h1 class="mb-4 text-3xl font-bold font-pixel-clean tracking-wide md:text-4xl">
+		<h1 class="mb-4 text-3xl md:text-page-title">
 			{title}
 		</h1>
-		<p class="max-w-2xl text-base leading-relaxed text-content-muted">
+		<p class="max-w-2xl text-body text-content-muted">
 			{summary}
 		</p>
 	</header>

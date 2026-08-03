@@ -29,8 +29,38 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.local(),
+			name: 'Inter',
+			cssVariable: '--font-sans',
+			display: 'optional',
+			fallbacks: ['system-ui', 'sans-serif'],
+			options: {
+				variants: [
+					{ weight: '400', style: 'normal', src: ['./src/assets/fonts/inter-400.woff2'] },
+					{ weight: '500', style: 'normal', src: ['./src/assets/fonts/inter-500.woff2'] },
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
+			name: 'Fira Code',
+			cssVariable: '--font-code',
+			display: 'optional',
+			fallbacks: ['monospace'],
+			options: {
+				variants: [
+					{
+						weight: '400',
+						style: 'normal',
+						src: ['./src/assets/fonts/fira-code-400.woff2'],
+					},
+				],
+			},
+		},
+		{
+			provider: fontProviders.local(),
 			name: 'Press Start 2P',
 			cssVariable: '--font-pixel',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -46,6 +76,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'VT323',
 			cssVariable: '--font-pixel-clean',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -57,6 +88,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Silkscreen',
 			cssVariable: '--font-retro-tag',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -65,6 +97,11 @@ export default defineConfig({
 						style: 'normal',
 						src: ['./src/assets/fonts/silkscreen-400.woff2'],
 					},
+					{
+						weight: '700',
+						style: 'normal',
+						src: ['./src/assets/fonts/silkscreen-700.woff2'],
+					},
 				],
 			},
 		},
@@ -72,6 +109,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Share Tech Mono',
 			cssVariable: '--font-gaming-mono',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -87,6 +125,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'JetBrains Mono',
 			cssVariable: '--font-mono',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -94,6 +133,16 @@ export default defineConfig({
 						weight: '400',
 						style: 'normal',
 						src: ['./src/assets/fonts/jetbrains-mono-400.woff2'],
+					},
+					{
+						weight: '500',
+						style: 'normal',
+						src: ['./src/assets/fonts/jetbrains-mono-500.woff2'],
+					},
+					{
+						weight: '700',
+						style: 'normal',
+						src: ['./src/assets/fonts/jetbrains-mono-700.woff2'],
 					},
 				],
 			},

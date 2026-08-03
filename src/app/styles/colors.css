@@ -1,7 +1,7 @@
 @theme {
-	--font-sans: 'JetBrains Mono', 'Inter', system-ui, sans-serif;
+	--font-sans: 'Inter', system-ui, sans-serif;
 	--font-mono: 'JetBrains Mono', monospace;
-	--font-code: 'JetBrains Mono', 'Fira Code', monospace;
+	--font-code: 'Fira Code', 'JetBrains Mono', monospace;
 	--font-pixel: 'Press Start 2P', monospace;
 	--font-pixel-clean: 'VT323', monospace;
 	--font-retro-tag: 'Silkscreen', monospace;

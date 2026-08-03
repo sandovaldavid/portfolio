@@ -14,6 +14,7 @@ test.describe('Recruiter-first homepage hierarchy', () => {
 				.evaluateAll(sections => sections.map(section => section.id));
 
 			expect(sectionIds).toEqual([
+				'hero',
 				'experience',
 				'projects',
 				'research',

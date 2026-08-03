@@ -57,15 +57,13 @@ const evidenceDecisionSections = evidence
 		</LinkInline>
 
 		<header class="mb-10">
-			<div
-				class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
-			>
+			<div class="mb-2 text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 				{caseStudyLabel}
 			</div>
-			<h1 class="mb-4 text-3xl font-bold font-pixel-clean tracking-wide md:text-5xl">
+			<h1 class="mb-4 text-3xl md:text-page-title">
 				{project.title}
 			</h1>
-			<p class="mb-6 max-w-2xl text-base leading-relaxed text-content-muted">
+			<p class="mb-6 max-w-2xl text-body text-content-muted">
 				{project.description}
 			</p>
 
@@ -124,39 +122,37 @@ const evidenceDecisionSections = evidence
 					>
 						<dl class="grid gap-4 sm:grid-cols-3">
 							<div>
-								<dt class="font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+								<dt class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 									{caseStudy.status.lifecycleLabel}
 								</dt>
-								<dd class="mt-1 text-sm font-bold text-content-strong">
+								<dd class="mt-1 text-secondary font-bold text-content-strong">
 									{caseStudy.status.lifecycle}
 								</dd>
 							</div>
 							<div>
-								<dt class="font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+								<dt class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 									{caseStudy.status.sourceLabel}
 								</dt>
-								<dd class="mt-1 text-sm font-bold text-content-strong">
+								<dd class="mt-1 text-secondary font-bold text-content-strong">
 									{caseStudy.status.source}
 								</dd>
 							</div>
 							<div>
-								<dt class="font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+								<dt class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 									{caseStudy.status.demoLabel}
 								</dt>
-								<dd class="mt-1 text-sm font-bold text-content-strong">
+								<dd class="mt-1 text-secondary font-bold text-content-strong">
 									{caseStudy.status.demo}
 								</dd>
 							</div>
 						</dl>
 						<div class="mt-5 border-t border-neutral-300 pt-4 dark:border-neutral-700">
-							<div class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-error-500">
+							<div class="mb-2 text-editorial-label uppercase text-error-500">
 								{caseStudy.status.limitationsLabel}
 							</div>
 							<ul class="space-y-2">
 								{caseStudy.status.limitations.map(item => (
-									<li class="text-sm leading-relaxed text-content-muted">
-										{item}
-									</li>
+									<li class="text-body text-content-muted">{item}</li>
 								))}
 							</ul>
 						</div>
@@ -169,43 +165,41 @@ const evidenceDecisionSections = evidence
 						>
 							<h2
 								id="case-study-status"
-								class="mb-3 font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
+								class="mb-3 text-subheading uppercase text-primary-500 dark:text-primary-400"
 							>
 								{evidence.statusLabel}
 							</h2>
 							<p class="text-xl font-bold text-content-strong">{evidence.status}</p>
-							<p class="mt-3 text-sm leading-relaxed text-content-muted">
-								{evidence.statusDetail}
-							</p>
+							<p class="mt-3 text-body text-content-muted">{evidence.statusDetail}</p>
 						</section>
 					)}
 
 					<div class="border-l-4 border-red-500 pl-6">
-						<div class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-error-500">
+						<h2 class="mb-2 text-subheading uppercase text-error-500">
 							{labelProblem}
-						</div>
-						<p class="text-base leading-relaxed">{caseStudy.problem}</p>
+						</h2>
+						<p class="text-body">{caseStudy.problem}</p>
 					</div>
 
 					<div class="border-l-4 border-yellow-500 pl-6">
-						<div class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-warning-500">
+						<h2 class="mb-2 text-subheading uppercase text-warning-500">
 							{labelApproach}
-						</div>
-						<p class="text-base leading-relaxed">{caseStudy.approach}</p>
+						</h2>
+						<p class="text-body">{caseStudy.approach}</p>
 					</div>
 
 					<div class="border-l-4 border-orange-500 pl-6">
-						<div class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-orange-500">
+						<h2 class="mb-2 text-subheading uppercase text-orange-500">
 							{labelTradeoffs}
-						</div>
-						<p class="text-base leading-relaxed">{caseStudy.tradeoffs}</p>
+						</h2>
+						<p class="text-body">{caseStudy.tradeoffs}</p>
 					</div>
 
 					<div class="border-l-4 border-green-500 pl-6">
-						<div class="mb-2 font-retro-tag text-xs font-bold uppercase tracking-widest text-success-500">
+						<h2 class="mb-2 text-subheading uppercase text-success-500">
 							{labelOutcome}
-						</div>
-						<p class="text-base leading-relaxed">{caseStudy.outcome}</p>
+						</h2>
+						<p class="text-body">{caseStudy.outcome}</p>
 					</div>
 
 					{evidence && (
@@ -213,13 +207,13 @@ const evidenceDecisionSections = evidence
 							<section aria-labelledby="implemented-evidence">
 								<h2
 									id="implemented-evidence"
-									class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-success-500"
+									class="mb-4 text-subheading uppercase text-success-500"
 								>
 									{evidence.implementedLabel}
 								</h2>
 								<ul class="space-y-3">
 									{evidence.implemented.map(item => (
-										<li class="flex items-start gap-3 text-sm leading-relaxed">
+										<li class="flex items-start gap-3 text-body">
 											<span
 												class="mt-1 font-bold text-success-500"
 												aria-hidden="true"
@@ -235,13 +229,13 @@ const evidenceDecisionSections = evidence
 							<section aria-labelledby="planned-evidence">
 								<h2
 									id="planned-evidence"
-									class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-warning-500"
+									class="mb-4 text-subheading uppercase text-warning-500"
 								>
 									{evidence.plannedLabel}
 								</h2>
 								<ul class="space-y-3">
 									{evidence.planned.map(item => (
-										<li class="flex items-start gap-3 text-sm leading-relaxed">
+										<li class="flex items-start gap-3 text-body">
 											<span
 												class="mt-1 font-bold text-warning-500"
 												aria-hidden="true"
@@ -260,7 +254,7 @@ const evidenceDecisionSections = evidence
 						<section aria-labelledby="architecture-evidence">
 							<h2
 								id="architecture-evidence"
-								class="mb-5 font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
+								class="mb-5 text-subheading uppercase text-primary-500 dark:text-primary-400"
 							>
 								{evidence.architectureLabel}
 							</h2>
@@ -368,7 +362,7 @@ const evidenceDecisionSections = evidence
 											</p>
 										))}
 								</div>
-								<figcaption class="mt-5 text-sm leading-relaxed text-neutral-300">
+								<figcaption class="mt-5 text-caption text-neutral-300">
 									{evidence.architecture.caption}
 								</figcaption>
 							</figure>
@@ -379,12 +373,12 @@ const evidenceDecisionSections = evidence
 						<div class="grid gap-8 md:grid-cols-3">
 							{evidenceDecisionSections.map(({ label, items }) => (
 								<section class="border-t-4 border-primary-500 pt-4">
-									<h2 class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400">
+									<h2 class="mb-4 text-subheading uppercase text-primary-500 dark:text-primary-400">
 										{label}
 									</h2>
 									<ul class="space-y-3">
 										{items.map(item => (
-											<li class="text-sm leading-relaxed">{item}</li>
+											<li class="text-body">{item}</li>
 										))}
 									</ul>
 								</section>
@@ -396,27 +390,27 @@ const evidenceDecisionSections = evidence
 						<div class="flex flex-wrap gap-6 border-t border-neutral-300 pt-6 dark:border-neutral-700">
 							{caseStudy.timeline && (
 								<div>
-									<span class="font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400">
+									<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 										{labelTimeline}
 									</span>
-									<p class="mt-1 text-sm">{caseStudy.timeline}</p>
+									<p class="mt-1 text-secondary">{caseStudy.timeline}</p>
 								</div>
 							)}
 							{caseStudy.role && (
 								<div>
-									<span class="font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400">
+									<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
 										{labelRole}
 									</span>
-									<p class="mt-1 text-sm">{caseStudy.role}</p>
+									<p class="mt-1 text-secondary">{caseStudy.role}</p>
 								</div>
 							)}
 						</div>
 					)}
 
 					<div>
-						<div class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-purple-500">
+						<h2 class="mb-4 text-subheading uppercase text-purple-500">
 							{labelLearnings}
-						</div>
+						</h2>
 						<ul class="space-y-3">
 							{caseStudy.learnings.map(learning => (
 								<li class="flex items-start gap-3">
@@ -424,7 +418,7 @@ const evidenceDecisionSections = evidence
 										class="mt-1 size-2 shrink-0 bg-purple-500"
 										aria-hidden="true"
 									/>
-									<span class="text-sm">{learning}</span>
+									<span class="text-body">{learning}</span>
 								</li>
 							))}
 						</ul>
@@ -435,13 +429,13 @@ const evidenceDecisionSections = evidence
 							<section aria-labelledby="limitations-evidence">
 								<h2
 									id="limitations-evidence"
-									class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-error-500"
+									class="mb-4 text-subheading uppercase text-error-500"
 								>
 									{evidence.limitationsLabel}
 								</h2>
 								<ul class="space-y-3">
 									{evidence.limitations.map(item => (
-										<li class="text-sm leading-relaxed">{item}</li>
+										<li class="text-body">{item}</li>
 									))}
 								</ul>
 							</section>
@@ -449,7 +443,7 @@ const evidenceDecisionSections = evidence
 							<section aria-labelledby="sources-evidence">
 								<h2
 									id="sources-evidence"
-									class="mb-4 font-retro-tag text-xs font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
+									class="mb-4 text-subheading uppercase text-primary-500 dark:text-primary-400"
 								>
 									{evidence.sourcesLabel}
 								</h2>
@@ -468,7 +462,7 @@ const evidenceDecisionSections = evidence
 											) : (
 												<p class="font-bold">{source.label}</p>
 											)}
-											<p class="mt-2 text-sm leading-relaxed text-content-muted">
+											<p class="mt-2 text-secondary text-content-muted">
 												{source.access}
 											</p>
 										</li>
