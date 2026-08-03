@@ -30,6 +30,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Inter',
 			cssVariable: '--font-sans',
+			display: 'optional',
 			fallbacks: ['system-ui', 'sans-serif'],
 			options: {
 				variants: [
@@ -42,6 +43,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Fira Code',
 			cssVariable: '--font-code',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -57,6 +59,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Press Start 2P',
 			cssVariable: '--font-pixel',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -72,6 +75,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'VT323',
 			cssVariable: '--font-pixel-clean',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -83,6 +87,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Silkscreen',
 			cssVariable: '--font-retro-tag',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -103,6 +108,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Share Tech Mono',
 			cssVariable: '--font-gaming-mono',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
@@ -118,6 +124,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'JetBrains Mono',
 			cssVariable: '--font-mono',
+			display: 'optional',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [
