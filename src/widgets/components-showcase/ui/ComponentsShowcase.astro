@@ -79,8 +79,12 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('linksDescription')}</p>
 				<div class="flex flex-wrap gap-6">
-					<LinkInline href="https://github.com">{tPage('profileLink')}</LinkInline>
-					<LinkInline href="https://linkedin.com">{tPage('networkLink')}</LinkInline>
+					<LinkInline href="https://github.com" class="text-lg">
+						{tPage('profileLink')}
+					</LinkInline>
+					<LinkInline href="https://linkedin.com" class="text-lg">
+						{tPage('networkLink')}
+					</LinkInline>
 				</div>
 			</section>
 
