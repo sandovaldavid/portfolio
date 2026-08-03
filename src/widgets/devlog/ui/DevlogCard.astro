@@ -21,37 +21,35 @@ const slug = getDevlogSlug(post);
 	<div
 		class="flex items-center gap-2 border-b-2 border-black dark:border-white bg-primary-500/10 px-4 py-2"
 	>
-		<span
-			class="font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400"
-		>
+		<span class="text-editorial-label uppercase text-primary-600 dark:text-primary-400">
 			{version}
 		</span>
-		<span class="ml-auto font-mono text-xs text-content-muted">
+		<span class="ml-auto text-caption text-content-muted">
 			#{slug}
 		</span>
 	</div>
 	<div class="p-5">
 		<div class="mb-2 flex items-center gap-2">
-			<time class="font-mono text-xs text-content-muted" datetime={pubDate.toISOString()}>
+			<time class="text-caption text-content-muted" datetime={pubDate.toISOString()}>
 				[{formattedDate}]
 			</time>
 			{
 				tags.map(tag => (
-					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400">
+					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
 						{tag}
 					</span>
 				))
 			}
 		</div>
-		<h2 class="mb-2 text-xl font-bold font-pixel-clean tracking-wide text-content-strong">
+		<h2 class="mb-2 text-subheading text-content-strong">
 			{title}
 		</h2>
-		<p class="mb-4 text-base leading-relaxed text-content-muted">
+		<p class="mb-4 text-body text-content-muted">
 			{summary}
 		</p>
 		<a
 			href={readMoreLink}
-			class="inline-flex items-center gap-1.5 font-mono text-xs font-bold uppercase tracking-wider text-primary-600 dark:text-primary-400 hover:underline"
+			class="inline-flex items-center gap-1.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400 hover:underline"
 		>
 			{readMoreText}
 			<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
