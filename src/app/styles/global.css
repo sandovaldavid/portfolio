@@ -78,6 +78,17 @@ html {
 	scrollbar-width: auto;
 }
 
+/* #main-content (and Layout's non-home content wrapper directly inside it)
+   both use align-items: center, so a page's content div is a flex item sized
+   by its own content instead of stretched to the viewport. A non-wrapping
+   child (a code block with a long unbroken line) can then grow past the
+   viewport and widen the whole page instead of scrolling within its own
+   overflow-x: auto box. */
+#main-content > *,
+#main-content > * > * {
+	max-width: 100%;
+}
+
 @layer base {
 	h1,
 	h2,
