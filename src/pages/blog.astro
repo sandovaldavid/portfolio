@@ -20,14 +20,14 @@ const posts = await getBlogPosts(lang);
 		<div class="mx-auto max-w-4xl">
 			<header class="mb-12">
 				<p
-					class="mb-2 font-retro-tag text-sm font-bold uppercase tracking-widest text-primary-500 dark:text-primary-400"
+					class="mb-2 text-editorial-label uppercase text-primary-500 dark:text-primary-400"
 				>
 					{tBlog('label')}
 				</p>
-				<h1 class="mb-4 text-3xl font-bold font-pixel-clean tracking-wide md:text-5xl">
+				<h1 class="mb-4 text-3xl md:text-page-title">
 					{tBlog('heading')}
 				</h1>
-				<p class="max-w-2xl text-base leading-relaxed text-content-muted">
+				<p class="max-w-2xl text-body text-content-muted">
 					{tBlog('subheading')}
 				</p>
 			</header>
