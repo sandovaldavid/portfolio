@@ -49,6 +49,9 @@ card remains available for channels that require a light surface.
 
 Critical local faces use `font-display: swap`. The hero name uses JetBrains Mono 700 with the
 Identity System display proportions: 72 px at the large breakpoint, 80 px line height, and
-approximately -2 px tracking. The color implementation remains in `src/app/styles/colors.css`;
-its OKLCH primitives and semantic/channel aliases already match the approved Figma HEX/sRGB
-references, so this synchronization does not introduce a second palette.
+approximately -2 px tracking.
+
+The UI color implementation remains in `src/app/styles/colors.css`. Its OKLCH primitives and
+semantic/channel aliases match the approved Figma references. Raster generation uses the
+immutable sRGB export snapshot in `src/assets/brand/export-palette.ts`; that file is governed
+artwork data for OG/PWA rendering, not an alternative UI token system.
