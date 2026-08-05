@@ -1,5 +1,5 @@
 import { spawnSync } from 'node:child_process';
-import { existsSync, lstatSync, readFileSync } from 'node:fs';
+import { existsSync, lstatSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const mode = process.argv[2];
@@ -71,22 +71,6 @@ for (let index = 0; index < trackedFiles.length; index += batchSize) {
 	}
 
 	if (prettierResult.status !== 0) {
-		if (mode === '--check' && batch.includes('tests/e2e/brand-identity.spec.ts')) {
-			spawnSync(
-				process.execPath,
-				[
-					prettierCli,
-					'--write',
-					'--ignore-path',
-					'.prettierignore',
-					'tests/e2e/brand-identity.spec.ts',
-				],
-				{ stdio: 'inherit' }
-			);
-			console.log('--- BEGIN FORMATTED BRAND IDENTITY TEST ---');
-			console.log(readFileSync('tests/e2e/brand-identity.spec.ts', 'utf8'));
-			console.log('--- END FORMATTED BRAND IDENTITY TEST ---');
-		}
 		process.exit(prettierResult.status ?? 1);
 	}
 }
