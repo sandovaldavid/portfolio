@@ -10,7 +10,6 @@ on:
             - '.agents/**'
             - '.claude/**'
             - '.vscode/**'
-            - '.github/**'
     push:
         branches: [develop]
 
