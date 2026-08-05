@@ -13,24 +13,16 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 	aria-label={accessibleLabel}
 	class={`brand-logo-link inline-flex h-11 items-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none sm:w-[210px] ${className}`}
 >
-	<span class="size-8 shrink-0" aria-hidden="true">
-		<img
-			src="/brand/logo-primary-light.svg"
-			alt=""
-			width="32"
-			height="32"
-			class="block size-8 dark:hidden"
-			data-brand-mode="light"
-		/>
-		<img
-			src="/brand/logo-primary-dark.svg"
-			alt=""
-			width="32"
-			height="32"
-			class="hidden size-8 dark:block"
-			data-brand-mode="dark"
-		/>
-	</span>
+	<img
+		src="/brand/logo-primary-dark.svg"
+		alt=""
+		width="32"
+		height="32"
+		class="block size-8 shrink-0"
+		data-brand-logo
+		data-brand-mode="dark"
+		aria-hidden="true"
+	/>
 	<span
 		class="brand-logo-signature hidden sm:inline-block font-gaming-mono text-base leading-[22px] tracking-[1px]"
 		aria-hidden="true"
@@ -38,6 +30,33 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 		&lt;sandovaldavid/&gt;
 	</span>
 </a>
+
+<script>
+	const syncBrandLogoAssets = () => {
+		const mode = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+		const source = `/brand/logo-primary-${mode}.svg`;
+
+		document.querySelectorAll<HTMLImageElement>('[data-brand-logo]').forEach(image => {
+			if (image.getAttribute('src') !== source) image.setAttribute('src', source);
+			image.dataset.brandMode = mode;
+		});
+	};
+
+	const setupBrandLogoAssets = () => {
+		syncBrandLogoAssets();
+
+		if (document.documentElement.dataset.brandLogoObserver === 'ready') return;
+		document.documentElement.dataset.brandLogoObserver = 'ready';
+
+		new MutationObserver(syncBrandLogoAssets).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+	};
+
+	setupBrandLogoAssets();
+	document.addEventListener('astro:page-load', setupBrandLogoAssets);
+</script>
 
 <style>
 	.brand-logo-link {
