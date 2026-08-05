@@ -16,10 +16,12 @@ describe('navigation lockup contract', () => {
 		expect(source).toContain('tracking-[1px]');
 		expect(source).toContain('h-11');
 		expect(source).toContain(':focus-visible');
+		expect(source).toContain('outline-offset: -2px');
 		expect(source).toContain('@media (prefers-reduced-motion: reduce)');
 		expect(source).toContain('data-brand-logo');
 		expect(source).toContain('MutationObserver');
 		expect(source).toContain("setAttribute('src', source)");
+		expect(source).not.toContain('sm:w-[210px]');
 
 		for (const forbidden of [
 			'prompt-symbol',
