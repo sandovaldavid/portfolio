@@ -10,6 +10,8 @@ on:
             - '.agents/**'
             - '.claude/**'
             - '.vscode/**'
+    push:
+        branches: [develop]
 
 permissions:
     contents: read
@@ -17,7 +19,7 @@ permissions:
     pull-requests: write
 
 concurrency:
-    group: vercel-preview-${{ github.event.pull_request.number }}
+    group: vercel-preview-${{ github.event.pull_request.number || 'develop' }}
     cancel-in-progress: true
 
 jobs:
@@ -28,10 +30,10 @@ jobs:
             name: Preview
             url: ${{ steps.deploy.outputs.preview_url }}
         steps:
-            - name: Checkout pull request head
+            - name: Checkout deployment revision
               uses: actions/checkout@v7
               with:
-                  ref: ${{ github.event.pull_request.head.sha }}
+                  ref: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.head.sha }}
 
             - name: Checkout canonical resume assets
               uses: actions/checkout@v7
@@ -63,13 +65,17 @@ jobs:
               id: deploy
               run: |
                   PREVIEW_URL=$(bunx vercel deploy --prebuilt --yes --token=${{ secrets.VERCEL_TOKEN }})
+                  if [ "${{ github.event_name }}" = "push" ]; then
+                    bunx vercel alias set "$PREVIEW_URL" dev.sandovaldavid.com --token=${{ secrets.VERCEL_TOKEN }}
+                    PREVIEW_URL=https://dev.sandovaldavid.com
+                  fi
                   echo "preview_url=$PREVIEW_URL" >> "$GITHUB_OUTPUT"
               env:
                   VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
                   VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
 
             - name: Create or update PR comment
-              if: success()
+              if: github.event_name == 'pull_request' && success()
               uses: actions/github-script@v9
               with:
                   script: |
@@ -116,7 +122,7 @@ jobs:
               run: |
                   echo "## Vercel Preview" >> "$GITHUB_STEP_SUMMARY"
                   echo "Status: ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"
-                  echo "Source SHA: ${{ github.event.pull_request.head.sha }}" >> "$GITHUB_STEP_SUMMARY"
+                  echo "Source SHA: ${{ github.event_name == 'push' && github.sha || github.event.pull_request.head.sha }}" >> "$GITHUB_STEP_SUMMARY"
                   if [ -n "${{ steps.deploy.outputs.preview_url }}" ]; then
                     echo "Preview URL: ${{ steps.deploy.outputs.preview_url }}" >> "$GITHUB_STEP_SUMMARY"
                   fi

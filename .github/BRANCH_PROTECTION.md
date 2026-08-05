@@ -74,11 +74,11 @@ Use branch target `main` and configure:
 
 ### Preview
 
-The `Preview` environment is used by pull requests targeting `develop` or `main`.
+The `Preview` environment is used by pull requests targeting `develop` or `main`, and by the post-merge deployment from `develop`.
 
 Recommended configuration:
 
-- allow deployments from pull-request refs;
+- allow deployments from pull-request refs and the `develop` branch;
 - do not make the Preview deployment a required merge check;
 - keep Vercel credentials scoped to the Preview environment;
 - review deployment history when a preview is used as manual evidence.
@@ -112,7 +112,7 @@ Verify:
 - [ ] `main` accepts promotion, hotfix and Release Please pull requests and rejects direct/force pushes.
 - [ ] Pull requests into `develop` report the five stable checks; pull requests into `main` report those five plus the three `Main Quality` jobs.
 - [ ] Check names in rulesets exactly match the workflow job names above.
-- [ ] Preview runs for pull requests into `develop` and `main` when credentials are available.
+- [ ] Preview runs for pull requests into `develop` and `main` when credentials are available, and pushes to `develop` update `https://dev.sandovaldavid.com`.
 - [ ] Preview and PR summary remain informative rather than required.
 - [ ] `Main Quality` runs as a pull-request check against `main` (or manual dispatch), not on push.
 - [ ] Production deploys directly on push to `main`, except documented manual/resume dispatches.

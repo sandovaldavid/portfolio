@@ -42,7 +42,7 @@ The promotion uses a real merge commit so the integrated commits remain ancestor
 
 ## Preview and production
 
-`Deploy to Vercel Preview` builds the exact pull-request head for changes targeting `develop` or `main` when credentials are available.
+`Deploy to Vercel Preview` builds the exact pull-request head for changes targeting `develop` or `main` when credentials are available. It also runs after every push to `develop`, including a merged pull request, and assigns that deployment to `https://dev.sandovaldavid.com`.
 
 `main` is the only normal production source. A push to `main` triggers the production workflow, which verifies the selected revision, installs the canonical resume assets and deploys through the Vercel production environment.
 
