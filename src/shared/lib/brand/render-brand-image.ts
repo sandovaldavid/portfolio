@@ -100,11 +100,24 @@ const createProjectMarkSvg = (mode: BrandMode): string => {
 	`;
 };
 
-export const renderOpenGraphImage = async (mode: BrandMode): Promise<Buffer> =>
-	sharp(Buffer.from(await createOpenGraphSvg(mode))).png({ compressionLevel: 9 }).toBuffer();
+const toResponseBody = (buffer: Buffer): Uint8Array<ArrayBuffer> => Uint8Array.from(buffer);
 
-export const renderProjectMark = async (mode: BrandMode, size: number): Promise<Buffer> =>
-	sharp(Buffer.from(createProjectMarkSvg(mode)))
-		.resize(size, size, { fit: 'contain' })
-		.png({ compressionLevel: 9 })
-		.toBuffer();
+export const renderOpenGraphImage = async (
+	mode: BrandMode,
+): Promise<Uint8Array<ArrayBuffer>> =>
+	toResponseBody(
+		await sharp(Buffer.from(await createOpenGraphSvg(mode)))
+			.png({ compressionLevel: 9 })
+			.toBuffer(),
+	);
+
+export const renderProjectMark = async (
+	mode: BrandMode,
+	size: number,
+): Promise<Uint8Array<ArrayBuffer>> =>
+	toResponseBody(
+		await sharp(Buffer.from(createProjectMarkSvg(mode)))
+			.resize(size, size, { fit: 'contain' })
+			.png({ compressionLevel: 9 })
+			.toBuffer(),
+	);
