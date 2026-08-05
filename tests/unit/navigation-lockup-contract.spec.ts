@@ -7,8 +7,8 @@ describe('navigation lockup contract', () => {
 	it('uses the approved assets and removes the legacy terminal animation', () => {
 		const source = readSource('src/widgets/header/ui/BrandLogo.astro');
 
-		expect(source).toContain('/brand/logo-primary-light.svg');
-		expect(source).toContain('/brand/logo-primary-dark.svg');
+		expect(source).toContain('src="/brand/logo-primary-dark.svg"');
+		expect(source).toContain('`/brand/logo-primary-${mode}.svg`');
 		expect(source).toContain('&lt;sandovaldavid/&gt;');
 		expect(source).toContain('font-gaming-mono');
 		expect(source).toContain('text-base');
