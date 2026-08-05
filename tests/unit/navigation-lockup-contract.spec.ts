@@ -17,7 +17,9 @@ describe('navigation lockup contract', () => {
 		expect(source).toContain('h-11');
 		expect(source).toContain(':focus-visible');
 		expect(source).toContain('@media (prefers-reduced-motion: reduce)');
-		expect(source).not.toContain('<script>');
+		expect(source).toContain('data-brand-logo');
+		expect(source).toContain('MutationObserver');
+		expect(source).toContain("setAttribute('src', source)");
 
 		for (const forbidden of [
 			'prompt-symbol',
