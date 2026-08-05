@@ -11,7 +11,7 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 <a
 	{href}
 	aria-label={accessibleLabel}
-	class={`brand-logo-link inline-flex h-11 items-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none sm:w-[210px] ${className}`}
+	class={`brand-logo-link inline-flex h-11 items-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none ${className}`}
 >
 	<img
 		src="/brand/logo-primary-dark.svg"
@@ -62,7 +62,7 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 	.brand-logo-link {
 		color: var(--color-content-strong);
 		outline: 2px solid transparent;
-		outline-offset: 2px;
+		outline-offset: -2px;
 		transition:
 			color 160ms ease,
 			outline-color 160ms ease;

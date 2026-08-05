@@ -33,7 +33,7 @@
 		"test": "node scripts/run-playwright.mjs",
 		"test:docker": "bash docker/docker-test.sh",
 		"test:local": "node scripts/run-playwright.mjs --project=chromium --project=firefox --project='Mobile Chrome'",
-		"test:e2e:smoke": "node scripts/run-playwright.mjs tests/e2e/smoke.spec.ts tests/e2e/design-system-colors.spec.ts tests/e2e/performance.spec.ts tests/e2e/editorial-localization.spec.ts tests/e2e/i18n-routing.spec.ts tests/e2e/metadata-localization.spec.ts tests/e2e/i18n-enforcement.spec.ts tests/e2e/recruiter-journey.spec.ts tests/e2e/brand-identity.spec.ts --project=chromium",
+		"test:e2e:smoke": "node scripts/run-playwright.mjs tests/e2e/smoke.spec.ts tests/e2e/design-system-colors.spec.ts tests/e2e/performance.spec.ts tests/e2e/editorial-localization.spec.ts tests/e2e/i18n-routing.spec.ts tests/e2e/metadata-localization.spec.ts tests/e2e/i18n-enforcement.spec.ts tests/e2e/recruiter-journey.spec.ts tests/e2e/brand-identity.spec.ts tests/e2e/navigation-focus-geometry.spec.ts --project=chromium",
 		"test:e2e:report": "playwright show-report playwright-report --host 127.0.0.1 --port 9323",
 		"test:e2e:desktop": "node scripts/run-playwright.mjs --project=chromium --project=firefox --project=webkit",
 		"test:e2e:extended": "node scripts/run-playwright.mjs --project=chromium --project=firefox --project=webkit --project='Mobile Chrome' --project='Mobile Safari'",
