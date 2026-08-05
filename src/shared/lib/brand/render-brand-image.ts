@@ -1,5 +1,5 @@
-import { readFile } from 'node:fs/promises';
-
+import jetBrainsMonoBoldUrl from '../../../assets/fonts/jetbrains-mono-700.woff2?inline';
+import silkscreenBoldUrl from '../../../assets/fonts/silkscreen-700.woff2?inline';
 import sharp from 'sharp';
 
 export type BrandMode = 'light' | 'dark';
@@ -25,36 +25,20 @@ const PALETTES = {
 	},
 } as const;
 
-const fontFiles = {
-	jetBrainsMonoBold: new URL('../../../assets/fonts/jetbrains-mono-700.woff2', import.meta.url),
-	silkscreenBold: new URL('../../../assets/fonts/silkscreen-700.woff2', import.meta.url),
-};
-
-let fontCssPromise: Promise<string> | undefined;
-
-const getEmbeddedFontCss = (): Promise<string> => {
-	fontCssPromise ??= Promise.all([
-		readFile(fontFiles.jetBrainsMonoBold, 'base64'),
-		readFile(fontFiles.silkscreenBold, 'base64'),
-	]).then(
-		([jetBrainsMonoBold, silkscreenBold]) => `
-			@font-face {
-				font-family: 'JetBrains Mono';
-				src: url(data:font/woff2;base64,${jetBrainsMonoBold}) format('woff2');
-				font-weight: 700;
-				font-style: normal;
-			}
-			@font-face {
-				font-family: 'Silkscreen';
-				src: url(data:font/woff2;base64,${silkscreenBold}) format('woff2');
-				font-weight: 700;
-				font-style: normal;
-			}
-		`,
-	);
-
-	return fontCssPromise;
-};
+const FONT_CSS = `
+	@font-face {
+		font-family: 'JetBrains Mono';
+		src: url('${jetBrainsMonoBoldUrl}') format('woff2');
+		font-weight: 700;
+		font-style: normal;
+	}
+	@font-face {
+		font-family: 'Silkscreen';
+		src: url('${silkscreenBoldUrl}') format('woff2');
+		font-weight: 700;
+		font-style: normal;
+	}
+`;
 
 const logoGeometry = (mode: BrandMode): string => {
 	const palette = PALETTES[mode];
@@ -72,13 +56,12 @@ const logoGeometry = (mode: BrandMode): string => {
 	`;
 };
 
-const createOpenGraphSvg = async (mode: BrandMode): Promise<string> => {
+const createOpenGraphSvg = (mode: BrandMode): string => {
 	const palette = PALETTES[mode];
-	const fontCss = await getEmbeddedFontCss();
 
 	return `
 		<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<style>${fontCss}</style>
+			<style>${FONT_CSS}</style>
 			<rect width="1200" height="630" fill="${palette.background}"/>
 			<rect width="18" height="630" fill="${palette.primary}"/>
 			<rect x="80" y="444" width="620" height="4" fill="${palette.border}"/>
@@ -106,9 +89,7 @@ export const renderOpenGraphImage = async (
 	mode: BrandMode,
 ): Promise<Uint8Array<ArrayBuffer>> =>
 	toResponseBody(
-		await sharp(Buffer.from(await createOpenGraphSvg(mode)))
-			.png({ compressionLevel: 9 })
-			.toBuffer(),
+		await sharp(Buffer.from(createOpenGraphSvg(mode))).png({ compressionLevel: 9 }).toBuffer(),
 	);
 
 export const renderProjectMark = async (
