@@ -34,7 +34,7 @@ jobs:
             - name: Build production output with bundle visualizer
               env:
                   ANALYZE_BUNDLE: 'true'
-              run: bun run build
+              run: bun run astro build
 
             - name: Validate generated internal links
               run: bun run check:links
