@@ -137,62 +137,61 @@ test.describe('navigation brand lockup', () => {
 	}
 
 	for (const theme of ['light', 'dark'] as const) {
-		test(
-			`${theme} mode exposes stable default, hover and focus states`,
-			async ({ page }, testInfo) => {
-				await page.setViewportSize({ width: 1280, height: 800 });
-				await installTheme(page, theme);
-				await page.goto('/');
+		test(`${theme} mode exposes stable default, hover and focus states`, async ({
+			page,
+		}, testInfo) => {
+			await page.setViewportSize({ width: 1280, height: 800 });
+			await installTheme(page, theme);
+			await page.goto('/');
 
-				const header = page.locator('header').first();
-				const brandLink = header.locator('a.brand-logo-link');
-				const signature = brandLink.locator('.brand-logo-signature');
-				const mark = brandLink.locator('[data-brand-logo]');
+			const header = page.locator('header').first();
+			const brandLink = header.locator('a.brand-logo-link');
+			const signature = brandLink.locator('.brand-logo-signature');
+			const mark = brandLink.locator('[data-brand-logo]');
 
-				await expect(mark).toHaveAttribute('src', `/brand/logo-primary-${theme}.svg`);
-				await expect(mark).toHaveAttribute('data-brand-mode', theme);
+			await expect(mark).toHaveAttribute('src', `/brand/logo-primary-${theme}.svg`);
+			await expect(mark).toHaveAttribute('data-brand-mode', theme);
 
-				const defaultState = await signature.evaluate(element => ({
-					color: getComputedStyle(element).color,
-					underlineTransform: getComputedStyle(element, '::after').transform,
-				}));
-				await testInfo.attach(`navigation-lockup-${theme}-default`, {
-					body: await header.screenshot(),
-					contentType: 'image/png',
-				});
+			const defaultState = await signature.evaluate(element => ({
+				color: getComputedStyle(element).color,
+				underlineTransform: getComputedStyle(element, '::after').transform,
+			}));
+			await testInfo.attach(`navigation-lockup-${theme}-default`, {
+				body: await header.screenshot(),
+				contentType: 'image/png',
+			});
 
-				await brandLink.hover();
-				await page.waitForTimeout(200);
-				const hoverState = await signature.evaluate(element => ({
-					color: getComputedStyle(element).color,
-					underlineTransform: getComputedStyle(element, '::after').transform,
-				}));
-				expect(hoverState.color).not.toBe(defaultState.color);
-				expect(hoverState.underlineTransform).not.toBe(defaultState.underlineTransform);
-				await testInfo.attach(`navigation-lockup-${theme}-hover`, {
-					body: await header.screenshot(),
-					contentType: 'image/png',
-				});
+			await brandLink.hover();
+			await page.waitForTimeout(200);
+			const hoverState = await signature.evaluate(element => ({
+				color: getComputedStyle(element).color,
+				underlineTransform: getComputedStyle(element, '::after').transform,
+			}));
+			expect(hoverState.color).not.toBe(defaultState.color);
+			expect(hoverState.underlineTransform).not.toBe(defaultState.underlineTransform);
+			await testInfo.attach(`navigation-lockup-${theme}-hover`, {
+				body: await header.screenshot(),
+				contentType: 'image/png',
+			});
 
-				await brandLink.focus();
-				await expect(brandLink).toBeFocused();
-				const focusState = await brandLink.evaluate(element => {
-					const style = getComputedStyle(element);
-					return {
-						outlineWidth: style.outlineWidth,
-						outlineStyle: style.outlineStyle,
-						outlineColor: style.outlineColor,
-					};
-				});
-				expect(focusState.outlineWidth).toBe('2px');
-				expect(focusState.outlineStyle).toBe('solid');
-				expect(focusState.outlineColor).not.toBe('rgba(0, 0, 0, 0)');
-				await testInfo.attach(`navigation-lockup-${theme}-focus`, {
-					body: await header.screenshot(),
-					contentType: 'image/png',
-				});
-			}
-		);
+			await brandLink.focus();
+			await expect(brandLink).toBeFocused();
+			const focusState = await brandLink.evaluate(element => {
+				const style = getComputedStyle(element);
+				return {
+					outlineWidth: style.outlineWidth,
+					outlineStyle: style.outlineStyle,
+					outlineColor: style.outlineColor,
+				};
+			});
+			expect(focusState.outlineWidth).toBe('2px');
+			expect(focusState.outlineStyle).toBe('solid');
+			expect(focusState.outlineColor).not.toBe('rgba(0, 0, 0, 0)');
+			await testInfo.attach(`navigation-lockup-${theme}-focus`, {
+				body: await header.screenshot(),
+				contentType: 'image/png',
+			});
+		});
 	}
 
 	for (const viewport of [
@@ -240,29 +239,28 @@ test.describe('navigation brand lockup', () => {
 		});
 	}
 
-	test(
-		'captures compact mobile evidence in Light and Dark Mode',
-		async ({ page }, testInfo) => {
-			await page.setViewportSize({ width: 390, height: 844 });
+	test('captures compact mobile evidence in Light and Dark Mode', async ({ page }, testInfo) => {
+		await page.setViewportSize({ width: 390, height: 844 });
 
-			for (const theme of ['light', 'dark'] as const) {
-				await installTheme(page, theme);
-				await page.goto('/');
-				const header = page.locator('header').first();
-				await expect(header.locator('.brand-logo-signature')).toBeHidden();
-				await expect(header.locator('[data-brand-logo]')).toHaveAttribute(
-					'src',
-					`/brand/logo-primary-${theme}.svg`
-				);
-				await testInfo.attach(`navigation-lockup-${theme}-mobile`, {
-					body: await header.screenshot(),
-					contentType: 'image/png',
-				});
-			}
+		for (const theme of ['light', 'dark'] as const) {
+			await installTheme(page, theme);
+			await page.goto('/');
+			const header = page.locator('header').first();
+			await expect(header.locator('.brand-logo-signature')).toBeHidden();
+			await expect(header.locator('[data-brand-logo]')).toHaveAttribute(
+				'src',
+				`/brand/logo-primary-${theme}.svg`
+			);
+			await testInfo.attach(`navigation-lockup-${theme}-mobile`, {
+				body: await header.screenshot(),
+				contentType: 'image/png',
+			});
 		}
-	);
+	});
 
-	test('reduced motion keeps the lockup stable and free of inline animation', async ({ page }) => {
+	test('reduced motion keeps the lockup stable and free of inline animation', async ({
+		page,
+	}) => {
 		await page.emulateMedia({ reducedMotion: 'reduce' });
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await installTheme(page, 'dark');
