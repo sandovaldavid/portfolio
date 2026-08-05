@@ -1,7 +1,4 @@
-import {
-	BRAND_EXPORT_PALETTES,
-	type BrandExportMode,
-} from '../../../assets/brand/export-palette';
+import { BRAND_EXPORT_PALETTES, type BrandExportMode } from '../../../assets/brand/export-palette';
 import jetBrainsMonoBoldUrl from '../../../assets/fonts/jetbrains-mono-700.woff2?inline';
 import silkscreenBoldUrl from '../../../assets/fonts/silkscreen-700.woff2?inline';
 import sharp from 'sharp';
