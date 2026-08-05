@@ -53,7 +53,7 @@ jobs:
                       ${{ runner.os }}-astro-main-
 
             - name: Build production output
-              run: bun run build
+              run: bun run astro build
 
             - name: Validate generated internal links
               run: bun run check:links
