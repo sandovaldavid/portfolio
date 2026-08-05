@@ -165,9 +165,11 @@ describe('Portfolio Retro color architecture', () => {
 		expect(colors).toContain(
 			'--color-logo-brackets: light-dark(var(--color-primary-800), var(--color-primary-400-light));'
 		);
-		expect(logo).toContain('text-logo-primary');
-		expect(logo).toContain('var(--color-logo-effect-magenta)');
+		expect(logo).toContain('color: var(--color-content-strong);');
+		expect(logo).toContain('color: var(--channel-accent-primary);');
 		expect(logo).toContain('@media (prefers-reduced-motion: reduce)');
+		expect(logo).not.toContain('var(--color-logo-effect-magenta)');
+		expect(logo).not.toContain('var(--color-logo-effect-cyan)');
 		expect(logo).not.toMatch(/#(?:1e40af|3b82f6)/i);
 	});
 

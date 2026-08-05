@@ -6,8 +6,8 @@
  *
  * Architecture: Composes smaller UI components following FSD
  * - BrandLogo: Left section with logo
- * - DesktopNav: Center navigation (md and above)
- * - MobileNav: Right section with mobile menu
+ * - DesktopNav: Center navigation (lg and above)
+ * - MobileNav: Right section below lg
  *
  * ThemeToggle and LanguagePicker live in RecruiterHUD, not here.
  */
@@ -76,17 +76,17 @@ const navItems = [
 >
 	<div class="flex items-center justify-between px-4 py-4 md:px-8 max-w-7xl mx-auto w-full">
 		<!-- Left: Brand Logo -->
-		<div class="w-auto md:w-48 lg:w-72 shrink-0">
-			<BrandLogo href={homeUrl} />
+		<div class="shrink-0">
+			<BrandLogo href={homeUrl} accessibleLabel={tAccessibility('brandHomeLink')} />
 		</div>
 
 		<!-- Center: Desktop Navigation -->
-		<div class="flex-1 flex justify-center">
+		<div class="hidden lg:flex flex-1 min-w-0 justify-center">
 			<DesktopNav navLabel={tAccessibility('mainNavigation')} {navItems} />
 		</div>
 
 		<!-- Right: Actions (Desktop) -->
-		<div class="hidden md:flex items-center justify-end gap-4 shrink-0 md:w-48 lg:w-72">
+		<div class="hidden lg:flex items-center justify-end gap-4 shrink-0">
 			<LinkButton
 				href={lang === 'en' ? siteConfig.resume.en : siteConfig.resume.es}
 				target="_blank"
@@ -98,7 +98,7 @@ const navItems = [
 		</div>
 
 		<!-- Mobile Menu Button -->
-		<div class="flex md:hidden items-center gap-3 shrink-0">
+		<div class="flex lg:hidden items-center gap-3 shrink-0">
 			<MobileNav
 				{navItems}
 				{lang}
