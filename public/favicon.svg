@@ -1,6 +1,22 @@
-<svg width="280" height="280" viewBox="0 0 280 280" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="140" cy="140" r="130.4" stroke="#8A5CF6" stroke-width="19.2"/>
-<path d="M191.958 92.1884L209.552 108.022C225.548 122.419 233.546 129.618 233.546 138.855C233.546 148.092 225.548 155.291 209.552 169.688L191.958 185.522" stroke="#3C81F1" stroke-width="25.6" stroke-linecap="round"/>
-<path d="M160.71 62.8445L119.502 216.634" stroke="#3C81F1" stroke-width="25.6" stroke-linecap="round"/>
-<path d="M88.255 92.1884L70.6619 108.022C54.665 122.419 46.6667 129.618 46.6667 138.855C46.6667 148.092 54.665 155.291 70.6619 169.688L88.255 185.522" stroke="#3C81F1" stroke-width="25.6" stroke-linecap="round"/>
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style>
+  .ring { stroke: #0044CC; }
+  .bracket, .slash { stroke: #1E40AF; }
+  .slash-accent { stroke: #00B0FF; }
+  @media (prefers-color-scheme: dark) {
+    .ring { stroke: #00B0FF; }
+    .bracket, .slash { stroke: #3B82F6; }
+    .slash-accent { stroke: #00D8FF; }
+  }
+</style>
+<circle class="ring" cx="32" cy="32" r="26.25" stroke-width="3.5"/>
+<path class="bracket" d="M23.75 21.25L13 32L23.75 42.75" stroke-width="5.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path class="bracket" d="M40.25 21.25L51 32L40.25 42.75" stroke-width="5.25" stroke-linecap="round" stroke-linejoin="round"/>
+<path class="slash" d="M35.75 15L28.25 49" stroke-width="5.25" stroke-linecap="round"/>
+<mask id="slash-accent" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="17" y="30" width="27" height="28">
+<path d="M20 30.625L41.25 39.375L43.75 57.5H17.5L20 30.625Z" fill="white"/>
+</mask>
+<g mask="url(#slash-accent)">
+<path class="slash-accent" d="M35.75 15L28.25 49" stroke-width="5.25" stroke-linecap="round"/>
+</g>
 </svg>

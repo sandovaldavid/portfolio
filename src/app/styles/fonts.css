@@ -1,0 +1,29 @@
+/*
+ * Critical Identity System web fonts.
+ * Inter is the reading face and JetBrains Mono is the display face.
+ * Local WOFF2 sources prevent network-dependent rendering and `swap` ensures
+ * the intended family replaces the metric-compatible fallback after reload.
+ */
+@font-face {
+	font-family: 'Inter';
+	src: url('../../assets/fonts/inter-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Inter';
+	src: url('../../assets/fonts/inter-500.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Fira Code';
+	src: url('../../assets/fonts/fira-code-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
