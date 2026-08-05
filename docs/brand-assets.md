@@ -16,20 +16,18 @@ provenance instead of being silently rewritten.
 
 ## Export mapping
 
-| Repository asset                         | Figma source                         |
-| ---------------------------------------- | ------------------------------------ |
-| `public/brand/logo-primary-light.svg`    | Primary Light `15:2`                 |
-| `public/brand/logo-primary-dark.svg`     | Primary Dark `16:2`                  |
-| `public/brand/project-mark-light.svg`    | Project Mark / Square / Light `19:24` |
-| `public/brand/project-mark-dark.svg`     | Project Mark / Square / Dark `19:35` |
-| `public/brand/favicon-16-light.svg`       | Favicon / 16 / Light `20:38`         |
-| `public/brand/favicon-16-dark.svg`        | Favicon / 16 / Dark `20:49`          |
-| `public/brand/favicon-32-light.svg`       | Favicon / 32 / Light `20:60`         |
-| `public/brand/favicon-32-dark.svg`        | Favicon / 32 / Dark `20:71`          |
-| `public/brand/favicon-64-light.svg`       | Favicon / 64 / Light `20:82`         |
-| `public/brand/favicon-64-dark.svg`        | Favicon / 64 / Dark `20:93`          |
-| `public/brand/watermark-light.svg`        | Watermark Light `21:95`              |
-| `public/brand/watermark-dark.svg`         | Watermark Dark `21:106`              |
+- `public/brand/logo-primary-light.svg`: Primary Light, node `15:2`.
+- `public/brand/logo-primary-dark.svg`: Primary Dark, node `16:2`.
+- `public/brand/project-mark-light.svg`: Project Mark / Square / Light, node `19:24`.
+- `public/brand/project-mark-dark.svg`: Project Mark / Square / Dark, node `19:35`.
+- `public/brand/favicon-16-light.svg`: Favicon / 16 / Light, node `20:38`.
+- `public/brand/favicon-16-dark.svg`: Favicon / 16 / Dark, node `20:49`.
+- `public/brand/favicon-32-light.svg`: Favicon / 32 / Light, node `20:60`.
+- `public/brand/favicon-32-dark.svg`: Favicon / 32 / Dark, node `20:71`.
+- `public/brand/favicon-64-light.svg`: Favicon / 64 / Light, node `20:82`.
+- `public/brand/favicon-64-dark.svg`: Favicon / 64 / Dark, node `20:93`.
+- `public/brand/watermark-light.svg`: Watermark Light, node `21:95`.
+- `public/brand/watermark-dark.svg`: Watermark Dark, node `21:106`.
 
 `public/favicon.svg` preserves the approved 64 px geometry and resolves the light or dark
 palette using `prefers-color-scheme`. `public/favicon.ico` is the legacy browser fallback.
