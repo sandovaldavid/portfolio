@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-import { renderOpenGraphImage } from '@shared/lib/brand/render-brand-image';
+import { renderOpenGraphImage } from '@shared/lib/brand';
 
 export const prerender = true;
 
