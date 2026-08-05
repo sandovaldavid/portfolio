@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 
-import { renderProjectMark } from '@shared/lib/brand/render-brand-image';
+import { renderProjectMark } from '@shared/lib/brand';
 
 export const prerender = true;
 
