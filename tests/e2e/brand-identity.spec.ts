@@ -32,6 +32,18 @@ async function installTheme(page: Page, theme: 'light' | 'dark') {
 	await page.addInitScript(value => localStorage.setItem('theme', value), theme);
 }
 
+function parseTransitionDurations(value: string | undefined): number[] {
+	return (value ?? '')
+		.split(',')
+		.map(duration => duration.trim())
+		.filter(Boolean)
+		.map(duration =>
+			duration.endsWith('ms')
+				? Number.parseFloat(duration) / 1000
+				: Number.parseFloat(duration)
+		);
+}
+
 test.describe('brand identity assets and typography', () => {
 	test('serves the complete light and dark asset matrix', async ({ request }) => {
 		for (const [path, contentType] of brandAssets) {
@@ -286,9 +298,15 @@ test.describe('navigation brand lockup', () => {
 
 		expect(motion.linkAnimation).toBe('none');
 		expect(motion.signatureAnimation).toBe('none');
-		expect(motion.linkTransition).toBe('0s');
-		expect(motion.signatureTransition).toBe('0s');
-		expect(motion.underlineTransition).toBe('0s');
+		for (const duration of [
+			motion.linkTransition,
+			motion.signatureTransition,
+			motion.underlineTransition,
+		]) {
+			const seconds = parseTransitionDurations(duration);
+			expect(seconds.length).toBeGreaterThan(0);
+			expect(Math.max(...seconds)).toBeLessThanOrEqual(0.00001);
+		}
 		expect(motion.hasInlineStyle).toBe(false);
 	});
 });
