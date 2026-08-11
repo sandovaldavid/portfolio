@@ -6,9 +6,6 @@ on:
         types: [opened, synchronize, reopened]
         paths-ignore:
             - 'docs/**'
-            - '*.md'
-            - '.agents/**'
-            - '.claude/**'
             - '.vscode/**'
     push:
         branches: [develop]
