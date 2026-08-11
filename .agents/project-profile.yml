@@ -12,6 +12,7 @@ primary_agent: project-maintainer
 specialists:
   - architecture-reviewer
   - quality-gate-runner
+  - cross-repo-contract-reviewer
   - ux-accessibility-reviewer
   - evidence-content-reviewer
   - docs-memory-synchronizer
