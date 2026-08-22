@@ -1,17 +1,20 @@
 ---
 import CodeIcon from '@assets/icons/Code.astro';
 import MailIcon from '@assets/icons/Mail.astro';
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
 import {
 	Avatar,
 	Badge,
+	Button,
 	LinkButton,
 	LinkInline,
 	SectionContainer,
 	SocialPill,
 	TitleSection,
+	TechPill,
 } from '@shared/ui';
 
 interface Props {
@@ -22,13 +25,31 @@ const { lang } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.components');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const newTabLabel = tAccessibility('externalLink');
-const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
+const avatarSizes = ['xs', 'sm', 'md', 'lg', 'responsive'] as const;
+const badgeVariants = [
+	'default',
+	'primary',
+	'secondary',
+	'success',
+	'warning',
+	'danger',
+	'info',
+] as const;
+const badgeVariantLabels = {
+	default: 'defaultBadge',
+	primary: 'primaryBadge',
+	secondary: 'secondaryBadge',
+	success: 'completedBadge',
+	warning: 'warningBadge',
+	danger: 'dangerBadge',
+	info: 'infoBadge',
+} as const;
 ---
 
 <div class="px-4 py-16">
 	<SectionContainer>
 		<TitleSection>
-			<CodeIcon class="size-8" aria-hidden="true" />
+			<CodeIcon aria-hidden="true" />
 			{tPage('heading')}
 		</TitleSection>
 
@@ -38,19 +59,44 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 					{tPage('buttonsHeading')}
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('buttonsDescription')}</p>
-				<div class="flex flex-wrap gap-4">
-					<LinkButton href="https://github.com" {newTabLabel}>
-						<GitHubIcon class="size-6" aria-hidden="true" />
+				<p class="text-content-muted mb-4">
+					{tPage('linksDescription')}
+				</p>
+				<div class="flex flex-wrap items-center gap-4">
+					<LinkButton href="https://github.com" {newTabLabel} class="min-w-[190px]">
+						<GitHubIcon aria-hidden="true" />
 						{tPage('githubLabel')}
 					</LinkButton>
-					<LinkButton href="https://linkedin.com" {newTabLabel}>
-						<LinkedInIcon class="size-6" aria-hidden="true" />
+					<LinkButton
+						href="https://linkedin.com"
+						{newTabLabel}
+						variant="secondary"
+						class="min-w-[190px]"
+					>
+						<LinkedInIcon aria-hidden="true" />
 						{tPage('linkedinLabel')}
 					</LinkButton>
-					<LinkButton href="mailto:example@email.com" target="_self">
-						<MailIcon class="size-6" aria-hidden="true" />
+					<LinkButton
+						href="mailto:example@email.com"
+						target="_self"
+						class="min-w-[190px]"
+					>
+						<MailIcon aria-hidden="true" />
 						{tPage('contactLabel')}
 					</LinkButton>
+				</div>
+				<div class="mt-4 flex flex-wrap items-center gap-4">
+					<LinkButton
+						href="mailto:example@email.com"
+						target="_self"
+						disabled
+						class="min-w-[190px]"
+					>
+						{tPage('disabledState')} · {tPage('primaryAction')}
+					</LinkButton>
+					<Button variant="secondary" disabled class="min-w-[190px]">
+						{tPage('disabledState')} · {tPage('secondaryAction')}
+					</Button>
 				</div>
 			</section>
 
@@ -61,15 +107,15 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				<p class="text-content-muted mb-4">{tPage('socialDescription')}</p>
 				<div class="flex flex-wrap gap-4">
 					<SocialPill href="https://github.com" {newTabLabel}>
-						<GitHubIcon class="size-4 md:size-6" aria-hidden="true" />
+						<GitHubIcon aria-hidden="true" />
 						{tPage('githubLabel')}
 					</SocialPill>
 					<SocialPill href="https://linkedin.com" {newTabLabel}>
-						<LinkedInIcon class="size-4 md:size-6" aria-hidden="true" />
+						<LinkedInIcon aria-hidden="true" />
 						{tPage('linkedinLabel')}
 					</SocialPill>
 					<SocialPill href="mailto:example@email.com" target="_self">
-						<MailIcon class="size-4 md:size-6" aria-hidden="true" />
+						<MailIcon aria-hidden="true" />
 						{tPage('contactLabel')}
 					</SocialPill>
 				</div>
@@ -81,11 +127,19 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('linksDescription')}</p>
 				<div class="flex flex-wrap gap-6">
-					<LinkInline href="https://github.com" class="text-lg">
+					<LinkInline href="https://github.com" icon={GitHubIcon} {newTabLabel}>
 						{tPage('profileLink')}
 					</LinkInline>
-					<LinkInline href="https://linkedin.com" class="text-lg">
+					<LinkInline
+						href="https://linkedin.com"
+						icon={ArrowRightIcon}
+						iconPosition="trailing"
+						{newTabLabel}
+					>
 						{tPage('networkLink')}
+					</LinkInline>
+					<LinkInline href="mailto:example@email.com" target="_self">
+						{tPage('contactLabel')}
 					</LinkInline>
 				</div>
 			</section>
@@ -117,13 +171,75 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('badgesDescription')}</p>
 				<div class="flex flex-wrap gap-3">
-					<Badge variant="default">{tPage('badgeExample')}</Badge>
-					<Badge variant="primary">{tPage('anotherBadge')}</Badge>
+					{
+						badgeVariants.map(variant => (
+							<Badge variant={variant}>{tPage(badgeVariantLabels[variant])}</Badge>
+						))
+					}
 					<Badge variant="info">
-						<CodeIcon class="size-3" aria-hidden="true" />
+						<CodeIcon aria-hidden="true" />
 						{tPage('typescriptLabel')}
 					</Badge>
-					<Badge variant="success">{tPage('completedBadge')}</Badge>
+				</div>
+				<div class="mt-4 flex flex-wrap items-center gap-3">
+					<Badge variant="success" size="sm">{tPage('completedBadge')}</Badge>
+					<Badge variant="success" size="md">{tPage('completedBadge')}</Badge>
+					<Badge variant="success" size="lg">{tPage('completedBadge')}</Badge>
+					<Badge variant="warning" size="sm">
+						<CodeIcon aria-hidden="true" />
+						{tPage('warningBadge')}
+					</Badge>
+					<Badge variant="danger" size="lg">
+						<CodeIcon aria-hidden="true" />
+						{tPage('dangerBadge')}
+					</Badge>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('techPillsHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('techPillsDescription')}</p>
+				<div class="flex flex-wrap items-center gap-3">
+					<TechPill label={tPage('techPillShortLabel')} size="sm" variant="card" />
+					<TechPill
+						label={tPage('techPillShortLabel')}
+						size="sm"
+						variant="card"
+						icon={CodeIcon}
+					/>
+					<TechPill label={tPage('typescriptLabel')} size="md" variant="card" />
+					<TechPill
+						label={tPage('typescriptLabel')}
+						size="md"
+						variant="card"
+						icon={CodeIcon}
+					/>
+				</div>
+				<div class="mt-4 flex flex-wrap items-center gap-3">
+					<TechPill label={tPage('techPillShortLabel')} size="sm" variant="stack" />
+					<TechPill
+						label={tPage('techPillShortLabel')}
+						size="sm"
+						variant="stack"
+						icon={CodeIcon}
+					/>
+					<TechPill label={tPage('typescriptLabel')} size="md" variant="stack" />
+					<TechPill
+						label={tPage('typescriptLabel')}
+						size="md"
+						variant="stack"
+						icon={CodeIcon}
+					/>
+				</div>
+				<div class="mt-4 flex flex-wrap items-center gap-3">
+					<TechPill
+						label={tPage('techPillLongLabel')}
+						size="sm"
+						variant="stack"
+						icon={CodeIcon}
+					/>
 				</div>
 			</section>
 
@@ -132,7 +248,7 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 					{tPage('containersHeading')}
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('containersDescription')}</p>
-				<SectionContainer class="bg-gray-100 dark:bg-gray-800 p-8">
+				<SectionContainer class="bg-channel-surface-highlight p-8">
 					<h3 class="text-xl font-semibold mb-3 text-content-strong">
 						{tPage('containerTitle')}
 					</h3>
@@ -148,13 +264,16 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				<div class="space-y-6">
 					<TitleSection>{tPage('simpleTitle')}</TitleSection>
 					<TitleSection>
-						<GitHubIcon class="size-8" aria-hidden="true" />
+						<GitHubIcon aria-hidden="true" />
 						{tPage('iconTitle')}
 					</TitleSection>
 					<TitleSection>
-						<CodeIcon class="size-8" aria-hidden="true" />
+						<CodeIcon aria-hidden="true" />
 						{tPage('featuredTitle')}
 					</TitleSection>
+					<div class="w-[340px]">
+						<TitleSection className="mb-0">{tPage('wrappingTitle')}</TitleSection>
+					</div>
 				</div>
 			</section>
 		</div>

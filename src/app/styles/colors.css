@@ -59,6 +59,18 @@
 	--color-base-status-warning-text-dark: oklch(83.686% 0.16442 84.43); /* #FBBF24 */
 	--color-base-status-error-text-light: oklch(50.542% 0.19049 27.52); /* #B91C1C */
 	--color-base-status-error-text-dark: oklch(71.063% 0.16615 22.22); /* #F87171 */
+	--color-badge-secondary-bg-light: oklch(94.643% 0.03274 307.17); /* #F3E8FF */
+	--color-badge-secondary-text-light: oklch(43.828% 0.19833 303.72); /* #6B21A8 */
+	--color-badge-secondary-bg-dark: oklch(22.234% 0.07006 300.78); /* #211136 */
+	--color-badge-secondary-text-dark: oklch(82.676% 0.10823 306.38); /* #D8B4FE */
+	--color-badge-info-bg-light: oklch(95.626% 0.04433 203.39); /* #CFFAFE */
+	--color-badge-info-text-light: oklch(45.003% 0.07707 224.28); /* #155E75 */
+	--color-badge-info-bg-dark: oklch(23.43% 0.03333 239.51); /* #0E202C */
+	--color-badge-info-text-dark: oklch(86.507% 0.11535 207.08); /* #67E8F9 */
+	--color-badge-warning-bg-light: oklch(96.041% 0.03267 79.28); /* #FEF0DA */
+	--color-badge-warning-bg-dark: oklch(29.642% 0.04352 77.51); /* #392A12 */
+	--color-badge-danger-bg-light: oklch(95.656% 0.01849 17.48); /* #FDECEC */
+	--color-badge-danger-bg-dark: oklch(25.781% 0.0512 9.47); /* #38181E */
 	--color-retro-phosphor: oklch(87.628% 0.22779 152.55); /* #00FF88 */
 	--color-terminal-success: oklch(87.628% 0.22779 152.55); /* #00FF88 */
 
@@ -124,6 +136,40 @@
 	--color-badge-brand-outline-bg-hover: light-dark(
 		var(--alpha-primary-500-10-light),
 		var(--alpha-primary-500-10-dark)
+	);
+	--color-badge-default-bg: var(--channel-surface-highlight);
+	--color-badge-default-text: var(--channel-content-strong);
+	--color-badge-secondary-bg: light-dark(
+		var(--color-badge-secondary-bg-light),
+		var(--color-badge-secondary-bg-dark)
+	);
+	--color-badge-secondary-text: light-dark(
+		var(--color-badge-secondary-text-light),
+		var(--color-badge-secondary-text-dark)
+	);
+	--color-badge-info-bg: light-dark(
+		var(--color-badge-info-bg-light),
+		var(--color-badge-info-bg-dark)
+	);
+	--color-badge-info-text: light-dark(
+		var(--color-badge-info-text-light),
+		var(--color-badge-info-text-dark)
+	);
+	--color-badge-warning-bg: light-dark(
+		var(--color-badge-warning-bg-light),
+		var(--color-badge-warning-bg-dark)
+	);
+	--color-badge-warning-text: light-dark(
+		var(--color-base-status-warning-text-light),
+		var(--color-base-status-warning-text-dark)
+	);
+	--color-badge-danger-bg: light-dark(
+		var(--color-badge-danger-bg-light),
+		var(--color-badge-danger-bg-dark)
+	);
+	--color-badge-danger-text: light-dark(
+		var(--color-base-status-error-text-light),
+		var(--color-base-status-error-text-dark)
 	);
 	--color-status-success-bg: light-dark(
 		var(--alpha-success-05-light),
