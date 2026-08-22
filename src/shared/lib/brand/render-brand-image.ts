@@ -1,24 +1,7 @@
 import { BRAND_EXPORT_PALETTES, type BrandExportMode } from '../../../assets/brand/export-palette';
-import jetBrainsMonoBoldUrl from '../../../assets/fonts/jetbrains-mono-700.woff2?inline';
-import silkscreenBoldUrl from '../../../assets/fonts/silkscreen-700.woff2?inline';
 import sharp from 'sharp';
 
 export type BrandMode = BrandExportMode;
-
-const FONT_CSS = `
-	@font-face {
-		font-family: 'JetBrains Mono';
-		src: url('${jetBrainsMonoBoldUrl}') format('woff2');
-		font-weight: 700;
-		font-style: normal;
-	}
-	@font-face {
-		font-family: 'Silkscreen';
-		src: url('${silkscreenBoldUrl}') format('woff2');
-		font-weight: 700;
-		font-style: normal;
-	}
-`;
 
 const logoGeometry = (mode: BrandMode): string => {
 	const palette = BRAND_EXPORT_PALETTES[mode];
@@ -36,23 +19,6 @@ const logoGeometry = (mode: BrandMode): string => {
 	`;
 };
 
-const createOpenGraphSvg = (mode: BrandMode): string => {
-	const palette = BRAND_EXPORT_PALETTES[mode];
-
-	return `
-		<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
-			<style>${FONT_CSS}</style>
-			<rect width="1200" height="630" fill="${palette.background}"/>
-			<rect width="18" height="630" fill="${palette.primary}"/>
-			<rect x="80" y="444" width="620" height="4" fill="${palette.border}"/>
-			<text x="80" y="124" fill="${palette.accent}" font-family="Silkscreen, monospace" font-size="18" font-weight="700" letter-spacing="1">PERSONAL SOFTWARE ENGINEERING PORTFOLIO</text>
-			<text x="76" y="285" fill="${palette.text}" font-family="JetBrains Mono, monospace" font-size="72" font-weight="700" letter-spacing="-2">DAVID SANDOVAL</text>
-			<text x="80" y="505" fill="${palette.muted}" font-family="Silkscreen, monospace" font-size="22" font-weight="700" letter-spacing="1">SOFTWARE ENGINEER</text>
-			<g transform="translate(830 165) scale(0.5859375)">${logoGeometry(mode)}</g>
-		</svg>
-	`;
-};
-
 const createProjectMarkSvg = (mode: BrandMode): string => {
 	const palette = BRAND_EXPORT_PALETTES[mode];
 	return `
@@ -64,12 +30,6 @@ const createProjectMarkSvg = (mode: BrandMode): string => {
 };
 
 const toResponseBody = (buffer: Buffer): Uint8Array<ArrayBuffer> => Uint8Array.from(buffer);
-
-export const renderOpenGraphImage = async (mode: BrandMode) => {
-	const source = Buffer.from(createOpenGraphSvg(mode));
-	const image = await sharp(source).png({ compressionLevel: 9 }).toBuffer();
-	return toResponseBody(image);
-};
 
 export const renderProjectMark = async (mode: BrandMode, size: number) => {
 	const source = Buffer.from(createProjectMarkSvg(mode));

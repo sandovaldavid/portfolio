@@ -1,1 +1,1 @@
-export { renderOpenGraphImage, renderProjectMark, type BrandMode } from './render-brand-image';
+export { renderProjectMark, type BrandMode } from './render-brand-image';

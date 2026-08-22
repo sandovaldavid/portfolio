@@ -2,8 +2,10 @@ import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const brandAssets = [
-	['/favicon.svg', 'image/svg+xml'],
-	['/favicon.ico', 'image/'],
+	['/favicon.light.svg', 'image/svg+xml'],
+	['/favicon.dark.svg', 'image/svg+xml'],
+	['/apple-touch-icon.png', 'image/png'],
+	['/og-image.png', 'image/png'],
 	['/brand/favicon-16-light.svg', 'image/svg+xml'],
 	['/brand/favicon-16-dark.svg', 'image/svg+xml'],
 	['/brand/favicon-32-light.svg', 'image/svg+xml'],
@@ -16,9 +18,6 @@ const brandAssets = [
 	['/brand/project-mark-dark.svg', 'image/svg+xml'],
 	['/brand/icon-192.png', 'image/png'],
 	['/brand/icon-512.png', 'image/png'],
-	['/apple-touch-icon.png', 'image/png'],
-	['/brand/og-image-light.png', 'image/png'],
-	['/brand/og-image-dark.png', 'image/png'],
 	['/brand/watermark-light.svg', 'image/svg+xml'],
 	['/brand/watermark-dark.svg', 'image/svg+xml'],
 ] as const;
@@ -54,17 +53,24 @@ test.describe('brand identity assets and typography', () => {
 		}
 	});
 
-	test('home metadata uses the branded dark Open Graph card', async ({ page }) => {
+	test('home metadata uses the branded Open Graph card and theme-aware favicon', async ({
+		page,
+	}) => {
 		for (const path of ['/', '/es/']) {
 			await page.goto(path);
-			await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '/favicon.svg');
+			await expect(
+				page.locator('link[rel="icon"][media="(prefers-color-scheme: light)"]')
+			).toHaveAttribute('href', '/favicon.light.svg');
+			await expect(
+				page.locator('link[rel="icon"][media="(prefers-color-scheme: dark)"]')
+			).toHaveAttribute('href', '/favicon.dark.svg');
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/brand/og-image-dark.png'
+				'https://sandovaldavid.com/og-image.png'
 			);
 			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/brand/og-image-dark.png'
+				'https://sandovaldavid.com/og-image.png'
 			);
 		}
 	});
