@@ -1,12 +1,9 @@
 {
-	"genericTitle": "Algo salió mal",
-	"genericMessage": "No se pudo cargar el contenido solicitado.",
 	"notFoundPageTitle": "404 - Página no encontrada | David Sandoval",
 	"notFoundDescription": "La página que buscas no existe o fue movida.",
 	"notFoundTitle": "Página no encontrada",
 	"notFoundMessage": "Parece que te perdiste en el código. La página que buscas no existe o fue movida a otra ubicación.",
 	"homeButton": "Ir al inicio",
 	"backButton": "Volver",
-	"notFoundQuote": "En un multiverso infinito, esta página existe... pero no en este.",
-	"missingTranslation": "Falta una traducción obligatoria."
+	"notFoundQuote": "En un multiverso infinito, esta página existe... pero no en este."
 }

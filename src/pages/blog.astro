@@ -37,6 +37,7 @@ const posts = await getBlogPosts(lang);
 					posts.map(post => (
 						<BlogCard
 							post={post}
+							label={tBlog('label')}
 							readMoreText={tBlog('readMore')}
 							readMoreLink={getRelativeLocaleUrl(lang, `blog/${getBlogSlug(post)}`)}
 						/>

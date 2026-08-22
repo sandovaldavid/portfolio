@@ -4,11 +4,12 @@ import type { BlogPost } from '@entities/blog';
 
 interface Props {
 	post: BlogPost;
+	label: string;
 	readMoreText: string;
 	readMoreLink: string;
 }
 
-const { post, readMoreText, readMoreLink } = Astro.props;
+const { post, label, readMoreText, readMoreLink } = Astro.props;
 const { title, description, pubDate, tags } = post.data;
 const formattedDate = pubDate.toISOString().split('T')[0];
 ---
@@ -20,7 +21,7 @@ const formattedDate = pubDate.toISOString().split('T')[0];
 		class="flex items-center gap-2 border-b-2 border-black dark:border-white bg-primary-500/10 px-4 py-2"
 	>
 		<span class="text-editorial-label uppercase text-primary-600 dark:text-primary-400">
-			BLOG
+			{label}
 		</span>
 		<time class="ml-auto text-caption text-content-muted" datetime={pubDate.toISOString()}>
 			[{formattedDate}]

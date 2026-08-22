@@ -28,12 +28,5 @@
 	"sourceAccess": {
 		"public": "Public source",
 		"private": "Private source"
-	},
-	"demoAccess": {
-		"live": "Live demo",
-		"preview": "Preview",
-		"video": "Video demo",
-		"screenshots": "Screenshots",
-		"unavailable": "No public demo"
 	}
 }

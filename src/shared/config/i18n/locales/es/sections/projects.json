@@ -28,12 +28,5 @@
 	"sourceAccess": {
 		"public": "Código público",
 		"private": "Código privado"
-	},
-	"demoAccess": {
-		"live": "Demo en vivo",
-		"preview": "Vista previa",
-		"video": "Demo en video",
-		"screenshots": "Capturas de pantalla",
-		"unavailable": "Sin demo pública"
 	}
 }
