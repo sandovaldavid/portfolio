@@ -7,6 +7,7 @@ import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
 import CodeIcon from '@assets/icons/Code.astro';
+import { LinkButton, LinkInline } from '@shared/ui';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tFooter = createScopedUiTranslator(lang, 'footer');
@@ -15,6 +16,7 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
 const currentYear = new Date().getFullYear();
 const newTabLabel = tAccessibility('externalLink');
+const emailHref = `mailto:${siteConfig.email}`;
 
 const socialLinks = [
 	{
@@ -30,8 +32,8 @@ const socialLinks = [
 		opensNewTab: true,
 	},
 	{
-		name: tFooter('email'),
-		href: `mailto:${siteConfig.email}`,
+		name: tFooter('emailDavid'),
+		href: emailHref,
 		icon: MailIcon,
 		opensNewTab: false,
 	},
@@ -44,11 +46,19 @@ const socialLinks = [
 ];
 ---
 
+<!--
+	Footer CTA contract (spec/05 Footer + Plan 03 handoff): 440px tall on
+	mobile and 360px on tablet/desktop; localized headline, supporting line,
+	primary GET IN TOUCH mailto CTA (canonical Mail icon, 44px Button) and a
+	direct "Email David" inline link; icon-only social links; built-with line.
+-->
 <footer
-	class="mt-28 px-4 sm:px-6 lg:px-8 pb-8 w-full border-t-2 border-edge-strong pt-20"
+	class="mt-28 px-4 sm:px-6 lg:px-8 pb-8 w-full border-t-2 border-edge-strong pt-14"
 	id="contact"
 >
-	<div class="text-center space-y-4 mb-10 max-w-2xl mx-auto">
+	<div
+		class="mx-auto flex min-h-[27.5rem] max-w-2xl flex-col items-center justify-center gap-4 space-y-0 text-center md:min-h-[22.5rem]"
+	>
 		<h2
 			class="text-4xl sm:text-5xl md:text-6xl font-bold font-pixel-clean uppercase tracking-wider text-content-strong"
 		>
@@ -57,14 +67,12 @@ const socialLinks = [
 		<p class="text-sm font-mono uppercase text-content-muted tracking-wide">
 			{tFooter('subtitle')}
 		</p>
-		<div class="pt-4">
-			<a
-				href={`mailto:${siteConfig.email}`}
-				class="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 text-white dark:text-black border-2 border-black dark:border-white font-mono text-sm font-bold uppercase tracking-wider shadow-[3px_3px_0px_var(--color-primary-500)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0px_var(--color-primary-500)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all duration-100"
-			>
-				<MailIcon class="w-5 h-5" aria-hidden="true" />
+		<div class="flex flex-col items-center gap-3 pt-6">
+			<LinkButton href={emailHref} target="_self" variant="primary">
+				<MailIcon aria-hidden="true" />
 				{tFooter('contact')}
-			</a>
+			</LinkButton>
+			<LinkInline href={emailHref}>{tFooter('emailDavid')}</LinkInline>
 		</div>
 	</div>
 
@@ -77,9 +85,9 @@ const socialLinks = [
 					rel={opensNewTab ? 'noopener noreferrer' : undefined}
 					title={name}
 					aria-label={opensNewTab ? `${name}, ${newTabLabel}` : name}
-					class="flex items-center justify-center p-3.5 bg-surface border-2 border-black dark:border-white text-content-strong shadow-[2.5px_2.5px_0px_var(--color-primary-500)] hover:-translate-x-[1.5px] hover:-translate-y-[1.5px] hover:shadow-[4px_4px_0px_var(--color-primary-500)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all duration-100"
+					class="flex items-center justify-center rounded-none p-3.5 bg-channel-surface-default border-2 border-edge-strong text-content-strong shadow-retro-md transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight hover:shadow-retro-xl active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 				>
-					<Icon class="w-6 h-6" aria-hidden="true" />
+					<Icon class="size-6" aria-hidden="true" />
 				</a>
 			))
 		}
@@ -89,7 +97,7 @@ const socialLinks = [
 		class="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 sm:pt-8 px-4 sm:px-8 border-t border-neutral-300 dark:border-neutral-800 font-mono text-xs sm:text-sm text-content-muted text-center md:text-left"
 	>
 		<p>© {currentYear} {siteConfig.fullName}. {tFooter('rights')}.</p>
-		<p class="flex items-center gap-2">
+		<p class="flex items-center gap-2 uppercase">
 			{tFooter('builtWith')}
 			<CodeIcon class="w-4 h-4 text-primary-500" aria-hidden="true" />
 			<span class="text-content-muted">v2.0.0</span>

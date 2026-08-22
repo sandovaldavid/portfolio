@@ -214,7 +214,9 @@ test.describe('navigation brand lockup', () => {
 
 	for (const viewport of [
 		{ width: 390, signatureVisible: false, mobileMenuVisible: true },
-		{ width: 768, signatureVisible: true, mobileMenuVisible: true },
+		// spec/03 Header: tablet/mobile use the compact icon-only lockup, so the
+		// signature is desktop-only (lg and above).
+		{ width: 768, signatureVisible: false, mobileMenuVisible: true },
 		{ width: 1024, signatureVisible: true, mobileMenuVisible: false },
 		{ width: 1440, signatureVisible: true, mobileMenuVisible: false },
 	] as const) {

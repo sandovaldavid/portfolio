@@ -8,62 +8,108 @@ const lang = getLanguageFromLocale(Astro.currentLocale);
 const tTheme = createScopedUiTranslator(lang, 'theme');
 
 const THEMES = [
-	{ id: 'light', name: tTheme('light') },
-	{ id: 'dark', name: tTheme('dark') },
-	{ id: 'system', name: tTheme('system') },
-];
+	{ id: 'light', name: tTheme('light'), Icon: SunIcon },
+	{ id: 'dark', name: tTheme('dark'), Icon: MoonIcon },
+	{ id: 'system', name: tTheme('system'), Icon: SystemIcon },
+] as const;
 ---
 
-<div class="theme-toggle relative ml-1 mr-1">
+<!--
+	Theme trigger + menu contract (spec/03 Theme Trigger / Theme Menu):
+	trigger 40x40 border 2 strong radius 4 icon 20 (surface default, hover
+	highlight); menu 144 wide border 1 strong radius 8 padding 6 gap 4 with
+	options 132x36 px10 gap8 radius6, icon16, JetBrains Mono Bold 11 uppercase.
+	Selected option = highlight surface + accent text. Light/Dark difference is
+	owned by semantic CSS variables — System follows prefers-color-scheme at
+	runtime while the persisted choice stays untouched.
+-->
+<div class="theme-toggle relative">
 	<button
-		class="theme-toggle-btn relative appearance-none border-none size-7 flex justify-center items-center rounded-lg hover:bg-theme-control-background-hover hover:scale-110 transition-all duration-300 p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+		type="button"
+		class="theme-trigger grid size-10 place-items-center rounded-[4px] border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 		aria-label={tTheme('select')}
+		aria-haspopup="menu"
+		aria-expanded="false"
 	>
 		<span class="sr-only">{tTheme('select')}</span>
-		<SunIcon data-icon="light" class="theme-icon absolute size-5 transition-all text-content" />
-		<MoonIcon
-			data-icon="dark"
-			class="theme-icon hidden absolute size-5 transition-all text-content"
-		/>
-		<SystemIcon
-			data-icon="system"
-			class="theme-icon hidden absolute size-5 transition-all text-content"
-		/>
+		<span data-theme-icon="light" hidden><SunIcon class="size-5" /></span>
+		<span data-theme-icon="dark" hidden><MoonIcon class="size-5" /></span>
+		<span data-theme-icon="system" hidden><SystemIcon class="size-5" /></span>
 	</button>
 
 	<div
-		class="themes-menu absolute hidden w-28 top-10 right-0 text-sm p-1.5 rounded-xl border border-theme-menu-border bg-theme-menu-background backdrop-blur-lg shadow-lg z-50 transition-all duration-200"
+		class="theme-menu absolute top-11 right-0 z-50 hidden w-36 flex-col gap-1 rounded-lg border border-edge-strong bg-theme-menu-background backdrop-blur-lg p-1.5"
 	>
-		<ul class="space-y-0.5">
-			{
-				THEMES.map(theme => (
-					<li
-						data-theme={theme.id}
-						class="themes-menu-option px-3 py-2 cursor-pointer rounded-lg text-content hover:text-channel-accent-primary-hover hover:bg-theme-option-background-hover transition-all duration-200 font-medium"
-					>
-						{theme.name}
-					</li>
-				))
-			}
-		</ul>
+		{
+			THEMES.map(({ id, name, Icon }) => (
+				<button
+					type="button"
+					data-theme-option={id}
+					aria-pressed="false"
+					class="theme-option flex h-9 w-full items-center gap-2 rounded-md px-2.5 font-mono text-[11px] font-bold uppercase leading-none text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+				>
+					<Icon class="size-4 shrink-0" aria-hidden="true" />
+					{name}
+				</button>
+			))
+		}
 	</div>
 </div>
 
-<script>
-	const media = window.matchMedia('(prefers-color-scheme: dark)');
+<style>
+	/* Selected option: highlight surface + accent text (spec/03 Theme Menu). */
+	.theme-option[aria-pressed='true'] {
+		background-color: var(--channel-surface-highlight);
+		color: var(--channel-accent-primary);
+	}
 
-	const applyTheme = (theme: string) => {
-		const isDark = theme === 'dark' || (theme === 'system' && media.matches);
+	@media (prefers-reduced-motion: reduce) {
+		.theme-trigger,
+		.theme-option {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	const THEME_STORAGE_KEY = 'theme';
+	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+
+	const getSavedTheme = (): string => localStorage.getItem(THEME_STORAGE_KEY) ?? 'dark';
+
+	// Single source of truth for every mounted instance (Recruiter HUD on
+	// desktop and the Mobile Menu below lg): applies the .dark channel class
+	// and syncs each trigger/menu pair to the current selection.
+	const syncThemeState = () => {
+		const theme = getSavedTheme();
+		const isDark = theme === 'dark' || (theme === 'system' && darkSchemeMedia.matches);
 		document.documentElement.classList.toggle('dark', isDark);
+
 		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
-			const show = (selector: string, on: boolean) => {
-				const el = root.querySelector<HTMLElement>(selector);
-				if (el) el.style.display = on ? 'block' : 'none';
-			};
-			show('[data-icon="light"]', theme === 'light');
-			show('[data-icon="dark"]', theme === 'dark');
-			show('[data-icon="system"]', theme === 'system');
+			root.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(icon => {
+				icon.hidden = icon.dataset.themeIcon !== theme;
+			});
+			root.querySelectorAll<HTMLButtonElement>('[data-theme-option]').forEach(option => {
+				option.setAttribute('aria-pressed', String(option.dataset.themeOption === theme));
+			});
 		});
+	};
+
+	const setMenuOpen = (root: HTMLElement, open: boolean) => {
+		root.querySelector('.theme-menu')?.classList.toggle('hidden', !open);
+		root.querySelector('.theme-trigger')?.setAttribute('aria-expanded', String(open));
+	};
+
+	const closeAllMenus = (exceptRoot?: HTMLElement) => {
+		let closedAny = false;
+		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
+			if (root === exceptRoot) return;
+			if (!root.querySelector('.theme-menu')?.classList.contains('hidden')) {
+				setMenuOpen(root, false);
+				closedAny = true;
+			}
+		});
+		return closedAny;
 	};
 
 	const setupThemeToggles = () => {
@@ -71,48 +117,56 @@ const THEMES = [
 			if (root.dataset.themeReady === 'true') return;
 			root.dataset.themeReady = 'true';
 
-			const btn = root.querySelector<HTMLButtonElement>('.theme-toggle-btn');
-			const menu = root.querySelector<HTMLDivElement>('.themes-menu');
-			const opts = root.querySelectorAll<HTMLLIElement>('.themes-menu-option');
-			if (!btn || !menu) {
-				console.error('Required elements not found in theme toggle');
-				return;
-			}
+			const trigger = root.querySelector<HTMLButtonElement>('.theme-trigger');
+			const menu = root.querySelector<HTMLElement>('.theme-menu');
+			if (!trigger || !menu) return;
 
-			const toggleMenu = (event: Event) => {
+			trigger.addEventListener('click', event => {
 				event.stopPropagation();
-				event.preventDefault();
-				menu.classList.toggle('hidden');
-			};
-			btn.addEventListener('click', toggleMenu);
-			btn.addEventListener('touchend', toggleMenu);
+				const willOpen = menu.classList.contains('hidden');
+				closeAllMenus(root);
+				setMenuOpen(root, willOpen);
+			});
 
-			opts.forEach(opt => {
-				opt.addEventListener('click', () => {
-					const theme = opt.getAttribute('data-theme');
+			root.querySelectorAll<HTMLButtonElement>('[data-theme-option]').forEach(option => {
+				option.addEventListener('click', () => {
+					const theme = option.dataset.themeOption;
 					if (!theme) return;
-					localStorage.setItem('theme', theme);
-					applyTheme(theme);
-					menu.classList.add('hidden');
+					localStorage.setItem(THEME_STORAGE_KEY, theme);
+					syncThemeState();
+					setMenuOpen(root, false);
+					trigger.focus();
 				});
+			});
+
+			// Escape is scoped to this root so an open menu collapses without
+			// dismissing unrelated open surfaces such as the mobile dialog.
+			root.addEventListener('keydown', event => {
+				if (event.key !== 'Escape') return;
+				if (menu.classList.contains('hidden')) return;
+				event.stopPropagation();
+				setMenuOpen(root, false);
+				trigger.focus();
 			});
 		});
 
-		applyTheme(localStorage.getItem('theme') || 'dark');
+		syncThemeState();
 	};
 
-	media.addEventListener('change', () => {
-		if ((localStorage.getItem('theme') || 'dark') === 'system') applyTheme('system');
-	});
+	// Outside click closes any open menu (attached once).
 	document.addEventListener('click', (event: MouseEvent) => {
 		const target = event.target as Node;
 		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
-			const menu = root.querySelector<HTMLDivElement>('.themes-menu');
-			if (menu && !menu.classList.contains('hidden') && !root.contains(target)) {
-				menu.classList.add('hidden');
-			}
+			if (!root.contains(target)) setMenuOpen(root, false);
 		});
 	});
 
+	darkSchemeMedia.addEventListener('change', () => {
+		// System is a runtime preference: react to OS changes while keeping
+		// whatever choice (including 'system') is persisted.
+		if (getSavedTheme() === 'system') syncThemeState();
+	});
+
+	setupThemeToggles();
 	document.addEventListener('astro:page-load', setupThemeToggles);
 </script>

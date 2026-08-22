@@ -8,10 +8,15 @@ interface Props {
 const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 ---
 
+<!--
+	Navigation lockup (spec/03 Header + ADR-0008): dedicated navigation link,
+	restrained interaction. Desktop (lg+) full lockup 250x44 px8 py6; tablet/mobile
+	compact 48x44 icon-only. Fixed widths keep focus-geometry insets symmetric.
+-->
 <a
 	{href}
 	aria-label={accessibleLabel}
-	class={`brand-logo-link inline-flex h-11 items-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none ${className}`}
+	class={`brand-logo-link inline-flex h-11 w-12 items-center justify-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none lg:w-[250px] ${className}`}
 >
 	<img
 		src="/brand/logo-primary-dark.svg"
@@ -24,7 +29,7 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 		aria-hidden="true"
 	/>
 	<span
-		class="brand-logo-signature hidden sm:inline-block font-gaming-mono text-base leading-[22px] tracking-[1px]"
+		class="brand-logo-signature hidden font-gaming-mono text-base leading-[22px] tracking-[1px] lg:inline-block"
 		aria-hidden="true"
 	>
 		&lt;sandovaldavid/&gt;

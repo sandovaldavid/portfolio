@@ -1,9 +1,9 @@
 {
-	"title": "Let's build something",
-	"subtitle": "Open to opportunities and collaborations",
+	"title": "Let's build something useful",
+	"subtitle": "Open to international software engineering opportunities",
 	"contact": "Get in touch",
-	"email": "Email",
+	"emailDavid": "Email David",
 	"rights": "All rights reserved",
-	"builtWith": "Designed and built with Astro",
+	"builtWith": "Built with Astro",
 	"linkHub": "Link Hub"
 }

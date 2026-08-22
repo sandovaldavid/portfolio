@@ -1,6 +1,7 @@
 ---
 import { LinkButton } from '@shared/ui';
 import MenuIcon from '@assets/icons/MenuIcon.astro';
+import MailIcon from '@assets/icons/Mail.astro';
 import BriefcaseIcon from '@assets/icons/Briefcase.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
 import CodeIcon from '@assets/icons/Code.astro';
@@ -8,8 +9,9 @@ import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import ScrollTextIcon from '@assets/icons/ScrollText.astro';
 import BookOpenIcon from '@assets/icons/BookOpen.astro';
 import SystemIcon from '@assets/icons/System.astro';
-import type { Language } from '@shared/config/i18n';
-import { siteConfig } from '@shared/config/site.config';
+import type { Language, LocalizedPathMap } from '@shared/config/i18n';
+import { ThemeToggle } from '@features/theme-toggle';
+import { LanguagePicker } from '@features/language-picker';
 
 interface Props {
 	navItems: Array<{
@@ -20,26 +22,48 @@ interface Props {
 		prefetch?: boolean;
 	}>;
 	lang: Language;
+	localizedPaths?: LocalizedPathMap;
 	menuLabel: string;
 	openLabel: string;
 	closeLabel: string;
 	resumeLabel: string;
+	resumeHref: string;
+	contactLabel: string;
+	contactHref: string;
 	newTabLabel: string;
 }
 
-const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel, newTabLabel } = Astro.props;
+const {
+	navItems,
+	lang,
+	localizedPaths,
+	menuLabel,
+	openLabel,
+	closeLabel,
+	resumeLabel,
+	resumeHref,
+	contactLabel,
+	contactHref,
+	newTabLabel,
+} = Astro.props;
 ---
 
+<!--
+	Mobile/tablet navigation (spec/03 Header + Plan 03): compact trigger 40x40
+	(surface default, border 2 strong, hard shadow 1.5, icon 20). The overlay owns
+	every preference surface below lg: primary navigation, Download resume,
+	Get in touch, Theme and Language.
+-->
 <nav class="flex lg:hidden w-full items-center justify-between" aria-label={menuLabel}>
 	<button
 		id="mobile-menu-btn"
-		class="p-2 rounded-none border-2 border-black dark:border-white bg-surface shadow-retro-sm text-content-strong focus:outline-none focus:ring-2 focus:ring-primary-500 transition-all duration-100 active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+		class="grid size-10 place-items-center rounded-none border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 		aria-label={openLabel}
 		aria-haspopup="dialog"
 		aria-controls="mobile-menu"
 		aria-expanded="false"
 	>
-		<MenuIcon class="size-6" />
+		<MenuIcon class="size-5" />
 	</button>
 </nav>
 
@@ -49,18 +73,18 @@ const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel, newTabLab
 	role="dialog"
 	aria-modal="true"
 	aria-label={menuLabel}
-	class="fixed inset-0 w-full h-screen bg-background/95 backdrop-blur-md z-50 hidden items-center justify-center transition-all duration-100"
+	class="fixed inset-0 w-full h-screen bg-background/95 backdrop-blur-md z-50 hidden items-center justify-center transition-all duration-100 overflow-y-auto"
 >
-	<div class="flex flex-col items-center justify-center gap-6 w-full max-w-sm px-6">
+	<div class="flex flex-col items-center justify-center gap-6 w-full max-w-sm px-6 py-10">
 		<!-- Close Button -->
 		<button
 			id="mobile-menu-close"
-			class="absolute top-6 right-6 p-2 rounded-none bg-surface border-2 border-edge-strong text-content-strong hover:bg-surface-highlight transition-all duration-100 shadow-retro-sm active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
+			class="absolute top-6 right-6 grid size-10 place-items-center rounded-none bg-channel-surface-default border-2 border-edge-strong text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 			aria-label={closeLabel}
 		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
-				class="w-6 h-6"
+				class="size-5"
 				fill="none"
 				viewBox="0 0 24 24"
 				stroke="currentColor"
@@ -99,16 +123,21 @@ const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel, newTabLab
 			}
 		</nav>
 
-		<!-- Actions: Resume -->
-		<div class="flex flex-col items-center gap-4 mt-6 w-full">
-			<LinkButton
-				href={lang === 'en' ? siteConfig.resume.en : siteConfig.resume.es}
-				target="_blank"
-				variant="primary"
-				{newTabLabel}
-			>
+		<!-- Actions: Download resume and Get in touch -->
+		<div class="flex flex-col items-stretch gap-3 mt-2 w-full">
+			<LinkButton href={resumeHref} target="_blank" variant="primary" {newTabLabel}>
 				{resumeLabel}
 			</LinkButton>
+			<LinkButton href={contactHref} target="_self" variant="secondary">
+				<MailIcon aria-hidden="true" />
+				{contactLabel}
+			</LinkButton>
+		</div>
+
+		<!-- Preferences: theme and language live here below lg (Plan 03) -->
+		<div class="flex flex-col items-center gap-4 w-full border-t-2 border-edge-subtle pt-5">
+			<ThemeToggle />
+			<LanguagePicker {localizedPaths} currentLang={lang} />
 		</div>
 	</div>
 </div>
@@ -135,7 +164,7 @@ const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel, newTabLab
 		menu.classList.add('hidden');
 		menu.classList.remove('flex');
 		btn?.setAttribute('aria-expanded', 'false');
-		// Return focus to the trigger after dismissing.
+		// Return focus to the trigger after dismissing (repo focus pattern).
 		btn?.focus();
 	};
 
@@ -181,7 +210,7 @@ const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel, newTabLab
 		}
 	});
 
-	// Escape closes the dialog (dismissible). Attached once.
+	// Escape closes the dialog and returns focus to the trigger (attached once).
 	document.addEventListener('keydown', e => {
 		if (e.key === 'Escape') closeMobileMenu();
 	});

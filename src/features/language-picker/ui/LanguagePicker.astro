@@ -10,8 +10,14 @@ import type { LanguagePickerProps } from '../model';
 const { currentLang: providedCurrentLang, localizedPaths } = Astro.props as LanguagePickerProps;
 const currentLang = providedCurrentLang ?? getLanguageFromLocale(Astro.currentLocale);
 const tAccessibility = createScopedUiTranslator(currentLang, 'accessibility');
+/*
+	Language picker contract (spec/03): wrapper gap 8px, buttons 48x36,
+	border 2 strong edge, JetBrains Mono Bold 12; current = accent background
+	with primary-button content, inactive = default surface with strong text.
+	Hover/active move only the hard shadow — geometry never shifts.
+*/
 const baseClass =
-	'px-2.5 py-1 text-xs font-bold transition-all duration-100 uppercase tracking-wider border-2 border-black dark:border-white';
+	'inline-flex h-9 w-12 items-center justify-center font-mono text-xs font-bold uppercase tracking-wide rounded-none border-2 border-edge-strong transition-[box-shadow,background-color] duration-100 shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus';
 ---
 
 <div
@@ -35,7 +41,7 @@ const baseClass =
 					<button
 						type="button"
 						disabled
-						class={`${baseClass} cursor-not-allowed opacity-50 bg-surface text-content-muted`}
+						class={`${baseClass} cursor-not-allowed opacity-50 bg-channel-surface-default text-content-muted`}
 						aria-label={label}
 					>
 						{lang.toUpperCase()}
@@ -49,8 +55,8 @@ const baseClass =
 					data-language-base-path={path}
 					class={`${baseClass} ${
 						isActive
-							? 'bg-primary-500 text-white dark:text-black shadow-retro-xs translate-x-[1.5px] translate-y-[1.5px] cursor-default pointer-events-none'
-							: 'bg-surface text-content-strong shadow-retro-sm hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-retro-md active:translate-x-[1.5px] active:translate-y-[1.5px] active:shadow-retro-xs'
+							? 'bg-button-primary-background text-button-primary-content cursor-default pointer-events-none shadow-retro-xs'
+							: 'bg-channel-surface-default text-content-strong hover:bg-channel-surface-highlight hover:shadow-retro-md active:shadow-retro-xs'
 					}`}
 					aria-label={label}
 					aria-current={isActive ? 'page' : undefined}

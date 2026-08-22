@@ -1,9 +1,9 @@
 {
-	"title": "Construyamos algo",
-	"subtitle": "Disponible para oportunidades y colaboraciones",
+	"title": "Construyamos algo útil",
+	"subtitle": "Disponible para oportunidades internacionales en ingeniería de software",
 	"contact": "Contactarme",
-	"email": "Correo",
+	"emailDavid": "Escribir a David",
 	"rights": "Todos los derechos reservados",
-	"builtWith": "Diseñado y construido con Astro",
+	"builtWith": "Construido con Astro",
 	"linkHub": "Link Hub"
 }

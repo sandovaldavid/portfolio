@@ -21,14 +21,16 @@ interface Props {
 const { navItems, navLabel } = Astro.props;
 ---
 
-<nav
-	class="hidden lg:flex items-center justify-center gap-4 xl:gap-8 font-mono"
-	aria-label={navLabel}
->
+<!--
+	Desktop nav contract (spec/03 Header): group gap 10px; item 145x40 with
+	icon 16 and Navigation typography (JetBrains Mono Bold 14/20 tracking .35).
+	min-width keeps translated labels safe instead of forcing a hard width.
+-->
+<nav class="hidden lg:flex items-center justify-center gap-2.5 font-mono" aria-label={navLabel}>
 	{
 		navItems.map(link => (
 			<a
-				class="relative flex items-center gap-1.5 px-2 py-2 text-sm font-bold uppercase tracking-wide transition text-content-strong hover:text-primary-500 dark:hover:text-primary-500 whitespace-nowrap"
+				class="relative flex h-10 min-w-[145px] items-center justify-center gap-2 px-3 text-sm font-bold leading-5 tracking-[0.35px] transition-colors duration-100 text-content-strong hover:text-channel-accent-primary-hover whitespace-nowrap focus-visible:outline-none focus-visible:text-channel-accent-primary"
 				aria-label={link.title}
 				data-section-id={link.label}
 				href={link.url}
@@ -48,6 +50,7 @@ const { navItems, navLabel } = Astro.props;
 </nav>
 
 <style>
+	/* Active/hover indicator is an absolute rule: geometry never shifts. */
 	nav a::after {
 		content: '';
 		position: absolute;
@@ -56,15 +59,18 @@ const { navItems, navLabel } = Astro.props;
 		width: 0;
 		height: 2px;
 		background-color: currentColor;
-		transition: all 0.3s ease;
+		transition: width 0.3s ease;
 		transform: translateX(-50%);
 	}
 
-	nav a:hover::after {
+	nav a:hover::after,
+	nav a.active::after {
 		width: calc(100% - 1rem);
 	}
 
-	nav a.active::after {
-		width: calc(100% - 1rem);
+	@media (prefers-reduced-motion: reduce) {
+		nav a::after {
+			transition: none;
+		}
 	}
 </style>
