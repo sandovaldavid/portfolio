@@ -8,6 +8,8 @@ interface Props {
 	size?: 'sm' | 'md';
 	variant?: 'card' | 'stack';
 	class?: string;
+	/** Screen-reader-only text announcing the link opens in a new tab. Omit for non-navigating targets (e.g. mailto:). */
+	newTabLabel?: string;
 }
 const {
 	label,
@@ -16,6 +18,7 @@ const {
 	size = 'md',
 	variant = 'card',
 	class: additionalClasses = '',
+	newTabLabel,
 } = Astro.props as Props;
 
 // Base classes
@@ -57,6 +60,7 @@ const iconClasses = variant === 'stack' ? stackIcon : cardIcon;
 		<a href={href} class={containerClasses} rel="noopener noreferrer" target="_blank">
 			{Icon && <Icon class={iconClasses} />}
 			<span>{label}</span>
+			{newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 		</a>
 	) : (
 		<span class={containerClasses}>

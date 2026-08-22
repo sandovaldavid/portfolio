@@ -1,5 +1,6 @@
 ---
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { siteConfig } from '@shared/config/site.config';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tHero = createScopedUiTranslator(lang, 'sections.hero');
@@ -30,7 +31,7 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 				class="text-4xl sm:text-6xl lg:text-7xl text-center text-content-strong font-mono font-bold tracking-[-0.028em] leading-[1.11]"
 				style="text-shadow: 5px 5px 0px var(--color-primary-500);"
 			>
-				David Sandoval
+				{siteConfig.name}
 			</h1>
 			<p class="text-lg text-content-strong font-gaming-mono tracking-wide max-w-2xl mx-auto">
 				{tHero('subtitle')}
@@ -63,7 +64,7 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 					<div
 						class="absolute bottom-0 inset-x-0 bg-primary-500 text-white dark:text-black text-xs font-pixel text-center py-1.5 uppercase tracking-widest"
 					>
-						DAVID_S
+						{siteConfig.name}
 					</div>
 				</div>
 				<span

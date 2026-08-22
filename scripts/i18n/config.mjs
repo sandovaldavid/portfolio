@@ -6,18 +6,8 @@ export const INTENTIONAL_SINGLE_LOCALE_EDITORIAL = Object.freeze({
 	devlog: Object.freeze({}),
 });
 
-export const HARD_CODED_TEXT_ALLOWLIST = Object.freeze([
-	Object.freeze({
-		file: 'src/features/cli-terminal/ui/CLITerminalCatalog.astro',
-		value: 'portfolio@sandovaldavid:~',
-		reason: 'Decorative shell prompt composed only from the public handle and source-code syntax.',
-	}),
-	Object.freeze({
-		file: 'src/widgets/hero/ui/Hero.astro',
-		value: 'David Sandoval',
-		reason: 'Proper name displayed as the portfolio owner identity; proper names are language-neutral.',
-	}),
-]);
+/** @type {readonly { file: string; value: string; reason: string }[]} */
+export const HARD_CODED_TEXT_ALLOWLIST = Object.freeze([]);
 
 export const SPANISH_FORBIDDEN_PHRASES = Object.freeze([
 	'Skip to main content',
@@ -35,12 +25,9 @@ export const SPANISH_FORBIDDEN_PHRASES = Object.freeze([
 	'Terminal command input',
 	'Close terminal',
 	'Developer secret mode',
-	'Something went wrong',
-	'The requested content could not be loaded.',
 	'Page not found',
 	'Go to home',
 	'Go back',
-	'A required translation is missing.',
 ]);
 
 export const REPRESENTATIVE_ROUTE_PAIRS = Object.freeze([

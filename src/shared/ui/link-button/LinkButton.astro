@@ -6,9 +6,11 @@ interface Props {
 	target?: '_blank' | '_self';
 	variant?: 'primary' | 'secondary';
 	class?: string;
+	/** Screen-reader-only text announcing the link opens in a new tab. Omit for non-navigating targets (e.g. mailto:). */
+	newTabLabel?: string;
 }
 
-const { href, target = '_blank', variant = 'primary', class: className } = Astro.props;
+const { href, target = '_blank', variant = 'primary', class: className, newTabLabel } = Astro.props;
 ---
 
 <a
@@ -24,4 +26,5 @@ const { href, target = '_blank', variant = 'primary', class: className } = Astro
 	]}
 >
 	<slot />
+	{target === '_blank' && newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 </a>

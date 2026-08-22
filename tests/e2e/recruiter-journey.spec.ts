@@ -86,12 +86,15 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 					await page.locator('#mobile-menu-close').click();
 				}
 
-				// 4. Professional contact channels resolve to the canonical registry.
+				// 4. Professional contact channels resolve to the canonical registry. Their
+				// accessible name is prefixed with the visible label and suffixed with a
+				// screen-reader-only "opens in a new tab" announcement, so match loosely.
+				await expect(page.getByRole('link', { name: /^GitHub\b/ }).first()).toHaveAttribute(
+					'href',
+					'https://github.com/sandovaldavid'
+				);
 				await expect(
-					page.getByRole('link', { name: 'GitHub', exact: true }).first()
-				).toHaveAttribute('href', 'https://github.com/sandovaldavid');
-				await expect(
-					page.getByRole('link', { name: 'LinkedIn', exact: true }).first()
+					page.getByRole('link', { name: /^LinkedIn\b/ }).first()
 				).toHaveAttribute('href', 'https://www.linkedin.com/in/jdsandovals');
 				await expect(page.locator('a[href^="mailto:"]').first()).toHaveAttribute(
 					'href',

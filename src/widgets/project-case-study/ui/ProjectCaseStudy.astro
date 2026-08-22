@@ -20,6 +20,7 @@ interface Props {
 	labelTimeline: string;
 	labelRole: string;
 	backLink: string;
+	newTabLabel: string;
 }
 
 const {
@@ -36,6 +37,7 @@ const {
 	labelTimeline,
 	labelRole,
 	backLink,
+	newTabLabel,
 } = Astro.props;
 
 const { caseStudy } = project;
@@ -70,7 +72,7 @@ const evidenceDecisionSections = evidence
 			<div class="mb-4 flex flex-wrap gap-3">
 				{
 					project.github && (
-						<LinkButton href={project.github}>
+						<LinkButton href={project.github} {newTabLabel}>
 							<GitHubIcon class="size-5" />
 							{codeButtonText}
 						</LinkButton>
@@ -78,7 +80,7 @@ const evidenceDecisionSections = evidence
 				}
 				{
 					project.link && (
-						<LinkButton href={project.link}>
+						<LinkButton href={project.link} {newTabLabel}>
 							<LinkIcon class="size-4" />
 							{previewButtonText}
 						</LinkButton>
@@ -458,6 +460,7 @@ const evidenceDecisionSections = evidence
 													class="font-bold text-primary-500 underline decoration-2 underline-offset-4 hover:no-underline dark:text-primary-400"
 												>
 													{source.label}
+													<span class="sr-only"> {newTabLabel}</span>
 												</a>
 											) : (
 												<p class="font-bold">{source.label}</p>

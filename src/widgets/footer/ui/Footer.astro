@@ -11,29 +11,35 @@ import CodeIcon from '@assets/icons/Code.astro';
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tFooter = createScopedUiTranslator(lang, 'footer');
 const tNavigation = createScopedUiTranslator(lang, 'navigation');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
 const currentYear = new Date().getFullYear();
+const newTabLabel = tAccessibility('externalLink');
 
 const socialLinks = [
 	{
 		name: 'GitHub',
 		href: siteConfig.social.github,
 		icon: GitHubIcon,
+		opensNewTab: true,
 	},
 	{
 		name: 'LinkedIn',
 		href: siteConfig.social.linkedin,
 		icon: LinkedInIcon,
+		opensNewTab: true,
 	},
 	{
 		name: tFooter('email'),
 		href: `mailto:${siteConfig.email}`,
 		icon: MailIcon,
+		opensNewTab: false,
 	},
 	{
 		name: tFooter('linkHub'),
 		href: siteConfig.social.linkHub,
 		icon: LinkHubIcon,
+		opensNewTab: true,
 	},
 ];
 ---
@@ -64,13 +70,13 @@ const socialLinks = [
 
 	<div class="flex justify-center gap-4 sm:gap-5 mb-14 flex-wrap">
 		{
-			socialLinks.map(({ name, href, icon: Icon }) => (
+			socialLinks.map(({ name, href, icon: Icon, opensNewTab }) => (
 				<a
 					href={href}
-					target="_blank"
-					rel="noopener noreferrer"
+					target={opensNewTab ? '_blank' : undefined}
+					rel={opensNewTab ? 'noopener noreferrer' : undefined}
 					title={name}
-					aria-label={name}
+					aria-label={opensNewTab ? `${name}, ${newTabLabel}` : name}
 					class="flex items-center justify-center p-3.5 bg-surface border-2 border-black dark:border-white text-content-strong shadow-[2.5px_2.5px_0px_var(--color-primary-500)] hover:-translate-x-[1.5px] hover:-translate-y-[1.5px] hover:shadow-[4px_4px_0px_var(--color-primary-500)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all duration-100"
 				>
 					<Icon class="w-6 h-6" aria-hidden="true" />

@@ -1,8 +1,4 @@
 {
-	"launch": "Iniciar modo retro",
-	"skip": "Omitir introducción",
-	"loading": "Cargando portafolio",
-	"ready": "Sistema listo",
 	"title": "Modo retro",
 	"intro": "Secuencia de inicio opcional del portafolio",
 	"line1": "Cargando perfil de ingeniero de software orientado a backend…",

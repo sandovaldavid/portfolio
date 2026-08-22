@@ -16,6 +16,7 @@ export async function getStaticPaths() {
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const slug = Astro.params.slug ?? '';
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const project = await getProjectBySlug(lang, slug);
 
 if (!project) {
@@ -48,6 +49,7 @@ const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandov
 			labelLearnings={tProjects('learnings')}
 			labelTimeline={tProjects('timeline')}
 			labelRole={tProjects('role')}
+			newTabLabel={tAccessibility('externalLink')}
 		/>
 	</div>
 </Layout>

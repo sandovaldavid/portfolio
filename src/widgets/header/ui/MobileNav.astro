@@ -24,9 +24,10 @@ interface Props {
 	openLabel: string;
 	closeLabel: string;
 	resumeLabel: string;
+	newTabLabel: string;
 }
 
-const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel } = Astro.props;
+const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel, newTabLabel } = Astro.props;
 ---
 
 <nav class="flex lg:hidden w-full items-center justify-between" aria-label={menuLabel}>
@@ -104,6 +105,7 @@ const { navItems, lang, menuLabel, openLabel, closeLabel, resumeLabel } = Astro.
 				href={lang === 'en' ? siteConfig.resume.en : siteConfig.resume.es}
 				target="_blank"
 				variant="primary"
+				{newTabLabel}
 			>
 				{resumeLabel}
 			</LinkButton>
