@@ -21,8 +21,72 @@
 }
 
 @font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../../assets/fonts/jetbrains-mono-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../../assets/fonts/jetbrains-mono-500.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'JetBrains Mono';
+	src: url('../../assets/fonts/jetbrains-mono-700.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+@font-face {
 	font-family: 'Fira Code';
 	src: url('../../assets/fonts/fira-code-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'VT323';
+	src: url('../../assets/fonts/vt323-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Press Start 2P';
+	src: url('../../assets/fonts/press-start-2p-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Silkscreen';
+	src: url('../../assets/fonts/silkscreen-400.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Silkscreen';
+	src: url('../../assets/fonts/silkscreen-700.woff2') format('woff2');
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Share Tech Mono';
+	src: url('../../assets/fonts/share-tech-mono-400.woff2') format('woff2');
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;

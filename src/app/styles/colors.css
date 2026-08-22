@@ -55,6 +55,10 @@
 	--color-base-content-strong-dark: oklch(96.826% 0.00685 247.9); /* #F1F5F9 */
 	--color-base-status-success-text-light: oklch(43.18% 0.08647 166.91); /* #065F46 */
 	--color-base-status-success-text-dark: oklch(77.294% 0.15349 163.22); /* #34D399 */
+	--color-base-status-warning-text-light: oklch(47.319% 0.1247 46.2); /* #92400E */
+	--color-base-status-warning-text-dark: oklch(83.686% 0.16442 84.43); /* #FBBF24 */
+	--color-base-status-error-text-light: oklch(50.542% 0.19049 27.52); /* #B91C1C */
+	--color-base-status-error-text-dark: oklch(71.063% 0.16615 22.22); /* #F87171 */
 	--color-retro-phosphor: oklch(87.628% 0.22779 152.55); /* #00FF88 */
 	--color-terminal-success: oklch(87.628% 0.22779 152.55); /* #00FF88 */
 
@@ -134,8 +138,8 @@
 		var(--color-base-status-success-text-dark)
 	);
 	--color-hero-glow: light-dark(
-		var(--alpha-primary-500-06-light),
-		var(--alpha-primary-500-14-dark)
+		var(--alpha-primary-500-10-light),
+		var(--alpha-primary-500-25-dark)
 	);
 	--color-terminal-primary: var(--color-primary-500-dark);
 	--color-terminal-glow: var(--alpha-primary-500-35-dark);
@@ -166,6 +170,7 @@
 	--channel-content-default: light-dark(var(--color-neutral-700), var(--color-neutral-300));
 	--channel-content-muted: light-dark(var(--color-neutral-600), var(--color-neutral-400));
 	--channel-edge-default: light-dark(var(--color-neutral-300), var(--color-neutral-800));
+	--channel-edge-strong: light-dark(var(--color-neutral-900), var(--color-neutral-300));
 	--channel-accent-primary: light-dark(
 		var(--color-primary-500-light),
 		var(--color-primary-500-dark)
@@ -174,7 +179,10 @@
 		var(--color-primary-400-light),
 		var(--color-primary-400-dark)
 	);
-	--channel-status-online: light-dark(var(--color-success-900), var(--color-retro-phosphor));
+	--channel-status-online: light-dark(
+		var(--color-base-status-success-text-light),
+		var(--color-base-status-success-text-dark)
+	);
 	--color-terminal-background: var(--color-neutral-950);
 	--color-terminal-surface: var(--color-base-surface-dark);
 	--color-terminal-content: var(--color-base-content-strong-dark);
@@ -191,6 +199,7 @@
 	--color-channel-content-default: var(--channel-content-default);
 	--color-channel-content-muted: var(--channel-content-muted);
 	--color-channel-edge-default: var(--channel-edge-default);
+	--color-channel-edge-strong: var(--channel-edge-strong);
 	--color-channel-edge-subtle: var(--color-edge-subtle);
 	--color-channel-accent-primary: var(--channel-accent-primary);
 	--color-channel-accent-primary-hover: light-dark(
@@ -200,9 +209,15 @@
 	--color-channel-accent-secondary: var(--channel-accent-secondary);
 	--color-channel-status-online: var(--channel-status-online);
 	--color-channel-status-success: var(--color-success-500);
-	--color-channel-status-warning: var(--color-warning-500);
-	--color-channel-status-error: var(--color-error-500);
-	--color-channel-overlay: color-mix(in oklch, var(--color-neutral-950) 88%, transparent);
+	--color-channel-status-warning: light-dark(
+		var(--color-base-status-warning-text-light),
+		var(--color-base-status-warning-text-dark)
+	);
+	--color-channel-status-error: light-dark(
+		var(--color-base-status-error-text-light),
+		var(--color-base-status-error-text-dark)
+	);
+	--color-channel-overlay: light-dark(rgb(0 0 0 / 36%), rgb(0 0 0 / 62%));
 	--color-channel-hero-glow: var(--color-hero-glow);
 	--color-channel-portfolio-terminal-background: var(--color-terminal-background);
 	--color-channel-portfolio-terminal-surface: var(--color-terminal-surface);
@@ -252,7 +267,7 @@
 	);
 	--color-button-secondary-content: var(--channel-content-strong);
 	--color-button-border: var(--color-edge-strong);
-	--color-button-focus: var(--channel-accent-secondary);
+	--color-button-focus: light-dark(var(--color-primary-600-light), var(--color-primary-500-dark));
 	--color-component-button-primary-bg: var(--color-button-primary-background);
 	--color-component-button-primary-text: var(--color-button-primary-content);
 	--color-component-button-border: var(--color-button-border);
@@ -297,6 +312,20 @@
 	--shadow-header-scrolled:
 		0 8px 24px -6px var(--color-header-shadow-primary),
 		0 6px 12px -6px var(--color-header-shadow-secondary);
+
+	/* Pixel primitives: border weight, radius, touch target and fixed sizes. */
+	--border-pixel: 2px;
+	--radius-pixel: 0px;
+	--radius-pixel-soft: 4px;
+	--size-touch-target: 44px;
+	--size-icon-sm: 16px;
+	--size-icon-md: 24px;
+	--size-icon-lg: 32px;
+	--size-avatar-xs: 32px;
+	--size-avatar-sm: 48px;
+	--size-avatar-md: 96px;
+	--size-avatar-lg: 192px;
+	--size-avatar-xl: 256px;
 
 	/* Pixel-grid spacing scale (4px increments) */
 	--space-1: 0.25rem;
