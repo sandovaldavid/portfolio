@@ -20,6 +20,8 @@ interface Props {
 
 const { lang } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.components');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+const newTabLabel = tAccessibility('externalLink');
 const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 ---
 
@@ -37,15 +39,15 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('buttonsDescription')}</p>
 				<div class="flex flex-wrap gap-4">
-					<LinkButton href="https://github.com">
+					<LinkButton href="https://github.com" {newTabLabel}>
 						<GitHubIcon class="size-6" aria-hidden="true" />
-						GitHub
+						{tPage('githubLabel')}
 					</LinkButton>
-					<LinkButton href="https://linkedin.com">
+					<LinkButton href="https://linkedin.com" {newTabLabel}>
 						<LinkedInIcon class="size-6" aria-hidden="true" />
-						LinkedIn
+						{tPage('linkedinLabel')}
 					</LinkButton>
-					<LinkButton href="mailto:example@email.com">
+					<LinkButton href="mailto:example@email.com" target="_self">
 						<MailIcon class="size-6" aria-hidden="true" />
 						{tPage('contactLabel')}
 					</LinkButton>
@@ -58,15 +60,15 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 				</h2>
 				<p class="text-content-muted mb-4">{tPage('socialDescription')}</p>
 				<div class="flex flex-wrap gap-4">
-					<SocialPill href="https://github.com">
+					<SocialPill href="https://github.com" {newTabLabel}>
 						<GitHubIcon class="size-4 md:size-6" aria-hidden="true" />
-						GitHub
+						{tPage('githubLabel')}
 					</SocialPill>
-					<SocialPill href="https://linkedin.com">
+					<SocialPill href="https://linkedin.com" {newTabLabel}>
 						<LinkedInIcon class="size-4 md:size-6" aria-hidden="true" />
-						LinkedIn
+						{tPage('linkedinLabel')}
 					</SocialPill>
-					<SocialPill href="mailto:example@email.com">
+					<SocialPill href="mailto:example@email.com" target="_self">
 						<MailIcon class="size-4 md:size-6" aria-hidden="true" />
 						{tPage('contactLabel')}
 					</SocialPill>
@@ -119,7 +121,7 @@ const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 					<Badge variant="primary">{tPage('anotherBadge')}</Badge>
 					<Badge variant="info">
 						<CodeIcon class="size-3" aria-hidden="true" />
-						TypeScript
+						{tPage('typescriptLabel')}
 					</Badge>
 					<Badge variant="success">{tPage('completedBadge')}</Badge>
 				</div>

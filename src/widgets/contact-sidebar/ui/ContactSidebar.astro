@@ -68,7 +68,7 @@ const links = [
 					target={external ? '_blank' : undefined}
 					rel={external ? 'noopener noreferrer' : undefined}
 					title={tooltip}
-					aria-label={label}
+					aria-label={external ? `${label}, ${tAccessibility('externalLink')}` : label}
 					class="group relative flex items-center justify-center w-10 h-10 text-content-muted hover:text-badge-brand-text hover:bg-badge-brand-bg transition-all duration-150"
 				>
 					<Fragment set:html={svg} />

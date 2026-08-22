@@ -10,6 +10,7 @@ const { showAll = false } = Astro.props;
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const projects = await getProjectsData(lang);
 
 const projectsToDisplay = showAll
@@ -33,6 +34,7 @@ const projectsToDisplay = showAll
 						sourceAccessText={tProjects(`sourceAccess.${project.sourceAccess}`)}
 						caseStudyText={tProjects('caseStudy')}
 						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
+						newTabLabel={tAccessibility('externalLink')}
 						priority={i < 2}
 					/>
 				</div>

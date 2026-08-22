@@ -17,6 +17,8 @@ const { localizedPaths } = Astro.props;
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tRecruiter = createScopedUiTranslator(lang, 'recruiter');
 const tTheme = createScopedUiTranslator(lang, 'theme');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+const newTabLabel = tAccessibility('externalLink');
 const resumeUrl = lang === Language.ENGLISH ? siteConfig.resume.en : siteConfig.resume.es;
 const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(tRecruiter('emailSubject'))}`;
 ---
@@ -79,6 +81,7 @@ const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(tRecr
 				class="w-full text-center px-4 py-2 bg-button-secondary-background hover:bg-button-secondary-background-hover text-button-secondary-content font-bold uppercase tracking-wider border-2 border-button-border shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 			>
 				{tRecruiter('downloadResume')}
+				<span class="sr-only"> {newTabLabel}</span>
 			</a>
 			<div class="grid grid-cols-2 gap-2">
 				<a
@@ -88,6 +91,7 @@ const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(tRecr
 					class="text-center px-3 py-2 border-2 border-channel-edge-default font-bold uppercase hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 				>
 					{tRecruiter('github')}
+					<span class="sr-only"> {newTabLabel}</span>
 				</a>
 				<a
 					href={siteConfig.social.linkedin}
@@ -96,6 +100,7 @@ const emailHref = `mailto:${siteConfig.email}?subject=${encodeURIComponent(tRecr
 					class="text-center px-3 py-2 border-2 border-channel-edge-default font-bold uppercase hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 				>
 					{tRecruiter('linkedin')}
+					<span class="sr-only"> {newTabLabel}</span>
 				</a>
 			</div>
 		</div>
