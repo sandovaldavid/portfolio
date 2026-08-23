@@ -7,9 +7,9 @@ import { LinkButton } from '@shared/ui';
 
 interface Props {
 	showAll?: boolean;
-	centered?: boolean;
+	layout?: 'home' | 'catalog';
 }
-const { showAll = false, centered = false } = Astro.props;
+const { showAll = false, layout = 'home' } = Astro.props;
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
@@ -19,14 +19,16 @@ const projects = await getProjectsData(lang);
 const projectsToDisplay = showAll
 	? projects
 	: projects.filter(project => project.featured).slice(0, 2);
+const isCatalog = layout === 'catalog';
 ---
 
 <div class="w-full">
 	<div
+		data-projects-layout={layout}
 		class:list={[
 			'w-full items-stretch',
-			centered
-				? 'flex flex-col items-center gap-8 md:flex-row md:flex-wrap md:justify-center'
+			isCatalog
+				? 'grid grid-cols-1 justify-items-center gap-y-6 md:grid-cols-[repeat(2,minmax(0,369px))] md:justify-center md:gap-x-8 lg:grid-cols-[repeat(2,minmax(0,520px))]'
 				: 'grid grid-cols-1 justify-center gap-8 md:grid-cols-[repeat(2,minmax(0,369px))] lg:grid-cols-[repeat(2,minmax(0,520px))] lg:gap-20',
 		]}
 	>
@@ -35,7 +37,7 @@ const projectsToDisplay = showAll
 				<div
 					class:list={[
 						'h-full min-w-0',
-						centered && 'w-full max-w-85 md:max-w-92.25 lg:max-w-130',
+						isCatalog && 'w-full max-w-85 md:max-w-92.25 lg:max-w-130',
 					]}
 				>
 					<ProjectCard
