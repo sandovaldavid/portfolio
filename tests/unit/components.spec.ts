@@ -12,7 +12,7 @@ describe('home section catalog consumers', () => {
 		);
 		expect(hero('credential')).toContain('Remote from Peru');
 		expect(research('sectionTitle')).toBe('RESEARCH');
-		expect(techStack('frontendTitle')).toBe('Core frontend stack');
+		expect(techStack('sectionTitle')).toBe('CORE STACK');
 	});
 
 	it('resolves Spanish hero and section copy', () => {
@@ -25,7 +25,7 @@ describe('home section catalog consumers', () => {
 		);
 		expect(hero('banner')).toContain('DISPONIBLE');
 		expect(research('sectionTitle')).toBe('INVESTIGACIÓN');
-		expect(techStack('frontendTitle')).toBe('Stack frontend principal');
+		expect(techStack('sectionTitle')).toBe('STACK PRINCIPAL');
 	});
 
 	it('reuses shared status and action labels', () => {
