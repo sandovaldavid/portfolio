@@ -43,6 +43,33 @@ interface ProjectStatusDocument {
 	limitations: string[];
 }
 
+interface PresentationBlockDocument {
+	label: string;
+	title: string;
+	body: string;
+}
+
+interface ProjectPresentationDocument {
+	kicker: string;
+	description: string;
+	status: {
+		lifecycle: string;
+		source: string;
+		demo: string;
+	};
+	narrative: {
+		problem: PresentationBlockDocument;
+		approach: PresentationBlockDocument;
+		tradeoffs: PresentationBlockDocument;
+		outcome: PresentationBlockDocument;
+	};
+	evidenceTitle: string;
+	verified: PresentationBlockDocument;
+	boundaries: PresentationBlockDocument;
+	learningsTitle: string;
+	learnings: PresentationBlockDocument[];
+}
+
 interface ProjectDocument {
 	projectId: string;
 	locale: 'en' | 'es';
@@ -60,6 +87,7 @@ interface ProjectDocument {
 		role: string;
 		status: ProjectStatusDocument;
 		evidence?: ProjectEvidenceDocument;
+		presentation?: ProjectPresentationDocument;
 	};
 }
 
@@ -102,6 +130,7 @@ describe('localized project and case-study content', () => {
 		expect(config).toContain('imageAlt: nonEmptyString');
 		expect(config).toContain('status: projectStatus');
 		expect(config).toContain('evidence: projectEvidence.optional()');
+		expect(config).toContain('presentation: projectPresentation.optional()');
 		expect(config).toContain(
 			'export const collections = { blog, devlog, portfolioProfile, experience, research, projects }'
 		);
@@ -139,6 +168,9 @@ describe('localized project and case-study content', () => {
 				spanish?.caseStudy.status.limitations.length ?? -1
 			);
 			expect(Boolean(english?.caseStudy.evidence)).toBe(Boolean(spanish?.caseStudy.evidence));
+			expect(Boolean(english?.caseStudy.presentation)).toBe(
+				Boolean(spanish?.caseStudy.presentation)
+			);
 
 			if (english?.caseStudy.evidence && spanish?.caseStudy.evidence) {
 				expect(Object.keys(english.caseStudy.evidence).sort()).toEqual(
@@ -146,6 +178,15 @@ describe('localized project and case-study content', () => {
 				);
 				expect(english.caseStudy.evidence.sources.map(source => source.sourceId)).toEqual(
 					spanish.caseStudy.evidence.sources.map(source => source.sourceId)
+				);
+			}
+
+			if (english?.caseStudy.presentation && spanish?.caseStudy.presentation) {
+				expect(Object.keys(english.caseStudy.presentation).sort()).toEqual(
+					Object.keys(spanish.caseStudy.presentation).sort()
+				);
+				expect(english.caseStudy.presentation.learnings).toHaveLength(
+					spanish.caseStudy.presentation.learnings.length
 				);
 			}
 		}
@@ -173,6 +214,13 @@ describe('localized project and case-study content', () => {
 			expect(nonEmpty(entry.caseStudy.status.limitationsLabel)).toBe(true);
 			expect(entry.caseStudy.status.limitations.length).toBeGreaterThan(0);
 			expect(entry.caseStudy.status.limitations.every(nonEmpty)).toBe(true);
+
+			if (entry.caseStudy.presentation) {
+				expect(nonEmpty(entry.caseStudy.presentation.kicker)).toBe(true);
+				expect(nonEmpty(entry.caseStudy.presentation.description)).toBe(true);
+				expect(entry.caseStudy.presentation.learnings.length).toBeGreaterThan(0);
+				expect(entry.caseStudy.presentation.learnings.every(item => nonEmpty(item.body))).toBe(true);
+			}
 		}
 	});
 
@@ -193,9 +241,6 @@ describe('localized project and case-study content', () => {
 		expect(sourceAccesses.every(value => SOURCE_ACCESS_VALUES.includes(value))).toBe(true);
 		expect(demoAccesses.every(value => DEMO_ACCESS_VALUES.includes(value))).toBe(true);
 
-		// Verified 2026-07-30: mapa-unp.sandovaldavid.com and auctions.sandovaldavid.com no
-		// longer resolve (NXDOMAIN), so their dead preview links were removed rather than
-		// presented as a live demo.
 		expect(metadata).not.toContain('mapa-unp.sandovaldavid.com');
 		expect(metadata).not.toContain('auctions.sandovaldavid.com');
 	});
@@ -227,6 +272,7 @@ describe('localized project and case-study content', () => {
 		expect(query).toContain('Duplicate project ID');
 		expect(query).toContain('Missing project content for locale');
 		expect(query).toContain('Missing language-neutral URL for evidence source');
+		expect(query).toContain('toPresentation(entry)');
 	});
 
 	it('removes dictionary-backed project records and obsolete data owners', () => {
@@ -252,12 +298,16 @@ describe('localized project and case-study content', () => {
 			expect(route).toContain('const lang = getLanguageFromLocale(Astro.currentLocale)');
 			expect(route).toContain('await getProjectBySlug(lang, slug)');
 			expect(route).toContain("getRelativeLocaleUrl(lang, 'projects')");
+			expect(route).toContain("project.caseStudy.presentation ? 'flush' : 'default'");
 		}
 	});
 
 	it('contains no known hardcoded English project presentation on Spanish surfaces', () => {
 		const card = readSource('src/entities/project/ui/ProjectCard.astro');
 		const caseStudy = readSource('src/widgets/project-case-study/ui/ProjectCaseStudy.astro');
+		const legacyCaseStudy = readSource(
+			'src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro'
+		);
 		const metadata = readSource('src/entities/project/model/metadata.ts');
 
 		expect(card).toContain('alt={imageAlt}');
@@ -265,9 +315,11 @@ describe('localized project and case-study content', () => {
 		expect(card).not.toContain('sourceAccessText');
 		expect(card).not.toContain("'Feature'");
 		expect(card).not.toContain("'Project'");
-		expect(caseStudy).toContain('{caseStudyLabel}');
-		expect(caseStudy).toContain('alt={project.imageAlt}');
+		expect(caseStudy).toContain('const presentation = project.caseStudy.presentation');
+		expect(caseStudy).toContain('<ProjectCaseStudyLegacy {project} {backLink} {lang} />');
 		expect(caseStudy).not.toContain('BOSS FIGHT // CASE STUDY');
+		expect(legacyCaseStudy).toContain('{caseStudyLabel}');
+		expect(legacyCaseStudy).toContain('alt={project.imageAlt}');
 		expect(metadata).not.toContain("timeline: '3 months'");
 		expect(metadata).not.toContain("role: 'Solo Developer'");
 	});
