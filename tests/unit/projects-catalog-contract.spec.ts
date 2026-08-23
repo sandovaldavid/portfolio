@@ -16,6 +16,7 @@ describe('Projects Catalog composition contract', () => {
 		expect(layout).toContain("'pt-28 pb-16 w-full flex flex-col items-center'");
 		expect(englishRoute).toContain('contentLayout="flush"');
 		expect(spanishRoute).toContain('contentLayout="flush"');
+		expect(catalog).toContain('<div class="w-full pt-18">');
 	});
 
 	it('uses the current Figma intro as open editorial content instead of a legacy panel', () => {
