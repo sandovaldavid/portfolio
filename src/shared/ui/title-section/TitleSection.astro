@@ -8,27 +8,18 @@ const { className, align = 'start' } = Astro.props;
 ---
 
 <!--
-	Section Title contract (Figma / Portfolio v2): gap 12, optional leading
-	icon 20px, JetBrains Mono Bold 36/40 tracking .9px. The component owns no
-	external margin; section parents own vertical rhythm through gap/padding.
-	Alignment is explicit so individual section masters can opt into centered
-	composition without forcing every page heading to share that layout.
+	Section Title contract (Portfolio v2): Mobile uses the Feature Title scale
+	(28/36) with a 16px leading icon so section headings do not dominate narrow
+	viewports. Tablet/Desktop use the canonical Section Title scale (36/40)
+	with a 20px icon. The component owns no external margin; section parents own
+	vertical rhythm through gap/padding.
 -->
 <h2
 	class:list={[
-		'title-section flex items-center gap-3 text-section-title text-content-strong',
+		'title-section flex items-center gap-3 text-feature-title text-content-strong [&>svg]:size-4 md:text-section-title md:[&>svg]:size-5',
 		align === 'center' ? 'justify-center text-center' : 'justify-start text-left',
 		className,
 	]}
 >
 	<slot />
 </h2>
-
-<style>
-	/* Leading icons lock to the 20px contract size. */
-	.title-section :global(svg) {
-		width: 1.25rem;
-		height: 1.25rem;
-		flex-shrink: 0;
-	}
-</style>
