@@ -11,6 +11,7 @@ import { LanguagePicker } from '@features/language-picker';
 import { ThemeToggle } from '@features/theme-toggle';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
+import CloseIcon from '@assets/icons/Close.astro';
 import MailIcon from '@assets/icons/Mail.astro';
 
 interface Props {
@@ -91,21 +92,7 @@ const socialLinks = [
 				class="grid size-10 shrink-0 cursor-pointer place-items-center border border-edge-strong bg-transparent text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 				aria-label={tRecruiter('closePanel')}
 			>
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					class="size-5"
-					fill="none"
-					viewBox="0 0 24 24"
-					stroke="currentColor"
-					aria-hidden="true"
-				>
-					<path
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						stroke-width="2"
-						d="M6 18L18 6M6 6l12 12"
-					></path>
-				</svg>
+				<CloseIcon class="size-5" aria-hidden="true" />
 			</button>
 		</div>
 
