@@ -149,6 +149,33 @@ const projectEvidence = z.object({
 		.min(1),
 });
 
+const projectPresentationBlock = z.object({
+	label: nonEmptyString,
+	title: nonEmptyString,
+	body: nonEmptyString,
+});
+
+const projectPresentation = z.object({
+	kicker: nonEmptyString,
+	description: nonEmptyString,
+	status: z.object({
+		lifecycle: nonEmptyString,
+		source: nonEmptyString,
+		demo: nonEmptyString,
+	}),
+	narrative: z.object({
+		problem: projectPresentationBlock,
+		approach: projectPresentationBlock,
+		tradeoffs: projectPresentationBlock,
+		outcome: projectPresentationBlock,
+	}),
+	evidenceTitle: nonEmptyString,
+	verified: projectPresentationBlock,
+	boundaries: projectPresentationBlock,
+	learningsTitle: nonEmptyString,
+	learnings: z.array(projectPresentationBlock).min(1),
+});
+
 const projects = defineCollection({
 	loader: glob({ pattern: '**/*.json', base: './src/content/projects' }),
 	schema: z.object({
@@ -168,6 +195,7 @@ const projects = defineCollection({
 			role: nonEmptyString,
 			status: projectStatus,
 			evidence: projectEvidence.optional(),
+			presentation: projectPresentation.optional(),
 		}),
 	}),
 });
