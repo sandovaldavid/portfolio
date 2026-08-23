@@ -13,138 +13,136 @@
  */
 @utility text-hero-display {
 	font-family: var(--font-mono);
-	font-size: 4.5rem; /* 72px */
-	line-height: 5rem; /* 80px */
+	font-size: 4.5rem;
+	line-height: 5rem;
 	font-weight: 700;
 	letter-spacing: -2.016px;
 }
 
 @utility text-page-title {
 	font-family: var(--font-mono);
-	font-size: 3rem; /* 48px */
-	line-height: 3.5rem; /* 56px */
+	font-size: 3rem;
+	line-height: 3.5rem;
 	font-weight: 700;
 	letter-spacing: -1px;
 }
 
 @utility text-page-title-mobile {
 	font-family: var(--font-mono);
-	font-size: 2.5rem; /* 40px */
-	line-height: 3rem; /* 48px */
+	font-size: 2.5rem;
+	line-height: 3rem;
 	font-weight: 700;
 	letter-spacing: -0.5px;
 }
 
 @utility text-section-title {
 	font-family: var(--font-mono);
-	font-size: 2.25rem; /* 36px */
-	line-height: 2.5rem; /* 40px */
+	font-size: 2.25rem;
+	line-height: 2.5rem;
 	font-weight: 700;
 	letter-spacing: 0.9px;
 }
 
-/* Compatibility alias while the remaining v1-era consumers are migrated. */
 @utility text-section-heading {
 	font-family: var(--font-mono);
-	font-size: 2.25rem; /* 36px */
-	line-height: 2.5rem; /* 40px */
+	font-size: 2.25rem;
+	line-height: 2.5rem;
 	font-weight: 700;
 	letter-spacing: 0.9px;
 }
 
 @utility text-feature-title {
 	font-family: var(--font-mono);
-	font-size: 1.75rem; /* 28px */
-	line-height: 2.25rem; /* 36px */
+	font-size: 1.75rem;
+	line-height: 2.25rem;
 	font-weight: 500;
 	letter-spacing: 0;
 }
 
 @utility text-component-title {
 	font-family: var(--font-mono);
-	font-size: 1.5rem; /* 24px */
-	line-height: 2rem; /* 32px */
+	font-size: 1.5rem;
+	line-height: 2rem;
 	font-weight: 500;
 	letter-spacing: 0;
 }
 
 @utility text-subheading {
 	font-family: var(--font-mono);
-	font-size: 1.25rem; /* 20px */
-	line-height: 1.75rem; /* 28px */
+	font-size: 1.25rem;
+	line-height: 1.75rem;
 	font-weight: 500;
 	letter-spacing: 0;
 }
 
 @utility text-navigation {
 	font-family: var(--font-mono);
-	font-size: 0.875rem; /* 14px */
-	line-height: 1.25rem; /* 20px */
+	font-size: 0.875rem;
+	line-height: 1.25rem;
 	font-weight: 700;
 	letter-spacing: 0.35px;
 }
 
 @utility text-button-label {
 	font-family: var(--font-mono);
-	font-size: 0.875rem; /* 14px */
-	line-height: 1.25rem; /* 20px */
+	font-size: 0.875rem;
+	line-height: 1.25rem;
 	font-weight: 700;
 	letter-spacing: 0.7px;
 }
 
 @utility text-body {
 	font-family: var(--font-sans);
-	font-size: 1rem; /* 16px */
-	line-height: 1.625rem; /* 26px */
+	font-size: 1rem;
+	line-height: 1.625rem;
 	font-weight: 400;
 	letter-spacing: 0;
 }
 
 @utility text-secondary {
 	font-family: var(--font-sans);
-	font-size: 0.875rem; /* 14px */
-	line-height: 1.375rem; /* 22px */
+	font-size: 0.875rem;
+	line-height: 1.375rem;
 	font-weight: 400;
 	letter-spacing: 0;
 }
 
 @utility text-caption {
 	font-family: var(--font-sans);
-	font-size: 0.75rem; /* 12px */
-	line-height: 1.125rem; /* 18px */
+	font-size: 0.75rem;
+	line-height: 1.125rem;
 	font-weight: 500;
 	letter-spacing: 0.2px;
 }
 
 @utility text-editorial-label {
 	font-family: var(--font-retro-tag);
-	font-size: 0.875rem; /* 14px */
-	line-height: 1.375rem; /* 22px */
+	font-size: 0.875rem;
+	line-height: 1.375rem;
 	font-weight: 700;
 	letter-spacing: 0.5px;
 }
 
 @utility text-editorial-label-compact {
 	font-family: var(--font-retro-tag);
-	font-size: 0.75rem; /* 12px */
-	line-height: 1.125rem; /* 18px */
+	font-size: 0.75rem;
+	line-height: 1.125rem;
 	font-weight: 700;
 	letter-spacing: 0.4px;
 }
 
 @utility text-code {
 	font-family: var(--font-code);
-	font-size: 0.875rem; /* 14px */
-	line-height: 1.375rem; /* 22px */
+	font-size: 0.875rem;
+	line-height: 1.375rem;
 	font-weight: 400;
 	letter-spacing: 0;
 }
 
-/* Compatibility alias for existing code-oriented consumers. */
 @utility text-code-body {
 	font-family: var(--font-code);
-	font-size: 0.875rem; /* 14px */
-	line-height: 1.375rem; /* 22px */
+	font-size: 0.875rem;
+	line-height: 1.375rem;
 	font-weight: 400;
 	letter-spacing: 0;
 }
@@ -154,26 +152,17 @@ html {
 	scrollbar-width: auto;
 }
 
-/* #main-content (and Layout's non-home content wrapper directly inside it)
-   both use align-items: center, so a page's content div is a flex item sized
-   by its own content instead of stretched to the viewport. A non-wrapping
-   child (a code block with a long unbroken line) can then grow past the
-   viewport and widen the whole page instead of scrolling within its own
-   overflow-x: auto box. Lives in @layer base so an element's explicit
-   max-width utility (utilities layer) still wins over this protection. */
 @layer base {
 	#main-content > *,
 	#main-content > * > * {
 		max-width: 100%;
 	}
+
+	#main-content {
+		overflow-x: clip;
+	}
 }
 
-/*
- * Headings inherit the core display family only. Weight, tracking and casing
- * belong to the semantic role or component; forcing them globally would make
- * Component Title / Feature Title and mixed-case page headings contradict
- * the Figma contract.
- */
 @layer base {
 	h1,
 	h2,
@@ -185,7 +174,21 @@ html {
 	}
 }
 
-/* Custom retro blocky scrollbars */
+/*
+ * Home viewport rhythm. These IDs are owned exclusively by Layout's Home
+ * composition. Mobile remains content-driven; Tablet/Desktop reserve the
+ * usable viewport below the fixed 72px Header and may grow for localization.
+ */
+@media (min-width: 768px) {
+	#projects,
+	#research,
+	#about-me,
+	#technologies {
+		min-height: calc(100svh - 4.5rem);
+		scroll-margin-top: 4.5rem;
+	}
+}
+
 ::-webkit-scrollbar {
 	width: 12px;
 	height: 12px;
@@ -205,7 +208,6 @@ html {
 	background: var(--color-primary-600);
 }
 
-/* Responsive Containers */
 .container {
 	width: 100%;
 	margin-left: auto;
@@ -242,7 +244,6 @@ html {
 	}
 }
 
-/* Safe Area Insets para móviles con notch */
 @supports (padding: env(safe-area-inset-left)) {
 	body {
 		padding-left: env(safe-area-inset-left);
@@ -251,8 +252,6 @@ html {
 	}
 }
 
-/* Reading surfaces use Inter. Mono stays reserved for display, interface and
-   explicit code/terminal contexts. */
 @layer base {
 	body {
 		font-family: var(--font-sans);
@@ -266,7 +265,6 @@ html {
 	}
 }
 
-/* Respect user motion preference (WCAG 2.3.3) */
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
