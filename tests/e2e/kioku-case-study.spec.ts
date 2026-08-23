@@ -14,36 +14,63 @@ test.describe('Kioku public backend case study', () => {
 	for (const locale of [
 		{
 			path: '/projects/kioku',
-			status: 'Release 2.3.0 stable — active development on a narrower contract',
-			implemented: 'IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION',
-			planned: 'PLANNED // NOT PRESENTED AS SHIPPED',
-			limitations: 'ACCESS AND EVIDENCE LIMITATIONS',
-			adapter: 'MCP Adapter',
-			source: 'Kioku — MCP server for Obsidian',
+			kicker: 'PROJECT CASE STUDY · BACKEND ENGINEERING',
+			status: 'ACTIVE · STABLE 2.3.0 + DEVELOPMENT',
+			source: 'PUBLIC SOURCE',
+			demo: 'NO HOSTED DEMO',
+			problem: 'SESSION CONTEXT IS NOT DURABLE',
+			approach: 'LOCAL-FIRST MCP + OBSIDIAN',
+			tradeoffs: 'ONE DEPLOYABLE ASSEMBLY',
+			outcome: 'PUBLISHED TOOL AND HANDOFF EVIDENCE',
+			evidence: 'Evidence and limitations',
+			verified: 'RELEASES, TESTS, CI AND DOCUMENTED EVALUATION',
+			boundaries: 'UNRELEASED WORK IS LABELED',
+			learnings: 'Learning extraction',
+			learningBody:
+				'Durable, human-readable Markdown survives session and process boundaries better than provider-specific history.',
 		},
 		{
 			path: '/es/projects/kioku',
-			status: 'Release 2.3.0 estable — desarrollo activo sobre un contrato más reducido',
-			implemented: 'IMPLEMENTADO // VERIFICADO EN LA DOCUMENTACIÓN DEL REPOSITORIO',
-			planned: 'PLANIFICADO // NO PRESENTADO COMO ENTREGADO',
-			limitations: 'LIMITACIONES DE ACCESO Y EVIDENCIA',
-			adapter: 'Adaptador MCP',
-			source: 'Kioku — servidor MCP para Obsidian',
+			kicker: 'CASO DE ESTUDIO · INGENIERÍA BACKEND',
+			status: 'ACTIVO · ESTABLE 2.3.0 + DESARROLLO',
+			source: 'CÓDIGO PÚBLICO',
+			demo: 'SIN DEMO ALOJADA',
+			problem: 'EL CONTEXTO DE SESIÓN NO ES DURABLE',
+			approach: 'MCP LOCAL-FIRST + OBSIDIAN',
+			tradeoffs: 'UN SOLO ENSAMBLADO DESPLEGABLE',
+			outcome: 'HERRAMIENTA PUBLICADA Y EVIDENCIA DE TRASPASO',
+			evidence: 'Evidencia y limitaciones',
+			verified: 'RELEASES, TESTS, CI Y EVALUACIÓN DOCUMENTADA',
+			boundaries: 'EL TRABAJO NO PUBLICADO ESTÁ ETIQUETADO',
+			learnings: 'Extracción de aprendizajes',
+			learningBody:
+				'Markdown durable y legible por humanos sobrevive mejor los límites de sesión y proceso que un historial específico de proveedor.',
 		},
 	]) {
-		test(`renders verifiable bilingual evidence at ${locale.path}`, async ({ page }) => {
+		test(`renders the concise bilingual v2 presentation at ${locale.path}`, async ({ page }) => {
 			await page.goto(locale.path);
 
+			const caseStudy = page.locator('[data-project-case-study="v2"]');
+			await expect(caseStudy).toBeVisible();
 			await expect(page.getByRole('heading', { level: 1, name: 'Kioku' })).toBeVisible();
+			await expect(page.getByText(locale.kicker, { exact: true })).toBeVisible();
 			await expect(page.getByText(locale.status, { exact: true })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.implemented })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.planned })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.limitations })).toBeVisible();
-			await expect(page.getByText(locale.adapter, { exact: true })).toBeVisible();
-			await expect(page.getByRole('link', { name: locale.source })).toHaveAttribute(
-				'href',
-				'https://github.com/sandovaldavid/kioku'
-			);
+			await expect(page.getByText(locale.demo, { exact: true })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.problem })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.approach })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.tradeoffs })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.outcome })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.evidence })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.verified })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.boundaries })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.learnings })).toBeVisible();
+			await expect(page.getByText(locale.learningBody, { exact: true })).toBeVisible();
+
+			const sourceBadgeLink = page.locator('a[href="https://github.com/sandovaldavid/kioku"]');
+			await expect(sourceBadgeLink).toBeVisible();
+			await expect(sourceBadgeLink).toContainText(locale.source);
+
+			await expect(caseStudy.locator('figure')).toHaveCount(0);
 		});
 	}
 });
