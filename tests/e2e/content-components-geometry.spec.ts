@@ -188,7 +188,7 @@ test.describe('Experience Detail contract', () => {
 	for (const [viewport, expectedWidth] of [
 		[DESKTOP, 840],
 		[TABLET, 446],
-		[MOBILE, 360],
+		[MOBILE, 350],
 	] as const) {
 		test(`${viewport.label} detail is an open editorial block at ${expectedWidth}px`, async ({
 			page,
