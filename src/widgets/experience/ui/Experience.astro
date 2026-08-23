@@ -1,8 +1,8 @@
 ---
-import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import { getExperienceData } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import ExperienceItem from './ExperienceItem.astro';
+import ExperienceDetail from './ExperienceDetail.astro';
+import ExperienceTab from './ExperienceTab.astro';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
@@ -22,39 +22,17 @@ const EXPERIENCE = await getExperienceData(lang);
 			>
 				{
 					EXPERIENCE.map((exp, idx) => (
-						<button
-							role="tab"
-							id={`exp-tab-${exp.experienceId}`}
-							aria-controls={`exp-panel-${exp.experienceId}`}
-							aria-selected={idx === 0 ? 'true' : 'false'}
-							tabindex={idx === 0 ? 0 : -1}
-							data-index={idx}
-							data-experience-id={exp.experienceId}
-							data-active={idx === 0 ? 'true' : 'false'}
-							class="group relative pl-4 md:pl-6 pr-4 py-3 rounded-none text-left whitespace-nowrap md:whitespace-normal border-2 border-transparent data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg text-content-muted data-[active=true]:text-content-strong hover:text-content-strong transition-all duration-100 font-bold uppercase tracking-wider text-sm font-gaming-mono cursor-pointer"
-						>
-							{/* Active indicator bar */}
-							<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-500 scale-y-0 group-data-[active=true]:scale-y-100 transition-transform duration-150 origin-center hidden md:block" />
-							<div class="absolute bottom-0 left-0 right-0 h-1 bg-primary-500 scale-x-0 group-data-[active=true]:scale-x-100 transition-transform duration-150 origin-center block md:hidden" />
-
-							<div class="flex flex-col">
-								<span class="font-bold flex items-center">
-									<span class="text-primary-500 mr-1.5 scale-0 group-data-[active=true]:scale-100 transition-transform duration-150 origin-left">
-										<ArrowRightIcon
-											class="size-3.5"
-											aria-hidden="true"
-											focusable="false"
-										/>
-									</span>
-									{exp.company ?? exp.title}
-								</span>
-								{exp.company && (
-									<span class="text-content-muted text-xs md:text-sm pl-4 group-data-[active=true]:pl-4 transition-all duration-150">
-										{exp.title}
-									</span>
-								)}
-							</div>
-						</button>
+						<ExperienceTab
+							company={exp.company ?? exp.title}
+							role={exp.title}
+							active={idx === 0}
+							selected={idx === 0}
+							focusable={idx === 0}
+							tabId={`exp-tab-${exp.experienceId}`}
+							panelId={`exp-panel-${exp.experienceId}`}
+							experienceId={exp.experienceId}
+							index={idx}
+						/>
 					))
 				}
 			</div>
@@ -73,7 +51,7 @@ const EXPERIENCE = await getExperienceData(lang);
 							data-active={idx === 0}
 							data-experience-id={exp.experienceId}
 						>
-							<ExperienceItem {...exp} />
+							<ExperienceDetail {...exp} />
 						</div>
 					))
 				}

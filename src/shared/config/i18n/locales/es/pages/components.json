@@ -44,5 +44,21 @@
 	"simpleTitle": "Título simple",
 	"iconTitle": "Título con icono",
 	"featuredTitle": "Proyectos destacados",
-	"wrappingTitle": "Un título de sección largo que se ajusta en pantallas estrechas"
+	"wrappingTitle": "Un título de sección largo que se ajusta en pantallas estrechas",
+	"contentPanelsHeading": "Paneles de contenido",
+	"contentPanelsDescription": "Variantes de rol visual con alturas guiadas por el contenido: los textos largos crecen en vertical en lugar de recortarse.",
+	"contentPanelStatusLabel": "Estado",
+	"contentPanelHighlightLabel": "Destacado",
+	"contentPanelSuccessLabel": "Publicada",
+	"contentPanelDangerLabel": "Atención",
+	"contentPanelTitle": "Título del panel",
+	"contentPanelBody": "Este Content Panel mantiene el texto de demostración dentro del contrato aprobado de bordes, sombras y espaciado.",
+	"editorialCardsHeading": "Tarjetas editoriales",
+	"editorialCardsDescription": "Una primitiva renderiza las vistas previas del blog y del devlog con etiquetas de tipo localizadas y una llamada a la acción anclada abajo.",
+	"editorialCardBlogType": "BLOG",
+	"editorialCardDevlogType": "DEVLOG",
+	"editorialCardTitle": "Título de vista previa editorial",
+	"editorialCardBody": "Un resumen breve que describe el artículo o la nota de cambios vinculada.",
+	"editorialCardCta": "Leer artículo",
+	"editorialCardMeta": "2026-08-22"
 }

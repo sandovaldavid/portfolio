@@ -9,6 +9,8 @@ import {
 	Avatar,
 	Badge,
 	Button,
+	ContentPanel,
+	EditorialCard,
 	LinkButton,
 	LinkInline,
 	SectionContainer,
@@ -274,6 +276,81 @@ const badgeVariantLabels = {
 					<div class="w-[340px]">
 						<TitleSection className="mb-0">{tPage('wrappingTitle')}</TitleSection>
 					</div>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('contentPanelsHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('contentPanelsDescription')}</p>
+				<div class="flex flex-wrap gap-6">
+					<ContentPanel
+						variant="default"
+						density="compact"
+						label={tPage('contentPanelStatusLabel')}
+						title={tPage('contentPanelTitle')}
+						class="showcase-panel-default"
+					>
+						{tPage('contentPanelBody')}
+					</ContentPanel>
+					<ContentPanel
+						variant="highlight"
+						density="compact"
+						label={tPage('contentPanelHighlightLabel')}
+						title={tPage('contentPanelTitle')}
+						class="showcase-panel-highlight"
+					>
+						{tPage('contentPanelBody')}
+					</ContentPanel>
+					<ContentPanel
+						variant="success"
+						density="standard"
+						label={tPage('contentPanelSuccessLabel')}
+						title={tPage('contentPanelTitle')}
+						class="showcase-panel-success"
+					>
+						{tPage('contentPanelBody')}
+					</ContentPanel>
+					<ContentPanel
+						variant="danger"
+						density="standard"
+						label={tPage('contentPanelDangerLabel')}
+						title={tPage('contentPanelTitle')}
+						class="showcase-panel-danger"
+					>
+						{tPage('contentPanelBody')}
+					</ContentPanel>
+				</div>
+			</section>
+
+			<section>
+				<h2 class="text-2xl font-bold mb-3 text-content-strong">
+					{tPage('editorialCardsHeading')}
+				</h2>
+				<p class="text-content-muted mb-4">{tPage('editorialCardsDescription')}</p>
+				<div class="flex flex-wrap items-start gap-6">
+					<EditorialCard
+						typeLabel={tPage('editorialCardBlogType')}
+						metaText={tPage('editorialCardMeta')}
+						tags={[tPage('typescriptLabel')]}
+						title={tPage('editorialCardTitle')}
+						description={tPage('editorialCardBody')}
+						ctaText={tPage('editorialCardCta')}
+						ctaHref="#"
+						class="showcase-card-blog"
+					/>
+					<EditorialCard
+						typeLabel={tPage('editorialCardDevlogType')}
+						metaText={tPage('editorialCardMeta')}
+						tags={[tPage('techPillShortLabel')]}
+						title={tPage('editorialCardTitle')}
+						description={tPage('editorialCardBody')}
+						ctaText={tPage('editorialCardCta')}
+						ctaHref="#"
+						headingLevel="h3"
+						class="showcase-card-devlog"
+					/>
 				</div>
 			</section>
 		</div>

@@ -1,0 +1,96 @@
+---
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+
+interface Props {
+	/** Editorial type label rendered in the header (BLOG / DEVLOG). */
+	typeLabel: string;
+	/** Right-aligned header meta (date, version or slug line). */
+	metaText: string;
+	/** Optional machine-readable datetime for the meta element. */
+	datetime?: string;
+	tags?: string[];
+	title: string;
+	description: string;
+	ctaText: string;
+	ctaHref: string;
+	/** Heading level for the card title inside the page outline. */
+	headingLevel?: 'h2' | 'h3';
+	class?: string;
+}
+
+const {
+	typeLabel,
+	metaText,
+	datetime,
+	tags = [],
+	title,
+	description,
+	ctaText,
+	ctaHref,
+	headingLevel = 'h2',
+	class: className,
+} = Astro.props;
+
+const Heading = headingLevel;
+
+/*
+ * Editorial Card contract (spec/03 Editorial Card): one primitive for Blog and
+ * Devlog previews. Desktop 520x300 / Tablet 369x360 / Mobile 340x400 as target
+ * dims (min-heights so translated copy grows). Header h44 brand-badge surface,
+ * Silkscreen Bold12 type label at 14px inset, Inter Medium12 meta right.
+ * Content stack gap 20; tags px8/py3 brand chips with 1px outline, Silkscreen
+ * Bold10; title JBM Medium20 desktop / 18 tablet+mobile; description Inter15
+ * desktop / Inter14 tablet+mobile. CTA is bottom-anchored flow layout so a
+ * multi-line title/description can never collide with it.
+ * Hover raises the hard shadow (3px -> 5px) without geometry change.
+ */
+const cardBase =
+	'editorial-card relative flex w-full flex-col overflow-hidden rounded-none border-2 border-edge-strong bg-channel-surface-default shadow-retro-md transition-[box-shadow] duration-100 hover:shadow-retro-xl';
+const cardSize =
+	'max-w-[340px] min-h-[400px] md:max-w-[369px] md:min-h-[360px] lg:max-w-[520px] lg:min-h-[300px]';
+---
+
+<article class:list={[cardBase, cardSize, className]}>
+	<header
+		class="flex h-11 shrink-0 items-center justify-between gap-2 rounded-none border-b-0 bg-badge-brand-bg px-3.5"
+	>
+		<span class="font-retro-tag text-xs font-bold tracking-wide text-badge-brand-text">
+			{typeLabel}
+		</span>
+		<time class="text-caption text-content-muted" {datetime}>
+			{metaText}
+		</time>
+	</header>
+
+	<div class="flex grow flex-col gap-5 pt-[18px] px-3.5 pb-4 lg:px-[18px]">
+		{
+			tags.length > 0 && (
+				<ul class="flex flex-row flex-wrap gap-2" aria-label={typeLabel}>
+					{tags.map(tag => (
+						<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-[3px] font-retro-tag text-[10px] font-bold leading-none tracking-wide text-badge-brand-text">
+							{tag}
+						</li>
+					))}
+				</ul>
+			)
+		}
+		<div class="flex flex-col gap-5">
+			<Heading
+				class="text-content-strong font-mono text-lg font-medium leading-snug lg:text-xl"
+			>
+				{title}
+			</Heading>
+			<p class="font-sans text-sm leading-relaxed text-content-default lg:text-[15px]">
+				{description}
+			</p>
+		</div>
+
+		<a
+			href={ctaHref}
+			class="mt-auto inline-flex w-fit items-center gap-1.5 pt-2 font-retro-tag text-xs font-bold uppercase tracking-wide text-primary-500 underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 dark:text-primary-400"
+		>
+			{ctaText}
+			<ArrowRightIcon class="size-3.5 shrink-0" aria-hidden="true" focusable="false" />
+		</a>
+	</div>
+</article>

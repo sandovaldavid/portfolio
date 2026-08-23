@@ -1,6 +1,5 @@
 ---
 import GitHubIcon from '@assets/technologies/GitHub.astro';
-import LinkIcon from '@assets/icons/Link.astro';
 import BookIcon from '@assets/icons/BookOpen.astro';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
 import type { ProjectItem, ProjectLifecycle, ProjectSourceAccess } from '../model';
@@ -8,47 +7,49 @@ import { Image } from 'astro:assets';
 
 interface Props {
 	project: ProjectItem;
-	codeButtonText: string;
-	previewButtonText: string;
+	/** Localized primary action label (View case study). */
+	caseStudyText?: string;
+	caseStudyLink?: string;
+	/** Localized secondary action label (Source). */
+	sourceText?: string;
+	newTabLabel: string;
 	cardTypeText: string;
 	lifecycleText: string;
 	sourceAccessText: string;
-	caseStudyText?: string;
-	caseStudyLink?: string;
-	newTabLabel: string;
 	variant?: 'primary' | 'secondary';
 	priority?: boolean;
+	showSecondaryAction?: boolean;
 	/** Heading level for the card title: 'h3' under a section h2 (home), 'h2' under a page h1 */
 	headingLevel?: 'h2' | 'h3';
 }
 
 const {
 	project,
-	codeButtonText,
-	previewButtonText,
+	caseStudyText,
+	caseStudyLink,
+	sourceText,
+	newTabLabel,
 	cardTypeText,
 	lifecycleText,
 	sourceAccessText,
-	caseStudyText,
-	caseStudyLink,
-	newTabLabel,
 	variant = 'secondary',
 	priority = false,
+	showSecondaryAction = true,
 	headingLevel = 'h3',
 } = Astro.props;
+
 const Heading = headingLevel;
-const {
-	image,
-	imageAlt,
-	title,
-	description,
-	tags,
-	link,
-	github,
-	category,
-	lifecycle,
-	sourceAccess,
-} = project;
+
+/*
+ * Project Card contract (spec/03): surface default, border 2 strong, p2 (8px),
+ * overflow hidden; widths Desktop 520 / Tablet 369 / Mobile 340 as max targets
+ * inside grids. Shadow 3px -> hover 8px with no geometry change.
+ * Terminal slot: Primary Desktop h210 / Tablet+Mobile h190; Secondary Desktop
+ * h120 / Tablet+Mobile h130; fixed terminal palette tokens, window bar h28
+ * raised surface, three 8px square status dots, JBM Bold12 label.
+ */
+const { image, imageAlt, title, description, tags, github, category, lifecycle, sourceAccess } =
+	project;
 const isPrimary = variant === 'primary';
 
 const LIFECYCLE_BADGE_VARIANT: Record<
@@ -65,121 +66,129 @@ const SOURCE_BADGE_VARIANT: Record<ProjectSourceAccess, 'success' | 'default'> =
 	public: 'success',
 	private: 'default',
 };
+
+const terminalBodyHeight = isPrimary ? 'h-[190px] lg:h-[210px]' : 'h-[130px] lg:h-[120px]';
+const titleSize = isPrimary ? 'text-[30px]' : 'text-[26px]';
 ---
 
-<article class="font-mono group h-full" style={`animation: var(--animate-fade-in);`}>
+<article class="group h-full w-full font-mono" style={`animation: var(--animate-fade-in);`}>
 	<div
-		class={isPrimary
-			? 'relative h-full overflow-hidden rounded-none border-2 border-black dark:border-white bg-white/95 dark:bg-neutral-900/95 shadow-retro-lg transition-all duration-100 will-change-transform group-hover:-translate-x-[2px] group-hover:-translate-y-[2px] group-hover:shadow-retro-2xl'
-			: 'relative h-full overflow-hidden rounded-none border-2 border-black dark:border-white bg-white/95 dark:bg-neutral-900/95 shadow-retro-md transition-all duration-100 will-change-transform group-hover:-translate-x-[2px] group-hover:-translate-y-[2px] group-hover:shadow-retro-xl'}
+		class:list={[
+			'relative flex h-full w-full flex-col overflow-hidden rounded-none border-2 border-edge-strong bg-channel-surface-default p-2 shadow-retro-md transition-[box-shadow] duration-100 will-change-[box-shadow] group-hover:shadow-retro-3xl',
+			'mx-auto max-w-[340px] md:max-w-[369px] lg:max-w-[520px]',
+		]}
 	>
-		<Image
-			src={image}
-			width={isPrimary ? 800 : 600}
-			height={isPrimary ? 500 : 380}
-			class="absolute inset-0 h-full w-full object-cover"
-			decoding={priority ? 'sync' : 'async'}
-			loading={priority ? 'eager' : 'lazy'}
-			fetchpriority={priority ? 'high' : 'auto'}
-			alt={imageAlt}
-		/>
-		<div
-			class="absolute inset-0 bg-linear-to-b from-transparent via-background/80 to-background"
-		>
-		</div>
-		<div
-			class="absolute inset-x-0 top-0 flex items-center gap-2 border-b-2 border-black dark:border-white bg-white/90 dark:bg-neutral-900 px-4 py-3"
-		>
-			<span class="size-3 border border-black dark:border-white bg-red-500" aria-hidden="true"
-			></span>
-			<span
-				class="size-3 border border-black dark:border-white bg-yellow-500"
-				aria-hidden="true"></span>
-			<span
-				class="size-3 border border-black dark:border-white bg-green-500"
-				aria-hidden="true"></span>
-			<span
-				class="ml-auto font-retro-tag text-xs uppercase tracking-wider text-content-muted font-bold"
-				>{cardTypeText}</span
+		<figure class="shrink-0 overflow-hidden rounded-none border-0">
+			<div
+				class="flex h-7 items-center gap-1.5 bg-channel-portfolio-terminal-surface-raised px-3"
 			>
-		</div>
+				<span class="size-2 shrink-0 bg-channel-status-error" aria-hidden="true"></span>
+				<span class="size-2 shrink-0 bg-channel-status-warning" aria-hidden="true"></span>
+				<span class="size-2 shrink-0 bg-channel-status-success" aria-hidden="true"></span>
+				<span
+					class="ml-auto truncate font-mono text-xs font-bold tracking-wide text-channel-portfolio-terminal-content"
+					>{cardTypeText}</span
+				>
+			</div>
+			<div
+				class:list={[
+					'relative overflow-hidden bg-channel-portfolio-terminal-surface',
+					terminalBodyHeight,
+				]}
+			>
+				<Image
+					src={image}
+					width={isPrimary ? 800 : 600}
+					height={isPrimary ? 500 : 380}
+					class="absolute inset-0 size-full object-cover"
+					decoding={priority ? 'sync' : 'async'}
+					loading={priority ? 'eager' : 'lazy'}
+					fetchpriority={priority ? 'high' : 'auto'}
+					alt={imageAlt}
+				/>
+			</div>
+		</figure>
 
-		<div
-			class={isPrimary
-				? 'relative flex h-full flex-col justify-end gap-3 p-6 md:p-8 min-h-[460px] pt-14'
-				: 'relative flex h-full flex-col justify-end gap-3 p-5 min-h-[320px] pt-14'}
-		>
-			{
-				category && (
-					<p class="font-retro-tag text-sm font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400">
-						{category}
-					</p>
-				)
-			}
-			<ul
-				class="flex flex-row flex-wrap gap-2"
-				aria-label={`${lifecycleText}, ${sourceAccessText}`}
-			>
-				<li>
-					<Badge variant={LIFECYCLE_BADGE_VARIANT[lifecycle]} size="sm">
-						{lifecycleText}
-					</Badge>
-				</li>
-				<li>
-					<Badge variant={SOURCE_BADGE_VARIANT[sourceAccess]} size="sm">
-						{sourceAccessText}
-					</Badge>
-				</li>
-			</ul>
-			<Heading
-				class={isPrimary
-					? 'text-content-strong text-3xl font-bold font-pixel-clean tracking-wide'
-					: 'text-content-strong text-2xl font-bold font-pixel-clean tracking-wide'}
-			>
-				{title}
-			</Heading>
-			<p class="text-base text-content leading-relaxed line-clamp-3">
-				{description}
-			</p>
-
-			<ul class="flex flex-row flex-wrap gap-2 pt-1">
-				{
-					tags.map(tag => (
+		<div class:list={['flex grow flex-col gap-4 pt-3 pb-4', 'px-3.5 lg:px-5']}>
+			<div class:list={['flex grow flex-col', isPrimary ? 'gap-2.5' : 'gap-2']}>
+				<div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+					{
+						category && (
+							<p class="min-w-0 max-w-[154px] shrink basis-[154px] grow font-retro-tag text-xs font-bold uppercase tracking-wider text-primary-500 md:max-w-[190px] md:basis-[190px] lg:max-w-[330px] lg:basis-[330px] dark:text-primary-400">
+								{category}
+							</p>
+						)
+					}
+					<ul
+						class="flex flex-row flex-wrap items-center gap-1.5"
+						aria-label={`${lifecycleText}, ${sourceAccessText}`}
+					>
 						<li>
-							<TechPill
-								label={tag.name}
-								icon={tag.icon}
-								size="sm"
-								variant="card"
-								class={tag.class}
-							/>
+							<Badge variant={LIFECYCLE_BADGE_VARIANT[lifecycle]} size="sm">
+								{lifecycleText}
+							</Badge>
 						</li>
-					))
-				}
-			</ul>
+						<li>
+							<Badge variant={SOURCE_BADGE_VARIANT[sourceAccess]} size="sm">
+								{sourceAccessText}
+							</Badge>
+						</li>
+					</ul>
+				</div>
 
-			<footer class="mt-3 flex flex-wrap items-center gap-3">
-				{
-					github && (
-						<LinkButton href={github} {newTabLabel}>
-							<GitHubIcon class="size-5" />
-							{codeButtonText}
-						</LinkButton>
-					)
-				}
-				{
-					link && (
-						<LinkButton href={link} {newTabLabel}>
-							<LinkIcon class="size-4" />
-							{previewButtonText}
-						</LinkButton>
-					)
-				}
+				<Heading
+					class:list={[
+						'text-content-strong font-pixel-clean leading-8 tracking-wide',
+						titleSize,
+					]}
+				>
+					{title}
+				</Heading>
+
+				<p class="font-sans text-sm leading-relaxed text-content-default md:text-[15px]">
+					{description}
+				</p>
+
+				<ul class="flex flex-row flex-wrap gap-x-2 gap-y-1.5 pt-1">
+					{
+						tags.map(tag => (
+							<li>
+								<TechPill
+									label={tag.name}
+									icon={tag.icon}
+									size="sm"
+									variant="card"
+									class={tag.class}
+								/>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<footer class="mt-auto flex flex-col gap-2 pt-1 lg:flex-row">
 				{
 					caseStudyText && caseStudyLink && (
-						<LinkButton href={caseStudyLink} target="_self">
+						<LinkButton
+							href={caseStudyLink}
+							target="_self"
+							class="w-full lg:w-auto lg:min-w-[210px]"
+						>
 							<BookIcon class="size-4" />
 							{caseStudyText}
+						</LinkButton>
+					)
+				}
+				{
+					github && showSecondaryAction && sourceText && (
+						<LinkButton
+							href={github}
+							{newTabLabel}
+							variant="secondary"
+							class="w-full max-md:hidden! md:inline-flex lg:w-auto lg:min-w-[190px]"
+						>
+							<GitHubIcon class="size-5" />
+							{sourceText}
 						</LinkButton>
 					)
 				}

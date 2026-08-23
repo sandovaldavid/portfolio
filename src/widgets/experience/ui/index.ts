@@ -1,2 +1,3 @@
 export { default as Experience } from './Experience.astro';
-export { default as ExperienceItem } from './ExperienceItem.astro';
+export { default as ExperienceDetail } from './ExperienceDetail.astro';
+export { default as ExperienceTab } from './ExperienceTab.astro';

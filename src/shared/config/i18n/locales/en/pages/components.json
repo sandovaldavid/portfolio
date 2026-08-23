@@ -44,5 +44,21 @@
 	"simpleTitle": "Simple title",
 	"iconTitle": "Title with icon",
 	"featuredTitle": "Featured projects",
-	"wrappingTitle": "A long section title that wraps on narrow screens"
+	"wrappingTitle": "A long section title that wraps on narrow screens",
+	"contentPanelsHeading": "Content panels",
+	"contentPanelsDescription": "Visual role variants with content-driven heights: long copy grows vertically instead of clipping.",
+	"contentPanelStatusLabel": "Status",
+	"contentPanelHighlightLabel": "Highlight",
+	"contentPanelSuccessLabel": "Released",
+	"contentPanelDangerLabel": "Attention",
+	"contentPanelTitle": "Panel title",
+	"contentPanelBody": "This Content Panel keeps demonstration copy inside the approved border, shadow and spacing contract.",
+	"editorialCardsHeading": "Editorial cards",
+	"editorialCardsDescription": "One primitive renders blog and devlog previews with localized type labels and a bottom-anchored call to action.",
+	"editorialCardBlogType": "BLOG",
+	"editorialCardDevlogType": "DEVLOG",
+	"editorialCardTitle": "Editorial preview title",
+	"editorialCardBody": "A short summary describing the linked article or patch notes entry.",
+	"editorialCardCta": "Read article",
+	"editorialCardMeta": "2026-08-22"
 }

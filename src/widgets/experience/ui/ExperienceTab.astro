@@ -1,0 +1,60 @@
+---
+interface Props {
+	company: string;
+	role: string;
+	active: boolean;
+	tabId: string;
+	panelId: string;
+	experienceId: string;
+	index: number;
+	selected: boolean;
+	focusable: boolean;
+}
+
+const { company, role, active, tabId, panelId, experienceId, index, selected, focusable } =
+	Astro.props;
+
+/*
+ * Experience Tab contract (spec/03): one responsive component.
+ * Inactive: surface default, no indicator. Active: brand badge background,
+ * border 2 strong edge and an absolutely positioned accent indicator so the
+ * content never shifts (left rule on desktop/tablet, 4px bottom rule on
+ * mobile). Desktop 500x80 px20/30 pt14 pb22 gap12; Tablet 300x80; Mobile
+ * 220x64 pl14 pr16 pt10 pb15 gap7. Company Share Tech Mono 16, role Share
+ * Tech Mono 12 muted; both fill the width and wrap for long org names.
+ */
+const geometry =
+	'relative min-h-16 w-[220px] max-w-full shrink-0 gap-[7px] pl-3.5 pr-4 pt-2.5 pb-[15px] text-left md:min-h-20 md:w-[300px] md:gap-3 md:px-5 md:pt-[14px] md:pb-[22px] lg:w-[500px] lg:pr-[30px]';
+const stateClasses =
+	'cursor-pointer border-2 border-transparent bg-channel-surface-default transition-colors duration-100 data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg';
+---
+
+<button
+	role="tab"
+	id={tabId}
+	aria-controls={panelId}
+	aria-selected={selected ? 'true' : 'false'}
+	tabindex={focusable ? 0 : -1}
+	data-index={index}
+	data-experience-id={experienceId}
+	data-active={active ? 'true' : 'false'}
+	class:list={['group min-w-0 whitespace-normal', geometry, stateClasses]}
+>
+	<span
+		class="absolute left-0 top-0 bottom-0 hidden w-1 origin-center scale-y-0 bg-primary-500 transition-transform duration-150 group-data-[active=true]:scale-y-100 md:block"
+		aria-hidden="true"></span>
+	<span
+		class="absolute bottom-0 left-0 right-0 h-1 origin-center scale-x-0 bg-primary-500 transition-transform duration-150 group-data-[active=true]:scale-x-100 md:hidden"
+		aria-hidden="true"></span>
+
+	<span class="flex min-w-0 flex-col">
+		<span
+			class="font-gaming-mono text-base leading-tight text-content-muted transition-colors duration-100 group-data-[active=true]:text-content-strong group-hover:text-content-strong"
+		>
+			{company}
+		</span>
+		<span class="font-gaming-mono text-xs leading-snug text-content-muted">
+			{role}
+		</span>
+	</span>
+</button>

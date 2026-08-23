@@ -1,0 +1,96 @@
+---
+interface ProfileFact {
+	label: string;
+	value: string;
+}
+
+interface Props {
+	portraitSrc: string;
+	portraitAlt: string;
+	name: string;
+	role: string;
+	heading: string;
+	availabilityLabel: string;
+	facts: ProfileFact[];
+}
+
+const { portraitSrc, portraitAlt, name, role, heading, availabilityLabel, facts } = Astro.props;
+
+/*
+ * Hero Profile Record contract (spec/03): surface default, border 2 strong,
+ * hard shadow 8px, inner p2. Desktop 956x380 (portrait panel 256 wide, avatar
+ * 192 at x32/y40, data panel p32); Tablet 766x380 (portrait 220, avatar x14);
+ * Mobile w360 vertical content-hug (portrait 356x300, avatar 184 centered
+ * y24). Name band accent primary h32: Desktop x18/y270 w220, Tablet x0/y270,
+ * Mobile x28/y220 w300; name Press Start 2P 12 in primary button content
+ * color. Data panel gap20, VT323 30 heading, Silkscreen Bold12 online status,
+ * Share Tech Mono fact labels 12 muted with values 16 desktop/tablet and 14
+ * mobile.
+ *
+ * Portrait offsets resolve to horizontal centering at every breakpoint
+ * (256-192=2x32, 220-192=2x14, 356-184=2x86); band gaps derive from the same
+ * coordinates (avatar bottom 232 -> band 270 on md+, 208 -> 220 on mobile).
+ */
+---
+
+<div
+	class="mx-auto w-full max-w-[956px] rounded-none border-2 border-edge-strong bg-channel-surface-default p-2 shadow-retro-3xl"
+>
+	<div
+		class="grid grid-cols-1 md:min-h-[360px] md:grid-cols-[220px_1fr] lg:grid-cols-[256px_1fr]"
+	>
+		<figure
+			class="relative flex h-[300px] flex-col items-center border-b-2 border-edge-strong md:h-auto md:border-b-0 md:border-r-2"
+		>
+			<img
+				src={portraitSrc}
+				alt={portraitAlt}
+				width="192"
+				height="192"
+				decoding="sync"
+				fetchpriority="high"
+				class="mt-6 size-[184px] rounded-none border-2 border-edge-strong object-cover object-center shadow-retro-md md:mt-10 md:size-48"
+			/>
+			<p
+				class="mt-3 flex h-8 w-full max-w-[300px] items-center justify-center bg-channel-accent-primary px-2 font-pixel text-xs uppercase tracking-widest text-button-primary-content md:absolute md:inset-x-0 md:top-[270px] md:mt-0 lg:inset-x-[18px]"
+			>
+				{name}
+			</p>
+			<figcaption
+				class="mt-2 font-retro-tag text-xs font-bold uppercase tracking-wider text-content-muted md:absolute md:top-[310px]"
+			>
+				{role}
+			</figcaption>
+		</figure>
+
+		<div class="flex flex-col gap-5 p-6 md:p-8">
+			<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+				<h2 class="font-pixel-clean text-[30px] leading-8 text-content-strong">
+					{heading}
+				</h2>
+				<span
+					class="inline-flex items-center gap-1.5 font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-status-online"
+				>
+					<span class="size-2 shrink-0 bg-channel-status-success" aria-hidden="true"
+					></span>
+					{availabilityLabel}
+				</span>
+			</div>
+
+			<dl class="grid grid-cols-1 gap-x-8 gap-y-5 sm:grid-cols-2">
+				{
+					facts.map(fact => (
+						<div class="flex flex-col border-b border-edge-subtle pb-2">
+							<dt class="font-gaming-mono text-xs uppercase tracking-wide text-content-muted">
+								{fact.label}
+							</dt>
+							<dd class="mt-1 font-gaming-mono text-sm text-content-strong md:text-base">
+								{fact.value}
+							</dd>
+						</div>
+					))
+				}
+			</dl>
+		</div>
+	</div>
+</div>

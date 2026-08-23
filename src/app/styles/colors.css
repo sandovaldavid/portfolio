@@ -351,6 +351,8 @@
 	--shadow-retro-sm: 1.5px 1.5px 0 0 var(--color-edge-strong);
 	--shadow-retro-md: 3px 3px 0 0 var(--color-edge-strong);
 	--shadow-retro-lg: 4px 4px 0 0 var(--color-edge-strong);
+	/* Accent variant of the LG offset for surfaces that project with brand color (spec/03 Experience Detail). */
+	--shadow-retro-lg-accent: 4px 4px 0 0 var(--channel-accent-primary);
 	--shadow-retro-xl: 5px 5px 0 0 var(--color-edge-strong);
 	--shadow-retro-2xl: 6px 6px 0 0 var(--color-edge-strong);
 	--shadow-retro-3xl: 8px 8px 0 0 var(--color-edge-strong);

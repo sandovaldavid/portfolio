@@ -1,0 +1,93 @@
+---
+interface Props {
+	variant?: keyof typeof variantClasses;
+	density?: 'compact' | 'standard';
+	label?: string;
+	title?: string;
+	/** Heading level for the panel title inside the page outline. */
+	headingLevel?: 'h2' | 'h3' | 'h4';
+	class?: string;
+}
+
+const {
+	variant = 'default',
+	density = 'standard',
+	label,
+	title,
+	headingLevel = 'h3',
+	class: className,
+} = Astro.props;
+
+const Heading = headingLevel;
+
+/*
+ * Content Panel contract (spec/03 Content Panel + spec/02 component-local sizes):
+ * border 2, hard shadow 3px, flex column gap 10, content-driven height with
+ * min-heights only (Compact 180 / Standard 240 / Tablet 200 / Mobile 220) so
+ * long translated copy grows vertically instead of clipping.
+ * Widths are grid targets: Mobile 340 / Tablet 373 / Compact 420 / Standard 620.
+ */
+const variantClasses = {
+	default: 'bg-channel-surface-default border-edge-strong',
+	highlight: 'bg-channel-surface-highlight border-channel-accent-primary',
+	success: 'bg-channel-surface-default border-status-success-border',
+	danger: 'bg-channel-surface-default border-channel-status-error',
+} as const;
+
+const labelClasses = {
+	default: 'text-channel-accent-primary',
+	highlight: 'text-channel-accent-primary',
+	success: 'text-status-success-text',
+	danger: 'text-channel-status-error',
+} as const;
+
+const isCompact = density === 'compact';
+
+/* Desktop title/body scale switches on density; mobile/tablet share the small scale. */
+const titleClasses = isCompact ? 'lg:text-[20px]' : 'lg:text-[22px]';
+const bodyClasses = isCompact ? 'lg:text-[15px] lg:leading-6' : 'lg:text-base lg:leading-6';
+const minHeightClasses = isCompact ? 'lg:min-h-[180px]' : 'lg:min-h-[240px]';
+const maxWidthClasses = isCompact ? 'lg:max-w-[420px]' : 'lg:max-w-[620px]';
+const desktopPaddingClasses = isCompact ? 'lg:p-5' : 'lg:p-6';
+---
+
+<section
+	class:list={[
+		'relative flex w-full flex-col gap-2.5 overflow-hidden rounded-none border-2 shadow-retro-md',
+		'max-w-[340px] min-h-[220px] px-4 py-[18px]',
+		'md:max-w-[373px] md:min-h-[200px]',
+		maxWidthClasses,
+		minHeightClasses,
+		desktopPaddingClasses,
+		variantClasses[variant],
+		className,
+	]}
+>
+	{
+		label && (
+			<p
+				class:list={[
+					'font-retro-tag text-xs font-bold tracking-wide',
+					labelClasses[variant],
+				]}
+			>
+				{label}
+			</p>
+		)
+	}
+	{
+		title && (
+			<Heading
+				class:list={[
+					'text-content-strong font-mono font-medium leading-snug text-lg',
+					titleClasses,
+				]}
+			>
+				{title}
+			</Heading>
+		)
+	}
+	<div class:list={['font-sans text-sm leading-[22px] text-content-default', bodyClasses]}>
+		<slot />
+	</div>
+</section>

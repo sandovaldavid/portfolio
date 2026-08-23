@@ -1,11 +1,21 @@
 ---
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
+import HeroProfileRecord from './HeroProfileRecord.astro';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tHero = createScopedUiTranslator(lang, 'sections.hero');
 const tCommon = createScopedUiTranslator(lang, 'common');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+
+const profileFacts = [
+	{ label: tHero('roleLabel'), value: tHero('role') },
+	{ label: tHero('stackLabel'), value: tHero('stack') },
+	{ label: tHero('locationLabel'), value: tHero('location') },
+	{ label: tHero('workModeLabel'), value: tHero('workMode') },
+	{ label: tHero('currentLabel'), value: tHero('current') },
+	{ label: tHero('researchLabel'), value: tHero('research') },
+];
 ---
 
 <section
@@ -43,92 +53,14 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 			</p>
 		</div>
 
-		<div
-			class="w-full grid grid-cols-1 md:grid-cols-[16rem_1fr] border-2 border-black dark:border-white bg-surface shadow-retro-3xl rounded-none overflow-hidden font-mono"
-		>
-			<div
-				class="flex flex-col items-center justify-center p-6 md:p-8 border-b-2 md:border-b-0 md:border-r-2 border-black dark:border-white bg-neutral-100/50 dark:bg-black/20"
-			>
-				<div
-					class="relative w-44 h-44 md:w-52 md:h-52 border-2 border-black dark:border-white shadow-retro-lg overflow-hidden bg-black"
-				>
-					<img
-						src="/profile/perfil.webp"
-						alt={tAccessibility('profileImageAlt')}
-						width="208"
-						height="208"
-						decoding="async"
-						fetchpriority="high"
-						class="w-full h-full object-cover aspect-square"
-					/>
-					<div
-						class="absolute bottom-0 inset-x-0 bg-primary-500 text-white dark:text-black text-xs font-pixel text-center py-1.5 uppercase tracking-widest"
-					>
-						{siteConfig.name}
-					</div>
-				</div>
-				<span
-					class="font-retro-tag text-xs text-content-muted mt-4 uppercase tracking-wider"
-				>
-					{tHero('role')}
-				</span>
-			</div>
-
-			<div class="p-6 md:p-9 flex flex-col justify-between gap-6 bg-surface">
-				<div
-					class="w-full border-b-2 border-dashed border-edge-subtle pb-3 flex flex-wrap gap-3 justify-between items-center"
-				>
-					<span
-						class="font-pixel-clean text-2xl md:text-3xl font-bold uppercase tracking-wider text-content-strong"
-					>
-						{tHero('profile')}
-					</span>
-					<span
-						class="font-retro-tag text-xs bg-success-500 text-black px-2.5 py-1 font-bold uppercase"
-					>
-						{tCommon('status.available')}
-					</span>
-				</div>
-
-				<dl class="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-4 text-sm sm:text-base">
-					<div class="border-b border-edge-subtle pb-2">
-						<dt class="text-content-muted font-bold uppercase tracking-wide">
-							{tHero('roleLabel')}
-						</dt>
-						<dd class="text-content-strong font-semibold mt-1">{tHero('role')}</dd>
-					</div>
-					<div class="border-b border-edge-subtle pb-2">
-						<dt class="text-content-muted font-bold uppercase tracking-wide">
-							{tHero('stackLabel')}
-						</dt>
-						<dd class="text-content-strong font-semibold mt-1">{tHero('stack')}</dd>
-					</div>
-					<div class="border-b border-edge-subtle pb-2">
-						<dt class="text-content-muted font-bold uppercase tracking-wide">
-							{tHero('locationLabel')}
-						</dt>
-						<dd class="text-content-strong font-semibold mt-1">{tHero('location')}</dd>
-					</div>
-					<div class="border-b border-edge-subtle pb-2">
-						<dt class="text-content-muted font-bold uppercase tracking-wide">
-							{tHero('workModeLabel')}
-						</dt>
-						<dd class="text-content-strong font-semibold mt-1">{tHero('workMode')}</dd>
-					</div>
-					<div class="border-b border-edge-subtle pb-2">
-						<dt class="text-content-muted font-bold uppercase tracking-wide">
-							{tHero('currentLabel')}
-						</dt>
-						<dd class="text-content-strong font-semibold mt-1">{tHero('current')}</dd>
-					</div>
-					<div class="border-b border-edge-subtle pb-2">
-						<dt class="text-content-muted font-bold uppercase tracking-wide">
-							{tHero('researchLabel')}
-						</dt>
-						<dd class="text-content-strong font-semibold mt-1">{tHero('research')}</dd>
-					</div>
-				</dl>
-			</div>
-		</div>
+		<HeroProfileRecord
+			portraitSrc="/profile/perfil.webp"
+			portraitAlt={tAccessibility('profileImageAlt')}
+			name={siteConfig.name}
+			role={tHero('role')}
+			heading={tHero('profile')}
+			availabilityLabel={tCommon('status.available')}
+			facts={profileFacts}
+		/>
 	</div>
 </section>

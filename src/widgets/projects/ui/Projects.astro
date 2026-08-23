@@ -27,13 +27,12 @@ const projectsToDisplay = showAll
 						project={project}
 						variant="secondary"
 						headingLevel={showAll ? 'h2' : 'h3'}
-						codeButtonText={tProjects('codeButton')}
-						previewButtonText={tProjects('previewButton')}
+						caseStudyText={tProjects('viewCaseStudy')}
+						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
+						sourceText={tProjects('source')}
 						cardTypeText={tProjects(project.featured ? 'cardFeature' : 'cardProject')}
 						lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
 						sourceAccessText={tProjects(`sourceAccess.${project.sourceAccess}`)}
-						caseStudyText={tProjects('caseStudy')}
-						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
 						newTabLabel={tAccessibility('externalLink')}
 						priority={i < 2}
 					/>
