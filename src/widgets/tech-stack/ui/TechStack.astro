@@ -21,14 +21,12 @@ const coreStack = [
 ];
 ---
 
-<div class="flex w-full flex-col items-center justify-center gap-8 md:gap-10">
-	<ul class="flex w-full max-w-270 flex-wrap items-center justify-center gap-4">
-		{
-			coreStack.map(({ label, icon }) => (
-				<li>
-					<TechPill label={label} icon={icon} variant="stack" size="md" />
-				</li>
-			))
-		}
-	</ul>
-</div>
+<ul class="flex w-full max-w-270 flex-wrap items-center justify-center gap-4 self-center">
+	{
+		coreStack.map(({ label, icon }) => (
+			<li>
+				<TechPill label={label} icon={icon} variant="stack" size="md" />
+			</li>
+		))
+	}
+</ul>
