@@ -13,7 +13,7 @@ test.describe('Home floating contact rail', () => {
 		await expect(sidebar).toBeVisible();
 		await expect(sidebar).toHaveAttribute('data-collapsed', 'false');
 
-		await page.evaluate(() => window.scrollTo({ top: 240, behavior: 'instant' }));
+		await page.evaluate(() => window.scrollTo(0, 240));
 		await expect.poll(() => sidebar.getAttribute('data-collapsed')).toBe('true');
 		await expect(page.locator('#contact-sidebar-reveal')).toHaveAttribute('tabindex', '0');
 
