@@ -1,9 +1,9 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
+import { render } from 'astro:content';
 import Layout from '@app/layouts/Layout.astro';
-import { getProjectBySlug, getProjectsData } from '@entities/project';
+import { getProjectDetailBySlug, getProjectsData } from '@entities/project';
 import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
-import { ProjectCaseStudy } from '@widgets/project-case-study';
+import { ProjectCaseStudy, projectCaseStudyComponents } from '@widgets/project-case-study';
 
 export async function getStaticPaths() {
 	const projects = await getProjectsData(Language.SPANISH);
@@ -16,14 +16,15 @@ export async function getStaticPaths() {
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const slug = Astro.params.slug ?? '';
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
-const project = await getProjectBySlug(lang, slug);
+const detail = await getProjectDetailBySlug(lang, slug);
 
-if (!project) {
+if (!detail) {
 	return Astro.redirect('/404');
 }
 
+const { project, entry } = detail;
+const { Content } = await render(entry);
 const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandoval`;
-const contentLayout = project.caseStudy.presentation ? 'flush' : 'default';
 ---
 
 <Layout
@@ -33,7 +34,9 @@ const contentLayout = project.caseStudy.presentation ? 'flush' : 'default';
 	imageAlt={project.imageAlt}
 	pageType="project"
 	breadcrumbLabel={project.title}
-	{contentLayout}
+	contentLayout="flush"
 >
-	<ProjectCaseStudy {project} backLink={getRelativeLocaleUrl(lang, 'projects')} />
+	<ProjectCaseStudy {project}>
+		<Content components={projectCaseStudyComponents} />
+	</ProjectCaseStudy>
 </Layout>
