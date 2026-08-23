@@ -10,5 +10,11 @@
 	"outcomeLabel": "Resultado",
 	"narrativeSectionLabel": "Narrativa",
 	"evidenceTitle": "Evidencia y limitaciones",
-	"learningsTitle": "Extracción de aprendizajes"
+	"learningsTitle": "Extracción de aprendizajes",
+	"resourcesTitle": "Recursos del proyecto",
+	"resourceSource": "Código fuente",
+	"resourceDemo": "Demo en vivo",
+	"resourceDocs": "Documentación",
+	"resourcePackage": "Paquete",
+	"resourceRelated": "Proyecto relacionado"
 }
