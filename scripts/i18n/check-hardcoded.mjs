@@ -56,15 +56,15 @@ function astroTemplate(source) {
 	return source
 		.replace(/^---\s*\n[\s\S]*?\n---\s*/m, maskPreservingLines)
 		.replace(/<!--([\s\S]*?)-->/g, maskPreservingLines)
-		.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, maskPreservingLines)
-		.replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, maskPreservingLines);
+		.replace(/<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi, maskPreservingLines)
+		.replace(/<style\b[^>]*>[\s\S]*?<\/style\b[^>]*>/gi, maskPreservingLines);
 }
 
 /** @param {string} source */
 function astroRuntimeSource(source) {
 	let runtime = maskPreservingLines(source);
 	runtime = restoreMatches(runtime, source, /^---\s*\n[\s\S]*?\n---\s*/gm);
-	runtime = restoreMatches(runtime, source, /<script\b[^>]*>[\s\S]*?<\/script>/gi);
+	runtime = restoreMatches(runtime, source, /<script\b[^>]*>[\s\S]*?<\/script\b[^>]*>/gi);
 	return runtime;
 }
 
