@@ -1,11 +1,12 @@
 ---
 import { LinkButton } from '@shared/ui';
+import AboutIcon from '@assets/icons/About.astro';
+import CloseIcon from '@assets/icons/Close.astro';
 import MenuIcon from '@assets/icons/MenuIcon.astro';
 import MailIcon from '@assets/icons/Mail.astro';
 import BriefcaseIcon from '@assets/icons/Briefcase.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
 import CodeIcon from '@assets/icons/Code.astro';
-import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import ScrollTextIcon from '@assets/icons/ScrollText.astro';
 import BookOpenIcon from '@assets/icons/BookOpen.astro';
 import SystemIcon from '@assets/icons/System.astro';
@@ -82,20 +83,7 @@ const {
 			class="absolute top-6 right-6 grid size-10 place-items-center rounded-none bg-channel-surface-default border-2 border-edge-strong text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 			aria-label={closeLabel}
 		>
-			<svg
-				xmlns="http://www.w3.org/2000/svg"
-				class="size-5"
-				fill="none"
-				viewBox="0 0 24 24"
-				stroke="currentColor"
-				aria-hidden="true"
-			>
-				<path
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					stroke-width="2"
-					d="M6 18L18 6M6 6l12 12"></path>
-			</svg>
+			<CloseIcon class="size-5" aria-hidden="true" />
 		</button>
 
 		<!-- Navigation Items -->
@@ -115,7 +103,7 @@ const {
 						{link.icon === 'projects' && <CodeIcon class="size-5" />}
 						{link.icon === 'devlog' && <ScrollTextIcon class="size-5" />}
 						{link.icon === 'blog' && <BookOpenIcon class="size-5" />}
-						{link.icon === 'about-me' && <ProfileCheckIcon class="size-5" />}
+						{link.icon === 'about-me' && <AboutIcon class="size-5" />}
 						{link.icon === 'technologies' && <SystemIcon class="size-5" />}
 						<span>{link.title}</span>
 					</a>
@@ -207,8 +195,8 @@ const {
 			if (target instanceof Node && !menu.contains(target) && target !== btn) {
 				closeMobileMenu();
 			}
-		}
-	});
+		});
+	}
 
 	// Escape closes the dialog and returns focus to the trigger (attached once).
 	document.addEventListener('keydown', e => {
