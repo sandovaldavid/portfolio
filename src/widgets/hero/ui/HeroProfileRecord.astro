@@ -29,7 +29,9 @@ const mobileFactIds = new Set(['stack', 'location', 'current', 'domain']);
 <div
 	class="mx-auto w-full max-w-[360px] rounded-none border-2 border-edge-strong bg-channel-surface-default p-[2px] shadow-retro-3xl md:max-w-[766px] lg:max-w-[956px]"
 >
-	<div class="flex w-full flex-col gap-[2px] md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-0 lg:grid-cols-[256px_minmax(0,1fr)]">
+	<div
+		class="flex w-full flex-col gap-[2px] md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-0 lg:grid-cols-[256px_minmax(0,1fr)]"
+	>
 		<figure
 			class="relative h-[226px] overflow-hidden bg-channel-surface-highlight md:h-[376px]"
 		>
@@ -59,9 +61,7 @@ const mobileFactIds = new Set(['stack', 'location', 'current', 'domain']);
 		<div
 			class="flex h-[224px] min-w-0 flex-col gap-[14px] overflow-hidden bg-channel-surface-default p-[18px] md:h-[376px] md:gap-5 md:p-8"
 		>
-			<h2
-				class="w-full text-center text-component-title text-content-strong md:text-left"
-			>
+			<h2 class="w-full text-center text-component-title text-content-strong md:text-left">
 				{heading}
 			</h2>
 
@@ -79,8 +79,12 @@ const mobileFactIds = new Set(['stack', 'location', 'current', 'domain']);
 									visibleOnMobile ? 'flex' : 'hidden md:flex',
 								]}
 							>
-								<dt class="text-editorial-label-compact text-content-muted">{fact.label}</dt>
-								<dd class="text-secondary text-content-strong md:text-body">{fact.value}</dd>
+								<dt class="text-editorial-label-compact text-content-muted">
+									{fact.label}
+								</dt>
+								<dd class="text-secondary text-content-strong md:text-body">
+									{fact.value}
+								</dd>
 							</div>
 						);
 					})
