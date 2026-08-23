@@ -49,9 +49,9 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	};
 
 	const getThemeLabel = (button: HTMLButtonElement, theme: ThemePreference): string => {
-		if (theme === 'light') return button.dataset.themeLightLabel ?? 'Light';
-		if (theme === 'dark') return button.dataset.themeDarkLabel ?? 'Dark';
-		return button.dataset.themeSystemLabel ?? 'System';
+		if (theme === 'light') return button.dataset.themeLightLabel ?? '';
+		if (theme === 'dark') return button.dataset.themeDarkLabel ?? '';
+		return button.dataset.themeSystemLabel ?? '';
 	};
 
 	const syncThemeState = () => {
@@ -65,7 +65,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			});
 
 			const nextTheme = getNextTheme(theme);
-			const selectLabel = button.dataset.themeSelectLabel ?? 'Choose theme';
+			const selectLabel = button.dataset.themeSelectLabel ?? '';
 			button.setAttribute(
 				'aria-label',
 				`${selectLabel}: ${getThemeLabel(button, theme)} → ${getThemeLabel(button, nextTheme)}`
