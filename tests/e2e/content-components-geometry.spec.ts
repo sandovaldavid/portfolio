@@ -143,7 +143,9 @@ test.describe('Experience Tab contract', () => {
 		[TABLET, 300, 88],
 		[MOBILE, 250, 88],
 	] as const) {
-		test(`${viewport.label} tab respects the responsive Figma minimum geometry`, async ({ page }) => {
+		test(`${viewport.label} tab respects the responsive Figma minimum geometry`, async ({
+			page,
+		}) => {
 			await page.setViewportSize({ width: viewport.width, height: viewport.height });
 			await page.goto('/');
 			await setTheme(page, 'light');
@@ -179,7 +181,9 @@ test.describe('Experience Tab contract', () => {
 		await page.goto('/');
 		const tab = page.getByRole('tab', { selected: true }).first();
 		const text = tab.locator('span').filter({ hasText: /Atena/i }).last();
-		expect(await text.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(/JetBrains Mono/i);
+		expect(await text.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(
+			/JetBrains Mono/i
+		);
 		expect(await text.evaluate(el => getComputedStyle(el).fontSize)).toBe('14px');
 	});
 });
@@ -204,7 +208,9 @@ test.describe('Experience Detail contract', () => {
 
 			const role = detail.getByRole('heading', { level: 3 });
 			expect(await role.evaluate(el => getComputedStyle(el).fontSize)).toBe('24px');
-			expect(await role.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(/JetBrains Mono/i);
+			expect(await role.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(
+				/JetBrains Mono/i
+			);
 			expect(await role.evaluate(el => getComputedStyle(el).fontWeight)).toBe('500');
 
 			const achievements = detail.locator('ul').first();

@@ -39,7 +39,9 @@ for (const [label, viewport] of [
 	});
 }
 
-test('Experience keeps the next section anchored when a longer role is selected', async ({ page }) => {
+test('Experience keeps the next section anchored when a longer role is selected', async ({
+	page,
+}) => {
 	await page.setViewportSize(DESKTOP);
 	await page.goto('/');
 

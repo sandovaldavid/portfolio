@@ -6,12 +6,7 @@ interface Props {
 	surface?: 'canvas' | 'highlight';
 }
 
-const {
-	class: className,
-	id,
-	layout = 'contained',
-	surface = 'canvas',
-} = Astro.props;
+const { class: className, id, layout = 'contained', surface = 'canvas' } = Astro.props;
 
 /**
  * Section composition is explicit at the call site:

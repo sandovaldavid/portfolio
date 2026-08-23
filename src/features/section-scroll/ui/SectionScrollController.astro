@@ -19,7 +19,8 @@ const { enabled = true } = Astro.props;
 		if (!controller || controller.dataset.enabled !== 'true') return;
 
 		const isHome =
-			document.body.dataset.isHome === 'true' || Boolean(document.querySelector('main #experience'));
+			document.body.dataset.isHome === 'true' ||
+			Boolean(document.querySelector('main #experience'));
 		if (!isHome) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 

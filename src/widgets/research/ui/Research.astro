@@ -19,9 +19,13 @@ const pipeline = [
 ---
 
 <div class="w-full">
-	<div class="grid w-full min-w-0 gap-10 lg:grid-cols-[minmax(0,760px)_minmax(0,456px)] lg:gap-16">
+	<div
+		class="grid w-full min-w-0 gap-10 lg:grid-cols-[minmax(0,760px)_minmax(0,456px)] lg:gap-16"
+	>
 		<div class="flex min-w-0 flex-col gap-4">
-			<div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+			<div
+				class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"
+			>
 				<p class="text-editorial-label text-channel-accent-primary">
 					{tResearch('institution')} · {tResearch('label')}
 				</p>
@@ -54,7 +58,9 @@ const pipeline = [
 
 		<aside class="flex min-w-0 flex-col gap-5 lg:pt-1" aria-label={tResearch('pipelineTitle')}>
 			<div class="flex flex-col gap-3">
-				<h4 class="text-component-title text-content-strong">{tResearch('pipelineTitle')}</h4>
+				<h4 class="text-component-title text-content-strong">
+					{tResearch('pipelineTitle')}
+				</h4>
 				<ol class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
 					{
 						pipeline.map((step, index) => (
@@ -62,7 +68,9 @@ const pipeline = [
 								<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
 									{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="min-w-0 text-secondary text-content-default">{step}</span>
+								<span class="min-w-0 text-secondary text-content-default">
+									{step}
+								</span>
 							</li>
 						))
 					}
@@ -74,16 +82,20 @@ const pipeline = [
 					{tResearch('techStackLabel')}
 				</p>
 				<ul class="flex flex-wrap gap-2">
-					{techStack.map(tag => (
-						<li>
-							<TechPill label={tag} size="sm" variant="stack" />
-						</li>
-					))}
+					{
+						techStack.map(tag => (
+							<li>
+								<TechPill label={tag} size="sm" variant="stack" />
+							</li>
+						))
+					}
 				</ul>
 			</div>
 
 			<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
-			<p class="max-w-114 text-secondary text-content-muted">{tResearch('methodologyHint')}</p>
+			<p class="max-w-114 text-secondary text-content-muted">
+				{tResearch('methodologyHint')}
+			</p>
 		</aside>
 	</div>
 </div>

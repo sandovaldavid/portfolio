@@ -53,7 +53,9 @@ test('mobile experience keeps compact section typography and a visually hidden h
 	expect(await tablist.evaluate(el => getComputedStyle(el).overflowX)).toBe('auto');
 	expect(await tablist.evaluate(el => getComputedStyle(el).scrollbarWidth)).toBe('none');
 
-	const technologies = section.locator('[role="tabpanel"][data-active="true"] [data-experience-technologies]');
+	const technologies = section.locator(
+		'[role="tabpanel"][data-active="true"] [data-experience-technologies]'
+	);
 	await expect(technologies).toBeVisible();
 	expect(await technologies.evaluate(el => getComputedStyle(el).justifyContent)).toBe('center');
 });
@@ -65,7 +67,9 @@ test('experience hover remains visually distinct from the section surface', asyn
 	const section = page.locator('#experience');
 	const inactiveTab = section.getByRole('tab').nth(1);
 	const sectionBackground = await section.evaluate(el => getComputedStyle(el).backgroundColor);
-	const inactiveBackground = await inactiveTab.evaluate(el => getComputedStyle(el).backgroundColor);
+	const inactiveBackground = await inactiveTab.evaluate(
+		el => getComputedStyle(el).backgroundColor
+	);
 
 	expect(inactiveBackground).not.toBe(sectionBackground);
 

@@ -62,7 +62,11 @@ test.describe('Recruiter quick links motion', () => {
 
 		const recruiterPanel = page.locator('#recruiter-hud-panel');
 		const contactRail = page.locator('#contact-sidebar-rail');
-		expect(await recruiterPanel.evaluate(el => getComputedStyle(el).transitionDuration)).toBe('0s');
-		expect(await contactRail.evaluate(el => getComputedStyle(el).transitionDuration)).toBe('0s');
+		expect(await recruiterPanel.evaluate(el => getComputedStyle(el).transitionDuration)).toBe(
+			'0s'
+		);
+		expect(await contactRail.evaluate(el => getComputedStyle(el).transitionDuration)).toBe(
+			'0s'
+		);
 	});
 });

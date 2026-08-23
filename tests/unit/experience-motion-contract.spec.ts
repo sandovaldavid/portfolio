@@ -13,7 +13,7 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('group-data-[active=true]:scale-y-100');
 		expect(tab).toContain('opacity-0');
 		expect(tab).toContain('group-data-[active=true]:opacity-100');
-		expect(experience).toContain('.experience-panel[data-active=\'true\']');
+		expect(experience).toContain(".experience-panel[data-active='true']");
 		expect(experience).toContain('transform 220ms');
 		expect(experience).toContain('@media (prefers-reduced-motion: reduce)');
 		expect(experience).not.toContain('panel.animate(');

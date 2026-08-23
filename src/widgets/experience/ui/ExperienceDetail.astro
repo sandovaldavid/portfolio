@@ -26,8 +26,12 @@ const companyContext = isCurrent
 	overflowing the runtime's 350px content gutter.
 -->
 <div class="flex w-full min-w-0 flex-col gap-4 md:gap-5">
-	<header class="flex min-h-17.5 flex-col items-start gap-1 md:min-h-16 md:flex-row md:justify-between lg:min-h-15">
-		<h3 class="max-w-80 uppercase text-component-title text-content-strong md:w-62.5 lg:w-auto lg:max-w-none">
+	<header
+		class="flex min-h-17.5 flex-col items-start gap-1 md:min-h-16 md:flex-row md:justify-between lg:min-h-15"
+	>
+		<h3
+			class="max-w-80 uppercase text-component-title text-content-strong md:w-62.5 lg:w-auto lg:max-w-none"
+		>
 			{title}
 		</h3>
 		<p class="uppercase text-caption text-channel-status-online md:w-32 lg:w-auto">{date}</p>
@@ -54,7 +58,9 @@ const companyContext = isCurrent
 		}
 	</ul>
 
-	<footer class="mt-auto flex flex-col items-start gap-4 pt-1 lg:flex-row lg:items-center lg:justify-between">
+	<footer
+		class="mt-auto flex flex-col items-start gap-4 pt-1 lg:flex-row lg:items-center lg:justify-between"
+	>
 		{
 			visibleTechnologies.length > 0 && (
 				<ul

@@ -46,9 +46,7 @@ const LIFECYCLE_BADGE_VARIANT: Record<
 	deprecated: 'default',
 };
 
-const cardHeight = isPrimary
-	? 'h-131.5 md:h-134.5 lg:h-116'
-	: 'h-116.5 md:h-119.5 lg:h-93.5';
+const cardHeight = isPrimary ? 'h-131.5 md:h-134.5 lg:h-116' : 'h-116.5 md:h-119.5 lg:h-93.5';
 const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 ---
 
@@ -68,7 +66,9 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 				<span class="size-2 shrink-0 bg-channel-status-warning"></span>
 				<span class="size-2 shrink-0 bg-channel-status-success"></span>
 			</div>
-			<div class="relative h-full w-full overflow-hidden bg-channel-portfolio-terminal-surface">
+			<div
+				class="relative h-full w-full overflow-hidden bg-channel-portfolio-terminal-surface"
+			>
 				<Image
 					src={image}
 					width={isPrimary ? 800 : 600}
@@ -97,9 +97,13 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 					</Badge>
 				</div>
 
-				<Heading class="line-clamp-2 text-component-title text-content-strong">{title}</Heading>
+				<Heading class="line-clamp-2 text-component-title text-content-strong"
+					>{title}</Heading
+				>
 
-				<p class="line-clamp-3 text-secondary text-content-default md:text-body lg:line-clamp-2">
+				<p
+					class="line-clamp-3 text-secondary text-content-default md:text-body lg:line-clamp-2"
+				>
 					{description}
 				</p>
 
@@ -108,7 +112,12 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 						<ul class="flex flex-row flex-wrap gap-x-2 gap-y-1.5 pt-1">
 							{visibleTags.map(tag => (
 								<li>
-									<TechPill label={tag.name} icon={tag.icon} size="sm" variant="card" />
+									<TechPill
+										label={tag.name}
+										icon={tag.icon}
+										size="sm"
+										variant="card"
+									/>
 								</li>
 							))}
 						</ul>
@@ -116,7 +125,9 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 				}
 			</div>
 
-			<footer class="mt-auto flex min-h-14 w-full shrink-0 items-end justify-between gap-2 pb-3">
+			<footer
+				class="mt-auto flex min-h-14 w-full shrink-0 items-end justify-between gap-2 pb-3"
+			>
 				{
 					caseStudyText && caseStudyLink && (
 						<LinkButton href={caseStudyLink} target="_self" class="w-fit shrink-0 px-3">

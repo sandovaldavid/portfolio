@@ -46,10 +46,7 @@ describe('Portfolio v2 spacing contract', () => {
 	});
 
 	it('preserves arbitrary values only for non-spacing geometry or expressions', () => {
-		const profileRecord = readFileSync(
-			'src/widgets/hero/ui/HeroProfileRecord.astro',
-			'utf8'
-		);
+		const profileRecord = readFileSync('src/widgets/hero/ui/HeroProfileRecord.astro', 'utf8');
 		const hero = readFileSync('src/widgets/hero/ui/Hero.astro', 'utf8');
 		const experience = readFileSync('src/widgets/experience/ui/Experience.astro', 'utf8');
 		const sectionContainer = readFileSync(

@@ -79,7 +79,9 @@ const socialLinks = [
 		aria-hidden="true"
 		aria-labelledby="recruiter-hud-title"
 	>
-		<div class="flex w-full items-start justify-between gap-4 border-b border-edge-subtle pb-2.5">
+		<div
+			class="flex w-full items-start justify-between gap-4 border-b border-edge-subtle pb-2.5"
+		>
 			<h2
 				id="recruiter-hud-title"
 				class="text-lg font-bold leading-6 text-channel-accent-primary"
@@ -133,13 +135,17 @@ const socialLinks = [
 
 		<div class="flex w-full flex-col gap-2 border-t border-edge-subtle pt-2">
 			<div class="flex items-center justify-between gap-3">
-				<span class="text-xs font-bold uppercase tracking-widest text-channel-content-muted">
+				<span
+					class="text-xs font-bold uppercase tracking-widest text-channel-content-muted"
+				>
 					{tTheme('label')}
 				</span>
 				<ThemeToggle />
 			</div>
 			<div class="flex items-center justify-between gap-3">
-				<span class="text-xs font-bold uppercase tracking-widest text-channel-content-muted">
+				<span
+					class="text-xs font-bold uppercase tracking-widest text-channel-content-muted"
+				>
 					{tRecruiter('language')}
 				</span>
 				<LanguagePicker {localizedPaths} currentLang={lang} />

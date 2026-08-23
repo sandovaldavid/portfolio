@@ -50,7 +50,7 @@ const productionStyleFiles = collectFiles('src').filter(
 describe('Home style hygiene', () => {
 	it('keeps Home consumers on semantic color roles instead of raw Tailwind ramps', () => {
 		const rawPaletteUtility =
-		/\b(?:bg|text|border|ring|from|via|to)-(?:white|black|primary-\d+|neutral-\d+|success-\d+|warning-\d+|error-\d+)\b/g;
+			/\b(?:bg|text|border|ring|from|via|to)-(?:white|black|primary-\d+|neutral-\d+|success-\d+|warning-\d+|error-\d+)\b/g;
 		const offenders = homeStyleSurfaces.flatMap((source, index) =>
 			(source.match(rawPaletteUtility) ?? []).map(match => `${index}:${match}`)
 		);

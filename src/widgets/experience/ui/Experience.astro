@@ -125,7 +125,9 @@ const EXPERIENCE = await getExperienceData(lang);
 			tablist.dataset.tabsReady = 'true';
 
 			const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
-			const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls') ?? ''));
+			const panels = tabs.map(tab =>
+				document.getElementById(tab.getAttribute('aria-controls') ?? '')
+			);
 
 			const activateTab = (index: number, focus = false) => {
 				tabs.forEach((tab, tabIndex) => {
@@ -148,7 +150,7 @@ const EXPERIENCE = await getExperienceData(lang);
 			tabs.forEach((tab, index) => {
 				tab.addEventListener('click', () => activateTab(index));
 				tab.addEventListener('keydown', event => {
-					let next = index;
+					let next: number;
 					if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
 						next = (index + 1) % tabs.length;
 					} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {

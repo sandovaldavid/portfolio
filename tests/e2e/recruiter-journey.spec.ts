@@ -50,7 +50,9 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 
 				// 1. Identity and current role are understandable on first scan.
 				await expect(page.locator('h1').first()).toContainText('David Sandoval');
-				await expect(page.getByText(locale.roleText, { exact: true }).first()).toBeVisible();
+				await expect(
+					page.getByText(locale.roleText, { exact: true }).first()
+				).toBeVisible();
 
 				// 2. The two strongest projects expose their case studies. Public source is
 				// an optional secondary action on tablet/desktop; private-source projects do
@@ -70,8 +72,12 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 					kiokuCard.getByRole('link', { name: locale.caseStudyText, exact: true })
 				).toBeVisible();
 
-				const yukidokeSource = yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]');
-				const kiokuSource = kiokuCard.locator('a[href="https://github.com/sandovaldavid/kioku"]');
+				const yukidokeSource = yukidokeCard.locator(
+					'a[href*="github.com/sandovaldavid/yukidoke"]'
+				);
+				const kiokuSource = kiokuCard.locator(
+					'a[href="https://github.com/sandovaldavid/kioku"]'
+				);
 				await expect(yukidokeSource).toHaveCount(0);
 				if (viewport.name === 'desktop') {
 					await expect(kiokuSource).toBeVisible();
@@ -86,10 +92,9 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 				if (viewport.name === 'mobile') {
 					await page.locator('#mobile-menu-btn').click();
 				}
-				await expect(page.getByRole('link', { name: /resume|cv/i }).first()).toHaveAttribute(
-					'href',
-					locale.resumeHref
-				);
+				await expect(
+					page.getByRole('link', { name: /resume|cv/i }).first()
+				).toHaveAttribute('href', locale.resumeHref);
 				if (viewport.name === 'mobile') {
 					await page.locator('#mobile-menu-close').click();
 				}
@@ -101,10 +106,9 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 					'href',
 					'https://github.com/sandovaldavid'
 				);
-				await expect(page.getByRole('link', { name: /^LinkedIn\b/ }).first()).toHaveAttribute(
-					'href',
-					'https://www.linkedin.com/in/jdsandovals'
-				);
+				await expect(
+					page.getByRole('link', { name: /^LinkedIn\b/ }).first()
+				).toHaveAttribute('href', 'https://www.linkedin.com/in/jdsandovals');
 				await expect(page.locator('a[href^="mailto:"]').first()).toHaveAttribute(
 					'href',
 					'mailto:hello@sandovaldavid.com'

@@ -24,7 +24,9 @@ describe('Portfolio v2 icon contract', () => {
 		const genericLink = read('src/assets/icons/Link.astro');
 		const linkHub = read('src/assets/social-networks/LinkHub.astro');
 
-		expect(sidebar).toContain("import LinkHubIcon from '@assets/social-networks/LinkHub.astro'");
+		expect(sidebar).toContain(
+			"import LinkHubIcon from '@assets/social-networks/LinkHub.astro'"
+		);
 		expect(sidebar).toContain('Icon: LinkHubIcon');
 		expect((genericLink.match(/<svg/g) ?? []).length).toBe(1);
 		expect(genericLink).not.toContain('M9 6l6 6l-6 6');

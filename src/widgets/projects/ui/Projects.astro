@@ -16,7 +16,9 @@ const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const projects = await getProjectsData(lang);
 
-const projectsToDisplay = showAll ? projects : projects.filter(project => project.featured).slice(0, 2);
+const projectsToDisplay = showAll
+	? projects
+	: projects.filter(project => project.featured).slice(0, 2);
 ---
 
 <div class="w-full">
@@ -30,7 +32,12 @@ const projectsToDisplay = showAll ? projects : projects.filter(project => projec
 	>
 		{
 			projectsToDisplay.map((project, i) => (
-				<div class:list={['h-full min-w-0', centered && 'w-full max-w-85 md:max-w-92.25 lg:max-w-130']}>
+				<div
+					class:list={[
+						'h-full min-w-0',
+						centered && 'w-full max-w-85 md:max-w-92.25 lg:max-w-130',
+					]}
+				>
 					<ProjectCard
 						project={project}
 						variant="secondary"
