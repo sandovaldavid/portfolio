@@ -43,11 +43,11 @@ const mobileFactIds = new Set(['stack', 'location', 'current', 'domain']);
 				class="absolute top-3 left-1/2 size-[148px] -translate-x-1/2 rounded-none border-2 border-edge-strong object-cover object-center shadow-retro-md md:top-10 md:size-48"
 			/>
 
-			<div
-				class="absolute top-[168px] left-1/2 flex h-7 w-[280px] -translate-x-1/2 items-center justify-center bg-channel-accent-primary px-2 text-navigation text-button-primary-content md:top-[270px] md:h-8 md:w-[200px] lg:w-[220px]"
+			<span
+				class="hero-profile-name-band absolute top-[168px] left-1/2 flex h-7 w-[280px] -translate-x-1/2 items-center justify-center bg-channel-accent-primary px-2 text-navigation text-button-primary-content md:top-[270px] md:h-8 md:w-[200px] lg:w-[220px]"
 			>
 				{name}
-			</div>
+			</span>
 
 			<figcaption
 				class="absolute top-[202px] left-1/2 w-[280px] -translate-x-1/2 text-center text-editorial-label-compact text-content-muted md:top-[320px] md:w-[220px]"
@@ -73,6 +73,7 @@ const mobileFactIds = new Set(['stack', 'location', 'current', 'domain']);
 						const visibleOnMobile = mobileFactIds.has(fact.id);
 						return (
 							<div
+								data-profile-fact={fact.id}
 								class:list={[
 									'min-w-0 flex-col gap-1',
 									visibleOnMobile ? 'flex' : 'hidden md:flex',
