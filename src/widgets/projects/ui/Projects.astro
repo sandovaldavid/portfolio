@@ -1,15 +1,12 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import { getProjectsData, ProjectCard } from '@entities/project';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { LinkButton } from '@shared/ui';
 
 interface Props {
 	showAll?: boolean;
-	/**
-	 * Catalog layout (spec/04 Projects Catalog): cards keep their contract
-	 * widths and wrap as a centered 520+32+520 pair on desktop instead of
-	 * stretching to fill the container. Home keeps the default stretch grid.
-	 */
 	centered?: boolean;
 }
 const { showAll = false, centered = false } = Astro.props;
@@ -24,23 +21,18 @@ const projectsToDisplay = showAll
 	: projects.filter(project => project.featured).slice(0, 2);
 ---
 
-<section class="font-sans w-full">
+<section class="w-full font-sans">
 	<div
 		class:list={[
-			'gap-8 w-full items-stretch',
+			'w-full items-stretch gap-8',
 			centered
 				? 'flex flex-col items-center md:flex-row md:flex-wrap md:justify-center'
-				: 'grid grid-cols-1 md:grid-cols-2',
+				: 'grid grid-cols-1 md:grid-cols-2 lg:gap-20',
 		]}
 	>
 		{
 			projectsToDisplay.map((project, i) => (
-				<div
-					class:list={[
-						'h-full',
-						centered && 'w-full max-w-[340px] md:max-w-[369px] lg:max-w-[520px]',
-					]}
-				>
+				<div class:list={['h-full min-w-0', centered && 'w-full max-w-85 md:max-w-92.25 lg:max-w-130']}>
 					<ProjectCard
 						project={project}
 						variant="secondary"
@@ -61,13 +53,16 @@ const projectsToDisplay = showAll
 
 	{
 		!showAll && (
-			<div class="w-full flex justify-center mt-12">
-				<a
+			<div class="mt-8 flex w-full justify-center md:mt-10">
+				<LinkButton
 					href={getRelativeLocaleUrl(lang, 'projects')}
-					class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
+					target="_self"
+					variant="secondary"
+					class="w-full max-w-68"
 				>
+					<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 					{tProjects('viewAll')}
-				</a>
+				</LinkButton>
 			</div>
 		)
 	}
