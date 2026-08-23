@@ -2,11 +2,10 @@ import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 /*
- * Focused regression for the shared content components (plans/04):
- * Hero Profile Record, Experience Tab, Experience Detail, Project Card,
- * Content Panel and Editorial Card. Verifies key spec/03 geometries,
- * semantic-token resolution and dimension-stable hover shadows at the three
- * canonical viewports.
+ * Focused visual-contract regression for the shared content components.
+ * Geometry is asserted at the canonical Portfolio v2 viewports while colors
+ * are resolved through semantic custom properties rather than raw palette
+ * values.
  */
 
 type Viewport = { width: number; height: number; label: string };
@@ -24,10 +23,6 @@ async function setTheme(page: Page, theme: 'light' | 'dark') {
 	await page.waitForLoadState('domcontentloaded');
 }
 
-/**
- * Resolves a CSS custom property through a probe element so values expressed
- * with light-dark()/alpha primitives compare equal to computed styles.
- */
 async function probeStyle(
 	page: Page,
 	declaration: string
@@ -65,33 +60,7 @@ test.describe('Hero Profile Record contract', () => {
 		);
 		expect(avatarSize).toBe('192px|192px');
 	});
-});
 
-test.describe('Tablet geometry contract', () => {
-	test('project card terminal slot, content panel and editorial card hit tablet targets', async ({
-		page,
-	}) => {
-		await page.setViewportSize({ width: TABLET.width, height: TABLET.height });
-		await page.goto('/es/projects');
-		const card = page.locator('article').first();
-		await card.scrollIntoViewIfNeeded();
-		expect(
-			await card
-				.locator('figure > div')
-				.last()
-				.evaluate(el => getComputedStyle(el).height)
-		).toBe('130px');
-
-		await page.goto('/components');
-		const compact = page.locator('.showcase-panel-default');
-		await expect(compact).toBeVisible();
-		const compactBox = await compact.boundingBox();
-		expect(compactBox?.height).toBeGreaterThanOrEqual(200);
-		expect(compactBox?.width).toBeLessThanOrEqual(373);
-	});
-});
-
-test.describe('Hero Profile Record contract', () => {
 	for (const viewport of [DESKTOP, MOBILE]) {
 		test(`portrait panel, avatar and name band match the ${viewport.label} contract`, async ({
 			page,
@@ -128,10 +97,7 @@ test.describe('Hero Profile Record contract', () => {
 			expect(await band.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
 				await probeBackground(page, '--channel-accent-primary')
 			);
-
-			const outer = page.locator('#hero .shadow-retro-3xl');
-			await expect(outer).toHaveCSS('box-shadow', /8px 8px 0px 0px/);
-		});
+	});
 	}
 
 	test('mobile exposes only the four high-value recruiter facts', async ({ page }) => {
@@ -147,57 +113,111 @@ test.describe('Hero Profile Record contract', () => {
 	});
 });
 
+test.describe('Tablet geometry contract', () => {
+	test('project card terminal slot, content panel and editorial card hit tablet targets', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: TABLET.width, height: TABLET.height });
+		await page.goto('/es/projects');
+		const card = page.locator('article').first();
+		await card.scrollIntoViewIfNeeded();
+		expect(
+			await card
+				.locator('figure > div')
+				.last()
+				.evaluate(el => getComputedStyle(el).height)
+		).toBe('130px');
+
+		await page.goto('/components');
+		const compact = page.locator('.showcase-panel-default');
+		await expect(compact).toBeVisible();
+		const compactBox = await compact.boundingBox();
+		expect(compactBox?.height).toBeGreaterThanOrEqual(200);
+		expect(compactBox?.width).toBeLessThanOrEqual(373);
+	});
+});
+
 test.describe('Experience Tab contract', () => {
-	test('active tab uses brand badge surface with absolute indicators per breakpoint', async ({
+	for (const [viewport, expectedWidth, expectedHeight] of [
+		[DESKTOP, 400, 80],
+		[TABLET, 300, 88],
+		[MOBILE, 250, 88],
+	] as const) {
+		test(`${viewport.label} tab uses the responsive Figma geometry`, async ({ page }) => {
+			await page.setViewportSize({ width: viewport.width, height: viewport.height });
+			await page.goto('/');
+			await setTheme(page, 'light');
+
+			const activeTab = page.getByRole('tab', { selected: true }).first();
+			await expect(activeTab).toBeVisible();
+			const box = await activeTab.boundingBox();
+			expect(box?.width).toBe(expectedWidth);
+			expect(box?.height).toBe(expectedHeight);
+			expect(await activeTab.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
+				await probeBackground(page, '--color-badge-brand-bg')
+			);
+			expect(await activeTab.evaluate(el => getComputedStyle(el).borderTopWidth)).toBe('2px');
+
+			const indicator = activeTab.locator('span').nth(viewport.label === 'mobile' ? 1 : 0);
+			expect(await indicator.evaluate(el => getComputedStyle(el).position)).toBe('absolute');
+			if (viewport.label === 'mobile') {
+				expect(await indicator.evaluate(el => getComputedStyle(el).height)).toBe('4px');
+			} else {
+				expect(await indicator.evaluate(el => getComputedStyle(el).width)).toBe('4px');
+			}
+		});
+	}
+
+	test('company and role use navigation and caption typography instead of legacy fonts', async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: DESKTOP.width, height: DESKTOP.height });
 		await page.goto('/');
-		await setTheme(page, 'light');
-
-		const activeTab = page.getByRole('tab', { selected: true }).first();
-		await expect(activeTab).toBeVisible();
-		expect(await activeTab.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
-			await probeBackground(page, '--color-badge-brand-bg')
-		);
-		expect(await activeTab.evaluate(el => getComputedStyle(el).borderTopWidth)).toBe('2px');
-
-		const leftRule = activeTab.locator('span').first();
-		expect(await leftRule.evaluate(el => getComputedStyle(el).position)).toBe('absolute');
-		expect(await leftRule.evaluate(el => getComputedStyle(el).width)).toBe('4px');
-
-		await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
-		const bottomRule = page.getByRole('tab', { selected: true }).first().locator('span').nth(1);
-		expect(await bottomRule.evaluate(el => getComputedStyle(el).position)).toBe('absolute');
-		expect(await bottomRule.evaluate(el => getComputedStyle(el).height)).toBe('4px');
+		const tab = page.getByRole('tab', { selected: true }).first();
+		const text = tab.locator('span').filter({ hasText: 'ATENA' }).last();
+		expect(await text.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(/JetBrains Mono/i);
+		expect(await text.evaluate(el => getComputedStyle(el).fontSize)).toBe('14px');
 	});
 });
 
 test.describe('Experience Detail contract', () => {
-	for (const viewport of [DESKTOP, MOBILE]) {
-		test(`accent shadow and role typography match the ${viewport.label} contract`, async ({
+	for (const [viewport, expectedWidth] of [
+		[DESKTOP, 840],
+		[TABLET, 446],
+		[MOBILE, 360],
+	] as const) {
+		test(`${viewport.label} detail is an open editorial block at ${expectedWidth}px`, async ({
 			page,
 		}) => {
 			await page.setViewportSize({ width: viewport.width, height: viewport.height });
 			await page.goto('/');
-			await setTheme(page, 'dark');
 
-			const detail = page.locator('[role="tabpanel"][data-active="true"] > div').first();
+			const panel = page.locator('[role="tabpanel"][data-active="true"]');
+			const detail = panel.locator('> div').first();
 			await expect(detail).toBeVisible();
-
-			const expectedShadow = await probeStyle(
-				page,
-				'box-shadow: var(--shadow-retro-lg-accent);'
-			);
-			const actualShadow = await detail.evaluate(el => getComputedStyle(el).boxShadow);
-			expect(actualShadow).toContain(expectedShadow.boxShadow);
-			expect(actualShadow.match(/4px 4px/g)).toHaveLength(1);
+			expect((await detail.boundingBox())?.width).toBe(expectedWidth);
+			expect(await detail.evaluate(el => getComputedStyle(el).boxShadow)).toBe('none');
 
 			const role = detail.getByRole('heading', { level: 3 });
-			expect(await role.evaluate(el => getComputedStyle(el).fontSize)).toBe('30px');
-			expect(await role.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(/VT323/i);
+			expect(await role.evaluate(el => getComputedStyle(el).fontSize)).toBe('24px');
+			expect(await role.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(/JetBrains Mono/i);
+			expect(await role.evaluate(el => getComputedStyle(el).fontWeight)).toBe('500');
+
+			const achievements = detail.locator('ul').first();
+			const display = await achievements.evaluate(el => getComputedStyle(el).display);
+			expect(display).toBe(viewport.label === 'desktop' ? 'grid' : 'flex');
 		});
 	}
+
+	test('the current-role CTA exists only for the Atena experience', async ({ page }) => {
+		await page.setViewportSize({ width: DESKTOP.width, height: DESKTOP.height });
+		await page.goto('/');
+
+		await expect(page.getByRole('link', { name: /View current role/i })).toBeVisible();
+		const tabs = page.getByRole('tab');
+		await tabs.nth(1).click();
+		await expect(page.getByRole('link', { name: /View current role/i })).toHaveCount(0);
+	});
 });
 
 test.describe('Project Card contract', () => {
