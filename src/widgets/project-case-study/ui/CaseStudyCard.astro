@@ -1,0 +1,65 @@
+---
+interface Props {
+	label?: string;
+	title: string;
+	tone?: 'default' | 'primary' | 'success' | 'danger';
+}
+
+const { label, title, tone = 'default' } = Astro.props;
+const accentClasses = {
+	default: 'border-edge-subtle',
+	primary: 'border-channel-accent-primary',
+	success: 'border-status-success-text',
+	danger: 'border-channel-status-error',
+} as const;
+const labelClasses = {
+	default: 'text-content-muted',
+	primary: 'text-channel-accent-primary',
+	success: 'text-status-success-text',
+	danger: 'text-badge-danger-text',
+} as const;
+---
+
+<article
+	class:list={[
+		'flex min-w-0 flex-col border-l-4 bg-channel-surface-default p-5 shadow-retro-sm',
+		accentClasses[tone],
+	]}
+	data-case-study-card
+>
+	{
+		label && (
+			<p class:list={['text-editorial-label-compact uppercase', labelClasses[tone]]}>
+				{label}
+			</p>
+		)
+	}
+	<h3 class:list={['text-subheading text-content-strong md:text-component-title', label && 'mt-2']}>
+		{title}
+	</h3>
+	<div class="case-study-card-copy mt-3 text-secondary text-content-default md:text-body">
+		<slot />
+	</div>
+</article>
+
+<style>
+	.case-study-card-copy :global(p + p),
+	.case-study-card-copy :global(p + ul),
+	.case-study-card-copy :global(ul + p) {
+		margin-top: 0.75rem;
+	}
+
+	.case-study-card-copy :global(ul) {
+		list-style: square;
+		padding-left: 1.125rem;
+	}
+
+	.case-study-card-copy :global(li + li) {
+		margin-top: 0.375rem;
+	}
+
+	.case-study-card-copy :global(strong) {
+		color: var(--channel-content-strong);
+		font-weight: 700;
+	}
+</style>
