@@ -18,14 +18,13 @@ const profileFacts = [
 ---
 
 <!--
-	Portfolio / Home Hero (Figma v2)
-	Desktop: viewport-like min-height below the 72px header, 80px gutters.
-	Tablet/Mobile: content-driven. Mobile uses the 360px wide-component contract.
-	The availability banner is the single availability signal.
+	Home Hero follows the viewport-section rhythm from Tablet upward while
+	remaining content-driven on Mobile. min-height (not fixed height) protects
+	localization, zoom and shorter laptop viewports.
 -->
 <section
 	id="hero"
-	class="mx-auto flex w-full max-w-360 scroll-mt-18 flex-col items-center gap-5 bg-channel-background-canvas px-5 py-10 md:gap-6 md:px-8 md:py-12 lg:min-h-[calc(100svh-4.5rem)] lg:justify-center lg:px-20"
+	class="mx-auto flex w-full max-w-360 scroll-mt-18 flex-col items-center gap-5 bg-channel-background-canvas px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:justify-center md:gap-6 md:px-8 md:py-12 lg:px-20"
 	aria-labelledby="hero-title"
 >
 	<div
@@ -41,10 +40,7 @@ const profileFacts = [
 			{tHero('title')}
 		</p>
 
-		<h1
-			id="hero-title"
-			class="w-full text-page-title-mobile text-content-strong md:text-hero-display"
-		>
+		<h1 id="hero-title" class="w-full text-page-title-mobile text-content-strong md:text-hero-display">
 			{siteConfig.name}
 		</h1>
 
