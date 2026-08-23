@@ -1,7 +1,13 @@
 import { getCollection } from 'astro:content';
 import type { Language } from '@shared/config/i18n';
 import { PROJECT_METADATA, PROJECT_TECHNOLOGIES, isProjectId, type ProjectId } from './metadata';
-import type { CaseStudyEvidence, ProjectContentEntry, ProjectItem, ProjectList } from './types';
+import type {
+	CaseStudyEvidence,
+	CaseStudyPresentation,
+	ProjectContentEntry,
+	ProjectItem,
+	ProjectList,
+} from './types';
 
 function toEvidence(
 	entry: ProjectContentEntry,
@@ -44,6 +50,25 @@ function toEvidence(
 	};
 }
 
+function toPresentation(entry: ProjectContentEntry): CaseStudyPresentation | undefined {
+	const presentation = entry.data.caseStudy.presentation;
+	if (!presentation) return undefined;
+
+	return {
+		...presentation,
+		status: { ...presentation.status },
+		narrative: {
+			problem: { ...presentation.narrative.problem },
+			approach: { ...presentation.narrative.approach },
+			tradeoffs: { ...presentation.narrative.tradeoffs },
+			outcome: { ...presentation.narrative.outcome },
+		},
+		verified: { ...presentation.verified },
+		boundaries: { ...presentation.boundaries },
+		learnings: presentation.learnings.map(learning => ({ ...learning })),
+	};
+}
+
 function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 	const { projectId, title, description, category, imageAlt, caseStudy } = entry.data;
 
@@ -55,6 +80,7 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 	const link = metadata.link ? { link: metadata.link } : {};
 	const github = metadata.github ? { github: metadata.github } : {};
 	const evidence = toEvidence(entry, projectId);
+	const presentation = toPresentation(entry);
 
 	return {
 		projectId,
@@ -82,6 +108,7 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 				limitations: [...caseStudy.status.limitations],
 			},
 			...(evidence ? { evidence } : {}),
+			...(presentation ? { presentation } : {}),
 		},
 		...link,
 		...github,
