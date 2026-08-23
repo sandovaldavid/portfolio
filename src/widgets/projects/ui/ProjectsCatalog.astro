@@ -21,7 +21,7 @@ const tPage = createScopedUiTranslator(lang, 'pages.projects');
 	>
 		<div
 			data-projects-catalog-intro-shell
-			class="mx-auto grid w-full max-w-320 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,720fr)_minmax(0,480fr)] lg:items-end lg:gap-x-20"
+			class="mx-auto grid w-full max-w-320 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,720fr)_minmax(0,480fr)] lg:gap-x-20"
 		>
 			<div class="flex min-w-0 flex-col gap-4 lg:gap-5">
 				<p class="text-editorial-label text-channel-accent-primary">{tPage('introKicker')}</p>
@@ -33,7 +33,9 @@ const tPage = createScopedUiTranslator(lang, 'pages.projects');
 				</h1>
 			</div>
 
-			<p class="text-body text-content-default lg:pt-10">{tPage('introBody')}</p>
+			<div class="lg:pt-10">
+				<p class="text-body text-content-default">{tPage('introBody')}</p>
+			</div>
 		</div>
 	</header>
 
@@ -41,7 +43,10 @@ const tPage = createScopedUiTranslator(lang, 'pages.projects');
 		class="w-full bg-channel-background-canvas px-5 py-6 md:px-8 lg:px-20"
 		aria-label={tPage('catalogSectionLabel')}
 	>
-		<div data-projects-catalog-grid-shell class="mx-auto w-full max-w-320">
+		<div
+			data-projects-catalog-grid-shell
+			class="mx-auto w-full max-w-85 md:max-w-192.5 lg:max-w-320"
+		>
 			<Projects showAll={true} layout="catalog" />
 		</div>
 	</section>
