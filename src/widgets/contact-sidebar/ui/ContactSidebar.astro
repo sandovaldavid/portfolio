@@ -6,7 +6,7 @@
  */
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
-import LinkIcon from '@assets/icons/Link.astro';
+import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
 import MailIcon from '@assets/icons/Mail.astro';
 import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
@@ -45,7 +45,7 @@ const links = [
 		href: siteConfig.social.linkHub,
 		tooltip: tFooter('linkHub'),
 		external: true,
-		Icon: LinkIcon,
+		Icon: LinkHubIcon,
 	},
 	{
 		label: tRecruiter('resume'),
