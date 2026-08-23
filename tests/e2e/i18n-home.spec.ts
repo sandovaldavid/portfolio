@@ -14,7 +14,7 @@ test.describe('Localized home sections', () => {
 		await expect(page.getByRole('heading', { name: 'About me' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Core Stack' })).toBeVisible();
 		await expect(page.getByRole('link', { name: 'View biography' })).toBeVisible();
-		await expect(page.getByRole('link', { name: 'View full research' })).toBeVisible();
+		await expect(page.getByRole('link', { name: 'View research' })).toBeVisible();
 	});
 
 	test('renders complete Spanish home copy without English section labels', async ({ page }) => {
@@ -30,7 +30,7 @@ test.describe('Localized home sections', () => {
 		await expect(page.getByRole('heading', { name: 'Sobre mí' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Stack principal' })).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Ver biografía' })).toBeVisible();
-		await expect(page.getByRole('link', { name: 'Ver investigación completa' })).toBeVisible();
+		await expect(page.getByRole('link', { name: 'Ver investigación' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Experience' })).toHaveCount(0);
 	});
 });
