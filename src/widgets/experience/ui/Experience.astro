@@ -1,5 +1,5 @@
 ---
-import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import ChevronRightIcon from '@assets/icons/ChevronRight.astro';
 import { getExperienceData } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { TitleSection } from '@shared/ui';
@@ -24,8 +24,8 @@ const EXPERIENCE = await getExperienceData(lang);
 	class="mx-auto flex w-full max-w-360 scroll-mt-18 flex-col items-center gap-5 bg-channel-surface-highlight px-5 py-10 md:gap-6 md:px-8 md:py-12 lg:px-20 lg:py-14"
 	aria-labelledby="experience-title"
 >
-	<TitleSection className="w-full" >
-		<ArrowRightIcon class="text-channel-accent-primary" aria-hidden="true" focusable="false" />
+	<TitleSection className="w-full">
+		<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" focusable="false" />
 		<span id="experience-title">{tExperience('sectionTitle')}</span>
 	</TitleSection>
 
