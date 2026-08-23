@@ -161,6 +161,13 @@ html {
 	#main-content {
 		overflow-x: clip;
 	}
+
+	/* Layout's Home composition is a centered flex child. Explicit width keeps
+	   full-bleed section surfaces tied to the viewport without w-screen/100dvw. */
+	#main-content > div:has(> #hero) {
+		width: 100%;
+		min-width: 0;
+	}
 }
 
 @layer base {
@@ -171,21 +178,6 @@ html {
 	h5,
 	h6 {
 		font-family: var(--font-mono);
-	}
-}
-
-/*
- * Home viewport rhythm. These IDs are owned exclusively by Layout's Home
- * composition. Mobile remains content-driven; Tablet/Desktop reserve the
- * usable viewport below the fixed 72px Header and may grow for localization.
- */
-@media (min-width: 768px) {
-	#projects,
-	#research,
-	#about-me,
-	#technologies {
-		min-height: calc(100svh - 4.5rem);
-		scroll-margin-top: 4.5rem;
 	}
 }
 
