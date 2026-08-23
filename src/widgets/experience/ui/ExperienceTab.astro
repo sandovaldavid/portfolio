@@ -19,12 +19,11 @@ const { company, role, active, tabId, panelId, experienceId, index, selected, fo
 
 <!--
 	Portfolio / Experience Tab (Figma v2):
-	Mobile 250×88, Tablet 300×88, Desktop 400×80. Company uses Navigation
-	typography; role uses Caption. Text may wrap and must never be abbreviated.
-	The active indicator is absolutely positioned so state changes do not shift
-	content geometry. Mobile keeps the horizontal bottom indicator; tablet and
-	desktop use the left rule. Uppercase is a component presentation rule; source
-	content remains unchanged.
+	Mobile 250×88 minimum, Tablet 300×88 minimum, Desktop 400×80. Company uses
+	Navigation typography; role uses Caption. Text may wrap and must never be
+	abbreviated. The active indicator is absolutely positioned so state changes
+	do not shift geometry. Its transform/opacity transition restores the motion
+	cue without moving the tab itself. Uppercase remains presentation-only.
 -->
 <button
 	role="tab"
@@ -35,21 +34,23 @@ const { company, role, active, tabId, panelId, experienceId, index, selected, fo
 	data-index={index}
 	data-experience-id={experienceId}
 	data-active={active ? 'true' : 'false'}
-	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col items-start gap-1 border-2 border-transparent bg-channel-surface-default py-2 pl-3.5 pr-4 text-left transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:border-channel-accent-primary focus-visible:outline-none data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg md:w-75 md:px-5 lg:min-h-20 lg:w-100 lg:pl-5 lg:pr-7.5"
+	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col items-start gap-1 border-2 border-transparent bg-channel-surface-default py-2 pl-3.5 pr-4 text-left transition-colors duration-200 hover:bg-channel-surface-highlight focus-visible:border-channel-accent-primary focus-visible:outline-none data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg md:w-75 md:px-5 lg:min-h-20 lg:w-100 lg:pl-5 lg:pr-7.5"
 >
 	<span
-		class="absolute -top-0.5 bottom-1.5 -left-0.5 hidden w-1 bg-channel-accent-primary opacity-0 group-data-[active=true]:opacity-100 md:block"
+		data-experience-indicator="vertical"
+		class="absolute -top-0.5 bottom-1.5 -left-0.5 hidden w-1 origin-top scale-y-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-y-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:block"
 		aria-hidden="true"
 	></span>
 	<span
-		class="absolute bottom-0.5 -left-0.5 right-7 h-1 bg-channel-accent-primary opacity-0 group-data-[active=true]:opacity-100 md:hidden"
+		data-experience-indicator="horizontal"
+		class="absolute bottom-0.5 -left-0.5 right-7 h-1 origin-left scale-x-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-x-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:hidden"
 		aria-hidden="true"
 	></span>
 
 	<span class="flex min-h-5 w-full min-w-0 items-center gap-2 overflow-hidden">
 		<ArrowRightIcon class="size-4 shrink-0" aria-hidden="true" focusable="false" />
 		<span
-			class="min-w-0 uppercase text-navigation text-content-strong transition-colors duration-100 group-data-[active=true]:text-channel-accent-primary"
+			class="min-w-0 uppercase text-navigation text-content-strong transition-colors duration-200 group-data-[active=true]:text-channel-accent-primary"
 		>
 			{company}
 		</span>
