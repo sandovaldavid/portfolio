@@ -17,7 +17,6 @@ const LOCALES = [
 		viewWorkText: 'View work',
 		contactText: 'Get in touch',
 		caseStudyText: 'Case Study',
-		sourceText: 'Source',
 		resumeHref: 'https://sandovaldavid.com/resume/david-sandoval-resume.pdf',
 	},
 	{
@@ -27,7 +26,6 @@ const LOCALES = [
 		viewWorkText: 'Ver proyectos',
 		contactText: 'Contactarme',
 		caseStudyText: 'Caso de estudio',
-		sourceText: 'Código fuente',
 		resumeHref: 'https://sandovaldavid.com/resume/david-sandoval-resume-es.pdf',
 	},
 ] as const;
@@ -72,18 +70,11 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 					kiokuCard.getByRole('link', { name: locale.caseStudyText, exact: true })
 				).toBeVisible();
 
-				const yukidokeSource = yukidokeCard.getByRole('link', {
-					name: locale.sourceText,
-					exact: true,
-				});
-				const kiokuSource = kiokuCard.getByRole('link', {
-					name: locale.sourceText,
-					exact: true,
-				});
+				const yukidokeSource = yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]');
+				const kiokuSource = kiokuCard.locator('a[href="https://github.com/sandovaldavid/kioku"]');
 				await expect(yukidokeSource).toHaveCount(0);
 				if (viewport.name === 'desktop') {
 					await expect(kiokuSource).toBeVisible();
-					await expect(kiokuSource).toHaveAttribute('href', 'https://github.com/sandovaldavid/kioku');
 				} else {
 					await expect(kiokuSource).toBeHidden();
 				}
