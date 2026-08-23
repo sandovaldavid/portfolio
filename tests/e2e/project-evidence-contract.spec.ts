@@ -1,20 +1,26 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Recruiter evidence, access and status contract', () => {
-	test('homepage featured cards expose lifecycle and source-access badges', async ({ page }) => {
+	test('homepage featured cards expose lifecycle and only actionable public source evidence', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1440, height: 900 });
 		await page.goto('/');
 
 		const yukidokeCard = page.locator('article', {
 			has: page.getByRole('heading', { name: 'Yukidoke' }),
 		});
 		await expect(yukidokeCard.getByText('Active', { exact: true })).toBeVisible();
-		await expect(yukidokeCard.getByText('Private source', { exact: true })).toBeVisible();
+		await expect(yukidokeCard.getByRole('link', { name: 'Source', exact: true })).toHaveCount(0);
 
 		const kiokuCard = page.locator('article', {
 			has: page.getByRole('heading', { name: 'Kioku' }),
 		});
 		await expect(kiokuCard.getByText('Active', { exact: true })).toBeVisible();
-		await expect(kiokuCard.getByText('Public source', { exact: true })).toBeVisible();
+		await expect(kiokuCard.getByRole('link', { name: 'Source', exact: true })).toHaveAttribute(
+			'href',
+			'https://github.com/sandovaldavid/kioku'
+		);
 	});
 
 	for (const locale of [
