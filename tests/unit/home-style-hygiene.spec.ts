@@ -1,7 +1,13 @@
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync, statSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
+const collectFiles = (directory: string): string[] =>
+	readdirSync(directory).flatMap(entry => {
+		const path = join(directory, entry);
+		return statSync(path).isDirectory() ? collectFiles(path) : [path];
+	});
 
 const globalStyles = readSource('src/app/styles/global.css');
 const colors = readSource('src/app/styles/colors.css');
@@ -35,6 +41,10 @@ const homeStyleSurfaces = [
 	sectionContainer,
 	readSource('src/shared/ui/title-section/TitleSection.astro'),
 ];
+
+const productionStyleFiles = collectFiles('src').filter(
+	path => /\.(astro|css|ts|tsx|js|mjs)$/.test(path) && path !== 'src/app/styles/colors.css'
+);
 
 describe('Home style hygiene', () => {
 	it('keeps Home consumers on semantic color roles instead of raw Tailwind ramps', () => {
@@ -82,6 +92,41 @@ describe('Home style hygiene', () => {
 		}
 	});
 
+	it('has no production consumers of retired migration token names', () => {
+		const retiredFragments = [
+			'color-surface-highlight-light',
+			'color-surface-highlight-dark',
+			'color-background-light',
+			'color-background-dark',
+			'color-content-strong-light',
+			'color-content-strong-dark',
+			'color-content-light',
+			'color-content-dark',
+			'color-content-muted-light',
+			'color-content-muted-dark',
+			'color-edge-subtle-light',
+			'color-edge-subtle-dark',
+			'color-edge-strong-light',
+			'color-edge-strong-dark',
+			'color-retro-cyan',
+			'color-retro-cyan-bright',
+			'color-theme-menu-background',
+			'color-theme-menu-border',
+			'color-theme-option-background-hover',
+			'color-logo-effect-magenta',
+			'color-logo-effect-cyan',
+			'color-channel-hero-glow',
+		];
+		const offenders = productionStyleFiles.flatMap(path => {
+			const source = readSource(path);
+			return retiredFragments
+				.filter(fragment => source.includes(fragment))
+				.map(fragment => `${path}: ${fragment}`);
+		});
+
+		expect(offenders).toEqual([]);
+	});
+
 	it('centralizes shared button typography in the semantic Button Label role', () => {
 		expect(buttons).toContain('@apply text-button-label;');
 		expect(buttons).not.toContain('tracking-[0.7px]');
@@ -89,6 +134,10 @@ describe('Home style hygiene', () => {
 
 	it('keeps Home composition explicit instead of relying on hidden descendant overrides', () => {
 		expect(sectionContainer).not.toContain(':global(.title-section)');
+		expect(sectionContainer).not.toContain('HOME_VIEWPORT_SECTIONS');
+		expect(sectionContainer).not.toContain('HOME_COMPACT_SECTIONS');
+		expect(layout).toContain('layout="viewport"');
+		expect(layout).toContain('layout="compact"');
 		expect(projects.trimStart()).toContain('<div class="w-full">');
 		expect(research.trimStart()).toContain('<div class="w-full">');
 		expect(projectCard).not.toContain('<article class="group h-full w-full font-sans">');
