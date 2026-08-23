@@ -204,7 +204,9 @@ describe('Portfolio Retro color architecture', () => {
 
 	it('keeps Theme Toggle as the Figma cyclic control instead of a menu', () => {
 		expect(themeToggle).toContain('data-theme-toggle');
-		expect(themeToggle).toContain("const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];");
+		expect(themeToggle).toContain(
+			"const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];"
+		);
 		expect(themeToggle).not.toContain('theme-menu');
 		expect(themeToggle).not.toContain('data-theme-option');
 		expect(themeToggle).not.toContain('aria-haspopup');
