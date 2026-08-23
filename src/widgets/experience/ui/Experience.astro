@@ -44,7 +44,7 @@ const EXPERIENCE = await getExperienceData(lang);
 				id="experience-tablist"
 				role="tablist"
 				aria-label={tAccessibility('experienceTabs')}
-				class="flex w-90 max-w-none gap-2.5 overflow-x-auto bg-channel-surface-default md:w-75 md:flex-col md:overflow-visible lg:w-100"
+				class="flex w-90 max-w-none items-start gap-2.5 overflow-x-auto bg-channel-surface-default md:w-75 md:flex-col md:overflow-visible lg:w-100"
 			>
 				{
 					EXPERIENCE.map((exp, idx) => (
