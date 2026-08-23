@@ -1,8 +1,8 @@
 ---
+import AboutIcon from '@assets/icons/About.astro';
 import BriefcaseIcon from '@assets/icons/Briefcase.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
 import CodeIcon from '@assets/icons/Code.astro';
-import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import ScrollTextIcon from '@assets/icons/ScrollText.astro';
 import BookOpenIcon from '@assets/icons/BookOpen.astro';
 import SystemIcon from '@assets/icons/System.astro';
@@ -40,7 +40,7 @@ const { navItems, navLabel } = Astro.props;
 				{link.icon === 'projects' && <CodeIcon class="size-4" aria-hidden="true" />}
 				{link.icon === 'devlog' && <ScrollTextIcon class="size-4" aria-hidden="true" />}
 				{link.icon === 'blog' && <BookOpenIcon class="size-4" aria-hidden="true" />}
-				{link.icon === 'about-me' && <ProfileCheckIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'about-me' && <AboutIcon class="size-4" aria-hidden="true" />}
 				{link.icon === 'technologies' && <SystemIcon class="size-4" aria-hidden="true" />}
 				<span>{link.title}</span>
 			</a>
