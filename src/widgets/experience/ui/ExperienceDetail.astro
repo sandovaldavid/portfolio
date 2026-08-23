@@ -57,7 +57,10 @@ const companyContext = isCurrent
 	<footer class="mt-auto flex flex-col items-start gap-4 pt-1 lg:flex-row lg:items-center lg:justify-between">
 		{
 			visibleTechnologies.length > 0 && (
-				<ul class="flex flex-wrap gap-2">
+				<ul
+					data-experience-technologies
+					class="flex w-full flex-wrap justify-center gap-2 md:w-auto md:justify-start"
+				>
 					{visibleTechnologies.map(tech => (
 						<li>
 							<TechPill label={tech} size="sm" variant="stack" />
