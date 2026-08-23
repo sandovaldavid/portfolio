@@ -6,8 +6,7 @@ import MailIcon from '@assets/icons/Mail.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
-import CodeIcon from '@assets/icons/Code.astro';
-import { LinkButton, LinkInline } from '@shared/ui';
+import { LinkButton } from '@shared/ui';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tFooter = createScopedUiTranslator(lang, 'footer');
@@ -47,67 +46,58 @@ const socialLinks = [
 ---
 
 <!--
-	Footer CTA contract (spec/05 Footer + Plan 03 handoff): 440px tall on
-	mobile and 360px on tablet/desktop; localized headline, supporting line,
-	primary GET IN TOUCH mailto CTA (canonical Mail icon, 44px Button) and a
-	direct "Email David" inline link; icon-only social links; built-with line.
+	Portfolio / Footer CTA (Figma v2): full-width compact contact footer.
+	Desktop/Tablet base height 372px; Mobile 452px. Content may grow under
+	zoom/translation rather than clipping, so min-height is used at runtime.
 -->
 <footer
-	class="mt-28 px-4 sm:px-6 lg:px-8 pb-8 w-full border-t-2 border-edge-strong pt-14"
 	id="contact"
+	class="flex min-h-[452px] w-full flex-col items-center justify-between border-t-2 border-edge-strong bg-channel-background-canvas px-6 pt-10 pb-6 md:min-h-[372px]"
 >
-	<div
-		class="mx-auto flex min-h-[27.5rem] max-w-2xl flex-col items-center justify-center gap-4 space-y-0 text-center md:min-h-[22.5rem]"
-	>
-		<h2
-			class="text-4xl sm:text-5xl md:text-6xl font-bold font-pixel-clean uppercase tracking-wider text-content-strong"
-		>
+	<div class="flex w-full max-w-[900px] flex-col items-center gap-4 text-center">
+		<h2 class="w-full max-w-[340px] text-section-title text-content-strong md:max-w-[900px]">
 			{tFooter('title')}
 		</h2>
-		<p class="text-sm font-mono uppercase text-content-muted tracking-wide">
+
+		<p class="w-full max-w-[330px] text-secondary text-content-muted md:max-w-[900px]">
 			{tFooter('subtitle')}
 		</p>
-		<div class="flex flex-col items-center gap-3 pt-6">
-			<LinkButton href={emailHref} target="_self" variant="primary">
-				<MailIcon aria-hidden="true" />
-				{tFooter('contact')}
-			</LinkButton>
-			<LinkInline href={emailHref}>{tFooter('emailDavid')}</LinkInline>
+
+		<LinkButton
+			href={emailHref}
+			target="_self"
+			variant="primary"
+			class="w-[240px] md:w-[200px]"
+		>
+			<MailIcon aria-hidden="true" />
+			{tFooter('contact')}
+		</LinkButton>
+
+		<div class="flex items-center gap-4 pt-3" aria-label={tFooter('contact')}>
+			{
+				socialLinks.map(({ name, href, icon: Icon, opensNewTab }) => (
+					<a
+						href={href}
+						target={opensNewTab ? '_blank' : undefined}
+						rel={opensNewTab ? 'noopener noreferrer' : undefined}
+						title={name}
+						aria-label={opensNewTab ? `${name}, ${newTabLabel}` : name}
+						class="grid size-11 place-items-center overflow-hidden rounded-none border-2 border-edge-strong bg-channel-surface-default text-content-strong shadow-retro-sm transition-[box-shadow,background-color,color] duration-100 hover:bg-channel-surface-highlight hover:shadow-retro-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+					>
+						<Icon class="size-5" aria-hidden="true" />
+					</a>
+				))
+			}
 		</div>
 	</div>
 
-	<div class="flex justify-center gap-4 sm:gap-5 mb-14 flex-wrap">
-		{
-			socialLinks.map(({ name, href, icon: Icon, opensNewTab }) => (
-				<a
-					href={href}
-					target={opensNewTab ? '_blank' : undefined}
-					rel={opensNewTab ? 'noopener noreferrer' : undefined}
-					title={name}
-					aria-label={opensNewTab ? `${name}, ${newTabLabel}` : name}
-					class="flex items-center justify-center rounded-none p-3.5 bg-channel-surface-default border-2 border-edge-strong text-content-strong shadow-retro-md transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight hover:shadow-retro-xl active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
-				>
-					<Icon class="size-6" aria-hidden="true" />
-				</a>
-			))
-		}
-	</div>
-
-	<div
-		class="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 sm:pt-8 px-4 sm:px-8 border-t border-neutral-300 dark:border-neutral-800 font-mono text-xs sm:text-sm text-content-muted text-center md:text-left"
-	>
-		<p>© {currentYear} {siteConfig.fullName}. {tFooter('rights')}.</p>
-		<p class="flex items-center gap-2 uppercase">
-			{tFooter('builtWith')}
-			<CodeIcon class="w-4 h-4 text-primary-500" aria-hidden="true" />
-			<span class="text-content-muted">v2.0.0</span>
-			<span aria-hidden="true">·</span>
-			<a
-				href={getRelativeLocaleUrl(lang, 'devlog')}
-				class="underline decoration-dotted underline-offset-2 hover:text-primary-500 transition-colors"
-			>
-				{tNavigation('devlog')}
-			</a>
-		</p>
-	</div>
+	<p class="w-full max-w-[330px] text-center text-caption uppercase text-content-muted md:max-w-[1100px]">
+		© {currentYear} {siteConfig.name} · {tFooter('builtWith')} · V2.0.0 ·
+		<a
+			href={getRelativeLocaleUrl(lang, 'devlog')}
+			class="transition-colors duration-100 hover:text-channel-accent-primary focus-visible:outline-none focus-visible:underline"
+		>
+			{tNavigation('devlog')}
+		</a>
+	</p>
 </footer>
