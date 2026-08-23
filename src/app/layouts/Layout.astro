@@ -5,9 +5,7 @@ import { Font } from 'astro:assets';
 import { getPathByLocale, getRelativeLocaleUrl, pathHasLocale } from 'astro:i18n';
 import '@app/styles/global.css';
 import '@app/styles/print.css';
-import CodeIcon from '@assets/icons/Code.astro';
-import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
-import BrainIcon from '@assets/icons/Brain.astro';
+import ChevronRightIcon from '@assets/icons/ChevronRight.astro';
 import { ContactSidebar } from '@widgets/contact-sidebar';
 import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
@@ -356,7 +354,10 @@ const structuredPageSchema =
 		<Analytics />
 	</head>
 
-	<body class="bg-background text-content flex flex-col min-h-screen">
+	<body
+		class="bg-background text-content flex flex-col min-h-screen"
+		data-is-home={isHome ? 'true' : 'false'}
+	>
 		<a
 			href="#main-content"
 			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-500 focus:text-white dark:focus:text-black focus:font-bold focus:uppercase focus:tracking-wider focus:border-2 focus:border-black dark:focus:border-white focus:shadow-retro-lg focus:rounded-none focus:no-underline"
@@ -369,42 +370,41 @@ const structuredPageSchema =
 				{
 					isHome ? (
 						/*
-						 * Home composition (Figma v2): Hero owns its viewport-like
-						 * desktop treatment. Experience now owns its highlighted,
-						 * content-driven section. Remaining sections are still migrated
-						 * incrementally through the shared SectionContainer shell.
+						 * Home is composed as viewport-oriented sections from Tablet
+						 * upward. Hero and Experience own dedicated internal contracts;
+						 * the remaining sections use SectionContainer's Home mode.
 						 */
-						<div class="pt-18">
+						<div class="w-full pt-18">
 							<slot name="hero" />
 							<slot name="experience" />
 
 							<SectionContainer id="projects" class="py-12 md:py-16 gap-y-6">
-								<TitleSection className="mb-0">
-									<CodeIcon class="size-12" />
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tProjects('sectionTitle')}
 								</TitleSection>
 								<slot name="projects" />
 							</SectionContainer>
 
 							<SectionContainer id="research" class="py-12 md:py-16 gap-y-6">
-								<TitleSection className="mb-0">
-									<BrainIcon class="size-12" />
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tResearchSection('sectionTitle')}
 								</TitleSection>
 								<slot name="research" />
 							</SectionContainer>
 
 							<SectionContainer id="about-me" class="py-12 md:py-16 gap-y-6">
-								<TitleSection className="mb-0">
-									<ProfileCheckIcon class="size-12" />
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tAbout('sectionTitle')}
 								</TitleSection>
 								<slot name="about-me" />
 							</SectionContainer>
 
 							<SectionContainer id="technologies" class="py-12 md:py-16 gap-y-6">
-								<TitleSection className="mb-0">
-									<CodeIcon class="size-12" />
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tTechStack('sectionTitle')}
 								</TitleSection>
 								<TechStack />
