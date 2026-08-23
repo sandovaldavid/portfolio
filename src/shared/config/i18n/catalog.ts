@@ -6,6 +6,7 @@ import errorsEn from './locales/en/errors.json';
 import footerEn from './locales/en/footer.json';
 import metadataEn from './locales/en/metadata.json';
 import navigationEn from './locales/en/navigation.json';
+import aboutPageEn from './locales/en/pages/about.json';
 import atenaEn from './locales/en/pages/atena.json';
 import blogEn from './locales/en/pages/blog.json';
 import componentsEn from './locales/en/pages/components.json';
@@ -30,6 +31,7 @@ import errorsEs from './locales/es/errors.json';
 import footerEs from './locales/es/footer.json';
 import metadataEs from './locales/es/metadata.json';
 import navigationEs from './locales/es/navigation.json';
+import aboutPageEs from './locales/es/pages/about.json';
 import atenaEs from './locales/es/pages/atena.json';
 import blogEs from './locales/es/pages/blog.json';
 import componentsEs from './locales/es/pages/components.json';
@@ -62,6 +64,7 @@ const englishCatalog = {
 	recruiter: recruiterEn,
 	splash: splashEn,
 	pages: {
+		about: aboutPageEn,
 		atena: atenaEn,
 		blog: blogEn,
 		components: componentsEn,
@@ -93,6 +96,7 @@ const spanishCatalog = {
 	recruiter: recruiterEs,
 	splash: splashEs,
 	pages: {
+		about: aboutPageEs,
 		atena: atenaEs,
 		blog: blogEs,
 		components: componentsEs,
@@ -123,6 +127,7 @@ export const UI_CATALOG_MODULES = [
 	'errors',
 	'recruiter',
 	'splash',
+	'pages.about',
 	'pages.atena',
 	'pages.blog',
 	'pages.components',

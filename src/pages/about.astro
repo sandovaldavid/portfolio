@@ -1,11 +1,25 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
 import { getPortfolioProfile } from '@entities/profile';
-import { Language } from '@shared/config/i18n';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { siteConfig } from '@shared/config/site.config';
 import { AboutContent } from '@widgets/about-content';
+import { HeroProfileRecord } from '@widgets/hero';
 
 const lang = Language.ENGLISH;
 const profile = await getPortfolioProfile(lang);
+const tHero = createScopedUiTranslator(lang, 'sections.hero');
+const tCommon = createScopedUiTranslator(lang, 'common');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+
+const profileFacts = [
+	{ label: tHero('roleLabel'), value: tHero('role') },
+	{ label: tHero('stackLabel'), value: tHero('stack') },
+	{ label: tHero('locationLabel'), value: tHero('location') },
+	{ label: tHero('workModeLabel'), value: tHero('workMode') },
+	{ label: tHero('currentLabel'), value: tHero('current') },
+	{ label: tHero('researchLabel'), value: tHero('research') },
+];
 ---
 
 <Layout
@@ -14,5 +28,16 @@ const profile = await getPortfolioProfile(lang);
 	img_preview="/projects/portfolio.webp"
 	pageType="profile"
 >
-	<AboutContent {lang} profile={profile.data} />
+	<AboutContent {lang} profile={profile.data}>
+		<HeroProfileRecord
+			slot="profile"
+			portraitSrc="/profile/perfil.webp"
+			portraitAlt={tAccessibility('profileImageAlt')}
+			name={siteConfig.name}
+			role={tHero('role')}
+			heading={tHero('profile')}
+			availabilityLabel={tCommon('status.available')}
+			facts={profileFacts}
+		/>
+	</AboutContent>
 </Layout>

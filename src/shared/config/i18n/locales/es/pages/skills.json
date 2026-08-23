@@ -1,8 +1,9 @@
 {
 	"pageTitle": "Habilidades y Tecnologías | David Sandoval",
 	"pageDescription": "Explora los lenguajes de programación, frameworks, librerías y herramientas utilizados por David Sandoval.",
+	"introKicker": "Capacidades técnicas",
 	"heading": "Inventario de habilidades",
-	"status": "Base de habilidades cargada: perfil de ingeniero de sistemas",
+	"categoriesSectionLabel": "Categorías de tecnologías",
 	"frontendHeading": "Tecnologías frontend",
 	"backendHeading": "Tecnologías backend",
 	"toolsHeading": "Herramientas y utilidades",

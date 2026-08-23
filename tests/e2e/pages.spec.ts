@@ -42,12 +42,12 @@ pages.forEach(({ path, name }) => {
 });
 
 const internalRouteExpectations = [
-	{ path: '/about', heading: 'Full biography' },
+	{ path: '/about', heading: 'About David Sandoval' },
 	{
 		path: '/projects',
 		heading: 'Projects built with evidence, scope and trade-offs.',
 	},
-	{ path: '/es/about', heading: 'Biografía completa' },
+	{ path: '/es/about', heading: 'Sobre David Sandoval' },
 	{
 		path: '/es/projects',
 		heading: 'Proyectos construidos con evidencia, alcance y trade-offs.',

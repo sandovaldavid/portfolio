@@ -1,8 +1,7 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { PortfolioProfileData } from '@entities/profile';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { SectionContainer } from '@shared/ui';
+import { createScopedUiTranslator, type Language } from '@shared/config/i18n';
+import { ContentPanel, TitleSection } from '@shared/ui';
 
 interface Props {
 	lang: Language;
@@ -10,73 +9,93 @@ interface Props {
 }
 
 const { lang, profile } = Astro.props;
+const tPage = createScopedUiTranslator(lang, 'pages.about');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
+
+/*
+ * About page composition (spec/04 "About" + plans/pages/about.md):
+ * Intro inner grid 1280 wide — primary kicker+title w680, secondary compact
+ * summary panel w520 — followed by the centered Hero Profile Record
+ * (956/766/360 contract widths), three Compact biography panels across
+ * (420 + 10 gap desktop / 373 pairs on tablet / 340 stacked on mobile) and
+ * six Compact focus panels in a 3×2 grid (row gap 16, column gap 10).
+ * Biography copy comes from the localized profile collection unchanged;
+ * long paragraphs render at the 16px reading floor inside the panels.
+ * The profile record itself is passed in by the route through the named
+ * slot so this widget keeps importing no peer slice.
+ */
 ---
 
-<SectionContainer id="about-details" class="w-full max-w-4xl px-4 flex flex-col gap-8">
-	<div class="text-center space-y-3">
-		<h1
-			class="text-4xl md:text-5xl font-bold font-pixel-clean text-content-strong uppercase tracking-wide"
+<div class="w-full px-5 md:px-8 lg:px-0">
+	{
+		/* Inner container sits below #main-content's depth-2 max-width reset so
+	    the 1280px intro grid actually applies on wide screens. */
+	}
+	<div class="mx-auto flex w-full max-w-[1280px] flex-col">
+		<header
+			class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,680fr)_minmax(0,520fr)] lg:gap-x-20"
+			aria-labelledby="about-page-title"
 		>
-			{tAbout('biographyTitle')}
-		</h1>
-		<p class="text-content-muted font-mono text-sm uppercase">{tAbout('profileRecord')}</p>
-	</div>
-
-	<div class="space-y-6">
-		<article
-			class="rounded-none bg-surface border-2 border-edge-strong p-8 md:p-10 shadow-retro-lg transition-all duration-100"
-		>
-			<div class="flex flex-col items-center justify-center gap-8 md:gap-12 md:flex-row">
-				<div
-					class="flex-1 space-y-4 text-content text-pretty font-mono text-base leading-relaxed"
+			<div>
+				<p
+					class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary"
 				>
-					{profile.biography.map(paragraph => <p>{paragraph}</p>)}
-				</div>
-
-				<div class="shrink-0">
-					<img
-						width="240"
-						height="240"
-						src="/profile/perfil.webp"
-						alt={tAbout('imageAlt')}
-						class="w-56 h-56 object-cover aspect-square rounded-none border-2 border-black dark:border-white shadow-retro-lg"
-						style="object-position: 50% 50%"
-					/>
-				</div>
+					{tAbout('profileRecord')}
+				</p>
+				<h1
+					id="about-page-title"
+					class="mt-2 max-w-[680px] font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
+				>
+					{tPage('introTitle')}
+				</h1>
 			</div>
-		</article>
+			<ContentPanel density="compact" class="lg:mt-2">
+				<p class="text-base leading-relaxed">{profile.summary}</p>
+			</ContentPanel>
+		</header>
 
-		<article
-			class="rounded-none bg-surface border-2 border-edge-strong p-8 md:p-10 shadow-retro-lg transition-all duration-100"
-		>
-			<h2
-				class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 mb-6 border-b-2 border-dashed border-edge-subtle pb-2"
+		<section class="pt-8 lg:pt-10" aria-label={tAbout('profileTitle')}>
+			<slot name="profile" />
+		</section>
+
+		<section class="pt-14 lg:pt-16">
+			<p
+				class="mb-2 text-editorial-label uppercase tracking-[0.5px] text-channel-content-muted"
 			>
-				{tAbout('focusTitle')}
-			</h2>
-			<ul class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 font-mono text-base">
+				{tPage('biographySubtitle')}
+			</p>
+			<TitleSection>{tAbout('biographyTitle')}</TitleSection>
+			<div
+				class="grid grid-cols-1 justify-items-center gap-y-5 md:grid-cols-2 md:gap-x-5 lg:grid-cols-[repeat(3,minmax(0,420px))] lg:justify-items-start lg:gap-x-2.5"
+			>
 				{
-					profile.focusAreas.map((area, idx) => (
-						<li
-							class="flex items-start gap-3 transition-all duration-300"
-							style={`animation: var(--animate-slide-up); animation-delay: ${idx * 50}ms;`}
-						>
-							<span class="shrink-0 w-2.5 h-2.5 rounded-none bg-primary-500 dark:bg-primary-400 mt-1.5" />
-							<span class="text-content leading-relaxed">{area}</span>
-						</li>
+					profile.biography.map(paragraph => (
+						<ContentPanel density="compact">
+							<p class="text-base leading-relaxed">{paragraph}</p>
+						</ContentPanel>
 					))
 				}
-			</ul>
-		</article>
-	</div>
+			</div>
+		</section>
 
-	<div class="w-full flex justify-center mt-4">
-		<a
-			href={getRelativeLocaleUrl(lang, '')}
-			class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
-		>
-			{tAbout('returnHome')}
-		</a>
+		<section class="pt-14 pb-2 lg:pt-16">
+			<p
+				class="mb-2 text-editorial-label uppercase tracking-[0.5px] text-channel-content-muted"
+			>
+				{tPage('focusSubtitle')}
+			</p>
+			<TitleSection>{tAbout('focusTitle')}</TitleSection>
+			<div
+				class="grid grid-cols-1 justify-items-center gap-y-4 md:grid-cols-2 md:gap-x-5 lg:grid-cols-[repeat(3,minmax(0,420px))] lg:justify-items-start lg:gap-x-2.5"
+			>
+				{
+					profile.focusAreas.map(area => (
+						<ContentPanel density="compact">
+							<p>{area}</p>
+						</ContentPanel>
+					))
+				}
+			</div>
+		</section>
 	</div>
-</SectionContainer>
+</div>

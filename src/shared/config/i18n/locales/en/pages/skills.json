@@ -1,8 +1,9 @@
 {
 	"pageTitle": "Skills and Technologies | David Sandoval",
 	"pageDescription": "Explore the programming languages, frameworks, libraries and tools used by David Sandoval.",
+	"introKicker": "Technical capabilities",
 	"heading": "Skills inventory",
-	"status": "Skills database loaded: systems engineer profile",
+	"categoriesSectionLabel": "Technology categories",
 	"frontendHeading": "Frontend technologies",
 	"backendHeading": "Backend technologies",
 	"toolsHeading": "Tools and utilities",
