@@ -10,5 +10,11 @@
 	"outcomeLabel": "Outcome",
 	"narrativeSectionLabel": "Narrative",
 	"evidenceTitle": "Evidence and limitations",
-	"learningsTitle": "Learning extraction"
+	"learningsTitle": "Learning extraction",
+	"resourcesTitle": "Project resources",
+	"resourceSource": "Source",
+	"resourceDemo": "Live demo",
+	"resourceDocs": "Documentation",
+	"resourcePackage": "Package",
+	"resourceRelated": "Related project"
 }
