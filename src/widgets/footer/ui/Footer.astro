@@ -52,23 +52,18 @@ const socialLinks = [
 -->
 <footer
 	id="contact"
-	class="flex min-h-[452px] w-full flex-col items-center justify-between border-t-2 border-edge-strong bg-channel-background-canvas px-6 pt-10 pb-6 md:min-h-[372px]"
+	class="flex min-h-113 w-full flex-col items-center justify-between border-t-2 border-edge-strong bg-channel-background-canvas px-6 pt-10 pb-6 md:min-h-93"
 >
-	<div class="flex w-full max-w-[900px] flex-col items-center gap-4 text-center">
-		<h2 class="w-full max-w-[340px] text-section-title text-content-strong md:max-w-[900px]">
+	<div class="flex w-full max-w-225 flex-col items-center gap-4 text-center">
+		<h2 class="w-full max-w-85 text-section-title text-content-strong md:max-w-225">
 			{tFooter('title')}
 		</h2>
 
-		<p class="w-full max-w-[330px] text-secondary text-content-muted md:max-w-[900px]">
+		<p class="w-full max-w-82.5 text-secondary text-content-muted md:max-w-225">
 			{tFooter('subtitle')}
 		</p>
 
-		<LinkButton
-			href={emailHref}
-			target="_self"
-			variant="primary"
-			class="w-[240px] md:w-[200px]"
-		>
+		<LinkButton href={emailHref} target="_self" variant="primary" class="w-60 md:w-50">
 			<MailIcon aria-hidden="true" />
 			{tFooter('contact')}
 		</LinkButton>
@@ -93,9 +88,7 @@ const socialLinks = [
 		</ul>
 	</div>
 
-	<p
-		class="w-full max-w-[330px] text-center text-caption uppercase text-content-muted md:max-w-[1100px]"
-	>
+	<p class="w-full max-w-82.5 text-center text-caption uppercase text-content-muted md:max-w-275">
 		© {currentYear}
 		{siteConfig.name} · {tFooter('builtWith')} · V2.0.0 ·
 		<a
