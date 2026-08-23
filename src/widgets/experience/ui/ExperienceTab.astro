@@ -23,7 +23,8 @@ const { company, role, active, tabId, panelId, experienceId, index, selected, fo
 	typography; role uses Caption. Text may wrap and must never be abbreviated.
 	The active indicator is absolutely positioned so state changes do not shift
 	content geometry. Mobile keeps the horizontal bottom indicator; tablet and
-	desktop use the left rule.
+	desktop use the left rule. Uppercase is a component presentation rule; source
+	content remains unchanged.
 -->
 <button
 	role="tab"
@@ -48,10 +49,10 @@ const { company, role, active, tabId, panelId, experienceId, index, selected, fo
 	<span class="flex min-h-5 w-full min-w-0 items-center gap-2 overflow-hidden">
 		<ArrowRightIcon class="size-4 shrink-0" aria-hidden="true" focusable="false" />
 		<span
-			class="min-w-0 text-navigation text-content-strong transition-colors duration-100 group-data-[active=true]:text-channel-accent-primary"
+			class="min-w-0 uppercase text-navigation text-content-strong transition-colors duration-100 group-data-[active=true]:text-channel-accent-primary"
 		>
 			{company}
 		</span>
 	</span>
-	<span class="w-full text-caption text-content-muted">{role}</span>
+	<span class="w-full uppercase text-caption text-content-muted">{role}</span>
 </button>
