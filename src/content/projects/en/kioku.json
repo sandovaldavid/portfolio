@@ -17,6 +17,66 @@
 		],
 		"timeline": "Stable 2.3.0 · active development",
 		"role": "Backend engineer and maintainer",
+		"presentation": {
+			"kicker": "PROJECT CASE STUDY · BACKEND ENGINEERING",
+			"description": "A local-first .NET MCP server that turns AI-agent project knowledge — decisions, plans, bugs and sessions — into durable Markdown records inside an Obsidian vault.",
+			"status": {
+				"lifecycle": "ACTIVE · STABLE 2.3.0 + DEVELOPMENT",
+				"source": "PUBLIC SOURCE",
+				"demo": "NO HOSTED DEMO"
+			},
+			"narrative": {
+				"problem": {
+					"label": "PROBLEM",
+					"title": "SESSION CONTEXT IS NOT DURABLE",
+					"body": "AI coding agents lose context when a session or process ends. Decisions, plans, bugs and project knowledge can remain trapped in one conversation instead of becoming reusable project records."
+				},
+				"approach": {
+					"label": "APPROACH",
+					"title": "LOCAL-FIRST MCP + OBSIDIAN",
+					"body": "Kioku reads and writes sessions, plans, ADRs, bugs and queries as Markdown and YAML frontmatter. Typed MCP tools expose this knowledge through a layered .NET architecture."
+				},
+				"tradeoffs": {
+					"label": "TRADE-OFFS",
+					"title": "ONE DEPLOYABLE ASSEMBLY",
+					"body": "Architecture guard tests preserve dependency direction without splitting the server prematurely. Stable 2.3.0 and unreleased active-development evidence are reported separately."
+				},
+				"outcome": {
+					"label": "OUTCOME",
+					"title": "PUBLISHED TOOL AND HANDOFF EVIDENCE",
+					"body": "Release 2.3.0 ships as the kioku-mcp-server NuGet tool with automated tests, multi-OS CI and retrieval evaluation. Active development adds a reproducible multi-process handoff demo."
+				}
+			},
+			"evidenceTitle": "Evidence and limitations",
+			"verified": {
+				"label": "VERIFIED IN PUBLIC REPOSITORY",
+				"title": "RELEASES, TESTS, CI AND DOCUMENTED EVALUATION",
+				"body": "The stable main branch, release history, NuGet package, tests and retrieval-evaluation methodology are directly inspectable. Recent test counts remain PR-reported rather than independently rerun here."
+			},
+			"boundaries": {
+				"label": "BOUNDARIES",
+				"title": "UNRELEASED WORK IS LABELED",
+				"body": "The narrower generated tool contract and multi-agent handoff demo live on active development. No external adoption, production workload or commercial impact is claimed."
+			},
+			"learningsTitle": "Learning extraction",
+			"learnings": [
+				{
+					"label": "LEARNING 01",
+					"title": "ENGINEERING DECISION",
+					"body": "Durable, human-readable Markdown survives session and process boundaries better than provider-specific history."
+				},
+				{
+					"label": "LEARNING 02",
+					"title": "ENGINEERING DECISION",
+					"body": "Architecture guard tests keep a single-assembly server honest as the public protocol changes."
+				},
+				{
+					"label": "LEARNING 03",
+					"title": "ENGINEERING DECISION",
+					"body": "Metrics require their environment, dataset and methodology to remain reusable evidence."
+				}
+			]
+		},
 		"status": {
 			"lifecycleLabel": "LIFECYCLE",
 			"lifecycle": "Active — stable release plus active development",
