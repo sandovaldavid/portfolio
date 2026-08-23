@@ -29,7 +29,7 @@ const { navItems, navLabel } = Astro.props;
 	{
 		navItems.map(link => (
 			<a
-				class="relative flex h-10 w-[145px] items-center justify-center gap-1.5 px-3 text-navigation text-content-strong transition-colors duration-100 hover:text-channel-accent-primary-hover whitespace-nowrap focus-visible:outline-none focus-visible:text-channel-accent-primary"
+				class="relative flex h-10 w-36.25 items-center justify-center gap-1.5 px-3 text-navigation text-content-strong transition-colors duration-100 hover:text-channel-accent-primary-hover whitespace-nowrap focus-visible:outline-none focus-visible:text-channel-accent-primary"
 				aria-label={link.title}
 				data-section-id={link.label}
 				href={link.url}
