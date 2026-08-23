@@ -60,7 +60,7 @@ describe('Home viewport section contract', () => {
 	});
 
 	it('sizes Home biography and work actions from their localized copy', () => {
-		expect(aboutMe.match(/class="w-full sm:w-fit"/g)).toHaveLength(2);
+		expect(aboutMe.match(/class="w-fit"/g)).toHaveLength(2);
 	});
 
 	it('cleans up wheel listeners and does not intercept horizontal rails', () => {
