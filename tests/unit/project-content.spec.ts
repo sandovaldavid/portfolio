@@ -261,7 +261,8 @@ describe('localized project and case-study content', () => {
 		const metadata = readSource('src/entities/project/model/metadata.ts');
 
 		expect(card).toContain('alt={imageAlt}');
-		expect(card).toContain('{cardTypeText}');
+		expect(card).not.toContain('cardTypeText');
+		expect(card).not.toContain('sourceAccessText');
 		expect(card).not.toContain("'Feature'");
 		expect(card).not.toContain("'Project'");
 		expect(caseStudy).toContain('{caseStudyLabel}');
