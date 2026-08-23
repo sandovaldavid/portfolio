@@ -4,9 +4,12 @@ type CatalogViewport = {
 	name: 'desktop' | 'tablet' | 'mobile';
 	width: number;
 	height: number;
-	shellWidth: number;
+	introShellWidth: number;
+	gridShellWidth: number;
+	introShellY: number;
 	cardWidth: number;
 	cardHeight: number;
+	rowGap: number;
 	titleSize: string;
 	titleLineHeight: string;
 };
@@ -16,9 +19,12 @@ const VIEWPORTS: CatalogViewport[] = [
 		name: 'desktop',
 		width: 1440,
 		height: 900,
-		shellWidth: 1280,
+		introShellWidth: 1280,
+		gridShellWidth: 1280,
+		introShellY: 120,
 		cardWidth: 520,
 		cardHeight: 374,
+		rowGap: 32,
 		titleSize: '48px',
 		titleLineHeight: '56px',
 	},
@@ -26,9 +32,12 @@ const VIEWPORTS: CatalogViewport[] = [
 		name: 'tablet',
 		width: 834,
 		height: 1100,
-		shellWidth: 770,
+		introShellWidth: 770,
+		gridShellWidth: 770,
+		introShellY: 112,
 		cardWidth: 369,
 		cardHeight: 478,
+		rowGap: 24,
 		titleSize: '48px',
 		titleLineHeight: '56px',
 	},
@@ -36,9 +45,12 @@ const VIEWPORTS: CatalogViewport[] = [
 		name: 'mobile',
 		width: 390,
 		height: 844,
-		shellWidth: 350,
+		introShellWidth: 350,
+		gridShellWidth: 340,
+		introShellY: 104,
 		cardWidth: 340,
 		cardHeight: 466,
+		rowGap: 24,
 		titleSize: '40px',
 		titleLineHeight: '48px',
 	},
@@ -61,8 +73,10 @@ for (const viewport of VIEWPORTS) {
 		await expect(introShell).toBeVisible();
 		await expect(gridShell).toBeVisible();
 		await expect(cards).toHaveCount(6);
-		expect(Math.round((await introShell.boundingBox())!.width)).toBe(viewport.shellWidth);
-		expect(Math.round((await gridShell.boundingBox())!.width)).toBe(viewport.shellWidth);
+		const introBox = await introShell.boundingBox();
+		expect(Math.round(introBox!.width)).toBe(viewport.introShellWidth);
+		expect(Math.round(introBox!.y)).toBe(viewport.introShellY);
+		expect(Math.round((await gridShell.boundingBox())!.width)).toBe(viewport.gridShellWidth);
 
 		const titleStyle = await title.evaluate(element => {
 			const style = getComputedStyle(element);
@@ -79,11 +93,15 @@ for (const viewport of VIEWPORTS) {
 		expect(Math.round(firstBox!.height)).toBe(viewport.cardHeight);
 
 		if (viewport.name === 'mobile') {
-			expect(Math.round(secondBox!.y - (firstBox!.y + firstBox!.height))).toBe(24);
+			expect(Math.round(secondBox!.y - (firstBox!.y + firstBox!.height))).toBe(
+				viewport.rowGap
+			);
 		} else {
 			expect(Math.round(secondBox!.x - (firstBox!.x + firstBox!.width))).toBe(32);
 			const thirdBox = await cards.nth(2).boundingBox();
-			expect(Math.round(thirdBox!.y - (firstBox!.y + firstBox!.height))).toBe(24);
+			expect(Math.round(thirdBox!.y - (firstBox!.y + firstBox!.height))).toBe(
+				viewport.rowGap
+			);
 		}
 
 		const overflow = await page.evaluate(() => ({
