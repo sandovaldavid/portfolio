@@ -56,7 +56,8 @@ describe('Home viewport section contract', () => {
 		expect(projectCard).not.toContain('sourceAccessText');
 		expect(projectCard).toContain('justify-between');
 		expect(projectCard).toContain('class="w-fit shrink-0 px-3"');
-		expect(projectCard).toContain('hidden w-fit shrink-0 px-3 md:inline-flex');
+		expect(projectCard).toContain('class="hidden shrink-0 md:block"');
+		expect(projectCard).toContain('class="w-fit px-3"');
 		expect(projects).toContain("caseStudyText={tProjects('caseStudy')}");
 	});
 
