@@ -8,7 +8,7 @@ for (const [label, viewport] of [
 	['desktop', DESKTOP],
 	['tablet', TABLET],
 ] as const) {
-	test(`${label} Home sections fill the usable viewport without horizontal overflow`, async ({
+	test(`${label} substantial Home sections fill the usable viewport without horizontal overflow`, async ({
 		page,
 	}) => {
 		await page.setViewportSize(viewport);
@@ -20,7 +20,7 @@ for (const [label, viewport] of [
 		}));
 		expect(horizontalMetrics.scrollWidth).toBeLessThanOrEqual(horizontalMetrics.clientWidth);
 
-		for (const id of ['hero', 'experience', 'projects', 'research', 'about-me', 'technologies']) {
+		for (const id of ['hero', 'experience', 'projects', 'research', 'about-me']) {
 			const section = page.locator(`#${id}`);
 			await expect(section).toBeVisible();
 			const box = await section.boundingBox();
@@ -28,6 +28,14 @@ for (const [label, viewport] of [
 			expect(box!.width).toBeLessThanOrEqual(viewport.width);
 			expect(box!.height).toBeGreaterThanOrEqual(viewport.height - HEADER_HEIGHT);
 		}
+
+		const technologies = page.locator('#technologies');
+		await expect(technologies).toBeVisible();
+		const technologiesBox = await technologies.boundingBox();
+		expect(technologiesBox).not.toBeNull();
+		expect(technologiesBox!.width).toBeLessThanOrEqual(viewport.width);
+		expect(technologiesBox!.height).toBeLessThan(viewport.height - HEADER_HEIGHT);
+		await expect(technologies.locator('[data-home-compact-shell="true"]')).toBeVisible();
 	});
 }
 
