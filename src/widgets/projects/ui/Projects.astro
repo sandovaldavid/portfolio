@@ -16,18 +16,16 @@ const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const projects = await getProjectsData(lang);
 
-const projectsToDisplay = showAll
-	? projects
-	: projects.filter(project => project.featured).slice(0, 2);
+const projectsToDisplay = showAll ? projects : projects.filter(project => project.featured).slice(0, 2);
 ---
 
 <section class="w-full font-sans">
 	<div
 		class:list={[
-			'w-full items-stretch gap-8',
+			'w-full items-stretch',
 			centered
-				? 'flex flex-col items-center md:flex-row md:flex-wrap md:justify-center'
-				: 'grid grid-cols-1 md:grid-cols-2 lg:gap-20',
+				? 'flex flex-col items-center gap-8 md:flex-row md:flex-wrap md:justify-center'
+				: 'grid grid-cols-1 justify-center gap-8 md:grid-cols-[repeat(2,minmax(0,369px))] lg:grid-cols-[repeat(2,minmax(0,520px))] lg:gap-20',
 		]}
 	>
 		{
