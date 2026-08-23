@@ -107,12 +107,12 @@ const localizedHomePaths = {
 	<body
 		class="min-h-screen flex items-center justify-center bg-channel-background-canvas text-channel-content-strong"
 	>
-		<main class="w-full px-4 py-16">
+		<main class="w-full py-16">
 			<SectionContainer>
-				<div class="text-center space-y-8">
+				<div class="mx-auto w-full max-w-[760px] text-center">
 					<div class="relative">
 						<div
-							class="text-[clamp(8rem,20vw,16rem)] font-bold leading-none select-none"
+							class="font-pixel-clean text-[clamp(7rem,24vw,10.5rem)] leading-none select-none"
 							aria-hidden="true"
 						>
 							<span
@@ -141,50 +141,60 @@ const localizedHomePaths = {
 						</div>
 					</div>
 
-					<div class="space-y-4">
-						<h1
-							id="not-found-title"
-							class="text-3xl md:text-4xl lg:text-5xl font-bold text-channel-content-strong"
-						>
-							{tErrors('notFoundTitle')}
-						</h1>
+					<h1
+						id="not-found-title"
+						class="mt-6 font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] uppercase text-channel-content-strong md:text-[48px] md:leading-14 md:tracking-[-1px]"
+					>
+						{tErrors('notFoundTitle')}
+					</h1>
+					<p
+						id="not-found-message"
+						class="mx-auto mt-4 max-w-[720px] text-lg text-channel-content-default md:text-xl"
+					>
+						{tErrors('notFoundMessage')}
+					</p>
+
+					<div class="mx-auto mt-6 flex max-w-[624px] items-start justify-center gap-2">
+						<QuoteLeft
+							class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
+							aria-hidden="true"
+						/>
 						<p
-							id="not-found-message"
-							class="text-lg md:text-xl text-channel-content-default max-w-2xl mx-auto"
+							id="not-found-quote"
+							class="text-base italic text-channel-content-default"
 						>
-							{tErrors('notFoundMessage')}
+							{tErrors('notFoundQuote')}
 						</p>
+						<QuoteRight
+							class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
+							aria-hidden="true"
+						/>
 					</div>
 
-					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-						<div id="not-found-home-link">
-							<LinkButton href={localizedHomePaths[defaultLang]} target="_self">
-								<Home class="size-5" aria-hidden="true" />
-								<span id="not-found-home-label">{tErrors('homeButton')}</span>
-							</LinkButton>
-						</div>
-						<Button variant="secondary" onclick="history.back()">
+					<div
+						class="mx-auto mt-10 flex w-full max-w-[340px] flex-col justify-center gap-4 sm:max-w-none sm:flex-row"
+					>
+						<Button
+							variant="secondary"
+							onclick="history.back()"
+							class="w-full sm:w-[190px]"
+						>
 							<ArrowLeft class="size-5" aria-hidden="true" />
-							<span id="not-found-back-label">{tErrors('backButton')}</span>
-						</Button>
-					</div>
-
-					<div class="pt-8">
-						<div class="flex items-start justify-center gap-2 max-w-2xl mx-auto">
-							<QuoteLeft
-								class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
-								aria-hidden="true"
-							/>
-							<p
-								id="not-found-quote"
-								class="text-base text-channel-content-default italic leading-relaxed"
+							<span id="not-found-back-label" class="uppercase"
+								>{tErrors('backButton')}</span
 							>
-								{tErrors('notFoundQuote')}
-							</p>
-							<QuoteRight
-								class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
-								aria-hidden="true"
-							/>
+						</Button>
+						<div id="not-found-home-link" class="w-full sm:w-auto">
+							<LinkButton
+								href={localizedHomePaths[defaultLang]}
+								target="_self"
+								class="w-full sm:w-[190px]"
+							>
+								<Home class="size-5" aria-hidden="true" />
+								<span id="not-found-home-label" class="uppercase"
+									>{tErrors('homeButton')}</span
+								>
+							</LinkButton>
 						</div>
 					</div>
 				</div>

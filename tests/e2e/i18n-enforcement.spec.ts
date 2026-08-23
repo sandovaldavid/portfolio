@@ -73,7 +73,7 @@ test.describe('mandatory bilingual route matrix', () => {
 			locale: 'en',
 			title: '404 - Page not found | David Sandoval',
 			heading: 'Page not found',
-			homeLabel: 'Go to home',
+			homeLabel: 'Return to home',
 			homePath: '/',
 		},
 		{
@@ -81,7 +81,7 @@ test.describe('mandatory bilingual route matrix', () => {
 			locale: 'es',
 			title: '404 - Página no encontrada | David Sandoval',
 			heading: 'Página no encontrada',
-			homeLabel: 'Ir al inicio',
+			homeLabel: 'Volver al inicio',
 			homePath: '/es/',
 		},
 	] as const) {
@@ -130,14 +130,14 @@ test.describe('deduplicated legacy page pairs', () => {
 		{
 			route: '/components',
 			locale: 'en',
-			heading: 'UI components showcase',
-			forbiddenHeading: 'Muestra de componentes UI',
+			heading: 'Components Showcase',
+			forbiddenHeading: 'Catálogo de Componentes',
 		},
 		{
 			route: '/es/components',
 			locale: 'es',
-			heading: 'Muestra de componentes UI',
-			forbiddenHeading: 'UI components showcase',
+			heading: 'Catálogo de Componentes',
+			forbiddenHeading: 'Components Showcase',
 		},
 	] as const) {
 		test(`${scenario.route} renders only its canonical localized presentation`, async ({

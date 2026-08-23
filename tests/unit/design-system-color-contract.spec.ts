@@ -6,7 +6,7 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 const colors = readSource('src/app/styles/colors.css');
 const buttons = readSource('src/shared/ui/button/button.css');
-const logo = readSource('src/widgets/header/ui/BrandLogo.astro');
+const logo = readSource('src/shared/ui/brand-logo/BrandLogo.astro');
 const header = readSource('src/widgets/header/ui/Header.astro');
 const splash = readSource('src/features/splash-screen/ui/SplashScreen.astro');
 const cliCatalog = readSource('src/features/cli-terminal/ui/CLITerminalCatalog.astro');

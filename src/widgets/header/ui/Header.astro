@@ -17,14 +17,13 @@
  */
 
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { LinkButton } from '@shared/ui';
+import { LinkButton, BrandLogo } from '@shared/ui';
 import {
 	createScopedUiTranslator,
 	getLanguageFromLocale,
 	type LocalizedPathMap,
 } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
-import BrandLogo from './BrandLogo.astro';
 import DesktopNav from './DesktopNav.astro';
 import MobileNav from './MobileNav.astro';
 

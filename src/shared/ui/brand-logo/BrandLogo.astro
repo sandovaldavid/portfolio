@@ -2,10 +2,25 @@
 interface Props {
 	href?: string;
 	accessibleLabel: string;
+	/**
+	 * Lockup presentation. `responsive` (default) keeps the shell contract:
+	 * compact icon-only below lg, full lockup at lg+. `full`/`compact` pin a
+	 * single state for QA surfaces like the Components Showcase.
+	 */
+	variant?: 'responsive' | 'full' | 'compact';
 	class?: string;
 }
 
-const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
+const { href = '/', accessibleLabel, variant = 'responsive', class: className = '' } = Astro.props;
+
+const widthClass =
+	variant === 'full' ? 'w-[250px]' : variant === 'compact' ? 'w-12' : 'w-12 lg:w-[250px]';
+const signatureVisibility =
+	variant === 'full'
+		? 'inline-block'
+		: variant === 'compact'
+			? 'hidden'
+			: 'hidden lg:inline-block';
 ---
 
 <!--
@@ -16,7 +31,11 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 <a
 	{href}
 	aria-label={accessibleLabel}
-	class={`brand-logo-link inline-flex h-11 w-12 items-center justify-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none lg:w-[250px] ${className}`}
+	class:list={[
+		'brand-logo-link inline-flex h-11 items-center justify-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none',
+		widthClass,
+		className,
+	]}
 >
 	<img
 		src="/brand/logo-primary-dark.svg"
@@ -29,7 +48,10 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 		aria-hidden="true"
 	/>
 	<span
-		class="brand-logo-signature hidden font-gaming-mono text-base leading-[22px] tracking-[1px] lg:inline-block"
+		class:list={[
+			'brand-logo-signature font-gaming-mono text-base leading-[22px] tracking-[1px]',
+			signatureVisibility,
+		]}
 		aria-hidden="true"
 	>
 		&lt;sandovaldavid/&gt;
@@ -51,6 +73,7 @@ const { href = '/', accessibleLabel, class: className = '' } = Astro.props;
 		syncBrandLogoAssets();
 
 		if (document.documentElement.dataset.brandLogoObserver === 'ready') return;
+
 		document.documentElement.dataset.brandLogoObserver = 'ready';
 
 		new MutationObserver(syncBrandLogoAssets).observe(document.documentElement, {

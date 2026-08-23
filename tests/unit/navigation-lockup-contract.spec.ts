@@ -5,7 +5,7 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 describe('navigation lockup contract', () => {
 	it('uses the approved assets and removes the legacy terminal animation', () => {
-		const source = readSource('src/widgets/header/ui/BrandLogo.astro');
+		const source = readSource('src/shared/ui/brand-logo/BrandLogo.astro');
 
 		expect(source).toContain('src="/brand/logo-primary-dark.svg"');
 		expect(source).toContain('`/brand/logo-primary-${mode}.svg`');
@@ -65,6 +65,7 @@ describe('navigation lockup contract', () => {
 		expect(header).toContain('flex lg:hidden items-center');
 		expect(desktopNav).toContain('hidden lg:flex');
 		expect(mobileNav).toContain('flex lg:hidden');
-		expect(header).toContain("import BrandLogo from './BrandLogo.astro'");
+		expect(header).toContain('BrandLogo');
+		expect(header).toContain("from '@shared/ui'");
 	});
 });
