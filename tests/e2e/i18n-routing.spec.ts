@@ -26,11 +26,12 @@ test.describe('Astro-native locale routing', () => {
 			await page.goto(scenario.source);
 
 			// Routing ownership lives in Layout/Astro localized paths. Validate the
-			// canonical alternate route directly instead of coupling this contract to
-			// Recruiter HUD visibility (the HUD may intentionally yield to the Footer CTA).
+			// canonical page alternate directly instead of coupling this contract to
+			// Recruiter HUD visibility. RSS discovery links also use rel="alternate"
+			// plus hreflang, but are distinguished by type="application/rss+xml".
 			const targetLanguage = scenario.label === 'Español' ? 'es' : 'en';
 			const alternate = page.locator(
-				`head link[rel="alternate"][hreflang="${targetLanguage}"]`
+				`head link[rel="alternate"][hreflang="${targetLanguage}"]:not([type])`
 			);
 			await expect(alternate).toHaveCount(1);
 			const alternateHref = await alternate.getAttribute('href');
