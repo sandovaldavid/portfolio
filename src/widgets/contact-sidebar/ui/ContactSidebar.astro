@@ -1,9 +1,14 @@
 ---
 /**
- * ContactSidebar Widget
- * Floating left-side contact bar with social icon links
- * FSD Layer: Widgets > contact-sidebar > UI
+ * Home-only floating contact shortcuts.
+ * Visible on initial Home load, retracts after the user scrolls and can be
+ * revealed again from the left-edge hotspot by pointer or keyboard focus.
  */
+import GitHubIcon from '@assets/technologies/GitHub.astro';
+import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
+import LinkIcon from '@assets/icons/Link.astro';
+import MailIcon from '@assets/icons/Mail.astro';
+import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 
@@ -18,67 +23,183 @@ const links = [
 		href: siteConfig.social.github,
 		tooltip: `@${siteConfig.social.githubUsername}`,
 		external: true,
-		svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>`,
+		Icon: GitHubIcon,
 	},
 	{
 		label: tRecruiter('linkedin'),
 		href: siteConfig.social.linkedin,
 		tooltip: `in/${siteConfig.social.linkedinUsername}`,
 		external: true,
-		svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4.5 h-4.5" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+		Icon: LinkedInIcon,
 	},
 	{
 		label: tRecruiter('email'),
 		href: `mailto:${siteConfig.email}`,
 		tooltip: siteConfig.email,
 		external: false,
-		svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`,
+		Icon: MailIcon,
 	},
 	{
 		label: tFooter('linkHub'),
 		href: siteConfig.social.linkHub,
 		tooltip: tFooter('linkHub'),
 		external: true,
-		svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>`,
+		Icon: LinkIcon,
 	},
 	{
 		label: tRecruiter('resume'),
 		href: lang === Language.ENGLISH ? siteConfig.resume.en : siteConfig.resume.es,
 		tooltip: tRecruiter('downloadResume'),
 		external: true,
-		svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5" aria-hidden="true"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>`,
+		Icon: ProfileCheckIcon,
 	},
 ];
 ---
 
 <aside
 	id="contact-sidebar"
-	class="fixed left-0 top-1/2 -translate-y-1/2 z-30 flex flex-col items-center gap-0 hidden xl:flex"
+	class="contact-sidebar fixed left-0 top-1/2 z-40 hidden w-14 -translate-y-1/2 xl:flex"
+	data-collapsed="false"
 	aria-label={tAccessibility('socialContactLinks')}
 >
-	<div class="w-px h-16 bg-edge-strong opacity-60"></div>
-
 	<div
-		class="flex flex-col border-2 border-black dark:border-white bg-surface shadow-[3px_3px_0px_0px_var(--color-primary-500)] divide-y-2 divide-black dark:divide-white"
+		id="contact-sidebar-rail"
+		class="contact-sidebar-rail flex flex-col items-center"
+		aria-hidden="false"
 	>
-		{
-			links.map(({ label, href, tooltip, external, svg }) => (
-				<a
-					href={href}
-					target={external ? '_blank' : undefined}
-					rel={external ? 'noopener noreferrer' : undefined}
-					title={tooltip}
-					aria-label={external ? `${label}, ${tAccessibility('externalLink')}` : label}
-					class="group relative flex items-center justify-center w-10 h-10 text-content-muted hover:text-badge-brand-text hover:bg-badge-brand-bg transition-all duration-150"
-				>
-					<Fragment set:html={svg} />
-					<span class="pointer-events-none absolute left-full ml-3 whitespace-nowrap font-gaming-mono text-xs font-bold uppercase tracking-wider bg-surface border-2 border-black dark:border-white text-content-strong px-2.5 py-1.5 shadow-[2px_2px_0px_var(--color-primary-500)] opacity-0 group-hover:opacity-100 translate-x-1 group-hover:translate-x-0 transition-all duration-150 z-50">
-						{tooltip}
-					</span>
-				</a>
-			))
-		}
+		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true"></div>
+
+		<nav
+			class="flex flex-col border-2 border-edge-strong bg-channel-surface-default shadow-retro-md"
+			aria-label={tAccessibility('socialContactLinks')}
+		>
+			{
+				links.map(({ label, href, tooltip, external, Icon }) => (
+					<a
+						href={href}
+						target={external ? '_blank' : undefined}
+						rel={external ? 'noopener noreferrer' : undefined}
+						title={tooltip}
+						aria-label={external ? `${label}, ${tAccessibility('externalLink')}` : label}
+						class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
+					>
+						<Icon class="size-5" aria-hidden="true" />
+						<span class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
+							{tooltip}
+						</span>
+					</a>
+				))
+			}
+		</nav>
+
+		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true"></div>
 	</div>
 
-	<div class="w-px h-16 bg-edge-strong opacity-60"></div>
+	<button
+		id="contact-sidebar-reveal"
+		type="button"
+		class="contact-sidebar-hotspot absolute inset-y-0 left-0 grid w-6 cursor-pointer place-items-center bg-transparent opacity-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+		aria-label={tRecruiter('showContactShortcuts')}
+		tabindex="-1"
+	>
+		<span class="h-16 w-1 bg-channel-accent-primary" aria-hidden="true"></span>
+	</button>
 </aside>
+
+<style>
+	.contact-sidebar-rail {
+		opacity: 1;
+		transform: translateX(0);
+		transition:
+			opacity 180ms ease-out,
+			transform 240ms cubic-bezier(0.2, 0.8, 0.2, 1);
+	}
+
+	.contact-sidebar-hotspot {
+		pointer-events: none;
+		transition: opacity 160ms ease-out;
+	}
+
+	.contact-sidebar[data-collapsed='true'] .contact-sidebar-rail {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateX(calc(-100% - 0.5rem));
+	}
+
+	.contact-sidebar[data-collapsed='true'] .contact-sidebar-hotspot {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.contact-sidebar-rail,
+		.contact-sidebar-hotspot {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	const COLLAPSE_SCROLL_OFFSET = 96;
+
+	const setContactRailCollapsed = (root: HTMLElement, collapsed: boolean) => {
+		const rail = root.querySelector<HTMLElement>('#contact-sidebar-rail');
+		const reveal = root.querySelector<HTMLButtonElement>('#contact-sidebar-reveal');
+		if (!rail || !reveal) return;
+
+		root.dataset.collapsed = String(collapsed);
+		rail.setAttribute('aria-hidden', String(collapsed));
+		rail.inert = collapsed;
+		reveal.tabIndex = collapsed ? 0 : -1;
+	};
+
+	const setupContactRail = () => {
+		const root = document.getElementById('contact-sidebar');
+		if (!root || root.dataset.contactRailBound === 'true') return;
+		root.dataset.contactRailBound = 'true';
+
+		const reveal = root.querySelector<HTMLButtonElement>('#contact-sidebar-reveal');
+		const rail = root.querySelector<HTMLElement>('#contact-sidebar-rail');
+		if (!reveal || !rail) return;
+
+		let pointerInside = false;
+		let frame = 0;
+
+		const shouldCollapse = () =>
+			window.scrollY > COLLAPSE_SCROLL_OFFSET &&
+			!pointerInside &&
+			!root.contains(document.activeElement);
+
+		const syncFromScroll = () => {
+			cancelAnimationFrame(frame);
+			frame = requestAnimationFrame(() => setContactRailCollapsed(root, shouldCollapse()));
+		};
+
+		root.addEventListener('pointerenter', () => {
+			pointerInside = true;
+			setContactRailCollapsed(root, false);
+		});
+		root.addEventListener('pointerleave', () => {
+			pointerInside = false;
+			if (window.scrollY > COLLAPSE_SCROLL_OFFSET) setContactRailCollapsed(root, true);
+		});
+
+		root.addEventListener('focusin', () => setContactRailCollapsed(root, false));
+		root.addEventListener('focusout', () => {
+			requestAnimationFrame(() => {
+				if (shouldCollapse()) setContactRailCollapsed(root, true);
+			});
+		});
+
+		reveal.addEventListener('click', () => {
+			setContactRailCollapsed(root, false);
+			requestAnimationFrame(() => rail.querySelector<HTMLAnchorElement>('a')?.focus());
+		});
+
+		window.addEventListener('scroll', syncFromScroll, { passive: true });
+		setContactRailCollapsed(root, window.scrollY > COLLAPSE_SCROLL_OFFSET);
+	};
+
+	setupContactRail();
+	document.addEventListener('astro:page-load', setupContactRail);
+</script>
