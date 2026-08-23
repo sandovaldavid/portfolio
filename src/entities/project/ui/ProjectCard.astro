@@ -127,15 +127,17 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 				}
 				{
 					github && showSecondaryAction && sourceText && (
-						<LinkButton
-							href={github}
-							{newTabLabel}
-							variant="secondary"
-							class="hidden w-fit shrink-0 px-3 md:inline-flex"
-						>
-							<ArrowUpRightIcon class="size-4" aria-hidden="true" />
-							{sourceText}
-						</LinkButton>
+						<div class="hidden shrink-0 md:block">
+							<LinkButton
+								href={github}
+								{newTabLabel}
+								variant="secondary"
+								class="w-fit px-3"
+							>
+								<ArrowUpRightIcon class="size-4" aria-hidden="true" />
+								{sourceText}
+							</LinkButton>
+						</div>
 					)
 				}
 			</footer>
