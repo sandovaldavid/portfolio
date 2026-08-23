@@ -17,6 +17,66 @@
 		],
 		"timeline": "Estable 2.3.0 · desarrollo activo",
 		"role": "Ingeniero backend y mantenedor",
+		"presentation": {
+			"kicker": "CASO DE ESTUDIO · INGENIERÍA BACKEND",
+			"description": "Un servidor MCP local-first en .NET que convierte el conocimiento de proyecto de agentes de IA — decisiones, planes, bugs y sesiones — en registros Markdown durables dentro de un vault de Obsidian.",
+			"status": {
+				"lifecycle": "ACTIVO · ESTABLE 2.3.0 + DESARROLLO",
+				"source": "CÓDIGO PÚBLICO",
+				"demo": "SIN DEMO ALOJADA"
+			},
+			"narrative": {
+				"problem": {
+					"label": "PROBLEMA",
+					"title": "EL CONTEXTO DE SESIÓN NO ES DURABLE",
+					"body": "Los agentes de IA pierden contexto al terminar una sesión o proceso. Decisiones, planes, bugs y conocimiento pueden quedar atrapados en una conversación en vez de convertirse en registros reutilizables."
+				},
+				"approach": {
+					"label": "ENFOQUE",
+					"title": "MCP LOCAL-FIRST + OBSIDIAN",
+					"body": "Kioku lee y escribe sesiones, planes, ADRs, bugs y consultas como Markdown y frontmatter YAML. Tools MCP tipadas exponen este conocimiento mediante una arquitectura .NET en capas."
+				},
+				"tradeoffs": {
+					"label": "TRADE-OFFS",
+					"title": "UN SOLO ENSAMBLADO DESPLEGABLE",
+					"body": "Tests de guarda de arquitectura preservan la dirección de dependencias sin dividir prematuramente el servidor. La versión estable 2.3.0 y la evidencia no publicada se reportan por separado."
+				},
+				"outcome": {
+					"label": "RESULTADO",
+					"title": "HERRAMIENTA PUBLICADA Y EVIDENCIA DE TRASPASO",
+					"body": "La release 2.3.0 se distribuye como la herramienta NuGet kioku-mcp-server con tests automatizados, CI multi-SO y evaluación de retrieval. El desarrollo activo añade una demo reproducible de traspaso multi-proceso."
+				}
+			},
+			"evidenceTitle": "Evidencia y limitaciones",
+			"verified": {
+				"label": "VERIFICADO EN REPOSITORIO PÚBLICO",
+				"title": "RELEASES, TESTS, CI Y EVALUACIÓN DOCUMENTADA",
+				"body": "La rama estable main, el historial de releases, el paquete NuGet, los tests y la metodología de evaluación de retrieval son inspeccionables. Los conteos recientes permanecen reportados en PRs y no se reejecutan aquí."
+			},
+			"boundaries": {
+				"label": "LÍMITES",
+				"title": "EL TRABAJO NO PUBLICADO ESTÁ ETIQUETADO",
+				"body": "El contrato de tools más reducido y la demo de traspaso multi-agente viven en desarrollo activo. No se afirma adopción externa, carga de producción ni impacto comercial."
+			},
+			"learningsTitle": "Extracción de aprendizajes",
+			"learnings": [
+				{
+					"label": "APRENDIZAJE 01",
+					"title": "DECISIÓN DE INGENIERÍA",
+					"body": "Markdown durable y legible por humanos sobrevive mejor los límites de sesión y proceso que un historial específico de proveedor."
+				},
+				{
+					"label": "APRENDIZAJE 02",
+					"title": "DECISIÓN DE INGENIERÍA",
+					"body": "Los tests de guarda de arquitectura mantienen honesto a un servidor de un solo ensamblado mientras cambia el protocolo público."
+				},
+				{
+					"label": "APRENDIZAJE 03",
+					"title": "DECISIÓN DE INGENIERÍA",
+					"body": "Las métricas requieren su entorno, dataset y metodología para seguir siendo evidencia reutilizable."
+				}
+			]
+		},
 		"status": {
 			"lifecycleLabel": "CICLO DE VIDA",
 			"lifecycle": "Activo — release estable más desarrollo activo",
@@ -74,7 +134,7 @@
 			],
 			"deploymentLabel": "DECISIONES DE DESPLIEGUE",
 			"deployment": [
-				"El servidor se distribuye como herramienta global de NuGet, kioku-mcp-server, por lo que se instala y ejecuta localmente sin un backend alojado.",
+				"El servidor se distribuye como herramienta global de NuGet kioku-mcp-server, por lo que se instala y ejecuta localmente sin un backend alojado.",
 				"La release 2.3.0 y su changelog se publican desde la rama estable main; el desarrollo activo en develop lleva trabajo sustancial sin publicar.",
 				"El plugin puente de Obsidian se extrajo a su propio repositorio, sandovaldavid/kioku-obsidian, con versionado independiente, manteniendo el ritmo de releases del servidor separado del plugin."
 			],
