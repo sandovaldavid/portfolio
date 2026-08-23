@@ -3,18 +3,17 @@ export type {
 	ProjectDemoAccess,
 	ProjectId,
 	ProjectLifecycle,
+	ProjectResourceKind,
 	ProjectSourceAccess,
 	ProjectTechnologyId,
 } from './metadata';
-export { getProjectBySlug, getProjectsData } from './queries';
+export { getProjectBySlug, getProjectDetailBySlug, getProjectsData } from './queries';
 export type {
 	CaseStudy,
-	CaseStudyArchitecture,
-	CaseStudyEvidence,
-	CaseStudySource,
 	CaseStudyStatus,
 	ProjectContentData,
 	ProjectContentEntry,
+	ProjectDetail,
 	ProjectItem,
 	ProjectList,
 } from './types';
