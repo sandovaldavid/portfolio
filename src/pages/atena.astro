@@ -1,10 +1,19 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
+import { getExperienceData } from '@entities/experience';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
 import { AtenaDetails } from '@widgets/atena-details';
+import { ExperienceDetail } from '@widgets/experience';
 
 const lang = Language.ENGLISH;
 const tPage = createScopedUiTranslator(lang, 'pages.atena');
+const experience = (await getExperienceData(lang)).find(
+	item => item.experienceId === 'atena-software-engineer'
+);
+
+if (!experience) {
+	throw new Error('Missing Atena experience content for locale "en".');
+}
 ---
 
 <Layout
@@ -13,5 +22,7 @@ const tPage = createScopedUiTranslator(lang, 'pages.atena');
 	img_preview="/projects/portfolio.webp"
 	isHome={false}
 >
-	<AtenaDetails {lang} />
+	<AtenaDetails {lang} {experience}>
+		<ExperienceDetail {...experience} />
+	</AtenaDetails>
 </Layout>

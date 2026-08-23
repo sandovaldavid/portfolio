@@ -1,33 +1,17 @@
 ---
-import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
 import { getResearchContent } from '@entities/research';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { siteConfig } from '@shared/config/site.config';
+import { Badge, ContentPanel, TechPill, TitleSection } from '@shared/ui';
 
 interface Props {
 	lang: Language;
-	backHref?: string;
 }
 
-const { lang, backHref = '/#research' } = Astro.props;
+const { lang } = Astro.props;
 const research = await getResearchContent(lang);
 const tPage = createScopedUiTranslator(lang, 'pages.research');
-
-const labels = {
-	problem: tPage('problemLabel'),
-	hypothesis: tPage('hypothesisLabel'),
-	approach: tPage('approachLabel'),
-	dataset: tPage('datasetLabel'),
-	metrics: tPage('metricsLabel'),
-	architecture: tPage('architectureLabel'),
-	pipeline: tPage('pipelineLabel'),
-	keywords: tPage('keywordsLabel'),
-	status: tPage('statusLabel'),
-	contact: tPage('contactLabel'),
-	engineeredFeatures: tPage('engineeredFeaturesLabel'),
-};
 
 const metrics = [
 	{ prefix: 'ACC', text: research.metrics.accuracy },
@@ -35,249 +19,173 @@ const metrics = [
 	{ prefix: 'AUC', text: research.metrics.auc },
 	{ prefix: 'LOSS', text: research.metrics.loss },
 ];
+
+/*
+ * Research page composition (spec/04 "Research" + plans/pages/research.md):
+ * Hero with left accent bar (10px desktop/tablet, 8px mobile) → two-column
+ * content (primary 760 / secondary 492, stacked below lg) → Keywords pill row
+ * → global Footer. All claims come from the localized research content
+ * collection unchanged; the layout only restructures them.
+ */
 ---
 
-<div class="w-full max-w-5xl mx-auto px-4 font-mono">
-	<a
-		href={backHref}
-		class="inline-flex items-center gap-2 mb-8 text-xs font-bold uppercase tracking-wider text-content-muted hover:text-primary-500 transition-colors group"
-	>
-		<ArrowLeftIcon
-			class="size-4 group-hover:-translate-x-1 transition-transform"
-			aria-hidden="true"
-			focusable="false"
-		/>
-		{tPage('backButton')}
-	</a>
+<div class="w-full max-w-[1280px] flex flex-col">
+	<header class="relative mx-5 py-10 md:mx-8 lg:mx-0" aria-labelledby="research-title">
+		<span
+			class="absolute inset-y-0 left-0 w-2 bg-channel-accent-primary md:w-2.5"
+			aria-hidden="true"></span>
+		<div class="flex flex-col gap-4 pl-2 lg:gap-6 lg:pl-4">
+			<p
+				class="font-retro-tag text-xs font-bold uppercase tracking-[0.5px] text-channel-content-muted lg:leading-[22px]"
+			>
+				{research.institution} · {research.label}
+			</p>
+			<h1
+				id="research-title"
+				class="font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:h-[168px] lg:max-w-[1120px] lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
+			>
+				{research.title}
+			</h1>
+			<Badge variant="success" size="md">{research.status}</Badge>
+		</div>
+	</header>
 
 	<div
-		class="border-2 border-black dark:border-white bg-primary-500 px-6 py-5 mb-8 shadow-retro-2xl"
+		class="mx-5 mt-12 grid grid-cols-1 gap-5 md:mx-8 lg:mt-16 lg:grid-cols-[minmax(0,760fr)_minmax(0,492fr)] lg:gap-7"
 	>
-		<div class="flex items-start gap-4">
-			<BrainIcon class="w-8 h-8 text-white dark:text-black shrink-0 mt-1" />
-			<div class="flex-1">
-				<p
-					class="font-gaming-mono text-sm uppercase tracking-wider text-white dark:text-black/90 mb-1 font-bold"
-				>
-					{research.institution} · {research.label}
-				</p>
-				<h1
-					class="font-pixel-clean text-xl sm:text-3xl font-bold text-white dark:text-black uppercase leading-snug"
-				>
-					{research.title}
-				</h1>
-			</div>
-			<span
-				class="shrink-0 font-gaming-mono text-xs bg-white dark:bg-black text-primary-600 dark:text-primary-400 px-2.5 py-1 font-bold uppercase tracking-wider animate-pulse whitespace-nowrap self-start"
+		<div class="flex min-w-0 flex-col gap-5">
+			<ContentPanel
+				headingLevel="h2"
+				label={tPage('problemLabel')}
+				title={tPage('problemTitle')}
 			>
-				{research.status}
-			</span>
-		</div>
-	</div>
+				<p>{research.problem}</p>
+			</ContentPanel>
 
-	<div class="grid grid-cols-1 lg:grid-cols-5 gap-6 items-start">
-		<div class="lg:col-span-3 flex flex-col gap-6">
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
+			<ContentPanel
+				headingLevel="h2"
+				label={tPage('hypothesisLabel')}
+				title={tPage('hypothesisTitle')}
+			>
+				<p class="italic">“{research.hypothesis}”</p>
+			</ContentPanel>
+
+			<ContentPanel
+				headingLevel="h2"
+				label={tPage('approachLabel')}
+				title={tPage('approachTitle')}
+			>
+				<p>{research.approach}</p>
+			</ContentPanel>
+
+			<div
+				class="flex w-full max-w-[620px] flex-col gap-3 border-2 border-channel-accent-primary bg-channel-surface-highlight p-5 shadow-retro-md"
+			>
+				<p
+					class="font-retro-tag text-xs font-bold tracking-wide text-channel-accent-primary"
 				>
-					▸ {labels.problem}
-				</h2>
-				<p class="text-base leading-relaxed text-content-strong">
-					{research.problem}
+					{tPage('pipelineLabel')}
 				</p>
-			</div>
-
-			<div class="border-2 border-primary-500/40 bg-primary-500/5 p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
+				<ul
+					class="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center"
 				>
-					▸ {labels.hypothesis}
-				</h2>
-				<p class="text-base leading-relaxed italic text-content-strong">
-					“{research.hypothesis}”
-				</p>
-			</div>
-
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
-				>
-					▸ {labels.approach}
-				</h2>
-				<p class="text-base leading-relaxed text-content-strong mb-4">
-					{research.approach}
-				</p>
-
-				<div class="mt-4">
-					<p
-						class="font-gaming-mono text-sm text-content-muted uppercase tracking-wider mb-2 font-bold"
-					>
-						{labels.pipeline}
-					</p>
-					<div class="flex flex-wrap items-center gap-1">
-						{
-							research.pipelineSteps.map((step, index) => (
-								<>
-									<span class="font-gaming-mono text-xs sm:text-sm uppercase border border-primary-500/50 text-primary-500 px-2.5 py-1.5 bg-primary-500/5 font-bold">
-										{step}
-									</span>
-									{index < research.pipelineSteps.length - 1 && (
-										<span
-											class="text-primary-500 font-bold text-xs"
-											aria-hidden="true"
-										>
-											→
-										</span>
-									)}
-								</>
-							))
-						}
-					</div>
-				</div>
-			</div>
-
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
-				>
-					▸ {labels.engineeredFeatures}
-				</h2>
-				<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
 					{
-						research.engineeredFeatures.map((feature, index) => (
-							<div class="flex items-start gap-2 text-sm text-content-strong">
-								<span class="font-pixel-clean text-xs font-bold bg-primary-500/20 text-primary-600 dark:text-primary-400 px-1.5 py-0.5 shrink-0 mt-0.5 min-w-[28px] text-center">
-									F{String(index + 1).padStart(2, '0')}
-								</span>
-								<span class="leading-snug">{feature}</span>
-							</div>
+						research.pipelineSteps.map((step, index) => (
+							<li class="flex items-center gap-2">
+								<TechPill label={step} size="sm" variant="card" />
+								{index < research.pipelineSteps.length - 1 && (
+									<ArrowRightIcon
+										class="hidden size-3.5 shrink-0 text-channel-accent-primary sm:block"
+										aria-hidden="true"
+										focusable="false"
+									/>
+								)}
+							</li>
 						))
 					}
-				</div>
+				</ul>
 			</div>
 
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
-				>
-					▸ {labels.dataset}
-				</h2>
-				<p class="text-base leading-relaxed text-content-strong">
-					{research.dataset}
-				</p>
-			</div>
+			<ContentPanel headingLevel="h2" label={tPage('engineeredFeaturesLabel')}>
+				<ul class="grid grid-cols-1 gap-x-6 gap-y-2 sm:grid-cols-2">
+					{
+						research.engineeredFeatures.map(feature => (
+							<li class="flex items-start gap-2">
+								<span
+									class="mt-[7px] size-1.5 shrink-0 bg-channel-accent-primary"
+									aria-hidden="true"
+								/>
+								<span>{feature}</span>
+							</li>
+						))
+					}
+				</ul>
+			</ContentPanel>
+
+			<ContentPanel headingLevel="h2" label={tPage('datasetLabel')}>
+				<p>{research.dataset}</p>
+			</ContentPanel>
 		</div>
 
-		<div class="lg:col-span-2 flex flex-col gap-6">
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
-				>
-					▸ {labels.architecture}
-				</h2>
-				<div class="flex flex-col gap-2">
+		<div class="flex min-w-0 flex-col items-start gap-5">
+			<ContentPanel headingLevel="h2" label={tPage('architectureLabel')} class="w-full">
+				<ul class="flex flex-col gap-2">
 					{
 						research.architecture.map(item => (
-							<div class="border border-edge-subtle p-2.5 text-sm flex justify-between items-start gap-4">
-								<span class="font-bold text-primary-500 uppercase tracking-wider shrink-0 text-xs sm:text-sm font-gaming-mono">
+							<li class="flex items-start justify-between gap-4 border border-edge-subtle px-3 py-2.5 text-sm">
+								<span class="shrink-0 font-mono text-xs font-bold uppercase tracking-wide text-channel-accent-primary">
 									{item.label}
 								</span>
-								<span class="text-content-strong leading-snug text-right">
-									{item.value}
-								</span>
-							</div>
+								<span class="text-right leading-snug">{item.value}</span>
+							</li>
 						))
 					}
-				</div>
-			</div>
+				</ul>
+			</ContentPanel>
 
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-primary-500 uppercase tracking-wider mb-3"
-				>
-					▸ {labels.metrics}
-				</h2>
-				<div class="flex flex-col gap-2">
+			<ContentPanel headingLevel="h2" label={tPage('metricsLabel')} class="w-full">
+				<ul class="flex flex-col gap-2.5">
 					{
 						metrics.map(({ prefix, text }) => (
-							<div class="flex items-start gap-2">
-								<span class="shrink-0 font-pixel-clean text-sm font-bold bg-primary-500 text-white dark:text-black px-2 py-1 mt-0.5 uppercase min-w-[36px] text-center">
+							<li class="flex items-start gap-2">
+								<span class="shrink-0 bg-channel-accent-primary px-2 py-1 font-pixel-clean text-sm font-bold uppercase leading-none text-button-primary-content">
 									{prefix}
 								</span>
-								<span class="text-sm text-content-strong leading-snug">{text}</span>
-							</div>
+								<span class="text-sm leading-snug">{text}</span>
+							</li>
 						))
 					}
-				</div>
-			</div>
+				</ul>
+			</ContentPanel>
 
-			<div class="border-2 border-status-success-border bg-status-success-bg p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-status-success-text uppercase tracking-wider mb-3"
-				>
-					▸ {labels.status}
-				</h2>
-				<div class="flex items-center gap-2 mb-2">
-					<span class="w-2.5 h-2.5 bg-emerald-500 animate-pulse rounded-none shrink-0"
-					></span>
-					<span
-						class="font-gaming-mono text-xs sm:text-sm font-bold text-status-success-text uppercase"
-					>
-						{research.status}
-					</span>
-				</div>
-				<p class="text-base text-content-muted leading-relaxed">
-					{research.currentStatus}
-				</p>
-			</div>
-
-			<div class="border-2 border-edge-subtle bg-surface p-5">
-				<h2
-					class="font-gaming-mono text-xl sm:text-2xl font-bold text-content-muted uppercase tracking-wider mb-3"
-				>
-					{labels.keywords}
-				</h2>
-				<div class="flex flex-wrap gap-1.5">
-					{
-						research.keywords.map(keyword => (
-							<span class="font-gaming-mono text-xs sm:text-sm uppercase border border-badge-brand-outline-border text-badge-brand-text px-2 py-0.5 hover:bg-badge-brand-outline-bg-hover transition-colors cursor-default font-bold">
-								{keyword}
-							</span>
-						))
-					}
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div
-		class="border-2 border-black dark:border-white bg-primary-500 px-6 py-4 mt-8 shadow-retro-2xl"
-	>
-		<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-			<div class="flex items-center gap-3 flex-1 min-w-0">
-				<span
-					class="shrink-0 font-gaming-mono text-lg text-white dark:text-black"
-					aria-hidden="true">✉</span
-				>
-				<div class="flex flex-col gap-0.5 min-w-0">
-					<h2
-						class="font-gaming-mono text-lg sm:text-xl font-bold text-white dark:text-black/90 uppercase tracking-wider"
-					>
-						{labels.contact}
-					</h2>
-					<p class="text-sm text-white/90 dark:text-black/90 leading-snug">
-						{tPage('contactCta')}
-					</p>
-				</div>
-			</div>
-			<a
-				href={`mailto:${siteConfig.email}?subject=${encodeURIComponent(tPage('contactButton'))}`}
-				class="shrink-0 flex items-center justify-center gap-1.5 px-5 py-2 bg-white dark:bg-black text-primary-500 dark:text-primary-400 font-gaming-mono text-xs sm:text-sm font-bold uppercase tracking-wider hover:bg-white/90 dark:hover:bg-black/90 hover:-translate-x-px hover:-translate-y-px transition-all whitespace-nowrap self-start sm:self-center"
+			<ContentPanel
+				headingLevel="h2"
+				density="compact"
+				variant="success"
+				label={tPage('statusLabel')}
+				class="w-full"
 			>
-				<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
-				{tPage('contactButton')}
-			</a>
+				<p
+					class="flex items-center gap-2 font-retro-tag text-xs font-bold uppercase tracking-wide text-status-success-text"
+				>
+					<span class="size-2 shrink-0 bg-status-success-text" aria-hidden="true"></span>
+					{research.status}
+				</p>
+				<p>{research.currentStatus}</p>
+			</ContentPanel>
 		</div>
 	</div>
+
+	<section class="mx-5 mt-14 pb-4 md:mx-8 lg:mx-0 lg:mt-16" aria-label={tPage('keywordsLabel')}>
+		<TitleSection className="mb-8"><BrainIcon />{tPage('keywordsLabel')}</TitleSection>
+		<ul class="flex flex-wrap gap-3">
+			{
+				research.keywords.map(keyword => (
+					<li>
+						<TechPill label={keyword} size="sm" variant="card" />
+					</li>
+				))
+			}
+		</ul>
+	</section>
 </div>

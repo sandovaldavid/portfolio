@@ -1,11 +1,16 @@
 {
 	"pageTitle": "Experiencia en Atena | David Sandoval",
 	"pageDescription": "Experiencia profesional, responsabilidades y logros de ingeniería verificados del trabajo de David Sandoval en Atena.",
-	"heading": "Detalles de misión: Atena",
-	"subtitle": "Registro de misión de ingeniería de software",
-	"companyLabel": "Compañía / organización",
-	"periodLabel": "Período operativo",
-	"achievementsLabel": "Logros y acciones clave",
-	"technologiesLabel": "Stack tecnológico",
-	"returnHome": "Volver al inicio"
+	"introKicker": "ROL ACTUAL · FINTECH",
+	"introTitle": "Atena",
+	"introSummary": "Experiencia profesional actual, documentada con afirmaciones técnicas acotadas y sin arquitectura confidencial ni datos de clientes.",
+	"roleSectionLabel": "Detalle de experiencia",
+	"roleContextTitle": "CONTEXTO DEL ROL",
+	"rolePanelTitle": "ROL ACTUAL",
+	"roleTagline": "ORIENTADO A BACKEND CON EXPERIENCIA FRONTEND",
+	"roleBody": "Actualmente trabajo en Atena como Jr. Software Engineer con Angular y .NET. Mi enfoque es la entrega mantenible, los cambios validados y la documentación técnica clara.",
+	"confidentialityTitle": "LÍMITE DE CONFIDENCIALIDAD",
+	"confidentialityPanelTitle": "SIN ARQUITECTURA PRIVADA NI DATOS DE CLIENTES",
+	"confidentialityBody": "El portafolio registra únicamente trabajo técnico generalizable que puede compartirse públicamente. Detalles internos de fintech, datos financieros, roadmaps e información de clientes permanecen excluidos.",
+	"stackTitle": "STACK ACTUAL"
 }

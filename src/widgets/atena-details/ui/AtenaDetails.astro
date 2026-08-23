@@ -1,115 +1,83 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getExperienceData } from '@entities/experience';
+import type { ExperienceItem } from '@entities/experience';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { SectionContainer, TechPill } from '@shared/ui';
+import { ContentPanel, TechPill, TitleSection } from '@shared/ui';
 
 interface Props {
 	lang: Language;
+	experience: ExperienceItem;
 }
 
-const { lang } = Astro.props;
+const { lang, experience } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.atena');
-const experience = (await getExperienceData(lang)).find(
-	item => item.experienceId === 'atena-software-engineer'
-);
 
-if (!experience) {
-	throw new Error(`Missing Atena experience content for locale "${lang}".`);
-}
+/*
+ * Atena page composition (spec/04 "Atena" + plans/pages/atena.md):
+ * Intro → Current Role (Experience Detail 740/446/360) → Role Context
+ * (two Standard Content Panels 620x240) → Current Stack (Stack-MD pills)
+ * → global Footer. Widths are the hard contracts; vertical rhythm stays
+ * content-driven so translated copy grows without clipping.
+ */
 ---
 
-<SectionContainer id="atena-details" class="w-full max-w-4xl px-4 flex flex-col gap-8">
-	<div class="text-center space-y-3">
-		<h1
-			class="text-4xl md:text-5xl font-bold font-pixel-clean text-content-strong uppercase tracking-wide"
+<div class="w-full max-w-[1280px] flex flex-col px-5 md:px-8 lg:px-0">
+	<header class="flex flex-col gap-3">
+		<p
+			class="font-retro-tag text-xs font-bold uppercase tracking-[0.5px] text-channel-accent-primary"
 		>
-			{tPage('heading')}
-		</h1>
-		<p class="text-content-muted font-mono text-sm uppercase">
-			[ {tPage('subtitle')} ]
+			{tPage('introKicker')}
 		</p>
-	</div>
+		<h1
+			class="font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
+		>
+			{tPage('introTitle')}
+		</h1>
+		<p
+			class="max-w-[720px] font-sans text-sm leading-[22px] text-content-default md:text-base md:leading-[26px]"
+		>
+			{tPage('introSummary')}
+		</p>
+	</header>
 
-	<div
-		class="border-2 border-black dark:border-white bg-surface shadow-retro-2xl p-6 md:p-8 flex flex-col gap-6"
-	>
+	<section class="pt-8 pb-14 lg:pb-16">
+		<h2 class="sr-only">{tPage('roleSectionLabel')}</h2>
+		<div class="mx-auto w-full max-w-[360px] md:max-w-[446px] lg:mx-0 lg:max-w-[740px]">
+			<slot />
+		</div>
+	</section>
+
+	<section class="pb-14 lg:pb-16">
+		<TitleSection className="mb-8">{tPage('roleContextTitle')}</TitleSection>
 		<div
-			class="flex flex-col sm:flex-row justify-between items-start sm:items-center border-b-2 border-dashed border-edge-subtle pb-4 gap-4"
+			class="grid grid-cols-1 gap-5 md:grid-cols-2 justify-items-center md:justify-items-start"
 		>
-			<div>
-				<span class="text-content-muted text-xs font-bold tracking-wider uppercase block">
-					{tPage('companyLabel')}
-				</span>
-				<span class="text-2xl font-bold text-content-strong font-mono">
-					{experience.company}
-				</span>
-				<span class="text-content-muted text-sm font-mono block mt-1">
-					{experience.title}
-				</span>
-			</div>
-			<div class="sm:text-right">
-				<span class="text-content-muted text-xs font-bold tracking-wider uppercase block">
-					{tPage('periodLabel')}
-				</span>
-				<span
-					class="text-base font-bold text-status-success-text font-mono uppercase bg-status-success-bg px-2.5 py-1 border border-status-success-border inline-block"
+			<ContentPanel label={tPage('roleContextTitle')} title={tPage('rolePanelTitle')}>
+				<p
+					class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-content-muted"
 				>
-					[ {experience.date} ]
-				</span>
-			</div>
+					{tPage('roleTagline')}
+				</p>
+				<p>{tPage('roleBody')}</p>
+			</ContentPanel>
+			<ContentPanel
+				label={tPage('confidentialityTitle')}
+				title={tPage('confidentialityPanelTitle')}
+			>
+				<p>{tPage('confidentialityBody')}</p>
+			</ContentPanel>
 		</div>
+	</section>
 
-		<div class="space-y-6">
-			<div>
-				<h2
-					class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 mb-3"
-				>
-					[ {tPage('achievementsLabel')} ]
-				</h2>
-				<ul class="space-y-4 text-base font-mono">
-					{
-						experience.description.map(achievement => (
-							<li class="flex items-start gap-3">
-								<span
-									class="shrink-0 w-2 h-2 rounded-none bg-primary-500 dark:bg-primary-400 mt-2.5"
-									aria-hidden="true"
-								/>
-								<span class="text-content leading-relaxed">{achievement}</span>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-
-			<div class="border-t-2 border-dashed border-edge-subtle pt-4">
-				<h2
-					class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 mb-3"
-				>
-					[ {tPage('technologiesLabel')} ]
-				</h2>
-				<div class="flex flex-wrap gap-2.5 mt-2">
-					{
-						experience.technologies.map(technology => (
-							<TechPill
-								label={technology}
-								variant="stack"
-								size="sm"
-								class="px-2.5 py-1.5 text-xs font-mono font-semibold"
-							/>
-						))
-					}
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="w-full flex justify-center mt-4">
-		<a
-			href={getRelativeLocaleUrl(lang, '')}
-			class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
-		>
-			[ {tPage('returnHome')} ]
-		</a>
-	</div>
-</SectionContainer>
+	<section class="pb-4">
+		<TitleSection className="mb-8">{tPage('stackTitle')}</TitleSection>
+		<ul class="flex flex-wrap gap-x-3 gap-y-3">
+			{
+				experience.technologies.map(technology => (
+					<li>
+						<TechPill label={technology} size="md" variant="stack" />
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</div>

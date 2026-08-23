@@ -106,14 +106,14 @@ test.describe('deduplicated legacy page pairs', () => {
 		{
 			route: '/atena',
 			locale: 'en',
-			heading: 'Mission details: Atena',
-			forbiddenHeading: 'Detalles de misión: Atena',
+			heading: 'CURRENT ROLE',
+			forbiddenHeading: 'ROL ACTUAL',
 		},
 		{
 			route: '/es/atena',
 			locale: 'es',
-			heading: 'Detalles de misión: Atena',
-			forbiddenHeading: 'Mission details: Atena',
+			heading: 'ROL ACTUAL',
+			forbiddenHeading: 'CURRENT ROLE',
 		},
 		{
 			route: '/skills',
