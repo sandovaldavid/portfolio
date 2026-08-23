@@ -7,13 +7,21 @@ interface Props {
 const { class: className, id } = Astro.props;
 
 /**
- * Home has a deliberate viewport-section rhythm that should not leak into
- * internal pages using the same content container. These IDs are owned by the
- * Home composition in Layout. Experience and Hero use dedicated widgets
- * because their internal layout contracts are different.
+ * Home has two deliberate section rhythms that must not leak into internal
+ * pages using the same content container:
+ *
+ * - viewport sections reserve the usable viewport from Tablet upward;
+ * - compact sections keep the same full-bleed surface/content shell but size
+ *   only to their content.
+ *
+ * Experience and Hero use dedicated widgets because their internal layout
+ * contracts are different.
  */
-const HOME_VIEWPORT_SECTIONS = new Set(['projects', 'research', 'about-me', 'technologies']);
+const HOME_VIEWPORT_SECTIONS = new Set(['projects', 'research', 'about-me']);
+const HOME_COMPACT_SECTIONS = new Set(['technologies']);
 const isHomeViewportSection = Boolean(id && HOME_VIEWPORT_SECTIONS.has(id));
+const isHomeCompactSection = Boolean(id && HOME_COMPACT_SECTIONS.has(id));
+const isHomeSection = isHomeViewportSection || isHomeCompactSection;
 const homeSurface =
 	id === 'research' || id === 'technologies'
 		? 'bg-channel-surface-highlight'
@@ -21,12 +29,15 @@ const homeSurface =
 ---
 
 {
-	isHomeViewportSection ? (
+	isHomeSection ? (
 		<section id={id} class:list={['w-full max-w-none scroll-mt-18', homeSurface]}>
 			<div
-				data-home-viewport-shell
+				data-home-section-shell
+				data-home-viewport-shell={isHomeViewportSection ? 'true' : undefined}
+				data-home-compact-shell={isHomeCompactSection ? 'true' : undefined}
 				class:list={[
-					'mx-auto flex w-full max-w-360 flex-col justify-center px-5 md:min-h-[calc(100svh-4.5rem)] md:px-8 lg:px-20',
+					'mx-auto flex w-full max-w-360 flex-col justify-center px-5 md:px-8 lg:px-20',
+					isHomeViewportSection && 'md:min-h-[calc(100svh-4.5rem)]',
 					className,
 				]}
 			>
@@ -49,7 +60,7 @@ const homeSurface =
 }
 
 <style>
-	[data-home-viewport-shell] :global(.title-section) {
+	[data-home-section-shell] :global(.title-section) {
 		width: 100%;
 		justify-content: center;
 		text-align: center;
