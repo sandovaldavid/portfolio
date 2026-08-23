@@ -16,59 +16,83 @@ interface Props {
 
 const { post, Content, backText, backLink, publishedLabel, updatedLabel, tagsLabel } = Astro.props;
 const { title, description, pubDate, updatedDate, tags } = post.data;
+
+/*
+ * Blog detail composition (spec/04 "Blog Detail" +
+ * plans/pages/blog-detail.md): article header sits in the centered editorial
+ * column (350px mobile at x20 / 720px tablet at x57 / 980px desktop at x230)
+ * with back navigation, meta + tags groups and the page title. The MDX body
+ * keeps its real prose and code blocks (spec/06 drift rules) but is
+ * re-presented with ContentPanel/code-rule patterns: reading blocks center
+ * at the Standard panel width (620) while code/architecture blocks become
+ * bordered terminal slabs up to the 760 rule width that wrap inside mobile.
+ */
+const articleBodyClasses =
+	'article-body prose prose-neutral mt-12 max-w-none dark:prose-invert ' +
+	'[&_h2]:font-mono [&_h2]:font-bold [&_h2]:tracking-[-0.5px] ' +
+	'lg:[&_h2]:mx-auto lg:[&_h2]:max-w-[620px] lg:[&_p]:mx-auto lg:[&_p]:max-w-[620px] ' +
+	'lg:[&_ul]:mx-auto lg:[&_ul]:max-w-[620px] lg:[&_ol]:mx-auto lg:[&_ol]:max-w-[620px] ' +
+	'lg:[&_blockquote]:mx-auto lg:[&_blockquote]:max-w-[620px] ' +
+	'[&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:border-2 [&_pre]:border-edge-strong [&_pre]:shadow-retro-md ' +
+	'lg:[&_pre]:mx-auto lg:[&_pre]:max-w-[760px]';
 ---
 
-<article class="mx-auto max-w-3xl">
-	<header class="mb-10">
-		<nav aria-label={backText} class="mb-6">
-			<LinkInline href={backLink} class="inline-flex items-center gap-2 text-sm">
-				<ArrowLeftIcon class="size-4" />
-				{backText}
-			</LinkInline>
-		</nav>
+<article class="w-full font-sans px-5 md:px-8 lg:px-0">
+	<div class="mx-auto flex w-full max-w-[350px] flex-col md:max-w-[720px] lg:max-w-[980px]">
+		<header class="mb-12">
+			<nav aria-label={backText} class="mb-6">
+				<LinkInline
+					href={backLink}
+					class="inline-flex items-center gap-2 self-start text-sm"
+				>
+					<ArrowLeftIcon class="size-4" />
+					{backText}
+				</LinkInline>
+			</nav>
 
-		<div class="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
-			<div class="flex flex-wrap items-center gap-2 text-caption text-content-muted">
-				<span>
-					{publishedLabel}
-					<time datetime={pubDate.toISOString()}
-						>{pubDate.toISOString().split('T')[0]}</time
-					>
-				</span>
+			<div class="mb-3 flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+				<div class="flex flex-wrap items-center gap-2 text-caption text-content-muted">
+					<span>
+						{publishedLabel}
+						<time datetime={pubDate.toISOString()}
+							>{pubDate.toISOString().split('T')[0]}</time
+						>
+					</span>
+					{
+						updatedDate && (
+							<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
+								{updatedLabel}
+								<time datetime={updatedDate.toISOString()}>
+									{updatedDate.toISOString().split('T')[0]}
+								</time>
+							</span>
+						)
+					}
+				</div>
 				{
-					updatedDate && (
-						<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-							{updatedLabel}
-							<time datetime={updatedDate.toISOString()}>
-								{updatedDate.toISOString().split('T')[0]}
-							</time>
-						</span>
+					tags.length > 0 && (
+						<div class="flex flex-wrap items-center gap-2">
+							<span class="sr-only">{tagsLabel}</span>
+							{tags.map(tag => (
+								<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
+									{tag}
+								</span>
+							))}
+						</div>
 					)
 				}
 			</div>
-			{
-				tags.length > 0 && (
-					<div class="flex flex-wrap items-center gap-2">
-						<span class="sr-only">{tagsLabel}</span>
-						{tags.map(tag => (
-							<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
-								{tag}
-							</span>
-						))}
-					</div>
-				)
-			}
+
+			<h1
+				class="font-mono text-4xl font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-5xl lg:leading-14 lg:tracking-[-1px]"
+			>
+				{title}
+			</h1>
+			<p class="mt-4 max-w-[720px] text-body text-content-muted">{description}</p>
+		</header>
+
+		<div class={articleBodyClasses}>
+			<Content />
 		</div>
-
-		<h1 class="mb-4 text-3xl md:text-page-title">
-			{title}
-		</h1>
-		<p class="max-w-2xl text-body text-content-muted">
-			{description}
-		</p>
-	</header>
-
-	<div class="prose prose-neutral dark:prose-invert max-w-none">
-		<Content />
 	</div>
 </article>

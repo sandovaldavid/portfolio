@@ -1,13 +1,10 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
-import { getDevlogPosts, getDevlogSlug } from '@entities/devlog';
+import { DevlogList } from '@widgets/devlog';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { DevlogCard } from '@widgets/devlog';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
-const posts = await getDevlogPosts(lang);
 ---
 
 <Layout
@@ -16,36 +13,5 @@ const posts = await getDevlogPosts(lang);
 	img_preview="/projects/portfolio.webp"
 	isHome={false}
 >
-	<div class="py-16 md:py-24">
-		<div class="mx-auto max-w-4xl">
-			<header class="mb-12">
-				<p
-					class="mb-2 text-editorial-label uppercase text-primary-500 dark:text-primary-400"
-				>
-					{tDevlog('label')}
-				</p>
-				<h1 class="mb-4 text-3xl md:text-page-title">
-					{tDevlog('heading')}
-				</h1>
-				<p class="max-w-2xl text-body text-content-muted">
-					{tDevlog('subheading')}
-				</p>
-			</header>
-
-			<div class="space-y-6">
-				{
-					posts.map(post => (
-						<DevlogCard
-							post={post}
-							readMoreText={tDevlog('readMore')}
-							readMoreLink={getRelativeLocaleUrl(
-								lang,
-								`devlog/${getDevlogSlug(post)}`
-							)}
-						/>
-					))
-				}
-			</div>
-		</div>
-	</div>
+	<DevlogList />
 </Layout>
