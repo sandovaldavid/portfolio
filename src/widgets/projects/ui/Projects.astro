@@ -19,7 +19,7 @@ const projects = await getProjectsData(lang);
 const projectsToDisplay = showAll ? projects : projects.filter(project => project.featured).slice(0, 2);
 ---
 
-<section class="w-full font-sans">
+<div class="w-full">
 	<div
 		class:list={[
 			'w-full items-stretch',
@@ -62,4 +62,4 @@ const projectsToDisplay = showAll ? projects : projects.filter(project => projec
 			</div>
 		)
 	}
-</section>
+</div>
