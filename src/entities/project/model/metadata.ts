@@ -35,6 +35,8 @@ export type ProjectLifecycle = 'active' | 'maintained' | 'experimental' | 'archi
 export type ProjectSourceAccess = 'public' | 'private';
 /** What kind of demo evidence, if any, is publicly reachable. */
 export type ProjectDemoAccess = 'live' | 'preview' | 'video' | 'screenshots' | 'unavailable';
+/** Optional public resources that add evidence beyond the source repository and demo. */
+export type ProjectResourceKind = 'docs' | 'package' | 'related';
 
 interface ProjectMetadata {
 	slug: string;
@@ -47,7 +49,7 @@ interface ProjectMetadata {
 	demoAccess: ProjectDemoAccess;
 	link?: string;
 	github?: string;
-	evidenceSourceUrls?: Readonly<Record<string, string>>;
+	resources?: Partial<Record<ProjectResourceKind, string>>;
 }
 
 const projectMetadata = {
@@ -60,10 +62,6 @@ const projectMetadata = {
 		lifecycle: 'active',
 		sourceAccess: 'private',
 		demoAccess: 'unavailable',
-		evidenceSourceUrls: {
-			'yukidoke-web': 'https://github.com/sandovaldavid/yukidoke-web',
-			'yukidoke-api': 'https://github.com/sandovaldavid/yukidoke-api',
-		},
 	},
 	kioku: {
 		slug: 'kioku',
@@ -75,8 +73,10 @@ const projectMetadata = {
 		lifecycle: 'active',
 		sourceAccess: 'public',
 		demoAccess: 'unavailable',
-		evidenceSourceUrls: {
-			kioku: 'https://github.com/sandovaldavid/kioku',
+		resources: {
+			docs: 'https://kioku.sandovaldavid.com',
+			package: 'https://www.nuget.org/packages/kioku-mcp-server',
+			related: 'https://github.com/sandovaldavid/kioku-obsidian',
 		},
 	},
 	'campus-map': {
