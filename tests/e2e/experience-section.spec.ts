@@ -45,6 +45,23 @@ test('mobile experience section remains full-bleed with a horizontal tab rail', 
 	expect(await tablist.evaluate(el => getComputedStyle(el).overflowX)).toBe('auto');
 });
 
+test('experience hover remains visually distinct from the section surface', async ({ page }) => {
+	await page.setViewportSize({ width: 1440, height: 900 });
+	await page.goto('/');
+
+	const section = page.locator('#experience');
+	const inactiveTab = section.getByRole('tab').nth(1);
+	const sectionBackground = await section.evaluate(el => getComputedStyle(el).backgroundColor);
+	const inactiveBackground = await inactiveTab.evaluate(el => getComputedStyle(el).backgroundColor);
+
+	expect(inactiveBackground).not.toBe(sectionBackground);
+
+	await inactiveTab.hover();
+	const hoverBackground = await inactiveTab.evaluate(el => getComputedStyle(el).backgroundColor);
+	expect(hoverBackground).not.toBe(sectionBackground);
+	expect(hoverBackground).not.toBe(inactiveBackground);
+});
+
 test('experience selection keeps accessible tab state while the indicator has motion', async ({
 	page,
 }) => {
