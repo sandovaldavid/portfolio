@@ -99,7 +99,6 @@
 	--color-primary-600: light-dark(var(--color-primary-600-light), var(--color-primary-600-dark));
 	--color-background: light-dark(var(--color-base-background-light), var(--color-neutral-950));
 	--color-surface: light-dark(var(--color-base-white), var(--color-base-surface-dark));
-	--color-surface-light: var(--color-base-white);
 	--color-surface-highlight: light-dark(
 		var(--color-base-surface-highlight-light),
 		var(--color-base-surface-highlight-dark)
@@ -183,10 +182,6 @@
 		var(--color-base-status-success-text-light),
 		var(--color-base-status-success-text-dark)
 	);
-	--color-hero-glow: light-dark(
-		var(--alpha-primary-500-10-light),
-		var(--alpha-primary-500-25-dark)
-	);
 	--color-terminal-primary: var(--color-primary-500-dark);
 	--color-terminal-glow: var(--alpha-primary-500-35-dark);
 	--color-logo-ring: light-dark(var(--color-primary-600-light), var(--color-primary-500-dark));
@@ -264,7 +259,6 @@
 		var(--color-base-status-error-text-dark)
 	);
 	--color-channel-overlay: light-dark(rgb(0 0 0 / 36%), rgb(0 0 0 / 62%));
-	--color-channel-hero-glow: var(--color-hero-glow);
 	--color-channel-portfolio-terminal-background: var(--color-terminal-background);
 	--color-channel-portfolio-terminal-surface: var(--color-terminal-surface);
 	--color-channel-portfolio-terminal-surface-raised: var(--color-base-surface-highlight-dark);
@@ -280,24 +274,6 @@
 	--color-channel-portfolio-terminal-grid: var(--color-terminal-grid);
 	--color-channel-portfolio-terminal-error: var(--color-error-500);
 	--color-channel-portfolio-terminal-warning: var(--color-warning-500);
-
-	/* Backward-compatible aliases while consumers migrate to channel roles. */
-	--color-surface-highlight-light: var(--color-base-surface-highlight-light);
-	--color-surface-highlight-dark: var(--color-base-surface-highlight-dark);
-	--color-background-light: var(--color-base-background-light);
-	--color-background-dark: var(--color-neutral-950);
-	--color-content-strong-light: var(--color-neutral-900);
-	--color-content-strong-dark: var(--color-base-content-strong-dark);
-	--color-content-light: var(--color-neutral-700);
-	--color-content-dark: var(--color-neutral-300);
-	--color-content-muted-light: var(--color-neutral-600);
-	--color-content-muted-dark: var(--color-neutral-400);
-	--color-edge-subtle-light: var(--color-neutral-300);
-	--color-edge-subtle-dark: var(--color-neutral-800);
-	--color-edge-strong-light: var(--color-neutral-900);
-	--color-edge-strong-dark: var(--color-neutral-300);
-	--color-retro-cyan: var(--color-primary-500-dark);
-	--color-retro-cyan-bright: var(--color-primary-400-dark);
 
 	/* Component roles: components encode behavior, never ramp steps. */
 	--color-button-primary-background: var(--channel-accent-primary);
@@ -320,19 +296,6 @@
 	--color-logo-content: var(--color-logo-monochrome);
 	--color-logo-primary: var(--color-logo-brackets);
 	--color-logo-primary-hover: var(--color-logo-slash-end);
-	--color-logo-effect-magenta: var(--color-error-500);
-	--color-logo-effect-cyan: var(--color-terminal-phosphor);
-	--color-theme-control-background-hover: var(--channel-surface-highlight);
-	--color-theme-menu-background: color-mix(
-		in oklch,
-		var(--channel-surface-default) 95%,
-		transparent
-	);
-	--color-theme-menu-border: color-mix(in oklch, var(--color-edge-subtle) 50%, transparent);
-	--color-theme-option-background-hover: light-dark(
-		var(--color-neutral-200),
-		var(--color-neutral-700)
-	);
 	--color-header-surface-scrolled: light-dark(
 		color-mix(in oklch, var(--color-base-background-light) 78%, transparent),
 		color-mix(in oklch, var(--color-neutral-900) 88%, transparent)
@@ -388,28 +351,6 @@
 	--space-16: 4rem;
 	--space-20: 5rem;
 	--space-24: 6rem;
-	--animate-fade-in: fade-in 0.4s ease-out forwards;
-	--animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-	@keyframes fade-in {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	@keyframes slide-up {
-		from {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
 }
 
 :root {
@@ -423,8 +364,4 @@ body {
 	background-color: var(--channel-background-canvas);
 	color: var(--channel-content-default);
 	-webkit-font-smoothing: antialiased;
-}
-
-.hero-gradient {
-	background: radial-gradient(circle at 50% 0%, var(--color-hero-glow) 0%, transparent 50%);
 }
