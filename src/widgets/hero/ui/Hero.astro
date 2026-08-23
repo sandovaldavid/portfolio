@@ -5,7 +5,6 @@ import HeroProfileRecord from './HeroProfileRecord.astro';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tHero = createScopedUiTranslator(lang, 'sections.hero');
-const tCommon = createScopedUiTranslator(lang, 'common');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
 const profileFacts = [
@@ -23,14 +22,14 @@ const profileFacts = [
 	class="w-full lg:min-h-[calc(100svh-4.5rem)] scroll-mt-[4.5rem] hero-gradient flex flex-col items-center justify-start md:justify-center py-8 md:py-12 px-4"
 	aria-labelledby="hero-title"
 >
-	<div class="w-full max-w-[956px] flex flex-col items-center gap-8 md:gap-10">
+	<div class="w-full max-w-[956px] flex flex-col items-center gap-8 md:gap-10 lg:gap-6">
 		<div
-			class="w-full text-left md:text-center border-2 border-dashed border-banner-border p-3 font-retro-tag text-xs sm:text-sm text-banner-text tracking-widest uppercase"
+			class="w-full text-left md:text-center border-2 border-dashed border-banner-border bg-badge-brand-bg p-3 font-retro-tag text-xs sm:text-sm text-banner-text tracking-widest uppercase"
 		>
 			{tHero('banner')}
 		</div>
 
-		<div class="text-left md:text-center space-y-3">
+		<div class="text-left md:text-center space-y-4">
 			<span
 				class="font-retro-tag text-xs uppercase tracking-widest text-primary-500 font-bold block"
 			>
@@ -58,7 +57,6 @@ const profileFacts = [
 			name={siteConfig.name}
 			role={tHero('role')}
 			heading={tHero('profile')}
-			availabilityLabel={tCommon('status.available')}
 			facts={profileFacts}
 		/>
 	</div>

@@ -9,7 +9,6 @@ import { HeroProfileRecord } from '@widgets/hero';
 const lang = Language.SPANISH;
 const profile = await getPortfolioProfile(lang);
 const tHero = createScopedUiTranslator(lang, 'sections.hero');
-const tCommon = createScopedUiTranslator(lang, 'common');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
 const profileFacts = [
@@ -36,7 +35,6 @@ const profileFacts = [
 			name={siteConfig.name}
 			role={tHero('role')}
 			heading={tHero('profile')}
-			availabilityLabel={tCommon('status.available')}
 			facts={profileFacts}
 		/>
 	</AboutContent>

@@ -10,11 +10,10 @@ interface Props {
 	name: string;
 	role: string;
 	heading: string;
-	availabilityLabel: string;
 	facts: ProfileFact[];
 }
 
-const { portraitSrc, portraitAlt, name, role, heading, availabilityLabel, facts } = Astro.props;
+const { portraitSrc, portraitAlt, name, role, heading, facts } = Astro.props;
 
 /*
  * Hero Profile Record contract (spec/03): surface default, border 2 strong,
@@ -23,9 +22,9 @@ const { portraitSrc, portraitAlt, name, role, heading, availabilityLabel, facts 
  * Mobile w360 vertical content-hug (portrait 356x300, avatar 184 centered
  * y24). Name band accent primary h32: Desktop x18/y270 w220, Tablet x0/y270,
  * Mobile x28/y220 w300; name Press Start 2P 12 in primary button content
- * color. Data panel gap20, VT323 30 heading, Silkscreen Bold12 online status,
- * Share Tech Mono fact labels 12 muted with values 16 desktop/tablet and 14
- * mobile.
+ * color. Data panel gap20, VT323 30 heading (availability lives only on the
+ * outer Home Hero banner, never duplicated here), Share Tech Mono fact
+ * labels 12 muted with values 16 desktop/tablet and 14 mobile.
  *
  * Portrait offsets resolve to horizontal centering at every breakpoint
  * (256-192=2x32, 220-192=2x14, 356-184=2x86); band gaps derive from the same
@@ -64,17 +63,10 @@ const { portraitSrc, portraitAlt, name, role, heading, availabilityLabel, facts 
 		</figure>
 
 		<div class="flex flex-col gap-5 p-6 md:p-8">
-			<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+			<div class="flex items-center">
 				<h2 class="font-pixel-clean text-[30px] leading-8 text-content-strong">
 					{heading}
 				</h2>
-				<span
-					class="inline-flex items-center gap-1.5 font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-status-online"
-				>
-					<span class="size-2 shrink-0 bg-channel-status-success" aria-hidden="true"
-					></span>
-					{availabilityLabel}
-				</span>
 			</div>
 
 			<dl class="grid grid-cols-2 gap-x-8 gap-y-5">
