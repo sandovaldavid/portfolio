@@ -97,7 +97,7 @@ test.describe('Hero Profile Record contract', () => {
 			expect(await band.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
 				await probeBackground(page, '--channel-accent-primary')
 			);
-	});
+		});
 	}
 
 	test('mobile exposes only the four high-value recruiter facts', async ({ page }) => {
@@ -174,7 +174,7 @@ test.describe('Experience Tab contract', () => {
 		await page.setViewportSize({ width: DESKTOP.width, height: DESKTOP.height });
 		await page.goto('/');
 		const tab = page.getByRole('tab', { selected: true }).first();
-		const text = tab.locator('span').filter({ hasText: 'ATENA' }).last();
+		const text = tab.locator('span').filter({ hasText: /Atena/i }).last();
 		expect(await text.evaluate(el => getComputedStyle(el).fontFamily)).toMatch(/JetBrains Mono/i);
 		expect(await text.evaluate(el => getComputedStyle(el).fontSize)).toBe('14px');
 	});
