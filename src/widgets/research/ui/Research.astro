@@ -1,81 +1,89 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
-import BrainIcon from '@assets/icons/Brain.astro';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { Badge, LinkButton, TechPill } from '@shared/ui';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tResearch = createScopedUiTranslator(lang, 'sections.research');
 const tCommon = createScopedUiTranslator(lang, 'common');
-const techStack = ['BiLSTM', 'Deep Learning', 'MSR', 'Python', 'TensorFlow', 'GitHub API'];
+const techStack = ['BiLSTM', 'Python', 'TensorFlow', 'GitHub API'];
+const pipeline = [
+	tResearch('pipeline.githubApi'),
+	tResearch('pipeline.raw'),
+	tResearch('pipeline.features'),
+	tResearch('pipeline.sequences'),
+	tResearch('pipeline.bilstm'),
+	tResearch('pipeline.classifier'),
+];
 ---
 
-<section class="w-full h-full flex items-center justify-center px-4 py-6">
-	<article
-		class="w-full max-w-3xl border-2 border-button-border bg-channel-surface-default shadow-retro-2xl font-mono overflow-hidden"
-	>
-		<div
-			class="border-b-2 border-button-border bg-button-primary-background px-5 py-3.5 flex items-start justify-between gap-4"
-		>
-			<div class="flex items-start gap-3">
-				<BrainIcon class="w-5 h-5 text-button-primary-content shrink-0 mt-0.5" />
-				<div>
-					<p
-						class="font-retro-tag text-sm uppercase tracking-widest text-button-primary-content/90 leading-none"
-					>
-						{tResearch('institution')} · {tResearch('label')}
-					</p>
-					<h3
-						class="font-pixel-clean text-lg sm:text-xl font-bold text-button-primary-content uppercase leading-tight mt-1"
-					>
-						{tResearch('title')}
-					</h3>
-				</div>
+<section class="w-full">
+	<div class="grid w-full min-w-0 gap-10 lg:grid-cols-[minmax(0,760px)_minmax(0,456px)] lg:gap-16">
+		<div class="flex min-w-0 flex-col gap-4">
+			<div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+				<p class="text-editorial-label text-channel-accent-primary">
+					{tResearch('institution')} · {tResearch('label')}
+				</p>
+				<Badge variant="info" size="sm">{tCommon('status.inProgress')}</Badge>
 			</div>
-			<span
-				class="shrink-0 font-retro-tag text-xs bg-button-primary-content text-button-primary-background px-2.5 py-1 font-bold uppercase tracking-widest whitespace-nowrap"
+
+			<h3 class="max-w-190 uppercase text-feature-title text-content-strong">
+				{tResearch('title')}
+			</h3>
+
+			<p class="max-w-190 text-body text-content-default">{tResearch('summary')}</p>
+
+			<div class="flex flex-col gap-2 pt-1">
+				<p class="text-editorial-label text-channel-accent-primary">
+					{tResearch('hypothesisLabel')}
+				</p>
+				<p class="text-subheading text-content-strong">{tResearch('hypothesisTitle')}</p>
+			</div>
+
+			<LinkButton
+				href={getRelativeLocaleUrl(lang, 'research')}
+				target="_self"
+				variant="primary"
+				class="mt-1 w-full sm:w-47.5"
 			>
-				{tCommon('status.inProgress')}
-			</span>
+				<ArrowUpRightIcon class="size-4" aria-hidden="true" />
+				{tResearch('viewFull')}
+			</LinkButton>
 		</div>
 
-		<div class="px-5 py-5 space-y-5">
-			<p class="text-base leading-relaxed text-channel-content-strong">
-				{tResearch('summary')}
-			</p>
-
-			<div>
-				<h4
-					class="inline-flex items-center gap-1.5 font-retro-tag text-xs font-bold text-channel-accent-primary uppercase tracking-widest mb-2.5"
-				>
-					<ArrowRightIcon class="size-3.5" aria-hidden="true" focusable="false" />
-					{tResearch('techStackLabel')}
-				</h4>
-				<div class="flex flex-wrap gap-2">
+		<aside class="flex min-w-0 flex-col gap-5 lg:pt-1" aria-label={tResearch('pipelineTitle')}>
+			<div class="flex flex-col gap-3">
+				<h4 class="text-component-title text-content-strong">{tResearch('pipelineTitle')}</h4>
+				<ol class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
 					{
-						techStack.map(tag => (
-							<span class="font-retro-tag text-xs uppercase tracking-wider border-2 border-badge-brand-outline-border text-badge-brand-text px-3 py-1 font-bold bg-badge-brand-bg">
-								{tag}
-							</span>
+						pipeline.map((step, index) => (
+							<li class="flex min-w-0 items-center gap-2 py-1.5">
+								<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
+									{String(index + 1).padStart(2, '0')}
+								</span>
+								<span class="min-w-0 text-secondary text-content-default">{step}</span>
+							</li>
 						))
 					}
-				</div>
+				</ol>
 			</div>
 
-			<div
-				class="border-t-2 border-dashed border-channel-edge-subtle pt-4 flex items-center justify-between gap-4"
-			>
-				<p class="text-sm text-channel-content-muted leading-snug">
-					{tResearch('methodologyHint')}
+			<div class="flex flex-col gap-3">
+				<p class="text-editorial-label text-channel-accent-primary">
+					{tResearch('techStackLabel')}
 				</p>
-				<a
-					href={getRelativeLocaleUrl(lang, 'research')}
-					class="shrink-0 inline-flex items-center gap-2 font-retro-tag text-xs font-bold uppercase tracking-widest px-4 py-2 bg-button-primary-background text-button-primary-content border-2 border-button-border shadow-retro-sm hover:bg-button-primary-background-hover hover:-translate-x-[1px] hover:-translate-y-[1px] hover:shadow-retro-md active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all whitespace-nowrap"
-				>
-					{tResearch('viewFull')}
-					<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
-				</a>
+				<ul class="flex flex-wrap gap-2">
+					{techStack.map(tag => (
+						<li>
+							<TechPill label={tag} size="sm" variant="stack" />
+						</li>
+					))}
+				</ul>
 			</div>
-		</div>
-	</article>
+
+			<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
+			<p class="max-w-114 text-secondary text-content-muted">{tResearch('methodologyHint')}</p>
+		</aside>
+	</div>
 </section>
