@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const MIGRATED_STYLE_SURFACES = [
 	'src/app/layouts/Layout.astro',
+	'src/entities/project/ui/ProjectCard.astro',
 	'src/shared/ui/badge/Badge.astro',
 	'src/shared/ui/content-panel/ContentPanel.astro',
 	'src/shared/ui/editorial-card/EditorialCard.astro',
@@ -18,6 +19,10 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/widgets/experience/ui/Experience.astro',
 	'src/widgets/experience/ui/ExperienceTab.astro',
 	'src/widgets/experience/ui/ExperienceDetail.astro',
+	'src/widgets/projects/ui/Projects.astro',
+	'src/widgets/research/ui/Research.astro',
+	'src/widgets/about-me/ui/AboutMe.astro',
+	'src/widgets/tech-stack/ui/TechStack.astro',
 	'src/widgets/recruiter-hud/ui/RecruiterHUD.astro',
 	'src/widgets/contact-sidebar/ui/ContactSidebar.astro',
 ] as const;
@@ -47,17 +52,20 @@ describe('Portfolio v2 spacing contract', () => {
 		);
 		const hero = readFileSync('src/widgets/hero/ui/Hero.astro', 'utf8');
 		const experience = readFileSync('src/widgets/experience/ui/Experience.astro', 'utf8');
+		const sectionContainer = readFileSync(
+			'src/shared/ui/section-container/SectionContainer.astro',
+			'utf8'
+		);
 		const contactRail = readFileSync(
 			'src/widgets/contact-sidebar/ui/ContactSidebar.astro',
 			'utf8'
 		);
 
-		// Complex grid/calc expressions are legitimate arbitrary values; plain
-		// spacing values must use Tailwind's numeric scale instead.
 		expect(profileRecord).toContain('md:grid-cols-[220px_minmax(0,1fr)]');
-		expect(hero).toContain('lg:min-h-[calc(100svh-4.5rem)]');
+		expect(hero).toContain('md:min-h-[calc(100svh-4.5rem)]');
 		expect(experience).toContain('md:grid-cols-[300px_minmax(0,446px)]');
 		expect(experience).toContain('lg:grid-cols-[400px_minmax(0,840px)]');
+		expect(sectionContainer).toContain('md:min-h-[calc(100svh-4.5rem)]');
 		expect(contactRail).toContain('translateX(calc(-100% - 0.5rem))');
 		expect(profileRecord).toContain('p-0.5');
 		expect(profileRecord).toContain('gap-3.5');
