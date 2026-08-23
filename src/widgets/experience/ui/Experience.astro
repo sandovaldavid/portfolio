@@ -13,21 +13,20 @@ const EXPERIENCE = await getExperienceData(lang);
 ---
 
 <!--
-	Portfolio / Home Experience (Figma v2 + runtime behavior):
-	The semantic highlight surface is full-bleed even when Home is rendered
-	inside a centered flex composition. Content remains capped to the 1440px
-	Portfolio shell. Tablet/Desktop use a viewport-filling minimum height below
-	the 72px Header, but remain content-driven when localization needs more room.
-	Mobile remains content-driven with a horizontally scrollable 250px tab rail.
+	Home Experience is intentionally a special viewport section. From tablet
+	up it owns the usable viewport below the 72px Header, while Mobile remains
+	content-driven. All detail panels share one CSS-grid cell: inactive panels
+	stay visibility-hidden (not display:none), so the grid reserves the tallest
+	localized panel and switching tabs never moves the rest of the page.
 -->
 <section
 	id="experience"
-	class="relative left-1/2 w-dvw max-w-none -translate-x-1/2 scroll-mt-18 overflow-x-clip bg-channel-surface-highlight"
+	class="w-full scroll-mt-18 overflow-x-clip bg-channel-surface-highlight"
 	aria-labelledby="experience-title"
 >
 	<div
 		data-experience-shell
-		class="mx-auto flex w-full max-w-360 flex-col items-center gap-5 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:justify-center md:gap-6 md:px-8 md:py-12 lg:px-20 lg:py-14"
+		class="mx-auto flex w-full max-w-360 flex-col justify-center gap-8 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:gap-10 md:px-8 md:py-12 lg:gap-12 lg:px-20 lg:py-14"
 	>
 		<TitleSection align="center" className="w-full">
 			<ChevronRightIcon
@@ -39,13 +38,13 @@ const EXPERIENCE = await getExperienceData(lang);
 		</TitleSection>
 
 		<div
-			class="flex w-full flex-col items-start gap-5 md:grid md:grid-cols-[300px_minmax(0,446px)] md:gap-6 lg:grid-cols-[400px_minmax(0,840px)] lg:gap-10"
+			class="grid w-full min-w-0 grid-cols-1 items-start gap-6 md:grid-cols-[300px_minmax(0,446px)] md:gap-6 lg:grid-cols-[400px_minmax(0,840px)] lg:gap-10"
 		>
 			<div
 				id="experience-tablist"
 				role="tablist"
 				aria-label={tAccessibility('experienceTabs')}
-				class="flex w-90 max-w-none items-start gap-2.5 overflow-x-auto bg-channel-surface-default md:w-75 md:flex-col md:overflow-visible lg:w-100"
+				class="flex w-full min-w-0 items-start gap-2.5 overflow-x-auto bg-channel-surface-default pb-1 md:w-75 md:flex-col md:overflow-visible md:pb-0 lg:w-100"
 			>
 				{
 					EXPERIENCE.map((exp, idx) => (
@@ -64,15 +63,15 @@ const EXPERIENCE = await getExperienceData(lang);
 				}
 			</div>
 
-			<div class="relative w-90 max-w-none md:w-111.5 lg:w-210">
+			<div class="experience-panels grid w-full min-w-0">
 				{
 					EXPERIENCE.map((exp, idx) => (
 						<div
-							class="experience-panel"
+							class="experience-panel col-start-1 row-start-1 min-w-0"
 							role="tabpanel"
 							id={`exp-panel-${exp.experienceId}`}
 							aria-labelledby={`exp-tab-${exp.experienceId}`}
-							hidden={idx !== 0}
+							aria-hidden={idx === 0 ? 'false' : 'true'}
 							data-active={idx === 0 ? 'true' : 'false'}
 							data-experience-id={exp.experienceId}
 						>
@@ -84,6 +83,33 @@ const EXPERIENCE = await getExperienceData(lang);
 		</div>
 	</div>
 
+	<style>
+		.experience-panel {
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(0.5rem);
+			visibility: hidden;
+			transition:
+				opacity 180ms ease-out,
+				transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+				visibility 0s linear 220ms;
+		}
+
+		.experience-panel[data-active='true'] {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translateY(0);
+			visibility: visible;
+			transition-delay: 0s;
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.experience-panel {
+				transition: none;
+			}
+		}
+	</style>
+
 	<script>
 		const setupExperienceTabs = () => {
 			const tablist = document.getElementById('experience-tablist');
@@ -93,24 +119,7 @@ const EXPERIENCE = await getExperienceData(lang);
 			const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
 			const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls') ?? ''));
 
-			const animatePanel = (panel: HTMLElement) => {
-				if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-				panel.getAnimations().forEach(animation => animation.cancel());
-				panel.animate(
-					[
-						{ opacity: 0, transform: 'translateY(0.5rem)' },
-						{ opacity: 1, transform: 'translateY(0)' },
-					],
-					{
-						duration: 220,
-						easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-					}
-				);
-			};
-
-			const activateTab = (index: number, focus = false, animate = false) => {
-				const previousIndex = tabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
-
+			const activateTab = (index: number, focus = false) => {
 				tabs.forEach((tab, tabIndex) => {
 					const selected = tabIndex === index;
 					tab.setAttribute('aria-selected', String(selected));
@@ -119,9 +128,9 @@ const EXPERIENCE = await getExperienceData(lang);
 
 					const panel = panels[tabIndex];
 					if (panel) {
-						panel.hidden = !selected;
 						panel.dataset.active = String(selected);
-						if (selected && animate && index !== previousIndex) animatePanel(panel);
+						panel.setAttribute('aria-hidden', String(!selected));
+						panel.inert = !selected;
 					}
 				});
 
@@ -129,7 +138,7 @@ const EXPERIENCE = await getExperienceData(lang);
 			};
 
 			tabs.forEach((tab, index) => {
-				tab.addEventListener('click', () => activateTab(index, false, true));
+				tab.addEventListener('click', () => activateTab(index));
 				tab.addEventListener('keydown', event => {
 					let next = index;
 					if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
@@ -142,7 +151,7 @@ const EXPERIENCE = await getExperienceData(lang);
 						next = tabs.length - 1;
 					} else if (event.key === 'Enter' || event.key === ' ') {
 						event.preventDefault();
-						activateTab(index, true, true);
+						activateTab(index, true);
 						return;
 					} else {
 						return;
