@@ -13,22 +13,23 @@ const EXPERIENCE = await getExperienceData(lang);
 ---
 
 <!--
-	Portfolio / Home Experience (Figma v2):
-	The semantic highlight surface is full-bleed; content is capped to the
-	1440px Portfolio shell. Desktop uses 80px gutters, 56px vertical padding and
-	a 400 + 40 + 840 evidence grid. Tablet uses 32px gutters and 300 + 24 + 446.
-	Mobile is content-driven with 20px gutters; tabs remain a horizontally
-	scrollable 250px rail and the evidence detail follows below.
+	Portfolio / Home Experience (Figma v2 + runtime behavior):
+	The semantic highlight surface is full-bleed even when Home is rendered
+	inside a centered flex composition. Content remains capped to the 1440px
+	Portfolio shell. Tablet/Desktop use a viewport-filling minimum height below
+	the 72px Header, but remain content-driven when localization needs more room.
+	Mobile remains content-driven with a horizontally scrollable 250px tab rail.
 -->
 <section
 	id="experience"
-	class="w-full scroll-mt-18 bg-channel-surface-highlight"
+	class="relative left-1/2 w-dvw max-w-none -translate-x-1/2 scroll-mt-18 overflow-x-clip bg-channel-surface-highlight"
 	aria-labelledby="experience-title"
 >
 	<div
-		class="mx-auto flex w-full max-w-360 flex-col items-center gap-5 px-5 py-10 md:gap-6 md:px-8 md:py-12 lg:px-20 lg:py-14"
+		data-experience-shell
+		class="mx-auto flex w-full max-w-360 flex-col items-center gap-5 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:justify-center md:gap-6 md:px-8 md:py-12 lg:px-20 lg:py-14"
 	>
-		<TitleSection className="w-full">
+		<TitleSection align="center" className="w-full">
 			<ChevronRightIcon
 				class="text-channel-accent-primary"
 				aria-hidden="true"
@@ -67,6 +68,7 @@ const EXPERIENCE = await getExperienceData(lang);
 				{
 					EXPERIENCE.map((exp, idx) => (
 						<div
+							class="experience-panel"
 							role="tabpanel"
 							id={`exp-panel-${exp.experienceId}`}
 							aria-labelledby={`exp-tab-${exp.experienceId}`}
@@ -91,7 +93,24 @@ const EXPERIENCE = await getExperienceData(lang);
 			const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
 			const panels = tabs.map(tab => document.getElementById(tab.getAttribute('aria-controls') ?? ''));
 
-			const activateTab = (index: number, focus = false) => {
+			const animatePanel = (panel: HTMLElement) => {
+				if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+				panel.getAnimations().forEach(animation => animation.cancel());
+				panel.animate(
+					[
+						{ opacity: 0, transform: 'translateY(0.5rem)' },
+						{ opacity: 1, transform: 'translateY(0)' },
+					],
+					{
+						duration: 220,
+						easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+					}
+				);
+			};
+
+			const activateTab = (index: number, focus = false, animate = false) => {
+				const previousIndex = tabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+
 				tabs.forEach((tab, tabIndex) => {
 					const selected = tabIndex === index;
 					tab.setAttribute('aria-selected', String(selected));
@@ -102,6 +121,7 @@ const EXPERIENCE = await getExperienceData(lang);
 					if (panel) {
 						panel.hidden = !selected;
 						panel.dataset.active = String(selected);
+						if (selected && animate && index !== previousIndex) animatePanel(panel);
 					}
 				});
 
@@ -109,7 +129,7 @@ const EXPERIENCE = await getExperienceData(lang);
 			};
 
 			tabs.forEach((tab, index) => {
-				tab.addEventListener('click', () => activateTab(index));
+				tab.addEventListener('click', () => activateTab(index, false, true));
 				tab.addEventListener('keydown', event => {
 					let next = index;
 					if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
@@ -122,7 +142,7 @@ const EXPERIENCE = await getExperienceData(lang);
 						next = tabs.length - 1;
 					} else if (event.key === 'Enter' || event.key === ' ') {
 						event.preventDefault();
-						activateTab(index, true);
+						activateTab(index, true, true);
 						return;
 					} else {
 						return;
