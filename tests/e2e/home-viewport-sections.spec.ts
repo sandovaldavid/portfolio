@@ -45,18 +45,31 @@ test('Experience keeps the next section anchored when a longer role is selected'
 
 	const projects = page.locator('#projects');
 	const experience = page.locator('#experience');
-	const projectsBefore = await projects.boundingBox();
-	const experienceBefore = await experience.boundingBox();
+	const projectsBefore = await projects.evaluate(element => {
+		const rect = element.getBoundingClientRect();
+		return { documentY: rect.top + window.scrollY, height: rect.height };
+	});
+	const experienceBefore = await experience.evaluate(element => {
+		const rect = element.getBoundingClientRect();
+		return { documentY: rect.top + window.scrollY, height: rect.height };
+	});
 
 	const tabs = page.getByRole('tab');
 	await tabs.nth(2).click();
 	await expect(tabs.nth(2)).toHaveAttribute('aria-selected', 'true');
 
-	const projectsAfter = await projects.boundingBox();
-	const experienceAfter = await experience.boundingBox();
+	const projectsAfter = await projects.evaluate(element => {
+		const rect = element.getBoundingClientRect();
+		return { documentY: rect.top + window.scrollY, height: rect.height };
+	});
+	const experienceAfter = await experience.evaluate(element => {
+		const rect = element.getBoundingClientRect();
+		return { documentY: rect.top + window.scrollY, height: rect.height };
+	});
 
-	expect(Math.abs(projectsAfter!.y - projectsBefore!.y)).toBeLessThanOrEqual(1);
-	expect(Math.abs(experienceAfter!.height - experienceBefore!.height)).toBeLessThanOrEqual(1);
+	expect(Math.abs(projectsAfter.documentY - projectsBefore.documentY)).toBeLessThanOrEqual(1);
+	expect(Math.abs(experienceAfter.documentY - experienceBefore.documentY)).toBeLessThanOrEqual(1);
+	expect(Math.abs(experienceAfter.height - experienceBefore.height)).toBeLessThanOrEqual(1);
 });
 
 test('Mobile remains content-driven and horizontally contained', async ({ page }) => {
