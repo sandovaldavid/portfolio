@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const globalStyles = readFileSync('src/app/styles/global.css', 'utf8');
+const layout = readFileSync('src/app/layouts/Layout.astro', 'utf8');
 const sectionContainer = readFileSync(
 	'src/shared/ui/section-container/SectionContainer.astro',
 	'utf8'
@@ -18,9 +19,10 @@ const sectionScroll = readFileSync(
 );
 
 describe('Home viewport section contract', () => {
-	it('uses a full-width Home wrapper without viewport-width overflow hacks', () => {
-		expect(globalStyles).toContain('#main-content > div:has(> #hero)');
-		expect(globalStyles).toContain('width: 100%');
+	it('uses an explicit full-width Home wrapper without viewport-width or relational-selector hacks', () => {
+		expect(layout).toContain('<div class="w-full pt-18">');
+		expect(globalStyles).not.toContain(':has(> #hero)');
+		expect(globalStyles).not.toContain('.container {');
 		expect(experience).not.toContain('w-dvw');
 		expect(experience).not.toContain('100dvw');
 		expect(experience).not.toContain('-translate-x-1/2');
@@ -42,6 +44,8 @@ describe('Home viewport section contract', () => {
 		expect(experience).toContain('col-start-1 row-start-1');
 		expect(experience).toContain('visibility: hidden');
 		expect(experience).toContain('panel.inert = !selected');
+		expect(experience).not.toContain('active={idx === 0}');
+		expect(experienceTab).not.toContain('active: boolean');
 		expect(experienceTab).toContain('hover:bg-badge-brand-bg');
 		expect(experienceTab).toContain('data-[active=true]:border-edge-strong');
 	});
