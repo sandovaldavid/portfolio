@@ -7,12 +7,13 @@ const { className } = Astro.props;
 ---
 
 <!--
-	Section Title contract (spec/03): gap 12, optional leading icon 20px,
-	JetBrains Mono Bold 36/40 tracking .9px; wraps inside a 340px mobile column.
+	Section Title contract (Figma / Portfolio v2): gap 12, optional leading
+	icon 20px, JetBrains Mono Bold 36/40 tracking .9px. The component owns no
+	external margin; section parents own vertical rhythm through gap/padding.
 -->
 <h2
 	class:list={[
-		'title-section mb-12 flex items-center gap-3 font-mono text-4xl font-bold leading-10 tracking-[0.9px] text-content-strong',
+		'title-section flex items-center gap-3 text-section-title text-content-strong',
 		className,
 	]}
 >
