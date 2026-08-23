@@ -22,8 +22,8 @@ const { company, role, tabId, panelId, experienceId, index, selected, focusable 
 	abbreviated. Home Experience itself uses the semantic highlight surface, so
 	the runtime Hover state uses the brand-badge surface instead of the Figma
 	standalone surface-highlight swatch; Active remains unambiguous through its
-	strong border, accent text and indicator. Focus keeps the explicit accent
-	border. State changes never shift geometry.
+	strong border, accent text and full-height indicator. Focus keeps the explicit
+	accent border. Selection cues animate in and out without shifting geometry.
 -->
 <button
 	role="tab"
@@ -38,7 +38,7 @@ const { company, role, tabId, panelId, experienceId, index, selected, focusable 
 >
 	<span
 		data-experience-indicator="vertical"
-		class="absolute -top-0.5 bottom-1.5 -left-0.5 hidden w-1 origin-top scale-y-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-y-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:block"
+		class="absolute -top-0.5 -bottom-0.5 -left-0.5 hidden w-1 origin-top scale-y-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-y-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:block"
 		aria-hidden="true"
 	></span>
 	<span
