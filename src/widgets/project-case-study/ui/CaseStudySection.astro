@@ -1,0 +1,84 @@
+---
+interface Props {
+	eyebrow?: string;
+	title: string;
+	surface?: 'canvas' | 'highlight';
+	width?: 'wide' | 'reading';
+	id?: string;
+}
+
+const {
+	eyebrow,
+	title,
+	surface = 'canvas',
+	width = 'wide',
+	id,
+} = Astro.props;
+---
+
+<section
+	{id}
+	class:list={[
+		'w-full px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12',
+		surface === 'highlight' ? 'bg-channel-surface-highlight' : 'bg-channel-background-canvas',
+	]}
+	data-case-study-section
+>
+	<div
+		class:list={[
+			'mx-auto w-full',
+			width === 'reading' ? 'max-w-210' : 'max-w-320',
+		]}
+	>
+		{
+			eyebrow && (
+				<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+					{eyebrow}
+				</p>
+			)
+		}
+		<h2 class:list={['text-feature-title text-content-strong md:text-section-title', eyebrow && 'mt-2']}>
+			{title}
+		</h2>
+		<div class="case-study-copy mt-5 text-body text-content-default">
+			<slot />
+		</div>
+	</div>
+</section>
+
+<style>
+	.case-study-copy :global(p + p),
+	.case-study-copy :global(p + ul),
+	.case-study-copy :global(p + ol),
+	.case-study-copy :global(ul + p),
+	.case-study-copy :global(ol + p) {
+		margin-top: 1rem;
+	}
+
+	.case-study-copy :global(ul),
+	.case-study-copy :global(ol) {
+		padding-left: 1.25rem;
+	}
+
+	.case-study-copy :global(ul) {
+		list-style: square;
+	}
+
+	.case-study-copy :global(ol) {
+		list-style: decimal;
+	}
+
+	.case-study-copy :global(li + li) {
+		margin-top: 0.5rem;
+	}
+
+	.case-study-copy :global(strong) {
+		color: var(--channel-content-strong);
+		font-weight: 700;
+	}
+
+	.case-study-copy :global(code) {
+		font-family: var(--font-code);
+		font-size: 0.875em;
+	}
+</style>
