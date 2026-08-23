@@ -49,19 +49,21 @@ const socialLinks = [
 ---
 
 <!--
-	Recruiter HUD contract (spec/03): desktop ONLY (never rendered below lg).
-	Closed trigger is a content-hug 44px control; the open panel is 360px wide
-	with a 320px inner column. Preferences own Theme and Language on desktop.
-	Hides while the Footer CTA is visible (IntersectionObserver visibility).
+	Portfolio / Recruiter HUD (Figma v2): desktop only. The closed trigger is
+	44px high and content-hug; the open composition is 360px wide and uses the
+	20px / 16px panel rhythm from Figma. Open/close and Footer takeover use
+	subtle transform/opacity transitions while preserving reduced-motion.
 -->
 <div
 	id="recruiter-hud"
-	class="recruiter-hud fixed bottom-5 right-5 z-50 hidden flex-col items-end gap-4 font-mono lg:flex"
+	class="recruiter-hud fixed bottom-5 right-5 z-50 hidden w-90 flex-col items-end gap-4 font-mono lg:flex"
+	data-open="false"
+	data-footer-hidden="false"
 >
 	<button
 		id="recruiter-hud-toggle"
 		type="button"
-		class="flex h-11 cursor-pointer items-center gap-2 border-2 border-button-border bg-button-primary-background px-4 text-sm font-bold uppercase tracking-wider text-button-primary-content shadow-retro-md hover:bg-button-primary-background-hover hover:shadow-retro-xl active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+		class="flex h-11 cursor-pointer items-center gap-2 border-2 border-button-border bg-button-primary-background px-4 text-button-label text-button-primary-content shadow-retro-md transition-[background-color,box-shadow,transform] duration-150 hover:bg-button-primary-background-hover hover:shadow-retro-xl active:translate-y-0.5 active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 		aria-controls="recruiter-hud-panel"
 		aria-expanded="false"
 	>
@@ -70,12 +72,13 @@ const socialLinks = [
 
 	<div
 		id="recruiter-hud-panel"
-		class="absolute bottom-16 right-0 hidden w-[360px] flex-col gap-3.5 border-2 border-channel-edge-strong bg-channel-surface-default p-5 shadow-retro-2xl"
+		class="recruiter-panel absolute bottom-15 right-0 flex w-90 flex-col gap-4 border-2 border-channel-edge-strong bg-channel-surface-default p-5 shadow-retro-2xl"
 		role="dialog"
 		aria-modal="false"
+		aria-hidden="true"
 		aria-labelledby="recruiter-hud-title"
 	>
-		<div class="flex items-start justify-between gap-4 border-b border-edge-subtle pb-2.5">
+		<div class="flex w-full items-start justify-between gap-4 border-b border-edge-subtle pb-2.5">
 			<h2
 				id="recruiter-hud-title"
 				class="text-lg font-bold leading-6 text-channel-accent-primary"
@@ -85,7 +88,7 @@ const socialLinks = [
 			<button
 				id="recruiter-hud-close"
 				type="button"
-				class="grid size-10 shrink-0 cursor-pointer place-items-center rounded-none border border-edge-strong bg-transparent text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+				class="grid size-10 shrink-0 cursor-pointer place-items-center border border-edge-strong bg-transparent text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 				aria-label={tRecruiter('closePanel')}
 			>
 				<svg
@@ -101,8 +104,7 @@ const socialLinks = [
 						stroke-linejoin="round"
 						stroke-width="2"
 						d="M6 18L18 6M6 6l12 12"
-					>
-					</path>
+					></path>
 				</svg>
 			</button>
 		</div>
@@ -113,7 +115,7 @@ const socialLinks = [
 			{tRecruiter('availability')}
 		</p>
 
-		<div class="flex flex-col gap-3.5">
+		<div class="flex flex-col gap-4">
 			<LinkButton
 				href={resumeUrl}
 				target="_blank"
@@ -127,8 +129,7 @@ const socialLinks = [
 				{tRecruiter('sendEmail')}
 			</LinkButton>
 
-			<!-- Social row: 32px high, gap 24, icon 16, Inter Medium 16 -->
-			<div class="flex h-8 items-center justify-between gap-6">
+			<div class="flex h-8 items-center justify-center gap-6">
 				{
 					socialLinks.map(({ label, href, Icon, external }) => (
 						<LinkInline
@@ -136,27 +137,22 @@ const socialLinks = [
 							icon={Icon}
 							newTabLabel={external ? newTabLabel : undefined}
 						>
-							<span class="text-sm">{label}</span>
+							<span>{label}</span>
 						</LinkInline>
 					))
 				}
 			</div>
 		</div>
 
-		<!-- Preferences block owns Theme and Language on desktop (Plan 03). -->
-		<div class="mt-1.5 flex w-full flex-col gap-3 border-t border-edge-subtle pt-2.5">
+		<div class="flex w-full flex-col gap-2 border-t border-edge-subtle pt-2">
 			<div class="flex items-center justify-between gap-3">
-				<span
-					class="text-xs font-bold uppercase tracking-widest text-channel-content-muted"
-				>
+				<span class="text-xs font-bold uppercase tracking-widest text-channel-content-muted">
 					{tTheme('label')}
 				</span>
 				<ThemeToggle />
 			</div>
 			<div class="flex items-center justify-between gap-3">
-				<span
-					class="text-xs font-bold uppercase tracking-widest text-channel-content-muted"
-				>
+				<span class="text-xs font-bold uppercase tracking-widest text-channel-content-muted">
 					{tRecruiter('language')}
 				</span>
 				<LanguagePicker {localizedPaths} currentLang={lang} />
@@ -166,27 +162,67 @@ const socialLinks = [
 </div>
 
 <style>
-	/* Footer CTA takes over once visible: remove the HUD entirely from layout. */
+	.recruiter-hud {
+		transition:
+			opacity 180ms ease-out,
+			transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+			visibility 0s linear 0s;
+	}
+
+	.recruiter-panel {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(0.5rem) scale(0.985);
+		transform-origin: bottom right;
+		visibility: hidden;
+		transition:
+			opacity 180ms ease-out,
+			transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+			visibility 0s linear 220ms;
+	}
+
+	.recruiter-hud[data-open='true'] .recruiter-panel {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateY(0) scale(1);
+		visibility: visible;
+		transition-delay: 0s;
+	}
+
 	.recruiter-hud[data-footer-hidden='true'] {
-		display: none;
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(0.5rem);
+		visibility: hidden;
+		transition:
+			opacity 180ms ease-out,
+			transform 220ms cubic-bezier(0.2, 0.8, 0.2, 1),
+			visibility 0s linear 220ms;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.recruiter-hud,
+		.recruiter-panel {
+			transition: none;
+		}
 	}
 </style>
 
 <script>
-	const isOpen = (toggle: HTMLElement | null) => toggle?.getAttribute('aria-expanded') === 'true';
+	const isOpen = (root: HTMLElement | null) => root?.dataset.open === 'true';
 
 	const setOpen = (root: HTMLElement, open: boolean) => {
 		const toggle = root.querySelector<HTMLButtonElement>('#recruiter-hud-toggle');
 		const panel = root.querySelector<HTMLElement>('#recruiter-hud-panel');
 		if (!toggle || !panel) return;
 
-		panel.classList.toggle('hidden', !open);
-		panel.classList.toggle('flex', open);
+		root.dataset.open = String(open);
 		toggle.setAttribute('aria-expanded', String(open));
+		panel.setAttribute('aria-hidden', String(!open));
+
 		if (open) {
-			const firstFocusable = panel.querySelector<HTMLElement>('a, button');
-			firstFocusable?.focus();
-		} else if (document.activeElement && root.contains(document.activeElement)) {
+			requestAnimationFrame(() => panel.querySelector<HTMLAnchorElement>('a')?.focus());
+		} else if (document.activeElement && panel.contains(document.activeElement)) {
 			toggle.focus();
 		}
 	};
@@ -200,16 +236,13 @@ const socialLinks = [
 		const close = root.querySelector<HTMLButtonElement>('#recruiter-hud-close');
 		if (!toggle) return;
 
-		toggle.addEventListener('click', () => setOpen(root, !isOpen(toggle)));
+		toggle.addEventListener('click', () => setOpen(root, !isOpen(root)));
 		close?.addEventListener('click', () => setOpen(root, false));
 
-		// Escape/outside-click follow the mobile menu pattern: document-level,
-		// attached once per element, focus returns to the trigger on dismissal.
 		root.addEventListener('keydown', event => {
-			if (event.key === 'Escape' && isOpen(toggle)) {
+			if (event.key === 'Escape' && isOpen(root)) {
 				event.stopPropagation();
 				setOpen(root, false);
-				toggle.focus();
 			}
 		});
 	};
@@ -217,12 +250,9 @@ const socialLinks = [
 	setupHud();
 	document.addEventListener('astro:page-load', setupHud);
 
-	// Outside click resolves the live HUD so client navigations stay safe
-	// without re-binding document listeners.
 	document.addEventListener('click', event => {
 		const root = document.getElementById('recruiter-hud');
-		const toggle = root?.querySelector('#recruiter-hud-toggle');
-		if (!root || !(toggle instanceof HTMLElement) || !isOpen(toggle)) return;
+		if (!root || !isOpen(root)) return;
 		const target = event.target;
 		if (target instanceof Node && !root.contains(target)) setOpen(root, false);
 	});
@@ -230,29 +260,25 @@ const socialLinks = [
 	document.addEventListener('keydown', event => {
 		if (event.key !== 'Escape') return;
 		const root = document.getElementById('recruiter-hud');
-		const toggle = root?.querySelector('#recruiter-hud-toggle');
-		if (!root || !(toggle instanceof HTMLElement) || !isOpen(toggle)) return;
+		if (!root || !isOpen(root)) return;
 		if (!root.contains(event.target as Node)) setOpen(root, false);
 	});
 
-	// Hide the HUD while the Footer CTA is visible. One observer exists for the
-	// whole session; it re-observes the current footer after every navigation.
 	let footerObserver: IntersectionObserver | null = null;
 
 	const observeFooterCta = () => {
 		footerObserver?.disconnect();
-
 		const footer = document.getElementById('contact');
 		if (!footer) return;
 
-		if (!footerObserver) {
-			footerObserver = new IntersectionObserver(entries => {
-				entries.forEach(entry => {
-					const hud = document.getElementById('recruiter-hud');
-					hud?.setAttribute('data-footer-hidden', String(entry.isIntersecting));
-				});
+		footerObserver ??= new IntersectionObserver(entries => {
+			entries.forEach(entry => {
+				const hud = document.getElementById('recruiter-hud');
+				if (!hud) return;
+				hud.dataset.footerHidden = String(entry.isIntersecting);
+				if (entry.isIntersecting) setOpen(hud, false);
 			});
-		}
+		});
 		footerObserver.observe(footer);
 	};
 
