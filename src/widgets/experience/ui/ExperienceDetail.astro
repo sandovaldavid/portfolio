@@ -1,4 +1,5 @@
 ---
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import type { ExperienceItem as ExperienceItemData } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
@@ -6,87 +7,77 @@ import { LinkInline, TechPill } from '@shared/ui';
 
 type Props = Pick<
 	ExperienceItemData,
-	'title' | 'date' | 'description' | 'technologies' | 'link' | 'company'
+	'title' | 'date' | 'description' | 'technologies' | 'company' | 'isCurrent'
 >;
 
-const { title, date, description, technologies, link, company } = Astro.props;
+const { title, date, description, technologies, company, isCurrent } = Astro.props;
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tExperience = createScopedUiTranslator(lang, 'sections.experience');
-
-/*
- * Experience Detail contract (spec/03): default surface, border 2 strong,
- * hard accent shadow 4px 4px 0 (--shadow-retro-lg-accent), flex column gap18.
- * Widths Desktop 740 / Tablet 446 / Mobile 360 as targets; p24 desktop/tablet
- * and p20 mobile. Header: role VT323 30, date Share Tech Mono 12 in the
- * status-online color, desktop row h60 vs mobile stacked h70; company Share
- * Tech Mono 16 accent; divider 2px subtle edge. Achievements gap12 with JBM
- * Bold14 accent arrows and Inter 15/14 bodies. Technologies wrap gap8 using
- * Stack-SM Tech Pills.
- */
+const currentRoleUrl = getRelativeLocaleUrl(lang, 'atena');
+const visibleTechnologies = technologies.slice(0, 3);
+const companyContext = isCurrent
+	? `${company.toUpperCase()} · ${tExperience('currentDomain')}`
+	: company.toUpperCase();
 ---
 
-<div
-	class="flex w-full max-w-[360px] flex-col gap-[18px] rounded-none border-2 border-edge-strong bg-channel-surface-default p-5 text-content shadow-retro-lg-accent transition-all duration-100 md:max-w-[446px] md:p-6 lg:max-w-[740px]"
->
+<!--
+	Portfolio / Experience Detail (Figma v2): open editorial evidence block,
+	not a generic card. Desktop targets 840px and lays three achievements in
+	columns; Tablet 446px and Mobile 360px stack them vertically. Role,
+	company/date and achievements are localized source data. Only the current
+	role receives the dedicated Atena CTA. Technology inventory is deliberately
+	limited to three representative source-backed items on this home summary.
+-->
+<div class="flex w-full max-w-90 flex-col gap-3.5 md:max-w-111.5 lg:max-w-210 lg:gap-4">
 	<header
-		class="flex min-h-[70px] flex-col justify-center gap-1 md:h-[60px] md:flex-row md:items-center md:justify-between md:gap-6"
+		class="flex min-h-17.5 flex-col items-start gap-1 md:min-h-16 md:flex-row md:justify-between lg:min-h-15"
 	>
-		<h3 class="font-pixel-clean text-[30px] leading-8 text-content-strong">{title}</h3>
-		<p class="flex flex-wrap items-baseline gap-x-2 font-gaming-mono uppercase tracking-wider">
-			{
-				company && (
-					<>
-						<span class="text-base normal-case text-primary-500 dark:text-primary-400">
-							{company}
-						</span>
-						<span class="text-content-muted">·</span>
-					</>
-				)
-			}
-			<span class="text-xs text-channel-status-online">{date}</span>
-		</p>
+		<h3 class="max-w-80 text-component-title text-content-strong md:w-62.5 lg:w-auto lg:max-w-none">
+			{title}
+		</h3>
+		<p class="text-caption text-channel-status-online md:w-32 lg:w-auto">{date}</p>
 	</header>
 
-	<hr class="border-t-2 border-edge-subtle" />
+	<p class="text-editorial-label text-channel-accent-primary">{companyContext}</p>
 
-	<ul class="flex flex-col gap-3">
+	<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
+
+	<ul class="flex flex-col gap-2.5 lg:grid lg:grid-cols-3 lg:gap-6">
 		{
-			description.map((point, idx) => (
-				<li
-					class="flex items-start gap-2.5 font-sans text-sm leading-relaxed md:text-[15px]"
-					style={`animation: var(--animate-slide-up); animation-delay: ${idx * 50}ms;`}
-				>
+			description.slice(0, 3).map(point => (
+				<li class="flex min-w-0 items-start gap-2.5">
 					<ArrowRightIcon
-						class="mt-1 size-3.5 shrink-0 text-primary-500 dark:text-primary-400"
+						class="size-4 shrink-0 text-content-strong"
 						aria-hidden="true"
 						focusable="false"
 					/>
-					<span>{point}</span>
+					<span class="min-w-0 flex-1 text-secondary text-content-default md:text-body">
+						{point}
+					</span>
 				</li>
 			))
 		}
 	</ul>
 
-	{
-		technologies.length > 0 && (
-			<ul class="flex flex-wrap gap-2 pt-2">
-				{technologies.map(tech => (
-					<li>
-						<TechPill label={tech} size="sm" variant="stack" />
-					</li>
-				))}
-			</ul>
-		)
-	}
+	<footer class="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
+		{
+			visibleTechnologies.length > 0 && (
+				<ul class="flex flex-wrap gap-2">
+					{visibleTechnologies.map(tech => (
+						<li>
+							<TechPill label={tech} size="sm" variant="stack" />
+						</li>
+					))}
+				</ul>
+			)
+		}
 
-	{
-		link && (
-			<div class="pt-3">
-				<LinkInline href={link} class="text-lg">
-					{tExperience('learnMore')}
-					<ArrowRightIcon class="ml-1 size-4" aria-hidden="true" focusable="false" />
+		{
+			isCurrent && (
+				<LinkInline href={currentRoleUrl} icon={ArrowRightIcon} iconPosition="trailing">
+					{tExperience('viewCurrentRole')}
 				</LinkInline>
-			</div>
-		)
-	}
+			)
+		}
+	</footer>
 </div>
