@@ -370,65 +370,56 @@ const structuredPageSchema =
 			<main id="main-content" class="w-full min-h-screen flex flex-col items-center">
 				{
 					isHome ? (
+						/*
+						 * Home composition (spec/04): Hero and Experience fill the
+						 * viewport under the 72px header on desktop only; every other
+						 * section and all tablet/mobile sections are content-driven so
+						 * translated copy grows without clipping.
+						 */
 						<div class="pt-[4.5rem]">
-							<div class="flex flex-col justify-around md:max-h-[calc(100dvh-4.5rem)]">
-								<slot name="hero" />
-							</div>
-							<div class="flex flex-col">
-								<SectionContainer
-									id="experience"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<BriefCaseIcon class="size-12" />
-										{tExperience('sectionTitle')}
-									</TitleSection>
-									<slot name="experience" />
-								</SectionContainer>
-								<SectionContainer
-									id="projects"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<CodeIcon class="size-12" />
-										{tProjects('sectionTitle')}
-									</TitleSection>
-									<slot name="projects" />
-								</SectionContainer>
+							<slot name="hero" />
+							<SectionContainer
+								id="experience"
+								class="lg:min-h-[calc(100svh-4.5rem)] py-12 md:py-16 gap-y-6"
+							>
+								<TitleSection className="mb-0">
+									<BriefCaseIcon class="size-12" />
+									{tExperience('sectionTitle')}
+								</TitleSection>
+								<slot name="experience" />
+							</SectionContainer>
 
-								<SectionContainer
-									id="research"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<BrainIcon class="size-12" />
-										{tResearchSection('sectionTitle')}
-									</TitleSection>
-									<slot name="research" />
-								</SectionContainer>
+							<SectionContainer id="projects" class="py-12 md:py-16 gap-y-6">
+								<TitleSection className="mb-0">
+									<CodeIcon class="size-12" />
+									{tProjects('sectionTitle')}
+								</TitleSection>
+								<slot name="projects" />
+							</SectionContainer>
 
-								<SectionContainer
-									id="about-me"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<ProfileCheckIcon class="size-12" />
-										{tAbout('sectionTitle')}
-									</TitleSection>
-									<slot name="about-me" />
-								</SectionContainer>
+							<SectionContainer id="research" class="py-12 md:py-16 gap-y-6">
+								<TitleSection className="mb-0">
+									<BrainIcon class="size-12" />
+									{tResearchSection('sectionTitle')}
+								</TitleSection>
+								<slot name="research" />
+							</SectionContainer>
 
-								<SectionContainer
-									id="technologies"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<CodeIcon class="size-12" />
-										{tTechStack('sectionTitle')}
-									</TitleSection>
-									<TechStack />
-								</SectionContainer>
-							</div>
+							<SectionContainer id="about-me" class="py-12 md:py-16 gap-y-6">
+								<TitleSection className="mb-0">
+									<ProfileCheckIcon class="size-12" />
+									{tAbout('sectionTitle')}
+								</TitleSection>
+								<slot name="about-me" />
+							</SectionContainer>
+
+							<SectionContainer id="technologies" class="py-12 md:py-16 gap-y-6">
+								<TitleSection className="mb-0">
+									<CodeIcon class="size-12" />
+									{tTechStack('sectionTitle')}
+								</TitleSection>
+								<TechStack />
+							</SectionContainer>
 						</div>
 					) : (
 						<div class="pt-28 pb-16 w-full flex flex-col items-center">

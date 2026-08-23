@@ -68,7 +68,7 @@ describe('granular UI catalogs', () => {
 		const catalog = getUiCatalog(Language.ENGLISH);
 		const key: UiCatalogKey = 'sections.techStack.sectionTitle';
 
-		expect(catalog[key]).toBe('Technologies');
+		expect(catalog[key]).toBe('CORE STACK');
 		expectTypeOf<UiCatalogKey>().toMatchTypeOf<string>();
 	});
 
