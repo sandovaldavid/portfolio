@@ -84,10 +84,13 @@ html {
    by its own content instead of stretched to the viewport. A non-wrapping
    child (a code block with a long unbroken line) can then grow past the
    viewport and widen the whole page instead of scrolling within its own
-   overflow-x: auto box. */
-#main-content > *,
-#main-content > * > * {
-	max-width: 100%;
+   overflow-x: auto box. Lives in @layer base so an element's explicit
+   max-width utility (utilities layer) still wins over this protection. */
+@layer base {
+	#main-content > *,
+	#main-content > * > * {
+		max-width: 100%;
+	}
 }
 
 @layer base {
