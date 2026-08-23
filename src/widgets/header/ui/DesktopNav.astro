@@ -22,27 +22,26 @@ const { navItems, navLabel } = Astro.props;
 ---
 
 <!--
-	Desktop nav contract (spec/03 Header): group gap 10px; item 145x40 with
-	icon 16 and Navigation typography (JetBrains Mono Bold 14/20 tracking .35).
-	min-width keeps translated labels safe instead of forcing a hard width.
+	Desktop nav contract (Figma v2 Header): group gap 10px; item 145×40;
+	icon 16, content gap 6 and Navigation typography 14/20 tracking .35.
 -->
-<nav class="hidden lg:flex items-center justify-center gap-2.5 font-mono" aria-label={navLabel}>
+<nav class="hidden lg:flex items-center justify-center gap-2.5" aria-label={navLabel}>
 	{
 		navItems.map(link => (
 			<a
-				class="relative flex h-10 min-w-[145px] items-center justify-center gap-2 px-3 text-sm font-bold leading-5 tracking-[0.35px] transition-colors duration-100 text-content-strong hover:text-channel-accent-primary-hover whitespace-nowrap focus-visible:outline-none focus-visible:text-channel-accent-primary"
+				class="relative flex h-10 w-[145px] items-center justify-center gap-1.5 px-3 text-navigation text-content-strong transition-colors duration-100 hover:text-channel-accent-primary-hover whitespace-nowrap focus-visible:outline-none focus-visible:text-channel-accent-primary"
 				aria-label={link.title}
 				data-section-id={link.label}
 				href={link.url}
 				data-astro-prefetch={link.prefetch ? 'hover' : undefined}
 			>
-				{link.icon === 'experience' && <BriefcaseIcon class="size-4" />}
-				{link.icon === 'research' && <BrainIcon class="size-4" />}
-				{link.icon === 'projects' && <CodeIcon class="size-4" />}
-				{link.icon === 'devlog' && <ScrollTextIcon class="size-4" />}
-				{link.icon === 'blog' && <BookOpenIcon class="size-4" />}
-				{link.icon === 'about-me' && <ProfileCheckIcon class="size-4" />}
-				{link.icon === 'technologies' && <SystemIcon class="size-4" />}
+				{link.icon === 'experience' && <BriefcaseIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'research' && <BrainIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'projects' && <CodeIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'devlog' && <ScrollTextIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'blog' && <BookOpenIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'about-me' && <ProfileCheckIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'technologies' && <SystemIcon class="size-4" aria-hidden="true" />}
 				<span>{link.title}</span>
 			</a>
 		))
@@ -50,7 +49,7 @@ const { navItems, navLabel } = Astro.props;
 </nav>
 
 <style>
-	/* Active/hover indicator is an absolute rule: geometry never shifts. */
+	/* Active/hover indicator is absolute so state never shifts geometry. */
 	nav a::after {
 		content: '';
 		position: absolute;
