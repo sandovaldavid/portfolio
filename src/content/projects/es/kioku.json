@@ -2,26 +2,26 @@
 	"projectId": "kioku",
 	"locale": "es",
 	"title": "Kioku",
-	"description": "Un servidor MCP local-first en .NET que convierte el conocimiento de proyecto de agentes de IA — decisiones, planes, bugs y sesiones — en registros Markdown durables dentro de un vault de Obsidian, con un contrato de herramientas generado, evaluación de retrieval y evidencia de traspaso multi-agente.",
+	"description": "Un servidor MCP local-first en .NET 10 que convierte conocimiento de proyecto de agentes de IA en registros Markdown durables dentro de un vault de Obsidian, con contratos tipados, specs y planes de ingeniería, retrieval híbrido, coordinación y workflows de traspaso multi-agente.",
 	"category": "Desarrollo Backend",
 	"imageAlt": "Vista previa de la arquitectura y el traspaso multi-agente del servidor MCP Kioku",
 	"caseStudy": {
-		"problem": "Los agentes de codificación con IA pierden contexto cuando termina una sesión o proceso: decisiones, planes, bugs y conocimiento de proyecto suelen quedar atrapados en una sola conversación en lugar de convertirse en registros durables y reutilizables. Necesitaba una forma de que un agente traspasara un proyecto a otro agente — o a una futura sesión de sí mismo — sin depender del historial de conversación compartido.",
-		"approach": "Diseñé Kioku como un servidor Model Context Protocol local-first que lee y escribe conocimiento de proyecto estructurado — sesiones, planes, ADRs, bugs y consultas — como Markdown y frontmatter YAML dentro de un vault de Obsidian. El servidor expone este conocimiento mediante tools, prompts y resources MCP tipados detrás de una arquitectura .NET en capas: un adaptador MCP traduce las llamadas del protocolo a contratos de aplicación, los contratos de aplicación dirigen servicios de workflow, y los servicios de workflow dependen de puertos de dominio e infraestructura implementados contra el sistema de archivos, retrieval híbrido y un pipeline opcional de embeddings basado en Ollama. Tests de guarda de arquitectura hacen cumplir la dirección de dependencias y mantienen el servidor como un único ensamblado desplegable en lugar de dividirlo prematuramente.",
-		"tradeoffs": "Mantuve el proyecto como un único ensamblado Kioku.Mcp.Server y usé tests de guarda de arquitectura para sostener los límites en lugar de dividirlo en varios servicios desplegables antes de tener una razón concreta. La rama estable main todavía expone una superficie más antigua de 128 tools en 19 clases de tools; el desarrollo activo reduce esto a un contrato generado y con capacidades configurables — 43 tools por defecto y 59 con todas las capacidades habilitadas — para mantener el esquema del protocolo más pequeño en clientes con presupuestos de contexto limitados. Ese rediseño no está publicado, así que este case study reporta la evidencia estable y la de desarrollo activo por separado en lugar de combinarlas en un solo número.",
-		"outcome": "La release estable, versión 2.3.0, se publica como herramienta NuGet llamada kioku-mcp-server, con tests automatizados del servidor, CI en tres sistemas operativos, una suite de evaluación de retrieval documentada e historial de releases. En la rama de desarrollo activo, una demo reproducible multi-proceso muestra a un agente creando una sesión, un plan, un ADR y un bug, cerrando su conexión, y a un segundo agente — mediante una conexión y proceso MCP independientes — recuperando ese contexto de proyecto y continuando el trabajo, que es el comportamiento de persistencia y traspaso que el proyecto buscaba demostrar. Pull requests recientes reportan todos los tests del servidor pasando localmente; eso es validación reportada en el PR, no un resultado re-ejecutado de forma independiente para este case study.",
+		"problem": "Los agentes de codificación con IA pierden contexto cuando termina una sesión o proceso: decisiones, specs, planes, bugs y conocimiento de proyecto pueden quedar atrapados en una sola conversación en lugar de convertirse en registros durables y reutilizables. Kioku aborda ese problema de continuidad haciendo recuperable el conocimiento del proyecto entre sesiones nuevas y clientes MCP independientes.",
+		"approach": "Kioku es un servidor Model Context Protocol local-first que lee y escribe conocimiento de proyecto estructurado directamente en un vault de Obsidian como Markdown y frontmatter YAML. El servidor .NET 10 expone contratos MCP tipados para specs, planes, decisiones, bugs, sesiones, consultas, indexación y coordinación, soporta stdio local y Streamable HTTP autenticado, y mantiene retrieval semántico y generación opcionales de forma local mediante Ollama por defecto. Obsidian permanece como integración de UI opcional en lugar de ser una dependencia de runtime para los workflows principales.",
+		"tradeoffs": "El vault permanece como fuente de verdad legible por humanos en lugar de mover la memoria del proyecto a una base de datos alojada. Eso conserva propiedad local e inspección offline, pero convierte los límites del filesystem, la seguridad de mutaciones concurrentes y la protección explícita del transporte remoto en parte del contrato del producto. Kioku usa stdio local por defecto, restringe el acceso al vault y exige autenticación o una habilitación insegura explícita para exponer HTTP fuera de loopback.",
+		"outcome": "Kioku 3.1.2 es la última release etiquetada del servidor y se distribuye como la herramienta NuGet kioku-mcp-server. La línea v3 incluye contratos de resultado tipados, primitivas de coordinación, mutaciones del vault con CAS, historial de eventos y una demo reproducible de traspaso multi-agente; 3.1 añade specs de ingeniería de primera clase y soporte durable para el workflow SPEC → PLAN. El repositorio público también documenta contratos MCP generados, despliegue, seguridad y comportamiento de retrieval.",
 		"learnings": [
-			"Los registros Markdown durables y legibles por humanos sobreviven los límites de sesión y proceso mejor que el historial de conversación específico de un proveedor.",
-			"Los tests de guarda de arquitectura mantienen honesto a un servidor de un solo ensamblado sobre su propia dirección de dependencias a medida que la superficie de tools crece y cambia.",
-			"Publicar la metodología de evaluación de retrieval y benchmarks junto con los resultados importa tanto como los números mismos — una métrica sin su entorno y dataset no es evidencia reutilizable."
+			"Markdown durable y legible por humanos sobrevive mejor los límites de sesión y proceso que un historial de conversación específico de proveedor.",
+			"Contratos generados y límites explícitos SPEC → PLAN → SESSION hacen más recuperables los workflows de agentes entre clientes y sesiones nuevas.",
+			"El acceso MCP remoto necesita autenticación explícita y límites de origen y filesystem en lugar de heredar las suposiciones de confianza de un proceso stdio local."
 		],
-		"timeline": "Estable 2.3.0 · desarrollo activo",
+		"timeline": "Estable 3.1.2 · desarrollo activo",
 		"role": "Ingeniero backend y mantenedor",
 		"presentation": {
 			"kicker": "CASO DE ESTUDIO · INGENIERÍA BACKEND",
-			"description": "Un servidor MCP local-first en .NET que convierte el conocimiento de proyecto de agentes de IA — decisiones, planes, bugs y sesiones — en registros Markdown durables dentro de un vault de Obsidian.",
+			"description": "Un servidor MCP local-first en .NET que convierte conocimiento de proyecto de agentes de IA — decisiones, specs, planes, bugs y sesiones — en registros Markdown durables dentro de un vault de Obsidian.",
 			"status": {
-				"lifecycle": "ACTIVO · ESTABLE 2.3.0 + DESARROLLO",
+				"lifecycle": "ACTIVO · ESTABLE 3.1.2 + DESARROLLO",
 				"source": "CÓDIGO PÚBLICO",
 				"demo": "SIN DEMO ALOJADA"
 			},
@@ -29,34 +29,34 @@
 				"problem": {
 					"label": "PROBLEMA",
 					"title": "EL CONTEXTO DE SESIÓN NO ES DURABLE",
-					"body": "Los agentes de IA pierden contexto al terminar una sesión o proceso. Decisiones, planes, bugs y conocimiento pueden quedar atrapados en una conversación en vez de convertirse en registros reutilizables."
+					"body": "Los agentes de IA pierden contexto al terminar una sesión o proceso. Decisiones, specs, planes, bugs y conocimiento pueden quedar atrapados en una conversación en vez de convertirse en registros reutilizables."
 				},
 				"approach": {
 					"label": "ENFOQUE",
 					"title": "MCP LOCAL-FIRST + OBSIDIAN",
-					"body": "Kioku lee y escribe sesiones, planes, ADRs, bugs y consultas como Markdown y frontmatter YAML. Tools MCP tipadas exponen este conocimiento mediante una arquitectura .NET en capas."
+					"body": "Kioku lee y escribe conocimiento de proyecto como Markdown y frontmatter YAML dentro de un vault de Obsidian. Contratos MCP tipados exponen specs, planes, sesiones, consultas y coordinación mediante stdio local o Streamable HTTP autenticado."
 				},
 				"tradeoffs": {
 					"label": "TRADE-OFFS",
-					"title": "UN SOLO ENSAMBLADO DESPLEGABLE",
-					"body": "Tests de guarda de arquitectura preservan la dirección de dependencias sin dividir prematuramente el servidor. La versión estable 2.3.0 y la evidencia no publicada se reportan por separado."
+					"title": "LOCAL-FIRST POR DEFECTO",
+					"body": "El vault sigue siendo la fuente de verdad legible y los workflows principales funcionan sin Obsidian abierto. HTTP remoto está soportado, pero la exposición fuera de loopback requiere autenticación explícita y configuración de seguridad."
 				},
 				"outcome": {
 					"label": "RESULTADO",
-					"title": "HERRAMIENTA PUBLICADA Y EVIDENCIA DE TRASPASO",
-					"body": "La release 2.3.0 se distribuye como la herramienta NuGet kioku-mcp-server con tests automatizados, CI multi-SO y evaluación de retrieval. El desarrollo activo añade una demo reproducible de traspaso multi-proceso."
+					"title": "WORKFLOW V3 Y CONTRATO DE TRASPASO PUBLICADOS",
+					"body": "Kioku 3.1.2 se distribuye como la herramienta NuGet kioku-mcp-server. La línea v3 incluye contratos de resultado tipados, primitivas de coordinación, una demo reproducible de traspaso multi-agente y specs de ingeniería de primera clase."
 				}
 			},
 			"evidenceTitle": "Evidencia y limitaciones",
 			"verified": {
 				"label": "VERIFICADO EN REPOSITORIO PÚBLICO",
-				"title": "RELEASES, TESTS, CI Y EVALUACIÓN DOCUMENTADA",
-				"body": "La rama estable main, el historial de releases, el paquete NuGet, los tests y la metodología de evaluación de retrieval son inspeccionables. Los conteos recientes permanecen reportados en PRs y no se reejecutan aquí."
+				"title": "RELEASES, CONTRATOS Y DOCUMENTACIÓN OPERATIVA PÚBLICOS",
+				"body": "La rama main, el historial de releases, el paquete NuGet, la referencia de contratos MCP generados, la documentación de seguridad y los tests son inspeccionables directamente. Este portfolio no reejecuta de forma independiente toda la validación de cada release."
 			},
 			"boundaries": {
 				"label": "LÍMITES",
-				"title": "EL TRABAJO NO PUBLICADO ESTÁ ETIQUETADO",
-				"body": "El contrato de tools más reducido y la demo de traspaso multi-agente viven en desarrollo activo. No se afirma adopción externa, carga de producción ni impacto comercial."
+				"title": "RELEASE Y DEVELOP PERMANECEN EXPLÍCITOS",
+				"body": "El proyecto documenta que develop puede contener cambios verificados pero no publicados más allá del último tag. Este caso de estudio trata 3.1.2 como estable y no afirma adopción externa, carga de producción ni impacto comercial."
 			},
 			"learningsTitle": "Extracción de aprendizajes",
 			"learnings": [
@@ -68,89 +68,87 @@
 				{
 					"label": "APRENDIZAJE 02",
 					"title": "DECISIÓN DE INGENIERÍA",
-					"body": "Los tests de guarda de arquitectura mantienen honesto a un servidor de un solo ensamblado mientras cambia el protocolo público."
+					"body": "Límites explícitos SPEC → PLAN → SESSION hacen más fácil que un agente nuevo recupere la intención del proyecto y continúe el trabajo."
 				},
 				{
 					"label": "APRENDIZAJE 03",
 					"title": "DECISIÓN DE INGENIERÍA",
-					"body": "Las métricas requieren su entorno, dataset y metodología para seguir siendo evidencia reutilizable."
+					"body": "El acceso MCP remoto requiere autenticación explícita y límites del vault en vez de heredar la confianza de un proceso local."
 				}
 			]
 		},
 		"status": {
 			"lifecycleLabel": "CICLO DE VIDA",
-			"lifecycle": "Activo — release estable más desarrollo activo",
+			"lifecycle": "Activo — release estable 3.1.2 más desarrollo activo",
 			"sourceLabel": "ACCESO AL CÓDIGO",
-			"source": "Repositorio público; código fuente, releases y tests son directamente inspeccionables.",
+			"source": "Repositorio público; código, releases, contratos generados, tests y documentación operativa son directamente inspeccionables.",
 			"demoLabel": "ACCESO A DEMO",
-			"demo": "Sin demo en vivo alojada; una demo reproducible de traspaso multi-agente está documentada en el repositorio.",
+			"demo": "Sin demo en vivo alojada; el repositorio documenta workflows locales reproducibles, incluido el traspaso multi-agente.",
 			"limitationsLabel": "LIMITACIONES",
 			"limitations": [
-				"La arquitectura, el contrato de tools y la evidencia de demo no publicados viven en la rama de desarrollo activo, no en la release 2.3.0.",
-				"No se afirma adopción externa ni escala de producción para este proyecto."
+				"La rama develop puede contener cambios verificados pero no publicados más allá de la última release etiquetada.",
+				"No se afirma adopción externa, carga de producción ni impacto comercial para este proyecto."
 			]
 		},
 		"evidence": {
 			"statusLabel": "ESTADO ACTUAL",
-			"status": "Release 2.3.0 estable — desarrollo activo sobre un contrato más reducido",
-			"statusDetail": "Las capacidades estables y las de desarrollo activo se presentan por separado más abajo. Las funcionalidades que solo existen en la rama de desarrollo activo están explícitamente etiquetadas como no publicadas.",
-			"implementedLabel": "IMPLEMENTADO // VERIFICADO EN LA DOCUMENTACIÓN DEL REPOSITORIO",
+			"status": "Release 3.1.2 estable — develop puede contener cambios verificados no publicados",
+			"statusDetail": "El comportamiento etiquetado en releases y el comportamiento exclusivo de develop deben permanecer diferenciados. El README público identifica 3.1.2 como la última release etiquetada del servidor y advierte explícitamente que develop puede avanzar más allá de ella.",
+			"implementedLabel": "IMPLEMENTADO // VERIFICADO EN REPOSITORIO PÚBLICO",
 			"implemented": [
-				"Servidor MCP público en .NET 10 publicado como herramienta NuGet kioku-mcp-server, release 2.3.0.",
-				"Transporte local stdio y HTTP, con embeddings y generación opcionales mediante una instancia local de Ollama.",
-				"128 tools MCP en 19 clases de tools, 10 prompts y 2 resources en la rama estable main auditada.",
-				"Tests automatizados del servidor, CI multi-SO en Ubuntu, Windows y macOS, checks de formato y vulnerabilidades, e historial de releases y changelog documentado.",
-				"Una suite de evaluación de retrieval con Precision@k, Recall@k, MRR y NDCG@k sobre un vault de fixtures bilingüe de 27 notas con 22 consultas puntuadas y 2 pruebas sin respuesta."
+				"Servidor MCP público en .NET 10 publicado como herramienta NuGet kioku-mcp-server, última release etiquetada 3.1.2.",
+				"Almacenamiento directo en el vault de Obsidian mediante Markdown y frontmatter YAML; workflows principales de notas, proyectos, búsqueda, sesiones, indexación y coordinación funcionan sin Obsidian abierto.",
+				"stdio local más despliegue Streamable HTTP autenticado, con requisitos de seguridad explícitos para exposición fuera de loopback.",
+				"Contratos MCP tipados, specs y planes de ingeniería de primera clase, ownership concurrente de sesiones de trabajo, retrieval full-text y semántico, y un bridge de Obsidian opcional.",
+				"La línea v3 incluye primitivas de coordinación, mutaciones del vault con CAS, historial de eventos y una demo reproducible de traspaso multi-agente; 3.1 añade soporte durable para workflows de specs de ingeniería."
 			],
-			"plannedLabel": "PLANIFICADO // NO PRESENTADO COMO ENTREGADO",
+			"plannedLabel": "LIMITADO A RAMA // NO PRESENTADO COMO RELEASE",
 			"planned": [
-				"Promover la arquitectura en capas de desarrollo activo — adaptador MCP, contratos de aplicación, servicios de workflow, puertos de dominio e infraestructura — a una release estable.",
-				"Publicar el contrato de tools generado más reducido, 43 tools por defecto y 59 con todas las capacidades, como la nueva superficie pública estable, reemplazando el diseño anterior de 128 tools.",
-				"Promover la demo reproducible de traspaso multi-agente de evidencia de desarrollo a comportamiento documentado en una release.",
-				"Reconciliar los resultados de benchmark de desarrollo activo con un entorno y dataset de release estable antes de citarlos fuera de un contexto de desarrollo."
+				"Tratar cualquier comportamiento exclusivo de develop como no publicado hasta que aparezca en una release etiquetada y en los contratos públicos generados.",
+				"Usar la referencia de contratos generados de la rama o versión exacta que se ejecuta porque la superficie MCP pública puede evolucionar entre releases.",
+				"Mantener métricas de retrieval o rendimiento ligadas a su entorno, dataset y metodología documentados en lugar de presentarlas como SLAs universales."
 			],
-			"architectureLabel": "ARQUITECTURA // DESARROLLO ACTIVO",
+			"architectureLabel": "ARQUITECTURA // MODELO PÚBLICO ACTUAL",
 			"architecture": {
-				"caption": "Forma actual en desarrollo activo: un adaptador MCP traduce las llamadas del protocolo a contratos de aplicación, los contratos de aplicación dirigen servicios de workflow, y los servicios de workflow dependen de puertos de dominio e infraestructura implementados contra el vault de Obsidian y un pipeline opcional de embeddings local con Ollama. Tests de guarda de arquitectura hacen cumplir esta dirección y mantienen el servidor como un único ensamblado desplegable.",
-				"client": "Cliente MCP (Agente de IA)\nstdio · Streamable HTTP",
-				"identity": "Contratos de Aplicación\nLímites de caso de uso",
-				"api": "Adaptador MCP\nTools · prompts · resources",
-				"modules": "Servicios de Workflow\nSesiones · documentos · consultas",
-				"database": "Puertos de Dominio e Infraestructura\nAbstracciones de repositorio",
-				"processes": "Implementación de Infraestructura\nVault de Obsidian (Markdown/YAML) · embeddings opcionales con Ollama"
+				"caption": "Modelo público actual: clientes MCP se conectan mediante stdio local o Streamable HTTP autenticado al servidor Kioku .NET 10, que expone tools, prompts y resources tipados sobre un límite estricto del vault. Los workflows principales leen y escriben directamente el vault de Obsidian; retrieval semántico, Ollama y el bridge de Obsidian permanecen como integraciones opcionales.",
+				"client": "Cliente MCP\nClaude Code · Codex · OpenCode · otros",
+				"identity": "Contratos MCP Tipados\nTools · prompts · resources",
+				"api": "Kioku.Mcp.Server (.NET 10)\nstdio · Streamable HTTP",
+				"modules": "Workflows de Aplicación\nSpecs · planes · sesiones · coordinación",
+				"database": "Límite del Vault\nMarkdown · YAML · retrieval híbrido",
+				"processes": "Integraciones Opcionales\nOllama · bridge de Obsidian"
 			},
 			"securityLabel": "DECISIONES DE SEGURIDAD",
 			"security": [
-				"Kioku es local-first: el vault de Obsidian es la fuente de verdad y permanece completamente legible y editable sin que el servidor esté en ejecución.",
-				"CI ejecuta escaneo de vulnerabilidades de dependencias junto con los gates de build, formato y tests en cada cambio.",
-				"Los embeddings y la generación opcionales se ejecutan mediante una instancia local de Ollama en lugar de un servicio externo obligatorio, por lo que el contenido del vault permanece en la máquina del usuario por defecto."
+				"El vault de Obsidian es la fuente de verdad local; las escrituras permanecen dentro del vault configurado y lecturas externas o eliminación permanente requieren opt-in explícito.",
+				"Streamable HTTP se enlaza a loopback por defecto; la exposición fuera de loopback requiere una API key salvo que se configure una excepción insegura explícita.",
+				"Embeddings y generación opcionales con Ollama mantienen el contenido de notas local bajo la configuración por defecto, mientras el bridge de Obsidian usa autenticación separada."
 			],
-			"testingLabel": "DECISIONES DE PRUEBAS",
+			"testingLabel": "SUPERFICIES DE VALIDACIÓN",
 			"testing": [
-				"Los tests nativos del servidor corren en Ubuntu, Windows y macOS con un gate de cobertura de línea del 40% aplicado en CI.",
-				"Tests de sandbox de sistema de archivos, smoke tests stdio de la herramienta instalada y smoke tests nativos de Streamable HTTP de archivo único validan la herramienta empaquetada, no solo el árbol de código fuente.",
-				"Los tests de guarda de arquitectura hacen cumplir la forma de constructores, la dirección de dependencias, el registro de DI y la propagación de cancelación en lugar de depender solo de revisión manual.",
-				"Pull requests recientes reportan 708 de 708 tests del servidor pasando localmente; eso es validación reportada en el PR y no se reverifica de forma independiente para este case study."
+				"El repositorio público contiene tests automatizados del servidor y workflows de build/release junto con checks de contratos MCP generados.",
+				"El repositorio documenta instalación y ejecución tanto mediante stdio local como mediante despliegues Streamable HTTP.",
+				"Este portfolio no afirma un conteo de tests de release reejecutado de forma independiente; la evidencia de implementación actual permanece inspeccionable en el repositorio Kioku."
 			],
 			"deploymentLabel": "DECISIONES DE DESPLIEGUE",
 			"deployment": [
-				"El servidor se distribuye como herramienta global de NuGet kioku-mcp-server, por lo que se instala y ejecuta localmente sin un backend alojado.",
-				"La release 2.3.0 y su changelog se publican desde la rama estable main; el desarrollo activo en develop lleva trabajo sustancial sin publicar.",
-				"El plugin puente de Obsidian se extrajo a su propio repositorio, sandovaldavid/kioku-obsidian, con versionado independiente, manteniendo el ritmo de releases del servidor separado del plugin."
+				"El servidor se distribuye como herramienta global NuGet kioku-mcp-server para instalación local y uso mediante stdio.",
+				"Streamable HTTP autenticado soporta despliegues de larga duración, con defaults seguros en loopback y configuración explícita para exposición más amplia.",
+				"El plugin opcional de Obsidian se mantiene en sandovaldavid/kioku-obsidian con versionado independiente, separando las preocupaciones de release del servidor y del bridge de UI."
 			],
 			"limitationsLabel": "LIMITACIONES DE ACCESO Y EVIDENCIA",
 			"limitations": [
-				"La arquitectura en capas, el contrato de tools reducido y la demo de traspaso multi-agente descritos arriba viven en la rama de desarrollo activo y no forman parte de la release 2.3.0 hasta que se promuevan.",
-				"Los números de benchmark y retrieval provienen de una única máquina, dataset y configuración de modelo Ollama documentados; no son un SLA entre distintos hardwares.",
-				"Los conteos recientes de tests pasados son reportados en el PR y no se re-ejecutan de forma independiente para este case study; el estado de GitHub Actions no estaba disponible al momento de la revisión.",
+				"La rama develop puede avanzar más allá de 3.1.2, por lo que se requieren contratos generados específicos de rama antes de presentar comportamiento de develop como publicado.",
+				"No se reejecutó de forma independiente toda la suite de tests de la release para esta revisión del portfolio; los tests y workflows del repositorio son evidencia inspeccionable, no un resultado reproducido aquí.",
+				"El despliegue local-first implica que el operador sigue siendo responsable del acceso al vault, autenticación y exposición de red al habilitar HTTP remoto.",
 				"No se afirma adopción externa, carga de producción ni impacto comercial para este proyecto."
 			],
 			"sourcesLabel": "FUENTE Y EVIDENCIA",
 			"sources": [
 				{
 					"sourceId": "kioku",
-					"label": "Kioku — servidor MCP para Obsidian",
-					"access": "Repositorio público; código fuente, releases, tests y documentación generada son directamente inspeccionables."
+					"label": "Kioku — memoria persistente para agentes de IA en Obsidian",
+					"access": "Repositorio público; código, releases, contratos generados, tests y documentación operativa son directamente inspeccionables."
 				}
 			]
 		}
