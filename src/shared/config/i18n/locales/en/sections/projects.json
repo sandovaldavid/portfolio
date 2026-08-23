@@ -2,11 +2,8 @@
 	"sectionTitle": "SELECTED PROJECTS",
 	"codeButton": "Code",
 	"previewButton": "Preview",
-	"viewCaseStudy": "View case study",
 	"source": "Source",
 	"viewAll": "View All Projects",
-	"cardFeature": "Feature",
-	"cardProject": "Project",
 	"caseStudy": "Case Study",
 	"back": "Back to projects",
 	"timeline": "Duration",
@@ -20,9 +17,5 @@
 		"experimental": "Experimental",
 		"archived": "Archived",
 		"deprecated": "Deprecated"
-	},
-	"sourceAccess": {
-		"public": "Public source",
-		"private": "Private source"
 	}
 }
