@@ -20,6 +20,7 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/widgets/experience/ui/ExperienceTab.astro',
 	'src/widgets/experience/ui/ExperienceDetail.astro',
 	'src/widgets/projects/ui/Projects.astro',
+	'src/widgets/project-case-study/ui/ProjectCaseStudy.astro',
 	'src/widgets/research/ui/Research.astro',
 	'src/widgets/about-me/ui/AboutMe.astro',
 	'src/widgets/tech-stack/ui/TechStack.astro',
