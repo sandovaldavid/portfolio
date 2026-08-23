@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const MIGRATED_STYLE_SURFACES = [
+	'src/app/layouts/Layout.astro',
 	'src/shared/ui/badge/Badge.astro',
 	'src/shared/ui/content-panel/ContentPanel.astro',
 	'src/shared/ui/editorial-card/EditorialCard.astro',
@@ -14,6 +15,9 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/widgets/footer/ui/Footer.astro',
 	'src/widgets/hero/ui/Hero.astro',
 	'src/widgets/hero/ui/HeroProfileRecord.astro',
+	'src/widgets/experience/ui/Experience.astro',
+	'src/widgets/experience/ui/ExperienceTab.astro',
+	'src/widgets/experience/ui/ExperienceDetail.astro',
 ] as const;
 
 const arbitraryPixelSpacing =
@@ -40,11 +44,14 @@ describe('Portfolio v2 spacing contract', () => {
 			'utf8'
 		);
 		const hero = readFileSync('src/widgets/hero/ui/Hero.astro', 'utf8');
+		const experience = readFileSync('src/widgets/experience/ui/Experience.astro', 'utf8');
 
 		// Complex grid/calc expressions are legitimate arbitrary values; plain
 		// spacing values must use Tailwind's numeric scale instead.
 		expect(profileRecord).toContain('md:grid-cols-[220px_minmax(0,1fr)]');
 		expect(hero).toContain('lg:min-h-[calc(100svh-4.5rem)]');
+		expect(experience).toContain('md:grid-cols-[300px_minmax(0,446px)]');
+		expect(experience).toContain('lg:grid-cols-[400px_minmax(0,840px)]');
 		expect(profileRecord).toContain('p-0.5');
 		expect(profileRecord).toContain('gap-3.5');
 		expect(profileRecord).toContain('p-4.5');
