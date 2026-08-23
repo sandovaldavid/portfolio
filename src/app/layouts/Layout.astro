@@ -375,7 +375,12 @@ const structuredPageSchema =
 							<slot name="hero" />
 							<slot name="experience" />
 
-							<SectionContainer id="projects" class="py-12 md:py-16 gap-y-6">
+							<SectionContainer
+								id="projects"
+								layout="viewport"
+								surface="canvas"
+								class="py-12 md:py-16 gap-y-6"
+							>
 								<TitleSection align="center" className="mb-0">
 									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tProjects('sectionTitle')}
@@ -383,7 +388,12 @@ const structuredPageSchema =
 								<slot name="projects" />
 							</SectionContainer>
 
-							<SectionContainer id="research" class="py-12 md:py-16 gap-y-6">
+							<SectionContainer
+								id="research"
+								layout="viewport"
+								surface="highlight"
+								class="py-12 md:py-16 gap-y-6"
+							>
 								<TitleSection align="center" className="mb-0">
 									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tResearchSection('sectionTitle')}
@@ -391,7 +401,12 @@ const structuredPageSchema =
 								<slot name="research" />
 							</SectionContainer>
 
-							<SectionContainer id="about-me" class="py-12 md:py-16 gap-y-6">
+							<SectionContainer
+								id="about-me"
+								layout="viewport"
+								surface="canvas"
+								class="py-12 md:py-16 gap-y-6"
+							>
 								<TitleSection align="center" className="mb-0">
 									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tAbout('sectionTitle')}
@@ -399,7 +414,12 @@ const structuredPageSchema =
 								<slot name="about-me" />
 							</SectionContainer>
 
-							<SectionContainer id="technologies" class="py-12 md:py-16 gap-y-6">
+							<SectionContainer
+								id="technologies"
+								layout="compact"
+								surface="highlight"
+								class="py-12 md:py-16 gap-y-6"
+							>
 								<TitleSection align="center" className="mb-0">
 									<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 									{tTechStack('sectionTitle')}
