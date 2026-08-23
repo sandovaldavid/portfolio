@@ -43,9 +43,12 @@ const labelClasses = {
 
 const isCompact = density === 'compact';
 
-/* Desktop title/body scale switches on density; mobile/tablet share the small scale. */
+/*
+ * Desktop title scale switches on density; body copy stays 16px at every
+ * density and viewport because long localized panel copy is reading text
+ * under the repository's 16px reading-copy floor.
+ */
 const titleClasses = isCompact ? 'lg:text-[20px]' : 'lg:text-[22px]';
-const bodyClasses = isCompact ? 'lg:text-[15px] lg:leading-6' : 'lg:text-base lg:leading-6';
 const minHeightClasses = isCompact ? 'lg:min-h-[180px]' : 'lg:min-h-[240px]';
 const maxWidthClasses = isCompact ? 'lg:max-w-[420px]' : 'lg:max-w-[620px]';
 const desktopPaddingClasses = isCompact ? 'lg:p-5' : 'lg:p-6';
@@ -65,14 +68,14 @@ const desktopPaddingClasses = isCompact ? 'lg:p-5' : 'lg:p-6';
 >
 	{
 		label && (
-			<p
+			<span
 				class:list={[
 					'font-retro-tag text-xs font-bold tracking-wide',
 					labelClasses[variant],
 				]}
 			>
 				{label}
-			</p>
+			</span>
 		)
 	}
 	{
@@ -87,7 +90,7 @@ const desktopPaddingClasses = isCompact ? 'lg:p-5' : 'lg:p-6';
 			</Heading>
 		)
 	}
-	<div class:list={['font-sans text-sm leading-[22px] text-content-default', bodyClasses]}>
+	<div class:list={['font-sans text-base leading-6 text-content-default']}>
 		<slot />
 	</div>
 </section>

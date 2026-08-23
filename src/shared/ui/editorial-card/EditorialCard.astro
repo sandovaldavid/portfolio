@@ -67,7 +67,7 @@ const cardSize =
 			tags.length > 0 && (
 				<ul class="flex flex-row flex-wrap gap-2" aria-label={typeLabel}>
 					{tags.map(tag => (
-						<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-[3px] font-retro-tag text-[10px] font-bold leading-none tracking-wide text-badge-brand-text">
+						<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-[3px] font-retro-tag text-xs font-bold leading-none tracking-wide text-badge-brand-text">
 							{tag}
 						</li>
 					))}
@@ -80,7 +80,7 @@ const cardSize =
 			>
 				{title}
 			</Heading>
-			<p class="font-sans text-sm leading-relaxed text-content-default lg:text-[15px]">
+			<p class="font-sans text-base leading-relaxed text-content-default">
 				{description}
 			</p>
 		</div>

@@ -35,11 +35,11 @@ const metrics = [
 			class="absolute inset-y-0 left-0 w-2 bg-channel-accent-primary md:w-2.5"
 			aria-hidden="true"></span>
 		<div class="flex flex-col gap-4 pl-2 lg:gap-6 lg:pl-4">
-			<p
+			<span
 				class="font-retro-tag text-xs font-bold uppercase tracking-[0.5px] text-channel-content-muted lg:leading-[22px]"
 			>
 				{research.institution} · {research.label}
-			</p>
+			</span>
 			<h1
 				id="research-title"
 				class="font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:h-[168px] lg:max-w-[1120px] lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
@@ -81,11 +81,11 @@ const metrics = [
 			<div
 				class="flex w-full max-w-[620px] flex-col gap-3 border-2 border-channel-accent-primary bg-channel-surface-highlight p-5 shadow-retro-md"
 			>
-				<p
+				<span
 					class="font-retro-tag text-xs font-bold tracking-wide text-channel-accent-primary"
 				>
 					{tPage('pipelineLabel')}
-				</p>
+				</span>
 				<ul
 					class="flex flex-col items-start gap-2 sm:flex-row sm:flex-wrap sm:items-center"
 				>
@@ -165,12 +165,12 @@ const metrics = [
 				label={tPage('statusLabel')}
 				class="w-full"
 			>
-				<p
+				<span
 					class="flex items-center gap-2 font-retro-tag text-xs font-bold uppercase tracking-wide text-status-success-text"
 				>
 					<span class="size-2 shrink-0 bg-status-success-text" aria-hidden="true"></span>
 					{research.status}
-				</p>
+				</span>
 				<p>{research.currentStatus}</p>
 			</ContentPanel>
 		</div>
