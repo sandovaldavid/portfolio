@@ -6,237 +6,79 @@ import {
 	getLanguageFromLocale,
 	type Language,
 } from '@shared/config/i18n';
-import ProjectCaseStudyLegacy from './ProjectCaseStudyLegacy.astro';
 
 interface Props {
 	project: ProjectItem;
-	backLink: string;
 	lang?: Language;
 }
 
-const { project, backLink, lang = getLanguageFromLocale(Astro.currentLocale) } = Astro.props;
+const { project, lang = getLanguageFromLocale(Astro.currentLocale) } = Astro.props;
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const newTabLabel = tAccessibility('externalLink');
-const presentation = project.caseStudy.presentation;
-const primaryNarrative = presentation
-	? [presentation.narrative.problem, presentation.narrative.approach]
-	: [];
-const secondaryNarrative = presentation
-	? [presentation.narrative.tradeoffs, presentation.narrative.outcome]
-	: [];
+const { status } = project.caseStudy;
 ---
 
-{
-	presentation ? (
-		<article class="w-full pt-18" data-project-case-study="v2">
-			<section
-				class="w-full bg-channel-background-canvas px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12"
-				data-case-study-hero
-			>
+<article class="w-full pt-18" data-project-case-study="mdx">
+	<header
+		class="w-full bg-channel-background-canvas px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12"
+		data-case-study-hero
+	>
+		<div
+			class="mx-auto grid w-full max-w-320 gap-4 lg:grid-cols-[minmax(0,640px)_minmax(0,560px)] lg:items-center lg:gap-20"
+			data-case-study-hero-shell
+		>
+			<div class="flex min-w-0 flex-col gap-2">
+				<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+					{project.caseStudy.kicker}
+				</p>
+				<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
+					{project.title}
+				</h1>
+			</div>
+
+			<div class="flex min-w-0 flex-col gap-4">
+				<p class="text-secondary text-content-default md:text-body">{project.description}</p>
 				<div
-					class="mx-auto grid w-full max-w-320 gap-4 lg:grid-cols-[minmax(0,640px)_minmax(0,560px)] lg:items-center lg:gap-20"
-					data-case-study-hero-shell
+					class="flex flex-wrap items-center gap-3"
+					aria-label={`${status.lifecycle}, ${status.source}, ${status.demo}`}
 				>
-					<div class="flex min-w-0 flex-col gap-2">
-						<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
-							{presentation.kicker}
-						</p>
-						<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
-							{project.title}
-						</h1>
-					</div>
-
-					<div class="flex min-w-0 flex-col gap-4">
-						<p class="text-secondary text-content-default md:text-body">
-							{presentation.description}
-						</p>
-						<div
-							class="flex flex-wrap items-center gap-3"
-							aria-label={`${presentation.status.lifecycle}, ${presentation.status.source}, ${presentation.status.demo}`}
-						>
-							<Badge variant="success" size="sm">
-								{presentation.status.lifecycle}
-							</Badge>
-							{project.github && project.sourceAccess === 'public' ? (
-								<a
-									href={project.github}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label={`${presentation.status.source}, ${newTabLabel}`}
-									class="inline-flex no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								>
-									<Badge variant="info" size="sm">
-										{presentation.status.source}
-									</Badge>
-								</a>
-							) : (
-								<Badge variant="info" size="sm">
-									{presentation.status.source}
-								</Badge>
-							)}
-							{project.link ? (
-								<a
-									href={project.link}
-									target="_blank"
-									rel="noopener noreferrer"
-									aria-label={`${presentation.status.demo}, ${newTabLabel}`}
-									class="inline-flex no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								>
-									<Badge variant="default" size="sm">
-										{presentation.status.demo}
-									</Badge>
-								</a>
-							) : (
-								<Badge variant="default" size="sm">
-									{presentation.status.demo}
-								</Badge>
-							)}
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section
-				class="w-full bg-channel-background-canvas px-5 pt-8 pb-10 md:px-8 md:pt-10 md:pb-12 lg:px-20 lg:py-12"
-				data-case-study-narrative
-			>
-				<div
-					class="mx-auto grid w-full max-w-320 gap-6 lg:grid-cols-2 lg:gap-16"
-					data-case-study-narrative-shell
-				>
-					<div class="flex min-w-0 flex-col gap-6">
-						{primaryNarrative.map((block, index) => (
-							<>
-								{index > 0 && (
-									<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true" />
-								)}
-								<div class="flex flex-col gap-2">
-									<p class="text-editorial-label-compact uppercase text-channel-accent-primary">
-										{block.label}
-									</p>
-									<h2 class="text-subheading text-content-strong md:text-component-title">
-										{block.title}
-									</h2>
-									<p class="text-secondary text-content-default md:text-body">
-										{block.body}
-									</p>
-								</div>
-							</>
-						))}
-					</div>
-
-					<div class="flex min-w-0 flex-col gap-6 border-t-2 border-edge-subtle pt-6 lg:border-t-0 lg:pt-0">
-						{secondaryNarrative.map((block, index) => (
-							<>
-								{index > 0 && (
-									<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true" />
-								)}
-								<div class="flex flex-col gap-2">
-									<p
-										class:list={[
-											'text-editorial-label-compact uppercase',
-											block === presentation.narrative.outcome
-												? 'text-status-success-text'
-												: 'text-channel-accent-primary',
-										]}
-									>
-										{block.label}
-									</p>
-									<h2 class="text-subheading text-content-strong md:text-component-title">
-										{block.title}
-									</h2>
-									<p class="text-secondary text-content-default md:text-body">
-										{block.body}
-									</p>
-								</div>
-							</>
-						))}
-					</div>
-				</div>
-			</section>
-
-			<section
-				class="w-full bg-channel-surface-highlight px-5 pt-8 pb-10 md:px-8 md:py-10 lg:px-20"
-				data-case-study-evidence
-			>
-				<div class="mx-auto w-full max-w-320" data-case-study-evidence-shell>
-					<h2 class="text-feature-title text-content-strong md:text-section-title">
-						{presentation.evidenceTitle}
-					</h2>
-					<div class="mt-6 grid gap-6 lg:grid-cols-2 lg:gap-12">
-						<div class="flex min-w-0 gap-3.5 md:gap-4">
-							<div
-								class="w-1 shrink-0 self-stretch bg-channel-accent-primary"
-								aria-hidden="true"
-							/>
-							<div class="flex min-w-0 flex-col gap-2">
-								<p class="text-editorial-label-compact uppercase text-channel-accent-primary">
-									{presentation.verified.label}
-								</p>
-								<h3 class="text-subheading text-content-strong md:text-component-title">
-									{presentation.verified.title}
-								</h3>
-								<p class="text-secondary text-content-default md:text-body">
-									{presentation.verified.body}
-								</p>
-							</div>
-						</div>
-						<div class="flex min-w-0 gap-3.5 md:gap-4">
-							<div
-								class="w-1 shrink-0 self-stretch bg-channel-status-error"
-								aria-hidden="true"
-							/>
-							<div class="flex min-w-0 flex-col gap-2">
-								<p class="text-editorial-label-compact uppercase text-badge-danger-text">
-									{presentation.boundaries.label}
-								</p>
-								<h3 class="text-subheading text-content-strong md:text-component-title">
-									{presentation.boundaries.title}
-								</h3>
-								<p class="text-secondary text-content-default md:text-body">
-									{presentation.boundaries.body}
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
-			</section>
-
-			<section
-				class="w-full bg-channel-background-canvas px-5 pt-8 pb-10 md:px-8 md:pt-10 md:pb-12 lg:px-20"
-				data-case-study-learnings
-			>
-				<div class="mx-auto w-full max-w-320" data-case-study-learnings-shell>
-					<h2 class="text-feature-title text-content-strong md:text-section-title">
-						{presentation.learningsTitle}
-					</h2>
-					<div class="mt-6 grid gap-0 lg:grid-cols-3">
-						{presentation.learnings.map((learning, index) => (
-							<div
-								class:list={[
-									'flex min-w-0 flex-col gap-2',
-									index > 0 &&
-										'mt-5 border-t-2 border-edge-subtle pt-5 lg:mt-0 lg:border-t-0 lg:border-l-2 lg:pt-0 lg:pl-6',
-									index === 1 && 'lg:pr-6',
-									index === 0 && 'lg:pr-6',
-								]}
+					<Badge variant="success" size="sm">{status.lifecycle}</Badge>
+					{
+						project.github && project.sourceAccess === 'public' ? (
+							<a
+								href={project.github}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label={`${status.source}, ${newTabLabel}`}
+								class="inline-flex no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 							>
-								<p class="text-editorial-label-compact uppercase text-channel-accent-primary">
-									{learning.label}
-								</p>
-								<h3 class="text-subheading text-content-strong md:text-component-title">
-									{learning.title}
-								</h3>
-								<p class="text-secondary text-content-default md:text-body">
-									{learning.body}
-								</p>
-							</div>
-						))}
-					</div>
+								<Badge variant="info" size="sm">{status.source}</Badge>
+							</a>
+						) : (
+							<Badge variant="info" size="sm">{status.source}</Badge>
+						)
+					}
+					{
+						project.link ? (
+							<a
+								href={project.link}
+								target="_blank"
+								rel="noopener noreferrer"
+								aria-label={`${status.demo}, ${newTabLabel}`}
+								class="inline-flex no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							>
+								<Badge variant="default" size="sm">{status.demo}</Badge>
+							</a>
+						) : (
+							<Badge variant="default" size="sm">{status.demo}</Badge>
+						)
+					}
 				</div>
-			</section>
-		</article>
-	) : (
-		<ProjectCaseStudyLegacy {project} {backLink} {lang} />
-	)
-}
+			</div>
+		</div>
+	</header>
+
+	<div class="w-full" data-case-study-content>
+		<slot />
+	</div>
+</article>
