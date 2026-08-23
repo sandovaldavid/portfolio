@@ -89,7 +89,7 @@ export interface CaseStudyPresentationBlock {
 	body: string;
 }
 
-export interface CaseStudyPresentationLearning extends CaseStudyPresentationBlock {}
+export type CaseStudyPresentationLearning = CaseStudyPresentationBlock;
 
 /**
  * Optional concise display layer for the current Figma v2 case-study template.
