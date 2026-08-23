@@ -2,11 +2,8 @@
 	"sectionTitle": "PROYECTOS DESTACADOS",
 	"codeButton": "Código",
 	"previewButton": "Vista previa",
-	"viewCaseStudy": "Ver caso de estudio",
 	"source": "Código fuente",
 	"viewAll": "Ver todos los proyectos",
-	"cardFeature": "Destacado",
-	"cardProject": "Proyecto",
 	"caseStudy": "Caso de estudio",
 	"back": "Volver a proyectos",
 	"timeline": "Duración",
@@ -20,9 +17,5 @@
 		"experimental": "Experimental",
 		"archived": "Archivado",
 		"deprecated": "Obsoleto"
-	},
-	"sourceAccess": {
-		"public": "Código público",
-		"private": "Código privado"
 	}
 }
