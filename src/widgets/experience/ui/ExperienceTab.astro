@@ -1,4 +1,6 @@
 ---
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+
 interface Props {
 	company: string;
 	role: string;
@@ -13,22 +15,16 @@ interface Props {
 
 const { company, role, active, tabId, panelId, experienceId, index, selected, focusable } =
 	Astro.props;
-
-/*
- * Experience Tab contract (spec/03): one responsive component.
- * Inactive: surface default, no indicator. Active: brand badge background,
- * border 2 strong edge and an absolutely positioned accent indicator so the
- * content never shifts (left rule on desktop/tablet, 4px bottom rule on
- * mobile). Desktop 500x80 px20/30 pt14 pb22 gap12; Tablet 300x80; Mobile
- * 220x64 pl14 pr16 pt10 pb15 gap7. Company Share Tech Mono 16, role Share
- * Tech Mono 12 muted; both fill the width and wrap for long org names.
- */
-const geometry =
-	'relative min-h-16 w-[220px] max-w-full shrink-0 gap-[7px] pl-3.5 pr-4 pt-2.5 pb-[15px] text-left md:min-h-20 md:w-[300px] md:gap-3 md:px-5 md:pt-[14px] md:pb-[22px] lg:w-[500px] lg:pr-[30px]';
-const stateClasses =
-	'cursor-pointer border-2 border-transparent bg-channel-surface-default transition-colors duration-100 data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg';
 ---
 
+<!--
+	Portfolio / Experience Tab (Figma v2):
+	Mobile 250×88, Tablet 300×88, Desktop 400×80. Company uses Navigation
+	typography; role uses Caption. Text may wrap and must never be abbreviated.
+	The active indicator is absolutely positioned so state changes do not shift
+	content geometry. Mobile keeps the horizontal bottom indicator; tablet and
+	desktop use the left rule.
+-->
 <button
 	role="tab"
 	id={tabId}
@@ -38,23 +34,24 @@ const stateClasses =
 	data-index={index}
 	data-experience-id={experienceId}
 	data-active={active ? 'true' : 'false'}
-	class:list={['group min-w-0 whitespace-normal', geometry, stateClasses]}
+	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col items-start gap-1 bg-channel-surface-default py-2 pl-3.5 pr-4 text-left transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:border-channel-accent-primary focus-visible:outline-none data-[active=true]:border-2 data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg md:w-75 md:px-5 lg:min-h-20 lg:w-100 lg:pl-5 lg:pr-7.5"
 >
 	<span
-		class="absolute left-0 top-0 bottom-0 hidden w-1 origin-center scale-y-0 bg-primary-500 transition-transform duration-150 group-data-[active=true]:scale-y-100 md:block"
-		aria-hidden="true"></span>
+		class="absolute -top-0.5 bottom-1.5 -left-0.5 hidden w-1 bg-channel-accent-primary opacity-0 group-data-[active=true]:opacity-100 md:block"
+		aria-hidden="true"
+	></span>
 	<span
-		class="absolute bottom-0 left-0 right-0 h-1 origin-center scale-x-0 bg-primary-500 transition-transform duration-150 group-data-[active=true]:scale-x-100 md:hidden"
-		aria-hidden="true"></span>
+		class="absolute bottom-0.5 -left-0.5 right-7 h-1 bg-channel-accent-primary opacity-0 group-data-[active=true]:opacity-100 md:hidden"
+		aria-hidden="true"
+	></span>
 
-	<span class="flex min-w-0 flex-col">
+	<span class="flex min-h-5 w-full min-w-0 items-center gap-2 overflow-hidden">
+		<ArrowRightIcon class="size-4 shrink-0" aria-hidden="true" focusable="false" />
 		<span
-			class="font-gaming-mono text-base leading-tight text-content-muted transition-colors duration-100 group-data-[active=true]:text-content-strong group-hover:text-content-strong"
+			class="min-w-0 text-navigation text-content-strong transition-colors duration-100 group-data-[active=true]:text-channel-accent-primary"
 		>
 			{company}
 		</span>
-		<span class="font-gaming-mono text-xs leading-snug text-content-muted">
-			{role}
-		</span>
 	</span>
+	<span class="w-full text-caption text-content-muted">{role}</span>
 </button>
