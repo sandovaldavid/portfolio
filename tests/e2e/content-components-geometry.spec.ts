@@ -103,37 +103,48 @@ test.describe('Hero Profile Record contract', () => {
 			const record = page.locator('#hero').getByRole('figure');
 			await expect(record).toBeVisible();
 
-			if (viewport.label === 'desktop') {
-				const figureBox = await record.boundingBox();
-				expect(figureBox?.width).toBe(256);
-
-				const band = record.locator('span').first();
-				const bandBox = await band.boundingBox();
-				expect(bandBox?.height).toBe(32);
-				expect(Math.round(bandBox!.x - figureBox!.x)).toBe(18);
-				expect(Math.round(bandBox!.y - figureBox!.y)).toBe(270);
-				expect(await band.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
-					await probeBackground(page, '--channel-accent-primary')
-				);
-			} else {
-				const figureBox = await record.boundingBox();
-				expect(figureBox?.height).toBe(300);
-
-				const band = record.locator('span').first();
-				expect((await band.boundingBox())?.height).toBe(32);
-				expect((await band.boundingBox())?.width).toBeLessThanOrEqual(300);
-			}
-
+			const figureBox = await record.boundingBox();
+			const band = record.locator('.hero-profile-name-band');
+			const bandBox = await band.boundingBox();
 			const avatar = record.getByRole('img');
 			const avatarSize = await avatar.evaluate(
 				el => `${getComputedStyle(el).width}|${getComputedStyle(el).height}`
 			);
-			expect(avatarSize).toBe(viewport.label === 'desktop' ? '192px|192px' : '184px|184px');
+
+			if (viewport.label === 'desktop') {
+				expect(figureBox?.width).toBe(256);
+				expect(bandBox?.height).toBe(32);
+				expect(Math.round(bandBox!.x - figureBox!.x)).toBe(18);
+				expect(Math.round(bandBox!.y - figureBox!.y)).toBe(270);
+				expect(avatarSize).toBe('192px|192px');
+			} else {
+				expect(figureBox?.height).toBe(226);
+				expect(bandBox?.height).toBe(28);
+				expect(bandBox?.width).toBe(280);
+				expect(Math.round(bandBox!.y - figureBox!.y)).toBe(168);
+				expect(avatarSize).toBe('148px|148px');
+			}
+
+			expect(await band.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
+				await probeBackground(page, '--channel-accent-primary')
+			);
 
 			const outer = page.locator('#hero .shadow-retro-3xl');
 			await expect(outer).toHaveCSS('box-shadow', /8px 8px 0px 0px/);
 		});
 	}
+
+	test('mobile exposes only the four high-value recruiter facts', async ({ page }) => {
+		await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
+		await page.goto('/');
+
+		for (const fact of ['stack', 'location', 'current', 'domain']) {
+			await expect(page.locator(`[data-profile-fact="${fact}"]`)).toBeVisible();
+		}
+		for (const fact of ['role', 'work-mode']) {
+			await expect(page.locator(`[data-profile-fact="${fact}"]`)).toBeHidden();
+		}
+	});
 });
 
 test.describe('Experience Tab contract', () => {
@@ -151,7 +162,6 @@ test.describe('Experience Tab contract', () => {
 		);
 		expect(await activeTab.evaluate(el => getComputedStyle(el).borderTopWidth)).toBe('2px');
 
-		// Desktop left rule is absolutely positioned so activation never shifts copy.
 		const leftRule = activeTab.locator('span').first();
 		expect(await leftRule.evaluate(el => getComputedStyle(el).position)).toBe('absolute');
 		expect(await leftRule.evaluate(el => getComputedStyle(el).width)).toBe('4px');
@@ -180,8 +190,6 @@ test.describe('Experience Detail contract', () => {
 				'box-shadow: var(--shadow-retro-lg-accent);'
 			);
 			const actualShadow = await detail.evaluate(el => getComputedStyle(el).boxShadow);
-			// Tailwind composes shadow utilities into a multi-layer stack; the
-			// accent layer must appear exactly once and match the token probe.
 			expect(actualShadow).toContain(expectedShadow.boxShadow);
 			expect(actualShadow.match(/4px 4px/g)).toHaveLength(1);
 
@@ -200,8 +208,6 @@ test.describe('Project Card contract', () => {
 		await page.goto('/projects');
 		await setTheme(page, 'light');
 
-		// A card exposing a source repo carries both actions; private-source
-		// cards legitimately omit the secondary action.
 		const card = page
 			.locator('article')
 			.filter({ has: page.getByRole('link', { name: /Source/ }) })
@@ -214,7 +220,6 @@ test.describe('Project Card contract', () => {
 			await probeBackground(page, '--color-terminal-surface')
 		);
 
-		// Hover raises the hard shadow without changing geometry.
 		const frame = card.locator('> div');
 		const before = await frame.boundingBox();
 		const shadowBefore = await frame.evaluate(el => getComputedStyle(el).boxShadow);
@@ -228,7 +233,6 @@ test.describe('Project Card contract', () => {
 		const sourceButton = card.getByRole('link', { name: /Source/ }).first();
 		await expect(sourceButton).toBeVisible();
 
-		// Mobile omits the secondary action per contract.
 		await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
 		await expect(sourceButton).toBeHidden();
 	});
@@ -271,7 +275,6 @@ test.describe('Content Panel contract', () => {
 			)
 		);
 
-		// Long translated copy grows the panel vertically instead of clipping.
 		const grew = await compact.evaluate(el => {
 			const before = el.getBoundingClientRect().height;
 			const body = el.querySelector('div:last-child') as HTMLElement | null;
@@ -296,7 +299,6 @@ test.describe('Editorial Card contract', () => {
 			'44px'
 		);
 
-		// Bottom-anchored CTA never collides with a multi-line title.
 		const title = card.getByRole('heading', { level: 2 });
 		const cta = card.locator('a').last();
 		const titleBox = await title.boundingBox();
