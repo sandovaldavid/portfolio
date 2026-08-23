@@ -1,0 +1,66 @@
+---
+import LinkIcon from '@assets/icons/Link.astro';
+import { PROJECT_METADATA, type ProjectId, type ProjectResourceKind } from '@entities/project';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+export type RequestedProjectResource = 'source' | 'demo' | ProjectResourceKind;
+
+interface Props {
+	projectId: ProjectId;
+	resources: RequestedProjectResource[];
+}
+
+const { projectId, resources } = Astro.props;
+const metadata = PROJECT_METADATA[projectId];
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.projects');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+
+const labelKeys: Record<RequestedProjectResource, Parameters<typeof tPage>[0]> = {
+	source: 'resourceSource',
+	demo: 'resourceDemo',
+	docs: 'resourceDocs',
+	package: 'resourcePackage',
+	related: 'resourceRelated',
+};
+
+const urls: Record<RequestedProjectResource, string | undefined> = {
+	source: metadata.sourceAccess === 'public' ? metadata.github : undefined,
+	demo: metadata.link,
+	docs: metadata.resources?.docs,
+	package: metadata.resources?.package,
+	related: metadata.resources?.related,
+};
+
+const resolvedResources = resources
+	.map(kind => ({ kind, href: urls[kind], label: tPage(labelKeys[kind]) }))
+	.filter((resource): resource is { kind: RequestedProjectResource; href: string; label: string } =>
+		Boolean(resource.href)
+	);
+---
+
+{
+	resolvedResources.length > 0 && (
+		<nav aria-label={tPage('resourcesTitle')} data-project-resources>
+			<p class="text-editorial-label-compact uppercase text-content-muted">
+				{tPage('resourcesTitle')}
+			</p>
+			<ul class="mt-3 flex flex-wrap gap-3">
+				{resolvedResources.map(resource => (
+					<li>
+						<a
+							href={resource.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+						>
+							<LinkIcon class="size-4" />
+							<span>{resource.label}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
