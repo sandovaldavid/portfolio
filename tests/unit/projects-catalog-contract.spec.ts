@@ -44,4 +44,13 @@ describe('Projects Catalog composition contract', () => {
 		expect(catalog).toContain('max-w-85 md:max-w-192.5 lg:max-w-320');
 		expect(catalog).toContain('<Projects showAll={true} layout="catalog" />');
 	});
+
+	it('keeps catalog styles semantic and free of inline presentation', () => {
+		const rawPaletteUtility =
+			/\b(?:bg|text|border|ring|from|via|to)-(?:white|black|primary-\d+|neutral-\d+|success-\d+|warning-\d+|error-\d+)\b/g;
+		for (const source of [catalog, projects]) {
+			expect(source.match(rawPaletteUtility) ?? []).toEqual([]);
+			expect(source).not.toMatch(/\sstyle\s*=/i);
+		}
+	});
 });
