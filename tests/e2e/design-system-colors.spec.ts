@@ -92,6 +92,12 @@ test.describe('Portfolio Retro color token contract', () => {
 
 			const primaryButton = page.locator('#recruiter-hud-toggle');
 			await expect(primaryButton).toBeVisible();
+			// This contract validates resolved token ownership, not interpolation. Chromium
+			// serializes an in-flight OKLCH transition as OKLab, so freeze only this control's
+			// transition before comparing the final default/hover role values.
+			await primaryButton.evaluate(element => {
+				(element as HTMLElement).style.setProperty('transition', 'none', 'important');
+			});
 			await expectColorRole(page, primaryButton, 'background-color', scenario.defaultToken);
 			await expectColorRole(page, primaryButton, 'color', scenario.contentToken);
 
