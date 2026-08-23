@@ -1,0 +1,52 @@
+---
+interface Props {
+	label: string;
+	title: string;
+	tone?: 'verified' | 'boundary' | 'info';
+}
+
+const { label, title, tone = 'info' } = Astro.props;
+const accentClasses = {
+	verified: 'bg-channel-accent-primary',
+	boundary: 'bg-channel-status-error',
+	info: 'bg-edge-strong',
+} as const;
+const labelClasses = {
+	verified: 'text-channel-accent-primary',
+	boundary: 'text-badge-danger-text',
+	info: 'text-content-muted',
+} as const;
+---
+
+<article class="flex min-w-0 gap-4" data-case-study-evidence-block>
+	<div class:list={['w-1 shrink-0 self-stretch', accentClasses[tone]]} aria-hidden="true" />
+	<div class="min-w-0">
+		<p class:list={['text-editorial-label-compact uppercase', labelClasses[tone]]}>{label}</p>
+		<h3 class="mt-2 text-subheading text-content-strong md:text-component-title">{title}</h3>
+		<div class="evidence-copy mt-3 text-secondary text-content-default md:text-body">
+			<slot />
+		</div>
+	</div>
+</article>
+
+<style>
+	.evidence-copy :global(p + p),
+	.evidence-copy :global(p + ul),
+	.evidence-copy :global(ul + p) {
+		margin-top: 0.75rem;
+	}
+
+	.evidence-copy :global(ul) {
+		list-style: square;
+		padding-left: 1.125rem;
+	}
+
+	.evidence-copy :global(li + li) {
+		margin-top: 0.375rem;
+	}
+
+	.evidence-copy :global(strong) {
+		color: var(--channel-content-strong);
+		font-weight: 700;
+	}
+</style>
