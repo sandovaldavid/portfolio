@@ -11,16 +11,17 @@ test.describe('Recruiter evidence, access and status contract', () => {
 			has: page.getByRole('heading', { name: 'Yukidoke' }),
 		});
 		await expect(yukidokeCard.getByText('Active', { exact: true })).toBeVisible();
-		await expect(yukidokeCard.getByRole('link', { name: 'Source', exact: true })).toHaveCount(0);
+		await expect(
+			yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]')
+		).toHaveCount(0);
 
 		const kiokuCard = page.locator('article', {
 			has: page.getByRole('heading', { name: 'Kioku' }),
 		});
 		await expect(kiokuCard.getByText('Active', { exact: true })).toBeVisible();
-		await expect(kiokuCard.getByRole('link', { name: 'Source', exact: true })).toHaveAttribute(
-			'href',
-			'https://github.com/sandovaldavid/kioku'
-		);
+		await expect(
+			kiokuCard.locator('a[href="https://github.com/sandovaldavid/kioku"]')
+		).toBeVisible();
 	});
 
 	for (const locale of [
