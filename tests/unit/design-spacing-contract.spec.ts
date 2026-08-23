@@ -18,6 +18,8 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/widgets/experience/ui/Experience.astro',
 	'src/widgets/experience/ui/ExperienceTab.astro',
 	'src/widgets/experience/ui/ExperienceDetail.astro',
+	'src/widgets/recruiter-hud/ui/RecruiterHUD.astro',
+	'src/widgets/contact-sidebar/ui/ContactSidebar.astro',
 ] as const;
 
 const arbitraryPixelSpacing =
@@ -45,6 +47,10 @@ describe('Portfolio v2 spacing contract', () => {
 		);
 		const hero = readFileSync('src/widgets/hero/ui/Hero.astro', 'utf8');
 		const experience = readFileSync('src/widgets/experience/ui/Experience.astro', 'utf8');
+		const contactRail = readFileSync(
+			'src/widgets/contact-sidebar/ui/ContactSidebar.astro',
+			'utf8'
+		);
 
 		// Complex grid/calc expressions are legitimate arbitrary values; plain
 		// spacing values must use Tailwind's numeric scale instead.
@@ -52,6 +58,7 @@ describe('Portfolio v2 spacing contract', () => {
 		expect(hero).toContain('lg:min-h-[calc(100svh-4.5rem)]');
 		expect(experience).toContain('md:grid-cols-[300px_minmax(0,446px)]');
 		expect(experience).toContain('lg:grid-cols-[400px_minmax(0,840px)]');
+		expect(contactRail).toContain('translateX(calc(-100% - 0.5rem))');
 		expect(profileRecord).toContain('p-0.5');
 		expect(profileRecord).toContain('gap-3.5');
 		expect(profileRecord).toContain('p-4.5');
