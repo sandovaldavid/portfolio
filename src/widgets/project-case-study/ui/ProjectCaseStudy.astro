@@ -1,15 +1,12 @@
 ---
-import { Image } from 'astro:assets';
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import LinkIcon from '@assets/icons/Link.astro';
-import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
-import { TechPill, LinkButton, LinkInline, ContentPanel, TitleSection } from '@shared/ui';
+import { Badge } from '@shared/ui';
 import type { ProjectItem } from '@entities/project';
 import {
 	createScopedUiTranslator,
 	getLanguageFromLocale,
 	type Language,
 } from '@shared/config/i18n';
+import ProjectCaseStudyLegacy from './ProjectCaseStudyLegacy.astro';
 
 interface Props {
 	project: ProjectItem;
@@ -18,405 +15,177 @@ interface Props {
 }
 
 const { project, backLink, lang = getLanguageFromLocale(Astro.currentLocale) } = Astro.props;
-
-const tProjects = createScopedUiTranslator(lang, 'sections.projects');
-const tPage = createScopedUiTranslator(lang, 'pages.projects');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
-
-/*
- * Case-study page composition (spec/04 "Project Case Study — Kioku reference
- * layout" + plans/pages/project-detail.md): hero inner grid — primary w640
- * kicker+title, secondary w560 status/source/demo — followed by the narrative
- * 2×2 Standard panels, the evidence and limits panels and three Compact
- * learning panels. All copy comes from the localized project collection
- * unchanged (spec/06 drift rules); heights are content-driven min-heights so
- * longer translated copy grows instead of clipping.
- */
-const caseStudyLabel = `${tPage('caseStudyKicker')} · ${project.category}`;
 const newTabLabel = tAccessibility('externalLink');
-
-const { caseStudy } = project;
-const evidence = caseStudy?.evidence;
-const architecture = evidence?.architecture;
-
-const architectureNodes = architecture
-	? [
-			{ accent: 'border-channel-status-error', lines: architecture.client.split('\n') },
-			{ accent: 'border-channel-accent-primary', lines: architecture.api.split('\n') },
-		]
+const presentation = project.caseStudy.presentation;
+const primaryNarrative = presentation
+	? [presentation.narrative.problem, presentation.narrative.approach]
 	: [];
-const architectureLeaves = architecture
-	? [
-			{ accent: 'border-badge-info-text', lines: architecture.identity.split('\n') },
-			{
-				accent: 'border-status-success-border',
-				lines: architecture.modules.split('\n'),
-			},
-			{ accent: 'border-channel-accent-secondary', lines: architecture.database.split('\n') },
-		]
+const secondaryNarrative = presentation
+	? [presentation.narrative.tradeoffs, presentation.narrative.outcome]
 	: [];
 ---
 
-<div class="w-full font-sans px-5 md:px-8 lg:px-0">
-	{
-		/* Inner container sits below #main-content's depth-2 max-width reset so
-	    the 1280px Kioku reference grid actually applies on wide screens. */
-	}
-	<div class="mx-auto flex w-full max-w-[1280px] flex-col">
-		<LinkInline href={backLink} class="mb-8 inline-flex items-center gap-2 self-start text-sm">
-			<ArrowLeftIcon class="size-4" />
-			{tProjects('back')}
-		</LinkInline>
-
-		<header
-			class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,640fr)_minmax(0,560fr)] lg:gap-x-20"
-		>
-			<div>
-				<p
-					class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary"
-				>
-					{caseStudyLabel}
-				</p>
-				<h1
-					class="mt-2 font-mono text-4xl font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-5xl lg:leading-14 lg:tracking-[-1px]"
-				>
-					{project.title}
-				</h1>
-				<p class="mt-4 max-w-[560px] text-body text-content-muted">{project.description}</p>
-
-				<div class="mt-6 flex flex-wrap gap-3">
-					{
-						project.github && (
-							<LinkButton href={project.github} {newTabLabel}>
-								<GitHubIcon class="size-5" />
-								{tProjects('codeButton')}
-							</LinkButton>
-						)
-					}
-					{
-						project.link && (
-							<LinkButton href={project.link} {newTabLabel}>
-								<LinkIcon class="size-4" />
-								{tProjects('previewButton')}
-							</LinkButton>
-						)
-					}
-				</div>
-
-				<ul class="mt-6 flex flex-row flex-wrap gap-x-2 gap-y-1.5">
-					{
-						project.tags.map(tag => (
-							<li>
-								<TechPill
-									label={tag.name}
-									icon={tag.icon}
-									size="sm"
-									variant="card"
-									class={tag.class}
-								/>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-
-			<div
-				class="flex flex-col gap-5 border-2 border-edge-strong bg-channel-surface-default p-5 shadow-retro-md"
-				aria-label={`${caseStudy.status.lifecycle}, ${caseStudy.status.source}, ${caseStudy.status.demo}`}
+{
+	presentation ? (
+		<article class="w-full pt-18" data-project-case-study="v2">
+			<section
+				class="w-full bg-channel-background-canvas px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12"
+				data-case-study-hero
 			>
-				<dl class="grid gap-4 sm:grid-cols-3">
-					<div>
-						<dt
-							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
-						>
-							{caseStudy.status.lifecycleLabel}
-						</dt>
-						<dd class="mt-1 text-secondary font-bold text-content-strong">
-							{caseStudy.status.lifecycle}
-						</dd>
+				<div
+					class="mx-auto grid w-full max-w-320 gap-4 lg:grid-cols-[minmax(0,640px)_minmax(0,560px)] lg:items-center lg:gap-20"
+					data-case-study-hero-shell
+				>
+					<div class="flex min-w-0 flex-col gap-2">
+						<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+							{presentation.kicker}
+						</p>
+						<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
+							{project.title}
+						</h1>
 					</div>
-					<div>
-						<dt
-							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
-						>
-							{caseStudy.status.sourceLabel}
-						</dt>
-						<dd class="mt-1 text-secondary font-bold text-content-strong">
-							{caseStudy.status.source}
-						</dd>
-					</div>
-					<div>
-						<dt
-							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
-						>
-							{caseStudy.status.demoLabel}
-						</dt>
-						<dd class="mt-1 text-secondary font-bold text-content-strong">
-							{caseStudy.status.demo}
-						</dd>
-					</div>
-				</dl>
 
-				<dl class="flex flex-wrap gap-x-8 gap-y-2 border-t border-edge-subtle pt-4">
-					<div>
-						<dt
-							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
-						>
-							{tProjects('timeline')}
-						</dt>
-						<dd class="mt-1 text-secondary text-content-default">
-							{caseStudy.timeline}
-						</dd>
+					<div class="flex min-w-0 flex-col gap-4">
+						<p class="text-secondary text-content-default md:text-body">
+							{presentation.description}
+						</p>
+						<div class="flex flex-wrap items-center gap-3" aria-label={`${presentation.status.lifecycle}, ${presentation.status.source}, ${presentation.status.demo}`}>
+							<Badge variant="success" size="sm">{presentation.status.lifecycle}</Badge>
+							{
+								project.github && project.sourceAccess === 'public' ? (
+									<a
+										href={project.github}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label={`${presentation.status.source}, ${newTabLabel}`}
+										class="inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+									>
+										<Badge variant="info" size="sm">{presentation.status.source}</Badge>
+									</a>
+								) : (
+									<Badge variant="info" size="sm">{presentation.status.source}</Badge>
+								)
+							}
+							{
+								project.link ? (
+									<a
+										href={project.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										aria-label={`${presentation.status.demo}, ${newTabLabel}`}
+										class="inline-flex focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+									>
+										<Badge variant="default" size="sm">{presentation.status.demo}</Badge>
+									</a>
+								) : (
+									<Badge variant="default" size="sm">{presentation.status.demo}</Badge>
+								)
+							}
+						</div>
 					</div>
-					<div>
-						<dt
-							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
-						>
-							{tProjects('role')}
-						</dt>
-						<dd class="mt-1 text-secondary text-content-default">{caseStudy.role}</dd>
-					</div>
-				</dl>
+				</div>
+			</section>
 
-				<div class="border-t border-edge-subtle pt-4">
-					<p
-						class="text-editorial-label uppercase tracking-wide text-channel-status-error"
-					>
-						{caseStudy.status.limitationsLabel}
-					</p>
-					<ul class="mt-2 space-y-2">
+			<section
+				class="w-full bg-channel-background-canvas px-5 pt-8 pb-10 md:px-8 md:pt-10 md:pb-12 lg:px-20 lg:py-12"
+				data-case-study-narrative
+			>
+				<div class="mx-auto grid w-full max-w-320 gap-6 lg:grid-cols-2 lg:gap-16" data-case-study-narrative-shell>
+					<div class="flex min-w-0 flex-col gap-6">
 						{
-							caseStudy.status.limitations.map(item => (
-								<li class="text-secondary text-content-muted">{item}</li>
+							primaryNarrative.map((block, index) => (
+								<>
+									{index > 0 && <div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true" />}
+									<div class="flex flex-col gap-2">
+										<p class="text-editorial-label-compact uppercase text-channel-accent-primary">{block.label}</p>
+										<h2 class="text-subheading text-content-strong md:text-component-title">{block.title}</h2>
+										<p class="text-secondary text-content-default md:text-body">{block.body}</p>
+									</div>
+								</>
 							))
 						}
-					</ul>
-				</div>
-			</div>
-		</header>
-
-		<figure class="relative mt-12 overflow-hidden border-2 border-edge-strong shadow-retro-md">
-			<Image
-				src={project.image}
-				width={1200}
-				height={630}
-				class="h-auto w-full object-cover"
-				alt={project.imageAlt}
-				loading="eager"
-				decoding="sync"
-			/>
-		</figure>
-
-		<section
-			class="mt-14 grid grid-cols-1 justify-center gap-6 md:grid-cols-[repeat(2,minmax(0,620px))]"
-			aria-label={tPage('narrativeSectionLabel')}
-		>
-			<ContentPanel headingLevel="h2" title={tPage('problemLabel')}>
-				<p class="text-base leading-relaxed">{caseStudy.problem}</p>
-			</ContentPanel>
-			<ContentPanel headingLevel="h2" title={tPage('approachLabel')}>
-				<p class="text-base leading-relaxed">{caseStudy.approach}</p>
-			</ContentPanel>
-			<ContentPanel headingLevel="h2" title={tPage('tradeoffsLabel')}>
-				<p class="text-base leading-relaxed">{caseStudy.tradeoffs}</p>
-			</ContentPanel>
-			<ContentPanel headingLevel="h2" title={tPage('outcomeLabel')}>
-				<p class="text-base leading-relaxed">{caseStudy.outcome}</p>
-			</ContentPanel>
-		</section>
-
-		{
-			evidence && (
-				<section class="mt-16">
-					<TitleSection className="mb-8">{tPage('evidenceTitle')}</TitleSection>
-					<div class="flex justify-center">
-						<ContentPanel
-							headingLevel="h3"
-							variant="highlight"
-							title={evidence.statusLabel}
-						>
-							<p class="font-mono text-sm font-bold text-content-strong">
-								{evidence.status}
-							</p>
-							<p>{evidence.statusDetail}</p>
-						</ContentPanel>
 					</div>
-					<div class="mt-6 grid grid-cols-1 justify-center gap-6 md:grid-cols-[repeat(2,minmax(0,620px))]">
-						<ContentPanel
-							headingLevel="h3"
-							variant="success"
-							title={evidence.implementedLabel}
-						>
-							<ul class="space-y-2.5">
-								{evidence.implemented.map(item => (
-									<li class="flex items-start gap-2">
-										<span
-											class="mt-[7px] size-1.5 shrink-0 bg-status-success-text"
-											aria-hidden="true"
-										/>
-										<span>{item}</span>
-									</li>
-								))}
-							</ul>
-						</ContentPanel>
 
-						<ContentPanel headingLevel="h3" title={evidence.plannedLabel}>
-							<ul class="space-y-2.5">
-								{evidence.planned.map(item => (
-									<li class="flex items-start gap-2">
-										<span
-											class="mt-[7px] size-1.5 shrink-0 bg-channel-accent-primary"
-											aria-hidden="true"
-										/>
-										<span>{item}</span>
-									</li>
-								))}
-							</ul>
-						</ContentPanel>
-
-						<ContentPanel
-							headingLevel="h3"
-							variant="danger"
-							title={evidence.limitationsLabel}
-						>
-							<ul class="space-y-2.5">
-								{evidence.limitations.map(item => (
-									<li class="flex items-start gap-2">
-										<span
-											class="mt-[7px] size-1.5 shrink-0 bg-channel-status-error"
-											aria-hidden="true"
-										/>
-										<span>{item}</span>
-									</li>
-								))}
-							</ul>
-						</ContentPanel>
-
-						<ContentPanel headingLevel="h3" title={evidence.sourcesLabel}>
-							<ul class="space-y-3">
-								{evidence.sources.map(source => (
-									<li class="border border-edge-subtle p-3">
-										{source.href ? (
-											<a
-												href={source.href}
-												target="_blank"
-												rel="noopener noreferrer"
-												class="font-mono text-sm font-bold text-channel-accent-primary underline decoration-2 underline-offset-4 hover:no-underline"
-											>
-												{source.label}
-												<span class="sr-only">
-													{' '}
-													{tAccessibility('externalLink')}
-												</span>
-											</a>
-										) : (
-											<p class="font-mono text-sm font-bold text-content-strong">
-												{source.label}
-											</p>
-										)}
-										<p class="mt-1.5 text-secondary text-content-muted">
-											{source.access}
-										</p>
-									</li>
-								))}
-							</ul>
-						</ContentPanel>
-
-						{architecture && (
-							<figure class="w-full max-w-[1264px] border-2 border-edge-strong bg-channel-portfolio-terminal-surface p-5 shadow-retro-lg md:col-span-2">
-								<div class="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
-									{architectureNodes.map(node => (
-										<div
-											class:list={[
-												'border-2 bg-channel-portfolio-terminal-surface-raised p-4 text-center',
-												node.accent,
-											]}
-										>
-											{node.lines.map((line, index) => (
-												<p
-													class:list={[
-														index === 0
-															? 'text-sm font-bold text-channel-portfolio-terminal-content'
-															: 'mt-1 text-caption text-channel-portfolio-terminal-content-muted',
-													]}
-												>
-													{line}
-												</p>
-											))}
-										</div>
-									))}
-									<div
-										class="hidden text-2xl text-channel-portfolio-terminal-content md:block"
-										aria-hidden="true"
-									>
-										→
+					<div class="flex min-w-0 flex-col gap-6 border-t-2 border-edge-subtle pt-6 lg:border-t-0 lg:pt-0">
+						{
+							secondaryNarrative.map((block, index) => (
+								<>
+									{index > 0 && <div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true" />}
+									<div class="flex flex-col gap-2">
+										<p class:list={[
+											'text-editorial-label-compact uppercase',
+											block === presentation.narrative.outcome
+												? 'text-status-success-text'
+												: 'text-channel-accent-primary',
+										]}>{block.label}</p>
+										<h2 class="text-subheading text-content-strong md:text-component-title">{block.title}</h2>
+										<p class="text-secondary text-content-default md:text-body">{block.body}</p>
 									</div>
-								</div>
-
-								<div
-									class="my-4 text-center text-2xl text-channel-portfolio-terminal-content"
-									aria-hidden="true"
-								>
-									↓
-								</div>
-
-								<div class="grid gap-4 md:grid-cols-3">
-									{architectureLeaves.map(node => (
-										<div
-											class:list={[
-												'border-2 bg-channel-portfolio-terminal-surface-raised p-4 text-center',
-												node.accent,
-											]}
-										>
-											{node.lines.map((line, index) => (
-												<p
-													class:list={[
-														index === 0
-															? 'text-sm font-bold text-channel-portfolio-terminal-content'
-															: 'mt-1 text-caption text-channel-portfolio-terminal-content-muted',
-													]}
-												>
-													{line}
-												</p>
-											))}
-										</div>
-									))}
-								</div>
-
-								<div class="mt-4 border-2 border-channel-edge-default bg-channel-portfolio-terminal-surface-raised p-4 text-center">
-									{architecture.processes.split('\n').map((line, index) => (
-										<p
-											class:list={[
-												index === 0
-													? 'text-sm font-bold text-channel-portfolio-terminal-content'
-													: 'mt-1 text-caption text-channel-portfolio-terminal-content-muted',
-											]}
-										>
-											{line}
-										</p>
-									))}
-								</div>
-								<figcaption class="mt-5 text-caption text-channel-portfolio-terminal-content-muted">
-									{architecture.caption}
-								</figcaption>
-							</figure>
-						)}
+								</>
+							))
+						}
 					</div>
-				</section>
-			)
-		}
+				</div>
+			</section>
 
-		<section class="mt-16 pb-2">
-			<TitleSection className="mb-8">{tPage('learningsTitle')}</TitleSection>
-			<div
-				class="flex flex-col items-center gap-2.5 md:flex-row md:flex-wrap md:justify-center"
+			<section
+				class="w-full bg-channel-surface-highlight px-5 pt-8 pb-10 md:px-8 md:py-10 lg:px-20"
+				data-case-study-evidence
 			>
-				{
-					caseStudy.learnings.map(learning => (
-						<ContentPanel density="compact">{learning}</ContentPanel>
-					))
-				}
-			</div>
-		</section>
-	</div>
-</div>
+				<div class="mx-auto w-full max-w-320" data-case-study-evidence-shell>
+					<h2 class="text-feature-title text-content-strong md:text-section-title">
+						{presentation.evidenceTitle}
+					</h2>
+					<div class="mt-6 grid gap-6 lg:grid-cols-2 lg:gap-12">
+						<div class="flex min-w-0 gap-3.5 md:gap-4">
+							<div class="w-1 shrink-0 self-stretch bg-channel-accent-primary" aria-hidden="true" />
+							<div class="flex min-w-0 flex-col gap-2">
+								<p class="text-editorial-label-compact uppercase text-channel-accent-primary">{presentation.verified.label}</p>
+								<h3 class="text-subheading text-content-strong md:text-component-title">{presentation.verified.title}</h3>
+								<p class="text-secondary text-content-default md:text-body">{presentation.verified.body}</p>
+							</div>
+						</div>
+						<div class="flex min-w-0 gap-3.5 md:gap-4">
+							<div class="w-1 shrink-0 self-stretch bg-channel-status-error" aria-hidden="true" />
+							<div class="flex min-w-0 flex-col gap-2">
+								<p class="text-editorial-label-compact uppercase text-badge-danger-text">{presentation.boundaries.label}</p>
+								<h3 class="text-subheading text-content-strong md:text-component-title">{presentation.boundaries.title}</h3>
+								<p class="text-secondary text-content-default md:text-body">{presentation.boundaries.body}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<section
+				class="w-full bg-channel-background-canvas px-5 pt-8 pb-10 md:px-8 md:pt-10 md:pb-12 lg:px-20"
+				data-case-study-learnings
+			>
+				<div class="mx-auto w-full max-w-320" data-case-study-learnings-shell>
+					<h2 class="text-feature-title text-content-strong md:text-section-title">
+						{presentation.learningsTitle}
+					</h2>
+					<div class="mt-6 grid gap-0 lg:grid-cols-3">
+						{
+							presentation.learnings.map((learning, index) => (
+								<div class:list={[
+									'flex min-w-0 flex-col gap-2',
+									index > 0 && 'mt-5 border-t-2 border-edge-subtle pt-5 lg:mt-0 lg:border-t-0 lg:border-l-2 lg:pt-0 lg:pl-6',
+									index === 1 && 'lg:pr-6',
+									index === 0 && 'lg:pr-6',
+								]}>
+									<p class="text-editorial-label-compact uppercase text-channel-accent-primary">{learning.label}</p>
+									<h3 class="text-subheading text-content-strong md:text-component-title">{learning.title}</h3>
+									<p class="text-secondary text-content-default md:text-body">{learning.body}</p>
+								</div>
+							))
+						}
+					</div>
+				</div>
+			</section>
+		</article>
+	) : (
+		<ProjectCaseStudyLegacy {project} {backLink} {lang} />
+	)
+}
