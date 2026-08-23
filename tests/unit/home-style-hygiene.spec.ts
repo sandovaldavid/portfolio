@@ -11,6 +11,7 @@ const collectFiles = (directory: string): string[] =>
 
 const globalStyles = readSource('src/app/styles/global.css');
 const colors = readSource('src/app/styles/colors.css');
+const printStyles = readSource('src/app/styles/print.css');
 const layout = readSource('src/app/layouts/Layout.astro');
 const buttons = readSource('src/shared/ui/button/button.css');
 const sectionContainer = readSource('src/shared/ui/section-container/SectionContainer.astro');
@@ -74,6 +75,7 @@ describe('Home style hygiene', () => {
 		]) {
 			expect(globalStyles).not.toContain(retired);
 		}
+		expect(globalStyles).not.toContain('.leading-relaxed {');
 
 		for (const retired of [
 			'Backward-compatible aliases while consumers migrate',
@@ -148,5 +150,15 @@ describe('Home style hygiene', () => {
 		expect(experienceTab).not.toContain('active: boolean');
 		expect(experience).not.toContain('active={idx === 0}');
 		expect(experienceTab).toContain("data-active={selected ? 'true' : 'false'}");
+	});
+
+	it('keeps print-only hiding rules aligned with current component selectors', () => {
+		for (const retired of ['#theme-toggle', '.cli-terminal', '.splash-screen', '.container']) {
+			expect(printStyles).not.toContain(retired);
+		}
+		expect(printStyles).toContain('[data-theme-toggle]');
+		expect(printStyles).toContain('#cli-terminal-root');
+		expect(printStyles).toContain('#splash-screen');
+		expect(printStyles).toContain("a[href='#main-content']");
 	});
 });
