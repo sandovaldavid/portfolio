@@ -1,0 +1,96 @@
+---
+projectId: kioku
+locale: en
+title: Kioku
+description: "A local-first .NET 10 MCP server that keeps agent decisions, specs, plans, bugs and session handoffs as durable Markdown and YAML records inside an Obsidian vault."
+category: "Backend Engineering"
+imageAlt: "Kioku MCP server architecture and durable agent handoff preview"
+caseStudy:
+  kicker: "PROJECT CASE STUDY · BACKEND ENGINEERING"
+  status:
+    lifecycle: "ACTIVE · STABLE 3.1.2 + DEVELOPMENT"
+    source: "PUBLIC SOURCE"
+    demo: "NO HOSTED DEMO"
+---
+
+<CaseStudySection eyebrow="PUBLIC EVIDENCE" title="Inspect the project beyond this portfolio" width="reading">
+  <ProjectResources projectId="kioku" resources={['docs', 'source', 'package', 'related']} />
+
+  Kioku is useful as a portfolio project because its implementation, package, operational documentation and release history are independently inspectable. The documentation site is the best starting point for the public contract; the repository remains the implementation source of truth.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEM" title="Agent context should survive the session that created it">
+  Coding agents can make good decisions and still lose the reasoning behind them when a process, terminal or conversation ends. Provider history is not a durable project record, and a handoff should not require the next agent to reconstruct intent from chat logs.
+
+  Kioku treats the vault as durable project memory instead: specs, implementation plans, decisions, bugs, knowledge and session handoffs remain readable as Markdown and YAML even without the MCP server or Obsidian UI running.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="SYSTEM" title="Local-first MCP boundary" surface="highlight">
+  <MermaidDiagram
+    title="Kioku runtime boundary"
+    description="MCP clients reach a .NET 10 Kioku server over local stdio or authenticated Streamable HTTP. The server reads the Obsidian vault directly, with semantic retrieval and the Obsidian bridge remaining optional integrations."
+    chart={`flowchart LR
+      Client["MCP clients\nClaude · Codex · OpenCode"] --> Server["Kioku.Mcp.Server\n.NET 10"]
+      Server --> Vault["Obsidian vault\nMarkdown + YAML"]
+      Server --> Retrieval["Full-text + semantic retrieval"]
+      Retrieval -. optional .-> Ollama["Local Ollama\nembeddings / generation"]
+      Server -. optional .-> Bridge["Obsidian bridge\nUI integration"]`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="ENGINEERING DECISIONS" title="Keep storage human-readable and protocol boundaries explicit">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="DECISION 01" title="MARKDOWN IS THE DURABLE FORMAT" tone="primary">
+      The vault remains understandable and editable without Kioku. The MCP layer coordinates workflows; it does not become the only place where project knowledge can be recovered.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="DECISION 02" title="HEADLESS CORE, OPTIONAL UI" tone="primary">
+      Core notes, search, projects, sessions, indexing and coordination work directly against the vault. Obsidian and its companion plugin are optional for UI and bridge-specific operations.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="DECISION 03" title="REMOTE ACCESS REQUIRES AN EXPLICIT TRUST BOUNDARY" tone="primary">
+      Local stdio stays the default. Streamable HTTP binds to loopback by default, and non-loopback exposure requires authentication unless an explicit unsafe override is chosen.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="WORKFLOW" title="Design intent becomes a recoverable project artifact" surface="highlight">
+  <MermaidDiagram
+    title="Durable engineering workflow"
+    description="Kioku separates the requirement, implementation plan and execution handoff so a fresh agent can recover both intent and current state."
+    chart={`flowchart LR
+      Request["Request / issue"] --> Spec["Engineering SPEC"]
+      Spec --> Plan["Implementation PLAN"]
+      Plan --> Session["SESSION / execution"]
+      Session --> Handoff["Durable handoff"]
+      Handoff --> Context["Fresh agent recovers context"]`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFIED IN PUBLIC REPOSITORY" title="RELEASE 3.1.2, PACKAGE, CONTRACTS AND OPERATIONAL DOCS" tone="verified">
+      The public repository identifies **3.1.2** as the latest tagged server release and links the `kioku-mcp-server` NuGet package. Generated MCP references, engineering-workflow documentation, configuration, security guidance and tests are directly inspectable.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="BOUNDARIES" title="DEVELOP CAN BE AHEAD OF THE LATEST TAG" tone="boundary">
+      The repository explicitly states that `develop` can contain verified but unreleased changes. This case study therefore distinguishes the latest tagged release from active development and does not claim external adoption, production workload or commercial impact.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="LEARNINGS" title="What this project changed in how I build" surface="highlight">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="LEARNING 01" title="DURABILITY BEATS PROVIDER HISTORY" tone="success">
+      Human-readable project records survive session and process boundaries better than depending on one AI provider's conversation history.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 02" title="SPEC → PLAN → SESSION IS A USEFUL BOUNDARY" tone="success">
+      Keeping requirements, implementation intent and execution state separate makes a fresh agent more likely to continue the right work instead of merely continuing text.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 03" title="LOCAL-FIRST DOES NOT REMOVE SECURITY WORK" tone="success">
+      The moment a local protocol becomes remotely reachable, authentication, origin policy, proxy trust and vault boundaries become first-class engineering concerns.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
