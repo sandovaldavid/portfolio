@@ -25,6 +25,8 @@ for (const viewport of [
 		const titleBox = await title.boundingBox();
 		expect(titleBox).not.toBeNull();
 		expect(sectionBox).not.toBeNull();
+		expect(await title.evaluate(el => getComputedStyle(el).fontSize)).toBe('36px');
+		expect(await title.evaluate(el => getComputedStyle(el).lineHeight)).toBe('40px');
 
 		const titleCenter = titleBox!.x + titleBox!.width / 2;
 		const sectionCenter = sectionBox!.x + sectionBox!.width / 2;
@@ -32,7 +34,9 @@ for (const viewport of [
 	});
 }
 
-test('mobile experience section remains full-bleed with a horizontal tab rail', async ({ page }) => {
+test('mobile experience keeps compact section typography and a visually hidden horizontal rail', async ({
+	page,
+}) => {
 	await page.setViewportSize({ width: 390, height: 844 });
 	await page.goto('/');
 
@@ -40,9 +44,18 @@ test('mobile experience section remains full-bleed with a horizontal tab rail', 
 	const box = await section.boundingBox();
 	expect(box?.width).toBeCloseTo(390, 0);
 
+	const title = section.getByRole('heading', { level: 2, name: /experience/i });
+	expect(await title.evaluate(el => getComputedStyle(el).fontSize)).toBe('28px');
+	expect(await title.evaluate(el => getComputedStyle(el).lineHeight)).toBe('36px');
+
 	const tablist = section.getByRole('tablist');
 	expect(await tablist.evaluate(el => getComputedStyle(el).flexDirection)).toBe('row');
 	expect(await tablist.evaluate(el => getComputedStyle(el).overflowX)).toBe('auto');
+	expect(await tablist.evaluate(el => getComputedStyle(el).scrollbarWidth)).toBe('none');
+
+	const technologies = section.locator('[role="tabpanel"][data-active="true"] [data-experience-technologies]');
+	await expect(technologies).toBeVisible();
+	expect(await technologies.evaluate(el => getComputedStyle(el).justifyContent)).toBe('center');
 });
 
 test('experience hover remains visually distinct from the section surface', async ({ page }) => {
