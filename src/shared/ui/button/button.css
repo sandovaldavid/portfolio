@@ -3,14 +3,14 @@
 /*
  * Portfolio Retro button contract (spec/03 Button):
  * height 44px, border 2px strong edge, padding 8px/16px, gap 8px,
- * label JetBrains Mono Bold 14/20 tracking .7px, icon 16px.
+ * semantic Button Label typography, icon 16px.
  * Shadow progression md (default) -> xl (hover) -> xs (active);
  * geometry never changes across states.
  */
 .btn-base {
 	@apply inline-flex items-center justify-center gap-2;
 	@apply h-11 px-4 py-2;
-	@apply font-mono text-sm font-bold leading-5 tracking-[0.7px];
+	@apply text-button-label;
 	@apply rounded-none border-2 border-button-border;
 	@apply transition-[box-shadow,background-color,color] duration-100;
 	@apply focus:outline-none focus-visible:outline-none;
@@ -35,19 +35,16 @@
 	box-shadow: var(--shadow-retro-xs);
 }
 
-/* Primary variant */
 .btn-primary {
 	@apply bg-button-primary-background text-button-primary-content;
 	@apply hover:bg-button-primary-background-hover;
 }
 
-/* Secondary variant */
 .btn-secondary {
 	@apply bg-button-secondary-background text-button-secondary-content;
 	@apply hover:bg-button-secondary-background-hover;
 }
 
-/* Disabled: no decorative shadow, muted/inactive treatment, geometry intact */
 .btn-base:disabled,
 .btn-base.btn-disabled {
 	@apply pointer-events-none cursor-not-allowed opacity-60;
