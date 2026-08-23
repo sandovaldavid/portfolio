@@ -51,7 +51,9 @@ describe('Project Case Study v2 contract', () => {
 	});
 
 	it('keeps unreviewed case studies on an explicit temporary migration fallback', () => {
-		expect(caseStudy).toContain("import ProjectCaseStudyLegacy from './ProjectCaseStudyLegacy.astro'");
+		expect(caseStudy).toContain(
+			"import ProjectCaseStudyLegacy from './ProjectCaseStudyLegacy.astro'"
+		);
 		expect(caseStudy).toContain('<ProjectCaseStudyLegacy {project} {backLink} {lang} />');
 		expect(legacy).toContain('Transitional renderer for case studies');
 		expect(legacy).toContain('Delete this file once every project');

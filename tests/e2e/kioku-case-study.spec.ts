@@ -47,7 +47,9 @@ test.describe('Kioku public backend case study', () => {
 				'Markdown durable y legible por humanos sobrevive mejor los límites de sesión y proceso que un historial específico de proveedor.',
 		},
 	]) {
-		test(`renders the concise bilingual v2 presentation at ${locale.path}`, async ({ page }) => {
+		test(`renders the concise bilingual v2 presentation at ${locale.path}`, async ({
+			page,
+		}) => {
 			await page.goto(locale.path);
 
 			const caseStudy = page.locator('[data-project-case-study="v2"]');
@@ -66,7 +68,9 @@ test.describe('Kioku public backend case study', () => {
 			await expect(page.getByRole('heading', { name: locale.learnings })).toBeVisible();
 			await expect(page.getByText(locale.learningBody, { exact: true })).toBeVisible();
 
-			const sourceBadgeLink = page.locator('a[href="https://github.com/sandovaldavid/kioku"]');
+			const sourceBadgeLink = page.locator(
+				'a[href="https://github.com/sandovaldavid/kioku"]'
+			);
 			await expect(sourceBadgeLink).toBeVisible();
 			await expect(sourceBadgeLink).toContainText(locale.source);
 

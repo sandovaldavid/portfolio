@@ -219,7 +219,9 @@ describe('localized project and case-study content', () => {
 				expect(nonEmpty(entry.caseStudy.presentation.kicker)).toBe(true);
 				expect(nonEmpty(entry.caseStudy.presentation.description)).toBe(true);
 				expect(entry.caseStudy.presentation.learnings.length).toBeGreaterThan(0);
-				expect(entry.caseStudy.presentation.learnings.every(item => nonEmpty(item.body))).toBe(true);
+				expect(
+					entry.caseStudy.presentation.learnings.every(item => nonEmpty(item.body))
+				).toBe(true);
 			}
 		}
 	});

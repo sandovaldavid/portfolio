@@ -64,7 +64,9 @@ const architectureLeaves = architecture
 			class="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,640fr)_minmax(0,560fr)] lg:gap-x-20"
 		>
 			<div>
-				<p class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary">
+				<p
+					class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary"
+				>
 					{caseStudyLabel}
 				</p>
 				<h1
@@ -116,7 +118,9 @@ const architectureLeaves = architecture
 			>
 				<dl class="grid gap-4 sm:grid-cols-3">
 					<div>
-						<dt class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary">
+						<dt
+							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
+						>
 							{caseStudy.status.lifecycleLabel}
 						</dt>
 						<dd class="mt-1 text-secondary font-bold text-content-strong">
@@ -124,7 +128,9 @@ const architectureLeaves = architecture
 						</dd>
 					</div>
 					<div>
-						<dt class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary">
+						<dt
+							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
+						>
 							{caseStudy.status.sourceLabel}
 						</dt>
 						<dd class="mt-1 text-secondary font-bold text-content-strong">
@@ -132,7 +138,9 @@ const architectureLeaves = architecture
 						</dd>
 					</div>
 					<div>
-						<dt class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary">
+						<dt
+							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
+						>
 							{caseStudy.status.demoLabel}
 						</dt>
 						<dd class="mt-1 text-secondary font-bold text-content-strong">
@@ -143,13 +151,19 @@ const architectureLeaves = architecture
 
 				<dl class="flex flex-wrap gap-x-8 gap-y-2 border-t border-edge-subtle pt-4">
 					<div>
-						<dt class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary">
+						<dt
+							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
+						>
 							{tProjects('timeline')}
 						</dt>
-						<dd class="mt-1 text-secondary text-content-default">{caseStudy.timeline}</dd>
+						<dd class="mt-1 text-secondary text-content-default">
+							{caseStudy.timeline}
+						</dd>
 					</div>
 					<div>
-						<dt class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary">
+						<dt
+							class="font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary"
+						>
 							{tProjects('role')}
 						</dt>
 						<dd class="mt-1 text-secondary text-content-default">{caseStudy.role}</dd>
@@ -157,11 +171,17 @@ const architectureLeaves = architecture
 				</dl>
 
 				<div class="border-t border-edge-subtle pt-4">
-					<p class="text-editorial-label uppercase tracking-wide text-channel-status-error">
+					<p
+						class="text-editorial-label uppercase tracking-wide text-channel-status-error"
+					>
 						{caseStudy.status.limitationsLabel}
 					</p>
 					<ul class="mt-2 space-y-2">
-						{caseStudy.status.limitations.map(item => <li class="text-secondary text-content-muted">{item}</li>)}
+						{
+							caseStudy.status.limitations.map(item => (
+								<li class="text-secondary text-content-muted">{item}</li>
+							))
+						}
 					</ul>
 				</div>
 			</div>
@@ -202,17 +222,30 @@ const architectureLeaves = architecture
 				<section class="mt-16">
 					<TitleSection className="mb-8">{tPage('evidenceTitle')}</TitleSection>
 					<div class="flex justify-center">
-						<ContentPanel headingLevel="h3" variant="highlight" title={evidence.statusLabel}>
-							<p class="font-mono text-sm font-bold text-content-strong">{evidence.status}</p>
+						<ContentPanel
+							headingLevel="h3"
+							variant="highlight"
+							title={evidence.statusLabel}
+						>
+							<p class="font-mono text-sm font-bold text-content-strong">
+								{evidence.status}
+							</p>
 							<p>{evidence.statusDetail}</p>
 						</ContentPanel>
 					</div>
 					<div class="mt-6 grid grid-cols-1 justify-center gap-6 md:grid-cols-[repeat(2,minmax(0,620px))]">
-						<ContentPanel headingLevel="h3" variant="success" title={evidence.implementedLabel}>
+						<ContentPanel
+							headingLevel="h3"
+							variant="success"
+							title={evidence.implementedLabel}
+						>
 							<ul class="space-y-2.5">
 								{evidence.implemented.map(item => (
 									<li class="flex items-start gap-2">
-										<span class="mt-[7px] size-1.5 shrink-0 bg-status-success-text" aria-hidden="true" />
+										<span
+											class="mt-[7px] size-1.5 shrink-0 bg-status-success-text"
+											aria-hidden="true"
+										/>
 										<span>{item}</span>
 									</li>
 								))}
@@ -223,18 +256,28 @@ const architectureLeaves = architecture
 							<ul class="space-y-2.5">
 								{evidence.planned.map(item => (
 									<li class="flex items-start gap-2">
-										<span class="mt-[7px] size-1.5 shrink-0 bg-channel-accent-primary" aria-hidden="true" />
+										<span
+											class="mt-[7px] size-1.5 shrink-0 bg-channel-accent-primary"
+											aria-hidden="true"
+										/>
 										<span>{item}</span>
 									</li>
 								))}
 							</ul>
 						</ContentPanel>
 
-						<ContentPanel headingLevel="h3" variant="danger" title={evidence.limitationsLabel}>
+						<ContentPanel
+							headingLevel="h3"
+							variant="danger"
+							title={evidence.limitationsLabel}
+						>
 							<ul class="space-y-2.5">
 								{evidence.limitations.map(item => (
 									<li class="flex items-start gap-2">
-										<span class="mt-[7px] size-1.5 shrink-0 bg-channel-status-error" aria-hidden="true" />
+										<span
+											class="mt-[7px] size-1.5 shrink-0 bg-channel-status-error"
+											aria-hidden="true"
+										/>
 										<span>{item}</span>
 									</li>
 								))}
@@ -253,12 +296,19 @@ const architectureLeaves = architecture
 												class="font-mono text-sm font-bold text-channel-accent-primary underline decoration-2 underline-offset-4 hover:no-underline"
 											>
 												{source.label}
-												<span class="sr-only">{' '}{tAccessibility('externalLink')}</span>
+												<span class="sr-only">
+													{' '}
+													{tAccessibility('externalLink')}
+												</span>
 											</a>
 										) : (
-											<p class="font-mono text-sm font-bold text-content-strong">{source.label}</p>
+											<p class="font-mono text-sm font-bold text-content-strong">
+												{source.label}
+											</p>
 										)}
-										<p class="mt-1.5 text-secondary text-content-muted">{source.access}</p>
+										<p class="mt-1.5 text-secondary text-content-muted">
+											{source.access}
+										</p>
 									</li>
 								))}
 							</ul>
@@ -268,24 +318,56 @@ const architectureLeaves = architecture
 							<figure class="w-full max-w-[1264px] border-2 border-edge-strong bg-channel-portfolio-terminal-surface p-5 shadow-retro-lg md:col-span-2">
 								<div class="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
 									{architectureNodes.map(node => (
-										<div class:list={['border-2 bg-channel-portfolio-terminal-surface-raised p-4 text-center', node.accent]}>
+										<div
+											class:list={[
+												'border-2 bg-channel-portfolio-terminal-surface-raised p-4 text-center',
+												node.accent,
+											]}
+										>
 											{node.lines.map((line, index) => (
-												<p class:list={[index === 0 ? 'text-sm font-bold text-channel-portfolio-terminal-content' : 'mt-1 text-caption text-channel-portfolio-terminal-content-muted']}>
+												<p
+													class:list={[
+														index === 0
+															? 'text-sm font-bold text-channel-portfolio-terminal-content'
+															: 'mt-1 text-caption text-channel-portfolio-terminal-content-muted',
+													]}
+												>
 													{line}
 												</p>
 											))}
 										</div>
 									))}
-									<div class="hidden text-2xl text-channel-portfolio-terminal-content md:block" aria-hidden="true">→</div>
+									<div
+										class="hidden text-2xl text-channel-portfolio-terminal-content md:block"
+										aria-hidden="true"
+									>
+										→
+									</div>
 								</div>
 
-								<div class="my-4 text-center text-2xl text-channel-portfolio-terminal-content" aria-hidden="true">↓</div>
+								<div
+									class="my-4 text-center text-2xl text-channel-portfolio-terminal-content"
+									aria-hidden="true"
+								>
+									↓
+								</div>
 
 								<div class="grid gap-4 md:grid-cols-3">
 									{architectureLeaves.map(node => (
-										<div class:list={['border-2 bg-channel-portfolio-terminal-surface-raised p-4 text-center', node.accent]}>
+										<div
+											class:list={[
+												'border-2 bg-channel-portfolio-terminal-surface-raised p-4 text-center',
+												node.accent,
+											]}
+										>
 											{node.lines.map((line, index) => (
-												<p class:list={[index === 0 ? 'text-sm font-bold text-channel-portfolio-terminal-content' : 'mt-1 text-caption text-channel-portfolio-terminal-content-muted']}>
+												<p
+													class:list={[
+														index === 0
+															? 'text-sm font-bold text-channel-portfolio-terminal-content'
+															: 'mt-1 text-caption text-channel-portfolio-terminal-content-muted',
+													]}
+												>
 													{line}
 												</p>
 											))}
@@ -295,12 +377,20 @@ const architectureLeaves = architecture
 
 								<div class="mt-4 border-2 border-channel-edge-default bg-channel-portfolio-terminal-surface-raised p-4 text-center">
 									{architecture.processes.split('\n').map((line, index) => (
-										<p class:list={[index === 0 ? 'text-sm font-bold text-channel-portfolio-terminal-content' : 'mt-1 text-caption text-channel-portfolio-terminal-content-muted']}>
+										<p
+											class:list={[
+												index === 0
+													? 'text-sm font-bold text-channel-portfolio-terminal-content'
+													: 'mt-1 text-caption text-channel-portfolio-terminal-content-muted',
+											]}
+										>
 											{line}
 										</p>
 									))}
 								</div>
-								<figcaption class="mt-5 text-caption text-channel-portfolio-terminal-content-muted">{architecture.caption}</figcaption>
+								<figcaption class="mt-5 text-caption text-channel-portfolio-terminal-content-muted">
+									{architecture.caption}
+								</figcaption>
 							</figure>
 						)}
 					</div>
@@ -310,8 +400,14 @@ const architectureLeaves = architecture
 
 		<section class="mt-16 pb-2">
 			<TitleSection className="mb-8">{tPage('learningsTitle')}</TitleSection>
-			<div class="flex flex-col items-center gap-2.5 md:flex-row md:flex-wrap md:justify-center">
-				{caseStudy.learnings.map(learning => <ContentPanel density="compact">{learning}</ContentPanel>)}
+			<div
+				class="flex flex-col items-center gap-2.5 md:flex-row md:flex-wrap md:justify-center"
+			>
+				{
+					caseStudy.learnings.map(learning => (
+						<ContentPanel density="compact">{learning}</ContentPanel>
+					))
+				}
 			</div>
 		</section>
 	</div>

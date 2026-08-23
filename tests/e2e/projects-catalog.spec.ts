@@ -57,7 +57,9 @@ const VIEWPORTS: CatalogViewport[] = [
 ];
 
 for (const viewport of VIEWPORTS) {
-	test(`Projects Catalog matches the ${viewport.name} responsive composition`, async ({ page }) => {
+	test(`Projects Catalog matches the ${viewport.name} responsive composition`, async ({
+		page,
+	}) => {
 		await page.setViewportSize({ width: viewport.width, height: viewport.height });
 		await page.goto('/projects');
 		await page.evaluate(() => document.fonts.ready);

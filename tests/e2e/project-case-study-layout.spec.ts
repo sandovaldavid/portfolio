@@ -113,5 +113,7 @@ test('unreviewed project details remain on the migration fallback', async ({ pag
 	await page.goto('/projects/yukidoke');
 	await expect(page.locator('[data-project-case-study="v2"]')).toHaveCount(0);
 	await expect(page.getByRole('link', { name: 'Back to projects' })).toBeVisible();
-	await expect(page.getByRole('heading', { name: 'IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION' })).toBeVisible();
+	await expect(
+		page.getByRole('heading', { name: 'IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION' })
+	).toBeVisible();
 });
