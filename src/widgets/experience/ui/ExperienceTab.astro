@@ -4,7 +4,6 @@ import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 interface Props {
 	company: string;
 	role: string;
-	active: boolean;
 	tabId: string;
 	panelId: string;
 	experienceId: string;
@@ -13,8 +12,7 @@ interface Props {
 	focusable: boolean;
 }
 
-const { company, role, active, tabId, panelId, experienceId, index, selected, focusable } =
-	Astro.props;
+const { company, role, tabId, panelId, experienceId, index, selected, focusable } = Astro.props;
 ---
 
 <!--
@@ -35,7 +33,7 @@ const { company, role, active, tabId, panelId, experienceId, index, selected, fo
 	tabindex={focusable ? 0 : -1}
 	data-index={index}
 	data-experience-id={experienceId}
-	data-active={active ? 'true' : 'false'}
+	data-active={selected ? 'true' : 'false'}
 	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col items-start gap-1 border-2 border-transparent bg-channel-surface-default py-2 pl-3.5 pr-4 text-left transition-[background-color,border-color] duration-200 hover:bg-badge-brand-bg focus-visible:border-channel-accent-primary focus-visible:bg-channel-surface-default focus-visible:outline-none data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg md:w-75 md:px-5 lg:min-h-20 lg:w-100 lg:pl-5 lg:pr-7.5"
 >
 	<span
