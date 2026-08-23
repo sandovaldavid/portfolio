@@ -55,7 +55,6 @@ const SOURCE_BADGE_VARIANT: Record<ProjectSourceAccess, 'success' | 'default'> =
 	private: 'default',
 };
 
-/* Figma component-set viewport geometry expressed through Tailwind's scale. */
 const cardHeight = isPrimary
 	? 'h-131.5 md:h-134.5 lg:h-116'
 	: 'h-116.5 md:h-119.5 lg:h-93.5';
@@ -69,19 +68,9 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 			cardHeight,
 		]}
 	>
-		<figure class:list={['relative w-full shrink-0 overflow-hidden bg-channel-portfolio-terminal-surface', mediaHeight]}>
-			<Image
-				src={image}
-				width={isPrimary ? 800 : 600}
-				height={isPrimary ? 500 : 380}
-				class="absolute inset-0 size-full object-cover"
-				decoding={priority ? 'sync' : 'async'}
-				loading={priority ? 'eager' : 'lazy'}
-				fetchpriority={priority ? 'high' : 'auto'}
-				alt={imageAlt}
-			/>
+		<figure class:list={['relative w-full shrink-0 overflow-hidden', mediaHeight]}>
 			<div
-				class="absolute inset-x-0 top-0 flex h-7 items-center gap-1.5 bg-channel-portfolio-terminal-surface-raised px-3"
+				class="absolute inset-x-0 top-0 z-10 flex h-7 items-center gap-1.5 bg-channel-portfolio-terminal-surface-raised px-3"
 			>
 				<span class="size-2 shrink-0 bg-channel-status-error" aria-hidden="true"></span>
 				<span class="size-2 shrink-0 bg-channel-status-warning" aria-hidden="true"></span>
@@ -89,6 +78,18 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 				<span class="ml-auto truncate text-caption font-bold text-channel-portfolio-terminal-content">
 					{cardTypeText}
 				</span>
+			</div>
+			<div class="relative h-full w-full overflow-hidden bg-channel-portfolio-terminal-surface">
+				<Image
+					src={image}
+					width={isPrimary ? 800 : 600}
+					height={isPrimary ? 500 : 380}
+					class="absolute inset-0 size-full object-cover"
+					decoding={priority ? 'sync' : 'async'}
+					loading={priority ? 'eager' : 'lazy'}
+					fetchpriority={priority ? 'high' : 'auto'}
+					alt={imageAlt}
+				/>
 			</div>
 		</figure>
 
