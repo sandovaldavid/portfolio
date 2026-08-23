@@ -21,18 +21,12 @@ const companyContext = isCurrent
 ---
 
 <!--
-	Portfolio / Experience Detail (Figma v2): open editorial evidence block,
-	not a generic card. Desktop targets 840px and lays three achievements in
-	columns; Tablet 446px and Mobile 360px stack them vertically. Role,
-	company/date and achievements are localized source data. Uppercase role/date
-	is a presentation rule only. Only the current role receives the dedicated
-	Atena CTA. Technology inventory is deliberately limited to three
-	representative source-backed items on this home summary.
+	Open editorial evidence block. Width is owned by the Experience grid rather
+	than duplicated here, which prevents the Mobile 360px design target from
+	overflowing the runtime's 350px content gutter.
 -->
-<div class="flex w-full max-w-90 flex-col gap-3.5 md:max-w-111.5 lg:max-w-210 lg:gap-4">
-	<header
-		class="flex min-h-17.5 flex-col items-start gap-1 md:min-h-16 md:flex-row md:justify-between lg:min-h-15"
-	>
+<div class="flex w-full min-w-0 flex-col gap-4 md:gap-5">
+	<header class="flex min-h-17.5 flex-col items-start gap-1 md:min-h-16 md:flex-row md:justify-between lg:min-h-15">
 		<h3 class="max-w-80 uppercase text-component-title text-content-strong md:w-62.5 lg:w-auto lg:max-w-none">
 			{title}
 		</h3>
@@ -43,12 +37,12 @@ const companyContext = isCurrent
 
 	<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
 
-	<ul class="flex flex-col gap-2.5 lg:grid lg:grid-cols-3 lg:gap-6">
+	<ul class="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-6">
 		{
 			description.slice(0, 3).map(point => (
 				<li class="flex min-w-0 items-start gap-2.5">
 					<ArrowRightIcon
-						class="size-4 shrink-0 text-content-strong"
+						class="mt-1 size-4 shrink-0 text-channel-accent-primary"
 						aria-hidden="true"
 						focusable="false"
 					/>
@@ -60,7 +54,7 @@ const companyContext = isCurrent
 		}
 	</ul>
 
-	<footer class="flex flex-col items-start gap-3 lg:flex-row lg:items-center lg:justify-between">
+	<footer class="mt-auto flex flex-col items-start gap-4 pt-1 lg:flex-row lg:items-center lg:justify-between">
 		{
 			visibleTechnologies.length > 0 && (
 				<ul class="flex flex-wrap gap-2">
