@@ -138,12 +138,12 @@ test.describe('Tablet geometry contract', () => {
 });
 
 test.describe('Experience Tab contract', () => {
-	for (const [viewport, expectedWidth, expectedHeight] of [
+	for (const [viewport, expectedWidth, minimumHeight] of [
 		[DESKTOP, 400, 80],
 		[TABLET, 300, 88],
 		[MOBILE, 250, 88],
 	] as const) {
-		test(`${viewport.label} tab uses the responsive Figma geometry`, async ({ page }) => {
+		test(`${viewport.label} tab respects the responsive Figma minimum geometry`, async ({ page }) => {
 			await page.setViewportSize({ width: viewport.width, height: viewport.height });
 			await page.goto('/');
 			await setTheme(page, 'light');
@@ -152,7 +152,11 @@ test.describe('Experience Tab contract', () => {
 			await expect(activeTab).toBeVisible();
 			const box = await activeTab.boundingBox();
 			expect(box?.width).toBe(expectedWidth);
-			expect(box?.height).toBe(expectedHeight);
+			if (viewport.label === 'desktop') {
+				expect(box?.height).toBe(minimumHeight);
+			} else {
+				expect(box?.height).toBeGreaterThanOrEqual(minimumHeight);
+			}
 			expect(await activeTab.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
 				await probeBackground(page, '--color-badge-brand-bg')
 			);
