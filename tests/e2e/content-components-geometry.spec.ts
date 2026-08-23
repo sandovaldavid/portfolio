@@ -107,7 +107,7 @@ test.describe('Hero Profile Record contract', () => {
 				const figureBox = await record.boundingBox();
 				expect(figureBox?.width).toBe(256);
 
-				const band = record.locator('p').first();
+				const band = record.locator('span').first();
 				const bandBox = await band.boundingBox();
 				expect(bandBox?.height).toBe(32);
 				expect(Math.round(bandBox!.x - figureBox!.x)).toBe(18);
@@ -119,7 +119,7 @@ test.describe('Hero Profile Record contract', () => {
 				const figureBox = await record.boundingBox();
 				expect(figureBox?.height).toBe(300);
 
-				const band = record.locator('p').first();
+				const band = record.locator('span').first();
 				expect((await band.boundingBox())?.height).toBe(32);
 				expect((await band.boundingBox())?.width).toBeLessThanOrEqual(300);
 			}
