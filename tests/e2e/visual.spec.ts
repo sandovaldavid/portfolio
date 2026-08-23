@@ -69,14 +69,14 @@ test.describe('Visual regression — Hero section', () => {
 
 	test('homepage hero should match baseline (EN dark)', async ({ page }) => {
 		await preparePage(page, '/');
-		const hero = page.locator('.hero-gradient').first();
+		const hero = page.locator('#hero');
 		await expect(hero).toBeVisible();
 		await expect(hero).toHaveScreenshot('hero-en-dark.png', { maxDiffPixelRatio: 0.05 });
 	});
 
 	test('homepage hero should render correctly in ES', async ({ page }) => {
 		await preparePage(page, '/es/');
-		const hero = page.locator('.hero-gradient').first();
+		const hero = page.locator('#hero');
 		await expect(hero).toBeVisible();
 		await expect(hero).toHaveScreenshot('hero-es-dark.png', { maxDiffPixelRatio: 0.05 });
 	});
