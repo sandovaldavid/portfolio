@@ -24,6 +24,7 @@ const homeSurface =
 	isHomeViewportSection ? (
 		<section id={id} class:list={['w-full max-w-none scroll-mt-18', homeSurface]}>
 			<div
+				data-home-viewport-shell
 				class:list={[
 					'mx-auto flex w-full max-w-360 flex-col justify-center px-5 md:min-h-[calc(100svh-4.5rem)] md:px-8 lg:px-20',
 					className,
@@ -46,3 +47,11 @@ const homeSurface =
 		</section>
 	)
 }
+
+<style>
+	[data-home-viewport-shell] :global(.title-section) {
+		width: 100%;
+		justify-content: center;
+		text-align: center;
+	}
+</style>
