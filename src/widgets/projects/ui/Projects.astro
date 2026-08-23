@@ -35,12 +35,10 @@ const projectsToDisplay = showAll ? projects : projects.filter(project => projec
 						project={project}
 						variant="secondary"
 						headingLevel={showAll ? 'h2' : 'h3'}
-						caseStudyText={tProjects('viewCaseStudy')}
+						caseStudyText={tProjects('caseStudy')}
 						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
 						sourceText={tProjects('source')}
-						cardTypeText={tProjects(project.featured ? 'cardFeature' : 'cardProject')}
 						lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
-						sourceAccessText={tProjects(`sourceAccess.${project.sourceAccess}`)}
 						newTabLabel={tAccessibility('externalLink')}
 						priority={i < 2}
 					/>
@@ -56,7 +54,7 @@ const projectsToDisplay = showAll ? projects : projects.filter(project => projec
 					href={getRelativeLocaleUrl(lang, 'projects')}
 					target="_self"
 					variant="secondary"
-					class="w-full max-w-68"
+					class="w-fit"
 				>
 					<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 					{tProjects('viewAll')}
