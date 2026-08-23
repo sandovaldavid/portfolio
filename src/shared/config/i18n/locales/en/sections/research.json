@@ -4,7 +4,18 @@
 	"label": "Bachelor thesis",
 	"title": "Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks",
 	"summary": "Applying Bidirectional LSTM neural networks to detect OSS repository abandonment risk from GitHub activity time series and benchmarking the results against traditional machine-learning baselines.",
-	"techStackLabel": "Technology stack",
+	"hypothesisLabel": "HYPOTHESIS",
+	"hypothesisTitle": "BILSTM VS. ML BASELINES",
+	"pipelineTitle": "PIPELINE",
+	"pipeline": {
+		"githubApi": "GITHUB API",
+		"raw": "RAW ACTIVITY",
+		"features": "FEATURES",
+		"sequences": "SEQUENCES",
+		"bilstm": "BILSTM",
+		"classifier": "CLASSIFIER"
+	},
+	"techStackLabel": "TECH STACK",
 	"methodologyHint": "Full methodology, architecture and pipeline are available on the research page.",
-	"viewFull": "View full research"
+	"viewFull": "View research"
 }
