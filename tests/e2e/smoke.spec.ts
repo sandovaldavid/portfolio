@@ -112,7 +112,7 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			catalogRoute: '/projects',
 			detailRoute: '/projects/campus-map',
 			category: 'Full-Stack Development',
-			cardLabel: 'Feature',
+			lifecycle: 'Maintained',
 			banner: 'Project case study · Full-Stack Development',
 			timeline: '3 months',
 			role: 'Solo Developer',
@@ -123,7 +123,7 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			catalogRoute: '/es/projects',
 			detailRoute: '/es/projects/campus-map',
 			category: 'Desarrollo Full-Stack',
-			cardLabel: 'Destacado',
+			lifecycle: 'Mantenido',
 			banner: 'Caso de estudio · Desarrollo Full-Stack',
 			timeline: '3 meses',
 			role: 'Desarrollador independiente',
@@ -136,7 +136,7 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		}) => {
 			await page.goto(scenario.catalogRoute);
 			await expect(page.getByText(scenario.category).first()).toBeVisible();
-			await expect(page.getByText(scenario.cardLabel).first()).toBeVisible();
+			await expect(page.getByText(scenario.lifecycle, { exact: true }).first()).toBeVisible();
 			await expect(page.getByRole('img', { name: scenario.imageAlt }).first()).toBeVisible();
 
 			await page.goto(scenario.detailRoute);
