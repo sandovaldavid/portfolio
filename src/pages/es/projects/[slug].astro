@@ -23,6 +23,7 @@ if (!project) {
 }
 
 const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandoval`;
+const contentLayout = project.caseStudy.presentation ? 'flush' : 'default';
 ---
 
 <Layout
@@ -32,6 +33,7 @@ const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandov
 	imageAlt={project.imageAlt}
 	pageType="project"
 	breadcrumbLabel={project.title}
+	{contentLayout}
 >
 	<ProjectCaseStudy {project} backLink={getRelativeLocaleUrl(lang, 'projects')} />
 </Layout>
