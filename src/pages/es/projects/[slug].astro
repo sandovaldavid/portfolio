@@ -16,7 +16,6 @@ export async function getStaticPaths() {
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const slug = Astro.params.slug ?? '';
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
-const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const project = await getProjectBySlug(lang, slug);
 
 if (!project) {
@@ -34,22 +33,5 @@ const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandov
 	pageType="project"
 	breadcrumbLabel={project.title}
 >
-	<div class="py-16 md:py-24">
-		<ProjectCaseStudy
-			{project}
-			backLink={getRelativeLocaleUrl(lang, 'projects')}
-			backText={tProjects('back')}
-			codeButtonText={tProjects('codeButton')}
-			previewButtonText={tProjects('previewButton')}
-			caseStudyLabel={tProjects('caseStudyBanner')}
-			labelProblem={tProjects('problem')}
-			labelApproach={tProjects('approach')}
-			labelTradeoffs={tProjects('tradeoffs')}
-			labelOutcome={tProjects('outcome')}
-			labelLearnings={tProjects('learnings')}
-			labelTimeline={tProjects('timeline')}
-			labelRole={tProjects('role')}
-			newTabLabel={tAccessibility('externalLink')}
-		/>
-	</div>
+	<ProjectCaseStudy {project} backLink={getRelativeLocaleUrl(lang, 'projects')} />
 </Layout>

@@ -1,0 +1,14 @@
+{
+	"introKicker": "CATÁLOGO DE PROYECTOS",
+	"introTitle": "Proyectos construidos con evidencia, alcance y trade-offs.",
+	"introBody": "El catálogo separa trabajo activo, mantenido y experimental. El acceso al código, la disponibilidad de demos y las limitaciones permanecen explícitos en lugar de quedar implícitos por el acabado visual.",
+	"catalogSectionLabel": "Cuadrícula de proyectos",
+	"caseStudyKicker": "Caso de estudio",
+	"problemLabel": "Problema",
+	"approachLabel": "Enfoque",
+	"tradeoffsLabel": "Compensaciones",
+	"outcomeLabel": "Resultado",
+	"narrativeSectionLabel": "Narrativa",
+	"evidenceTitle": "Evidencia y limitaciones",
+	"learningsTitle": "Extracción de aprendizajes"
+}

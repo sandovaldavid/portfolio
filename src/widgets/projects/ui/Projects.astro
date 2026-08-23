@@ -5,8 +5,14 @@ import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/
 
 interface Props {
 	showAll?: boolean;
+	/**
+	 * Catalog layout (spec/04 Projects Catalog): cards keep their contract
+	 * widths and wrap as a centered 520+32+520 pair on desktop instead of
+	 * stretching to fill the container. Home keeps the default stretch grid.
+	 */
+	centered?: boolean;
 }
-const { showAll = false } = Astro.props;
+const { showAll = false, centered = false } = Astro.props;
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
@@ -19,10 +25,22 @@ const projectsToDisplay = showAll
 ---
 
 <section class="font-sans w-full">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-stretch">
+	<div
+		class:list={[
+			'gap-8 w-full items-stretch',
+			centered
+				? 'flex flex-col items-center md:flex-row md:flex-wrap md:justify-center'
+				: 'grid grid-cols-1 md:grid-cols-2',
+		]}
+	>
 		{
 			projectsToDisplay.map((project, i) => (
-				<div class="h-full">
+				<div
+					class:list={[
+						'h-full',
+						centered && 'w-full max-w-[340px] md:max-w-[369px] lg:max-w-[520px]',
+					]}
+				>
 					<ProjectCard
 						project={project}
 						variant="secondary"

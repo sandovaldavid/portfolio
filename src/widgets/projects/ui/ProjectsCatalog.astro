@@ -1,0 +1,59 @@
+---
+import {
+	createScopedUiTranslator,
+	getLanguageFromLocale,
+	type Language,
+} from '@shared/config/i18n';
+import { ContentPanel } from '@shared/ui';
+import Projects from './Projects.astro';
+
+interface Props {
+	lang?: Language;
+}
+
+const { lang = getLanguageFromLocale(Astro.currentLocale) } = Astro.props;
+const tPage = createScopedUiTranslator(lang, 'pages.projects');
+
+/*
+ * Projects Catalog page composition (spec/04 "Projects Catalog" +
+ * plans/pages/projects-catalog.md): intro inner grid 1280 wide — primary
+ * kicker+title w720, secondary editorial context panel x800 w480 — followed
+ * by the centered card grid (520 + 32 + 520 desktop / 369 pairs on tablet /
+ * single 340 column on mobile). Vertical rhythm stays content-driven so
+ * translated copy grows without clipping.
+ */
+---
+
+<div class="w-full px-5 md:px-8 lg:px-0">
+	{
+		/* Inner container sits below #main-content's depth-2 max-width reset so
+	    the 1280px catalog grid actually applies on wide screens. */
+	}
+	<div class="mx-auto flex w-full max-w-[1280px] flex-col">
+		<header
+			class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,720fr)_minmax(0,480fr)] lg:gap-x-20"
+			aria-labelledby="projects-catalog-title"
+		>
+			<div>
+				<p
+					class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary"
+				>
+					{tPage('introKicker')}
+				</p>
+				<h1
+					id="projects-catalog-title"
+					class="mt-2 max-w-[720px] font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
+				>
+					{tPage('introTitle')}
+				</h1>
+			</div>
+			<ContentPanel class="lg:mt-6 lg:w-[480px] lg:max-w-none">
+				<p class="text-base leading-relaxed">{tPage('introBody')}</p>
+			</ContentPanel>
+		</header>
+
+		<section class="pt-10 lg:pt-16" aria-label={tPage('catalogSectionLabel')}>
+			<Projects showAll={true} centered={true} />
+		</section>
+	</div>
+</div>

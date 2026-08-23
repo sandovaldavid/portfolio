@@ -1,0 +1,14 @@
+{
+	"introKicker": "PROJECT CATALOG",
+	"introTitle": "Projects built with evidence, scope and trade-offs.",
+	"introBody": "The catalog separates active, maintained and experimental work. Public source access, demo availability and limitations remain explicit instead of being implied by visual polish.",
+	"catalogSectionLabel": "Project grid",
+	"caseStudyKicker": "Project case study",
+	"problemLabel": "Problem",
+	"approachLabel": "Approach",
+	"tradeoffsLabel": "Trade-offs",
+	"outcomeLabel": "Outcome",
+	"narrativeSectionLabel": "Narrative",
+	"evidenceTitle": "Evidence and limitations",
+	"learningsTitle": "Learning extraction"
+}

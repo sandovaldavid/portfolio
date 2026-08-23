@@ -11,6 +11,7 @@ import blogEn from './locales/en/pages/blog.json';
 import componentsEn from './locales/en/pages/components.json';
 import devlogEn from './locales/en/pages/devlog.json';
 import researchPageEn from './locales/en/pages/research.json';
+import projectsPageEn from './locales/en/pages/projects.json';
 import skillsEn from './locales/en/pages/skills.json';
 import recruiterEn from './locales/en/recruiter.json';
 import aboutEn from './locales/en/sections/about.json';
@@ -34,6 +35,7 @@ import blogEs from './locales/es/pages/blog.json';
 import componentsEs from './locales/es/pages/components.json';
 import devlogEs from './locales/es/pages/devlog.json';
 import researchPageEs from './locales/es/pages/research.json';
+import projectsPageEs from './locales/es/pages/projects.json';
 import skillsEs from './locales/es/pages/skills.json';
 import recruiterEs from './locales/es/recruiter.json';
 import aboutEs from './locales/es/sections/about.json';
@@ -65,6 +67,7 @@ const englishCatalog = {
 		components: componentsEn,
 		devlog: devlogEn,
 		research: researchPageEn,
+		projects: projectsPageEn,
 		skills: skillsEn,
 	},
 	sections: {
@@ -95,6 +98,7 @@ const spanishCatalog = {
 		components: componentsEs,
 		devlog: devlogEs,
 		research: researchPageEs,
+		projects: projectsPageEs,
 		skills: skillsEs,
 	},
 	sections: {
@@ -124,6 +128,7 @@ export const UI_CATALOG_MODULES = [
 	'pages.components',
 	'pages.devlog',
 	'pages.research',
+	'pages.projects',
 	'pages.skills',
 	'sections.hero',
 	'sections.about',
