@@ -62,12 +62,12 @@ const cardSize =
 		</time>
 	</header>
 
-	<div class="flex grow flex-col gap-5 pt-[18px] px-3.5 pb-4 lg:px-[18px]">
+	<div class="flex grow flex-col gap-5 pt-4.5 px-3.5 pb-4 lg:px-4.5">
 		{
 			tags.length > 0 && (
 				<ul class="flex flex-row flex-wrap gap-2" aria-label={typeLabel}>
 					{tags.map(tag => (
-						<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-[3px] font-retro-tag text-xs font-bold leading-none tracking-wide text-badge-brand-text">
+						<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-0.75 font-retro-tag text-xs font-bold leading-none tracking-wide text-badge-brand-text">
 							{tag}
 						</li>
 					))}
