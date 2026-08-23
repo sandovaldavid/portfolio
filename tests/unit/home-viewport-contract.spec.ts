@@ -28,13 +28,20 @@ describe('Home viewport section contract', () => {
 		expect(experience).not.toContain('-translate-x-1/2');
 	});
 
-	it('keeps only substantial Home sections viewport-oriented', () => {
-		for (const id of ['projects', 'research', 'about-me']) {
-			expect(sectionContainer).toContain(`'${id}'`);
-		}
-		expect(sectionContainer).toContain("HOME_COMPACT_SECTIONS = new Set(['technologies'])");
-		expect(sectionContainer).toContain('md:min-h-[calc(100svh-4.5rem)]');
+	it('declares viewport and compact section behavior at the Home call site', () => {
+		expect(sectionContainer).toContain("layout?: 'contained' | 'viewport' | 'compact'");
+		expect(sectionContainer).toContain("surface?: 'canvas' | 'highlight'");
+		expect(sectionContainer).not.toContain('HOME_VIEWPORT_SECTIONS');
+		expect(sectionContainer).not.toContain('HOME_COMPACT_SECTIONS');
+		expect(sectionContainer).toContain("layout === 'viewport' && 'md:min-h-[calc(100svh-4.5rem)]'");
 		expect(sectionContainer).toContain('data-home-compact-shell');
+
+		for (const id of ['projects', 'research', 'about-me']) {
+			expect(layout).toMatch(
+				new RegExp(`id="${id}"[\\s\\S]*?layout="viewport"`, 'm')
+			);
+		}
+		expect(layout).toMatch(/id="technologies"[\s\S]*?layout="compact"/m);
 		expect(hero).toContain('md:min-h-[calc(100svh-4.5rem)]');
 		expect(experience).toContain('md:min-h-[calc(100svh-4.5rem)]');
 	});
