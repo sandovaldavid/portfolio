@@ -27,7 +27,14 @@ const {
 const iconClasses = 'size-4 shrink-0';
 ---
 
-<a {href} class:list={['link-inline inline-flex items-center', className]} {...rest}>
+<a
+	{href}
+	class:list={[
+		'link-inline inline-flex h-8 items-center gap-1.5 font-sans text-base font-medium text-channel-accent-primary',
+		className,
+	]}
+	{...rest}
+>
 	{iconPosition === 'leading' && Icon && <Icon class={iconClasses} aria-hidden="true" />}
 	<slot />
 	{iconPosition === 'trailing' && Icon && <Icon class={iconClasses} aria-hidden="true" />}
@@ -35,19 +42,7 @@ const iconClasses = 'size-4 shrink-0';
 </a>
 
 <style>
-	/*
-	 * Contract metrics ship at zero specificity so consumer utilities
-	 * (e.g. back-link `text-sm gap-2`) override them predictably.
-	 */
-	a:where(.link-inline) {
-		height: 2rem;
-		gap: 6px;
-		font-family: var(--font-sans);
-		font-size: 1rem;
-		font-weight: 500;
-		color: var(--channel-accent-primary);
-	}
-
+	/* Contract metrics are utilities so consumers can override them predictably. */
 	a:where(.link-inline):hover {
 		text-decoration-line: underline;
 		text-decoration-thickness: 2px;
