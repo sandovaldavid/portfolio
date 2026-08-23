@@ -32,7 +32,7 @@ for (const viewport of [
 	});
 }
 
-test('mobile experience section stays full-bleed and content-driven', async ({ page }) => {
+test('mobile experience section remains full-bleed with a horizontal tab rail', async ({ page }) => {
 	await page.setViewportSize({ width: 390, height: 844 });
 	await page.goto('/');
 
@@ -40,8 +40,9 @@ test('mobile experience section stays full-bleed and content-driven', async ({ p
 	const box = await section.boundingBox();
 	expect(box?.width).toBeCloseTo(390, 0);
 
-	const shell = section.locator('[data-experience-shell]');
-	expect(await shell.evaluate(el => getComputedStyle(el).minHeight)).toBe('0px');
+	const tablist = section.getByRole('tablist');
+	expect(await tablist.evaluate(el => getComputedStyle(el).flexDirection)).toBe('row');
+	expect(await tablist.evaluate(el => getComputedStyle(el).overflowX)).toBe('auto');
 });
 
 test('experience selection keeps accessible tab state while the indicator has motion', async ({
