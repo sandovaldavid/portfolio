@@ -12,7 +12,7 @@ export type ProjectContentEntry = CollectionEntry<'projects'>;
 export type ProjectContentData = ProjectContentEntry['data'];
 
 /**
- * Architecture evidence rendered by the project case-study widget.
+ * Architecture evidence rendered by the legacy project case-study fallback.
  */
 export interface CaseStudyArchitecture {
 	/** Accessible caption explaining the diagram and its current scope */
@@ -43,6 +43,8 @@ export interface CaseStudySource {
 
 /**
  * Optional evidence package for flagship case studies.
+ * This remains the detailed source-of-truth layer even when a concise
+ * recruiter-facing presentation is rendered above it.
  */
 export interface CaseStudyEvidence {
 	statusLabel: string;
@@ -81,6 +83,40 @@ export interface CaseStudyStatus {
 	limitations: string[];
 }
 
+export interface CaseStudyPresentationBlock {
+	label: string;
+	title: string;
+	body: string;
+}
+
+export interface CaseStudyPresentationLearning extends CaseStudyPresentationBlock {}
+
+/**
+ * Optional concise display layer for the current Figma v2 case-study template.
+ * It never replaces the detailed case-study/evidence fields; it selects and
+ * summarizes verified content for the first recruiter-facing reading pass.
+ */
+export interface CaseStudyPresentation {
+	kicker: string;
+	description: string;
+	status: {
+		lifecycle: string;
+		source: string;
+		demo: string;
+	};
+	narrative: {
+		problem: CaseStudyPresentationBlock;
+		approach: CaseStudyPresentationBlock;
+		tradeoffs: CaseStudyPresentationBlock;
+		outcome: CaseStudyPresentationBlock;
+	};
+	evidenceTitle: string;
+	verified: CaseStudyPresentationBlock;
+	boundaries: CaseStudyPresentationBlock;
+	learningsTitle: string;
+	learnings: CaseStudyPresentationLearning[];
+}
+
 /**
  * Localized case-study content for a portfolio project.
  */
@@ -94,6 +130,7 @@ export interface CaseStudy {
 	role: string;
 	status: CaseStudyStatus;
 	evidence?: CaseStudyEvidence;
+	presentation?: CaseStudyPresentation;
 }
 
 /**
