@@ -25,10 +25,11 @@ describe('Projects Catalog composition contract', () => {
 		expect(catalog).toContain('max-w-320');
 		expect(catalog).toContain('px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12');
 		expect(catalog).toContain('text-page-title-mobile text-content-strong md:text-page-title');
+		expect(catalog).toContain('<div class="lg:pt-10">');
 		expect(catalog).toContain('text-body text-content-default');
 	});
 
-	it('gives the catalog an explicit two-column grid while preserving the Home layout', () => {
+	it('gives the catalog exact responsive grid geometry while preserving the Home layout', () => {
 		expect(projects).toContain("layout?: 'home' | 'catalog'");
 		expect(projects).toContain("layout = 'home'");
 		expect(projects).toContain("const isCatalog = layout === 'catalog'");
@@ -37,8 +38,10 @@ describe('Projects Catalog composition contract', () => {
 		expect(projects).toContain('lg:grid-cols-[repeat(2,minmax(0,520px))]');
 		expect(projects).toContain('gap-y-6');
 		expect(projects).toContain('md:gap-x-8');
+		expect(projects).toContain('lg:gap-y-8');
 		expect(projects).toContain('lg:gap-20');
 		expect(projects).not.toContain('centered?: boolean');
+		expect(catalog).toContain('max-w-85 md:max-w-192.5 lg:max-w-320');
 		expect(catalog).toContain('<Projects showAll={true} layout="catalog" />');
 	});
 });
