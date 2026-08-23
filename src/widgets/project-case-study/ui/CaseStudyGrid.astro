@@ -1,0 +1,17 @@
+---
+interface Props {
+	columns?: 2 | 3;
+}
+
+const { columns = 2 } = Astro.props;
+---
+
+<div
+	class:list={[
+		'grid gap-5 md:gap-6',
+		columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2',
+	]}
+	data-case-study-grid
+>
+	<slot />
+</div>
