@@ -131,13 +131,7 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 						<ul class="flex flex-row flex-wrap gap-x-2 gap-y-1.5 pt-1">
 							{visibleTags.map(tag => (
 								<li>
-									<TechPill
-										label={tag.name}
-										icon={tag.icon}
-										size="sm"
-										variant="card"
-										class={tag.class}
-									/>
+									<TechPill label={tag.name} icon={tag.icon} size="sm" variant="card" />
 								</li>
 							))}
 						</ul>
