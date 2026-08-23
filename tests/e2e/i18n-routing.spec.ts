@@ -24,12 +24,22 @@ test.describe('Astro-native locale routing', () => {
 	for (const scenario of routePairs) {
 		test(`${scenario.source} resolves ${scenario.target}`, async ({ page }) => {
 			await page.goto(scenario.source);
-			const panel = await openLanguagePanel(page);
-			const target = panel.getByRole('link', { name: scenario.label });
 
-			await expect(target).toHaveAttribute('href', scenario.target);
+			// Routing ownership lives in Layout/Astro localized paths. Validate the
+			// canonical alternate route directly instead of coupling this contract to
+			// Recruiter HUD visibility (the HUD may intentionally yield to the Footer CTA).
+			const targetLanguage = scenario.label === 'Español' ? 'es' : 'en';
+			const alternate = page.locator(
+				`head link[rel="alternate"][hreflang="${targetLanguage}"]`
+			);
+			await expect(alternate).toHaveCount(1);
+			const alternateHref = await alternate.getAttribute('href');
+			expect(alternateHref).not.toBeNull();
+			const alternateUrl = new URL(alternateHref!, page.url());
+			expect(alternateUrl.pathname).toBe(scenario.target);
+
 			if (scenario.label === 'English') {
-				await expect(target).not.toHaveAttribute('href', /^\/en(?:\/|$)/);
+				expect(alternateUrl.pathname).not.toMatch(/^\/en(?:\/|$)/);
 			}
 		});
 	}
