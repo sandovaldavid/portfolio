@@ -1,8 +1,12 @@
 /*
- * Critical Identity System web fonts.
- * Inter is the reading face and JetBrains Mono is the display face.
- * Local WOFF2 sources prevent network-dependent rendering and `swap` ensures
- * the intended family replaces the metric-compatible fallback after reload.
+ * Transitional local faces not yet emitted through Layout's Astro Font
+ * components. JetBrains Mono, Silkscreen, Share Tech Mono, VT323 and
+ * Press Start 2P are already emitted from the Astro font-provider contract
+ * and must not be duplicated here.
+ *
+ * Inter is the reading face and Fira Code is the code face. Keep these local
+ * WOFF2 declarations until Layout explicitly emits --font-sans/--font-code;
+ * then this compatibility stylesheet can be removed entirely.
  */
 @font-face {
 	font-family: 'Inter';
@@ -21,72 +25,8 @@
 }
 
 @font-face {
-	font-family: 'JetBrains Mono';
-	src: url('../../assets/fonts/jetbrains-mono-400.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url('../../assets/fonts/jetbrains-mono-500.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 500;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'JetBrains Mono';
-	src: url('../../assets/fonts/jetbrains-mono-700.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-}
-
-@font-face {
 	font-family: 'Fira Code';
 	src: url('../../assets/fonts/fira-code-400.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'VT323';
-	src: url('../../assets/fonts/vt323-400.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Press Start 2P';
-	src: url('../../assets/fonts/press-start-2p-400.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Silkscreen';
-	src: url('../../assets/fonts/silkscreen-400.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 400;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Silkscreen';
-	src: url('../../assets/fonts/silkscreen-700.woff2') format('woff2');
-	font-style: normal;
-	font-weight: 700;
-	font-display: swap;
-}
-
-@font-face {
-	font-family: 'Share Tech Mono';
-	src: url('../../assets/fonts/share-tech-mono-400.woff2') format('woff2');
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
