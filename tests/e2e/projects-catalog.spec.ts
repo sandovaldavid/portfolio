@@ -60,6 +60,7 @@ for (const viewport of VIEWPORTS) {
 	test(`Projects Catalog matches the ${viewport.name} responsive composition`, async ({ page }) => {
 		await page.setViewportSize({ width: viewport.width, height: viewport.height });
 		await page.goto('/projects');
+		await page.evaluate(() => document.fonts.ready);
 
 		const introShell = page.locator('[data-projects-catalog-intro-shell]');
 		const gridShell = page.locator('[data-projects-catalog-grid-shell]');
