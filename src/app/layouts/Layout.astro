@@ -5,7 +5,6 @@ import { Font } from 'astro:assets';
 import { getPathByLocale, getRelativeLocaleUrl, pathHasLocale } from 'astro:i18n';
 import '@app/styles/global.css';
 import '@app/styles/print.css';
-import BriefCaseIcon from '@assets/icons/Briefcase.astro';
 import CodeIcon from '@assets/icons/Code.astro';
 import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
@@ -78,7 +77,6 @@ const esUrl = esPath ? new URL(esPath, siteConfig.url).toString() : undefined;
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const tBreadcrumbs = createScopedUiTranslator(lang, 'breadcrumbs');
 const tMetadata = createScopedUiTranslator(lang, 'metadata');
-const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const tResearchSection = createScopedUiTranslator(lang, 'sections.research');
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
@@ -371,23 +369,14 @@ const structuredPageSchema =
 				{
 					isHome ? (
 						/*
-						 * Home composition (spec/04): Hero and Experience fill the
-						 * viewport under the 72px header on desktop only; every other
-						 * section and all tablet/mobile sections are content-driven so
-						 * translated copy grows without clipping.
+						 * Home composition (Figma v2): Hero owns its viewport-like
+						 * desktop treatment. Experience now owns its highlighted,
+						 * content-driven section. Remaining sections are still migrated
+						 * incrementally through the shared SectionContainer shell.
 						 */
-						<div class="pt-[4.5rem]">
+						<div class="pt-18">
 							<slot name="hero" />
-							<SectionContainer
-								id="experience"
-								class="lg:min-h-[calc(100svh-4.5rem)] py-12 md:py-16 gap-y-6"
-							>
-								<TitleSection className="mb-0">
-									<BriefCaseIcon class="size-12" />
-									{tExperience('sectionTitle')}
-								</TitleSection>
-								<slot name="experience" />
-							</SectionContainer>
+							<slot name="experience" />
 
 							<SectionContainer id="projects" class="py-12 md:py-16 gap-y-6">
 								<TitleSection className="mb-0">
