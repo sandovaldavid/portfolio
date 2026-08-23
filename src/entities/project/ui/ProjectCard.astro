@@ -1,16 +1,13 @@
 ---
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import BookIcon from '@assets/icons/BookOpen.astro';
+import { Image } from 'astro:assets';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
 import type { ProjectItem, ProjectLifecycle, ProjectSourceAccess } from '../model';
-import { Image } from 'astro:assets';
 
 interface Props {
 	project: ProjectItem;
-	/** Localized primary action label (View case study). */
 	caseStudyText?: string;
 	caseStudyLink?: string;
-	/** Localized secondary action label (Source). */
 	sourceText?: string;
 	newTabLabel: string;
 	cardTypeText: string;
@@ -19,7 +16,6 @@ interface Props {
 	variant?: 'primary' | 'secondary';
 	priority?: boolean;
 	showSecondaryAction?: boolean;
-	/** Heading level for the card title: 'h3' under a section h2 (home), 'h2' under a page h1 */
 	headingLevel?: 'h2' | 'h3';
 }
 
@@ -39,18 +35,10 @@ const {
 } = Astro.props;
 
 const Heading = headingLevel;
-
-/*
- * Project Card contract (spec/03): surface default, border 2 strong, p2 (8px),
- * overflow hidden; widths Desktop 520 / Tablet 369 / Mobile 340 as max targets
- * inside grids. Shadow 3px -> hover 8px with no geometry change.
- * Terminal slot: Primary Desktop h210 / Tablet+Mobile h190; Secondary Desktop
- * h120 / Tablet+Mobile h130; fixed terminal palette tokens, window bar h28
- * raised surface, three 8px square status dots, JBM Bold12 label.
- */
 const { image, imageAlt, title, description, tags, github, category, lifecycle, sourceAccess } =
 	project;
 const isPrimary = variant === 'primary';
+const visibleTags = tags.slice(0, 3);
 
 const LIFECYCLE_BADGE_VARIANT: Record<
 	ProjectLifecycle,
@@ -67,60 +55,55 @@ const SOURCE_BADGE_VARIANT: Record<ProjectSourceAccess, 'success' | 'default'> =
 	private: 'default',
 };
 
-const terminalBodyHeight = isPrimary ? 'h-[190px] lg:h-[210px]' : 'h-[130px] lg:h-[120px]';
-const titleSize = isPrimary ? 'text-[30px]' : 'text-[26px]';
+/* Figma component-set viewport geometry expressed through Tailwind's scale. */
+const cardHeight = isPrimary
+	? 'h-131.5 md:h-134.5 lg:h-116'
+	: 'h-116.5 md:h-119.5 lg:h-93.5';
+const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 ---
 
-<article class="group h-full w-full font-mono" style={`animation: var(--animate-fade-in);`}>
+<article class="group h-full w-full font-sans">
 	<div
 		class:list={[
-			'relative flex h-full w-full flex-col overflow-hidden rounded-none border-2 border-edge-strong bg-channel-surface-default p-2 shadow-retro-md transition-[box-shadow] duration-100 will-change-[box-shadow] group-hover:shadow-retro-3xl',
-			'mx-auto max-w-[340px] md:max-w-[369px] lg:max-w-[520px]',
+			'relative mx-auto flex w-full max-w-85 flex-col overflow-hidden border-2 border-edge-strong bg-channel-surface-default p-0.5 shadow-retro-md transition-[box-shadow] duration-150 group-hover:shadow-retro-3xl md:max-w-92.25 lg:max-w-130',
+			cardHeight,
 		]}
 	>
-		<figure class="shrink-0 overflow-hidden rounded-none border-0">
+		<figure class:list={['relative w-full shrink-0 overflow-hidden bg-channel-portfolio-terminal-surface', mediaHeight]}>
+			<Image
+				src={image}
+				width={isPrimary ? 800 : 600}
+				height={isPrimary ? 500 : 380}
+				class="absolute inset-0 size-full object-cover"
+				decoding={priority ? 'sync' : 'async'}
+				loading={priority ? 'eager' : 'lazy'}
+				fetchpriority={priority ? 'high' : 'auto'}
+				alt={imageAlt}
+			/>
 			<div
-				class="flex h-7 items-center gap-1.5 bg-channel-portfolio-terminal-surface-raised px-3"
+				class="absolute inset-x-0 top-0 flex h-7 items-center gap-1.5 bg-channel-portfolio-terminal-surface-raised px-3"
 			>
 				<span class="size-2 shrink-0 bg-channel-status-error" aria-hidden="true"></span>
 				<span class="size-2 shrink-0 bg-channel-status-warning" aria-hidden="true"></span>
 				<span class="size-2 shrink-0 bg-channel-status-success" aria-hidden="true"></span>
-				<span
-					class="ml-auto truncate font-mono text-xs font-bold tracking-wide text-channel-portfolio-terminal-content"
-					>{cardTypeText}</span
-				>
-			</div>
-			<div
-				class:list={[
-					'relative overflow-hidden bg-channel-portfolio-terminal-surface',
-					terminalBodyHeight,
-				]}
-			>
-				<Image
-					src={image}
-					width={isPrimary ? 800 : 600}
-					height={isPrimary ? 500 : 380}
-					class="absolute inset-0 size-full object-cover"
-					decoding={priority ? 'sync' : 'async'}
-					loading={priority ? 'eager' : 'lazy'}
-					fetchpriority={priority ? 'high' : 'auto'}
-					alt={imageAlt}
-				/>
+				<span class="ml-auto truncate text-caption font-bold text-channel-portfolio-terminal-content">
+					{cardTypeText}
+				</span>
 			</div>
 		</figure>
 
-		<div class:list={['flex grow flex-col gap-4 pt-3 pb-4', 'px-3.5 lg:px-5']}>
-			<div class:list={['flex grow flex-col', isPrimary ? 'gap-2.5' : 'gap-2']}>
-				<div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+		<div class="flex min-h-0 grow flex-col gap-2 px-3.5 py-2 lg:px-5">
+			<div class="flex min-h-0 grow flex-col gap-2 overflow-hidden">
+				<div class="flex flex-wrap items-start justify-between gap-x-2 gap-y-1">
 					{
 						category && (
-							<p class="min-w-0 max-w-[154px] shrink basis-[154px] grow font-retro-tag text-sm font-bold uppercase tracking-wider text-primary-500 md:max-w-[190px] md:basis-[190px] lg:max-w-[330px] lg:basis-[330px] dark:text-primary-400">
+							<p class="min-w-0 flex-1 text-editorial-label-compact uppercase text-channel-accent-primary">
 								{category}
 							</p>
 						)
 					}
 					<ul
-						class="flex flex-row flex-wrap items-center gap-1.5"
+						class="flex shrink-0 flex-row flex-wrap items-center justify-end gap-1.5"
 						aria-label={`${lifecycleText}, ${sourceAccessText}`}
 					>
 						<li>
@@ -128,7 +111,7 @@ const titleSize = isPrimary ? 'text-[30px]' : 'text-[26px]';
 								{lifecycleText}
 							</Badge>
 						</li>
-						<li>
+						<li class="hidden sm:block">
 							<Badge variant={SOURCE_BADGE_VARIANT[sourceAccess]} size="sm">
 								{sourceAccessText}
 							</Badge>
@@ -136,45 +119,40 @@ const titleSize = isPrimary ? 'text-[30px]' : 'text-[26px]';
 					</ul>
 				</div>
 
-				<Heading
-					class:list={[
-						'text-content-strong font-pixel-clean leading-8 tracking-wide',
-						titleSize,
-					]}
-				>
-					{title}
-				</Heading>
+				<Heading class="line-clamp-2 text-component-title text-content-strong">{title}</Heading>
 
-				<p class="font-sans text-base leading-relaxed text-content-default">
+				<p class="line-clamp-3 text-secondary text-content-default md:text-body lg:line-clamp-2">
 					{description}
 				</p>
 
-				<ul class="flex flex-row flex-wrap gap-x-2 gap-y-1.5 pt-1">
-					{
-						tags.map(tag => (
-							<li>
-								<TechPill
-									label={tag.name}
-									icon={tag.icon}
-									size="sm"
-									variant="card"
-									class={tag.class}
-								/>
-							</li>
-						))
-					}
-				</ul>
+				{
+					visibleTags.length > 0 && (
+						<ul class="flex flex-row flex-wrap gap-x-2 gap-y-1.5 pt-1">
+							{visibleTags.map(tag => (
+								<li>
+									<TechPill
+										label={tag.name}
+										icon={tag.icon}
+										size="sm"
+										variant="card"
+										class={tag.class}
+									/>
+								</li>
+							))}
+						</ul>
+					)
+				}
 			</div>
 
-			<footer class="mt-auto flex flex-col gap-2 pt-1 lg:flex-row">
+			<footer class="mt-auto flex min-h-14 shrink-0 items-end gap-2 pb-3">
 				{
 					caseStudyText && caseStudyLink && (
 						<LinkButton
 							href={caseStudyLink}
 							target="_self"
-							class="w-full lg:w-auto lg:min-w-[210px]"
+							class="w-44 shrink-0"
 						>
-							<BookIcon class="size-4" />
+							<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 							{caseStudyText}
 						</LinkButton>
 					)
@@ -185,9 +163,9 @@ const titleSize = isPrimary ? 'text-[30px]' : 'text-[26px]';
 							href={github}
 							{newTabLabel}
 							variant="secondary"
-							class="w-full max-md:hidden! md:inline-flex lg:w-auto lg:min-w-[190px]"
+							class="hidden w-28 shrink-0 md:inline-flex"
 						>
-							<GitHubIcon class="size-5" />
+							<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 							{sourceText}
 						</LinkButton>
 					)
