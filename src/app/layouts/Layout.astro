@@ -24,6 +24,7 @@ import {
 import { siteConfig } from '@shared/config/site.config';
 
 type PageType = 'website' | 'profile' | 'project' | 'blog' | 'devlog' | 'research';
+type ContentLayout = 'default' | 'flush';
 
 interface Props {
 	title: string;
@@ -37,6 +38,7 @@ interface Props {
 	breadcrumbLabel?: string;
 	keywords?: string;
 	localizedPaths?: LocalizedPathMap;
+	contentLayout?: ContentLayout;
 }
 
 const {
@@ -51,6 +53,7 @@ const {
 	breadcrumbLabel,
 	keywords = 'Software Engineer, Backend, .NET 8, Angular 19, TypeScript, Peru, Remote, Portfolio, Astro',
 	localizedPaths,
+	contentLayout = 'default',
 } = Astro.props;
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
@@ -88,6 +91,10 @@ const alternateOgLocale = lang === Language.ENGLISH ? 'es_PE' : 'en_US';
 const hasAlternateLocale = lang === Language.ENGLISH ? Boolean(esUrl) : Boolean(enUrl);
 const isArticlePage = pageType === 'blog' || pageType === 'devlog' || pageType === 'research';
 const ogType = isArticlePage ? 'article' : 'website';
+const pageContentClasses =
+	contentLayout === 'flush'
+		? 'w-full flex flex-col items-center'
+		: 'pt-28 pb-16 w-full flex flex-col items-center';
 
 const toIsoDate = (value: Date | string | undefined): string | undefined => {
 	if (!value) return undefined;
@@ -440,7 +447,7 @@ const structuredPageSchema =
 							</SectionContainer>
 						</div>
 					) : (
-						<div class="pt-28 pb-16 w-full flex flex-col items-center">
+						<div class={pageContentClasses}>
 							<slot />
 						</div>
 					)
