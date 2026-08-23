@@ -354,13 +354,10 @@ const structuredPageSchema =
 		<Analytics />
 	</head>
 
-	<body
-		class="bg-background text-content flex flex-col min-h-screen"
-		data-is-home={isHome ? 'true' : 'false'}
-	>
+	<body class="flex min-h-screen flex-col" data-is-home={isHome ? 'true' : 'false'}>
 		<a
 			href="#main-content"
-			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-500 focus:text-white dark:focus:text-black focus:font-bold focus:uppercase focus:tracking-wider focus:border-2 focus:border-black dark:focus:border-white focus:shadow-retro-lg focus:rounded-none focus:no-underline"
+			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:border-2 focus:border-button-border focus:bg-button-primary-background focus:px-4 focus:py-2 focus:text-button-label focus:text-button-primary-content focus:shadow-retro-lg focus:rounded-none focus:no-underline"
 		>
 			{tAccessibility('skipToContent')}
 		</a>
@@ -370,9 +367,9 @@ const structuredPageSchema =
 				{
 					isHome ? (
 						/*
-						 * Home is composed as viewport-oriented sections from Tablet
-						 * upward. Hero and Experience own dedicated internal contracts;
-						 * the remaining sections use SectionContainer's Home mode.
+						 * Home is viewport-oriented from Tablet upward for Hero,
+						 * Experience, Projects, Research and About. Experience owns its
+						 * dedicated internal contract; Core Stack remains content-driven.
 						 */
 						<div class="w-full pt-18">
 							<slot name="hero" />
