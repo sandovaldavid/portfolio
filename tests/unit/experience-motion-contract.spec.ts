@@ -9,10 +9,19 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('transition-[opacity,transform]');
 		expect(tab).toContain('duration-300');
 		expect(tab).toContain('motion-reduce:transition-none');
+		expect(tab).toContain('scale-y-0');
+		expect(tab).toContain('group-data-[active=true]:scale-y-100');
+		expect(tab).toContain('opacity-0');
+		expect(tab).toContain('group-data-[active=true]:opacity-100');
 		expect(experience).toContain('.experience-panel[data-active=\'true\']');
 		expect(experience).toContain('transform 220ms');
 		expect(experience).toContain('@media (prefers-reduced-motion: reduce)');
 		expect(experience).not.toContain('panel.animate(');
+	});
+
+	it('stretches the desktop/tablet selection indicator across the full tab height', () => {
+		expect(tab).toContain('-top-0.5 -bottom-0.5 -left-0.5');
+		expect(tab).not.toContain('-top-0.5 bottom-1.5 -left-0.5');
 	});
 
 	it('reserves the tallest localized panel so tab changes do not shift page geometry', () => {
