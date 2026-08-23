@@ -7,10 +7,17 @@ interface Props {
 const { class: className, id } = Astro.props;
 ---
 
+<!--
+	Portfolio v2 responsive container contract (ADR-0009 / Figma Screens):
+	1440 desktop -> 1280 content (80px gutters)
+	834 tablet  -> 770 content  (32px gutters)
+	390 mobile  -> 350 content  (20px gutters)
+	The section itself stays full-width; consumers own vertical rhythm.
+-->
 <section
 	{id}
 	class:list={[
-		'w-full max-w-5xl px-4 md:px-6 mx-auto',
+		'w-full px-5 md:px-8 lg:px-20 mx-auto',
 		'flex flex-col justify-center',
 		'scroll-mt-[4.5rem]',
 		className,
