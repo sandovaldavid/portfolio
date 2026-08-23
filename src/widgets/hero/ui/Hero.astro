@@ -8,56 +8,61 @@ const tHero = createScopedUiTranslator(lang, 'sections.hero');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
 const profileFacts = [
-	{ label: tHero('roleLabel'), value: tHero('role') },
-	{ label: tHero('stackLabel'), value: tHero('stack') },
-	{ label: tHero('locationLabel'), value: tHero('location') },
-	{ label: tHero('workModeLabel'), value: tHero('workMode') },
-	{ label: tHero('currentLabel'), value: tHero('current') },
-	{ label: tHero('researchLabel'), value: tHero('research') },
+	{ id: 'role', label: tHero('roleLabel'), value: tHero('role') },
+	{ id: 'stack', label: tHero('stackLabel'), value: tHero('stack') },
+	{ id: 'location', label: tHero('locationLabel'), value: tHero('location') },
+	{ id: 'work-mode', label: tHero('workModeLabel'), value: tHero('workMode') },
+	{ id: 'current', label: tHero('currentLabel'), value: tHero('current') },
+	{ id: 'domain', label: tHero('researchLabel'), value: tHero('research') },
 ];
 ---
 
+<!--
+	Portfolio / Home Hero (Figma v2)
+	Desktop: viewport-like min-height below the 72px header, 80px gutters.
+	Tablet/Mobile: content-driven. Mobile uses the 360px wide-component contract.
+	The availability banner is the single availability signal.
+-->
 <section
 	id="hero"
-	class="w-full lg:min-h-[calc(100svh-4.5rem)] scroll-mt-[4.5rem] hero-gradient flex flex-col items-center justify-start md:justify-center py-8 md:py-12 px-4"
+	class="flex w-full scroll-mt-[4.5rem] flex-col items-center gap-5 bg-channel-background-canvas px-4 py-10 md:gap-6 md:px-8 md:py-12 lg:min-h-[calc(100svh-4.5rem)] lg:justify-center lg:px-20"
 	aria-labelledby="hero-title"
 >
-	<div class="w-full max-w-[956px] flex flex-col items-center gap-8 md:gap-10 lg:gap-6">
-		<div
-			class="w-full text-left md:text-center border-2 border-dashed border-banner-border bg-badge-brand-bg p-3 font-retro-tag text-xs sm:text-sm text-banner-text tracking-widest uppercase"
-		>
-			{tHero('banner')}
-		</div>
-
-		<div class="text-left md:text-center space-y-4">
-			<span
-				class="font-retro-tag text-xs uppercase tracking-widest text-primary-500 font-bold block"
-			>
-				{tHero('title')}
-			</span>
-			<h1
-				id="hero-title"
-				class="text-4xl sm:text-6xl lg:text-7xl text-content-strong font-mono font-bold normal-case tracking-[-0.028em] leading-[1.11]"
-			>
-				{siteConfig.name}
-			</h1>
-			<p class="text-lg text-content-strong font-gaming-mono tracking-wide max-w-2xl mx-auto">
-				{tHero('subtitle')}
-			</p>
-			<p
-				class="text-base text-content-muted font-gaming-mono tracking-wide max-w-3xl mx-auto"
-			>
-				{tHero('credential')}
-			</p>
-		</div>
-
-		<HeroProfileRecord
-			portraitSrc="/profile/perfil.webp"
-			portraitAlt={tAccessibility('profileImageAlt')}
-			name={siteConfig.name}
-			role={tHero('role')}
-			heading={tHero('profile')}
-			facts={profileFacts}
-		/>
+	<div
+		class="flex h-[52px] w-full max-w-[360px] items-center justify-center border-2 border-dashed border-banner-border bg-badge-brand-bg px-4 text-center text-caption text-banner-text md:h-[38px] md:max-w-[766px] md:text-editorial-label lg:max-w-[956px]"
+	>
+		{tHero('banner')}
 	</div>
+
+	<div
+		class="flex w-full max-w-[360px] flex-col items-center gap-3 text-center md:max-w-[766px] md:gap-4 lg:max-w-[956px]"
+	>
+		<p class="w-full text-editorial-label text-channel-accent-primary">
+			{tHero('title')}
+		</p>
+
+		<h1
+			id="hero-title"
+			class="w-full text-page-title-mobile text-content-strong md:text-hero-display"
+		>
+			{siteConfig.name}
+		</h1>
+
+		<p class="w-full text-subheading text-channel-content-default">
+			{tHero('subtitle')}
+		</p>
+
+		<p class="w-full text-body text-channel-content-muted">
+			{tHero('credential')}
+		</p>
+	</div>
+
+	<HeroProfileRecord
+		portraitSrc="/profile/perfil.webp"
+		portraitAlt={tAccessibility('profileImageAlt')}
+		name={siteConfig.name}
+		role={tHero('role')}
+		heading={tHero('profile')}
+		facts={profileFacts}
+	/>
 </section>
