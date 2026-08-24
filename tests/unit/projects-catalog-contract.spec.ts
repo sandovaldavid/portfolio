@@ -35,13 +35,15 @@ describe('Projects Catalog composition contract', () => {
 		expect(catalog).toContain('text-body text-content-default');
 	});
 
-	it('uses more of the desktop shell for catalog cards while preserving the Home layout', () => {
+	it('anchors desktop catalog cards to opposite shell edges while preserving smaller layouts', () => {
 		expect(projects).toContain("layout?: 'home' | 'catalog'");
 		expect(projects).toContain("layout = 'home'");
 		expect(projects).toContain("const isCatalog = layout === 'catalog'");
 		expect(projects).toContain('data-projects-layout={layout}');
 		expect(projects).toContain('md:grid-cols-[repeat(2,minmax(0,369px))]');
 		expect(projects).toContain('lg:grid-cols-[repeat(2,minmax(0,592px))]');
+		expect(projects).toContain('lg:justify-between');
+		expect(projects).toContain('lg:gap-x-0');
 		expect(projects).toContain('lg:grid-cols-[repeat(2,minmax(0,520px))]');
 		expect(projects).toContain("variant={isCatalog ? 'catalog' : 'secondary'}");
 		expect(projects).toContain('lg:max-w-148');
@@ -54,12 +56,13 @@ describe('Projects Catalog composition contract', () => {
 		expect(catalog).toContain('<Projects showAll={true} layout="catalog" />');
 	});
 
-	it('gives catalog cards a distinct desktop composition and repository-aware GitHub action', () => {
+	it('gives catalog cards a distinct desktop composition and balanced footer actions', () => {
 		expect(card).toContain("variant?: 'primary' | 'secondary' | 'catalog'");
 		expect(card).toContain("const isCatalog = variant === 'catalog'");
 		expect(card).toContain("tags.slice(0, isCatalog ? 4 : 3)");
 		expect(card).toContain("github?.replace(/\\/$/, '').split('/').filter(Boolean).at(-1)");
 		expect(card).toContain("isCatalog ? 'lg:max-w-148' : 'lg:max-w-130'");
+		expect(card).toContain('items-end justify-between gap-2');
 		expect(card).toContain('data-project-card-repository');
 		expect(card).toContain('<GitHubIcon');
 		expect(card).toContain('{repositoryName}');
