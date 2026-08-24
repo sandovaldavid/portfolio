@@ -30,7 +30,8 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 
 <div class="w-full" data-research-home>
 	<div
-		class="grid w-full min-w-0 gap-10 lg:grid-cols-[minmax(0,672px)_minmax(0,544px)] lg:gap-16"
+		class="grid w-full min-w-0 items-start gap-10 lg:grid-cols-[minmax(0,672px)_minmax(0,544px)] lg:gap-16"
+		data-research-home-main
 	>
 		<div class="flex min-w-0 flex-col gap-5">
 			<div
@@ -116,30 +117,30 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 					}
 				</ul>
 			</div>
-
-			<div class="flex flex-col gap-3 border-t border-edge-subtle pt-4">
-				<p class="text-editorial-label text-channel-accent-primary">
-					{tResearch('techStackLabel')}
-				</p>
-				<ul class="flex flex-wrap gap-2">
-					{
-						techStack.map(tag => (
-							<li>
-								<TechPill
-									label={tag.label}
-									icon={tag.icon}
-									size="sm"
-									variant="stack"
-								/>
-							</li>
-						))
-					}
-				</ul>
-			</div>
-
-			<p class="border-t border-edge-subtle pt-4 text-secondary text-content-muted">
-				{tResearch('methodologyHint')}
-			</p>
 		</aside>
+	</div>
+
+	<div
+		class="mt-5 grid w-full gap-5 border-t-2 border-edge-strong pt-5 md:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] md:items-end md:gap-8 lg:mt-6"
+		data-research-home-footer
+	>
+		<div class="flex min-w-0 flex-col gap-3">
+			<p class="text-editorial-label text-channel-accent-primary">
+				{tResearch('techStackLabel')}
+			</p>
+			<ul class="flex flex-wrap gap-2">
+				{
+					techStack.map(tag => (
+						<li>
+							<TechPill label={tag.label} icon={tag.icon} size="sm" variant="stack" />
+						</li>
+					))
+				}
+			</ul>
+		</div>
+
+		<p class="max-w-105 text-secondary text-content-muted md:justify-self-end md:text-right">
+			{tResearch('methodologyHint')}
+		</p>
 	</div>
 </div>
