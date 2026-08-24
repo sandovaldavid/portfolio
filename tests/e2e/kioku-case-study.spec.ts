@@ -20,6 +20,7 @@ test.describe('Kioku public backend case study', () => {
 			evidence: 'What is verifiable today',
 			learnings: 'What this project changed in how I build',
 			resources: 'Project resources',
+			share: 'Share',
 		},
 		{
 			path: '/es/projects/kioku',
@@ -30,6 +31,7 @@ test.describe('Kioku public backend case study', () => {
 			evidence: 'Qué puede verificarse hoy',
 			learnings: 'Qué cambió este proyecto en mi forma de construir',
 			resources: 'Recursos del proyecto',
+			share: 'Compartir',
 		},
 	] as const) {
 		test(`renders current bilingual evidence at ${locale.path}`, async ({ page }) => {
@@ -44,7 +46,11 @@ test.describe('Kioku public backend case study', () => {
 			await expect(page.getByRole('heading', { name: locale.system })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.evidence })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.learnings })).toBeVisible();
-			await expect(page.getByRole('navigation', { name: locale.resources })).toBeVisible();
+
+			const resources = page.getByRole('navigation', { name: locale.resources });
+			await expect(resources).toBeVisible();
+			await expect(resources.locator('[data-project-resource="repository"]')).toHaveCount(2);
+			await expect(resources.getByRole('button', { name: locale.share })).toBeVisible();
 
 			for (const href of [
 				'https://kioku.sandovaldavid.com',
@@ -55,7 +61,18 @@ test.describe('Kioku public backend case study', () => {
 				await expect(page.locator(`a[href="${href}"]`)).toBeVisible();
 			}
 
-			await expect(page.locator('[data-mermaid-figure]')).toHaveCount(2);
+			const diagrams = page.locator('[data-mermaid-figure]');
+			await expect(diagrams).toHaveCount(2);
+			for (let index = 0; index < 2; index += 1) {
+				const diagram = diagrams.nth(index);
+				await expect(diagram.locator('[data-diagram-svg]')).toBeVisible();
+				await expect(diagram.locator('[data-diagram-node]').first()).toBeVisible();
+				await expect(diagram.locator('[data-diagram-edge]').first()).toBeAttached();
+				const tones = await diagram
+					.locator('[data-diagram-node]')
+					.evaluateAll(nodes => new Set(nodes.map(node => node.getAttribute('data-node-tone'))).size);
+				expect(tones).toBeGreaterThanOrEqual(3);
+			}
 			await expect(page.getByText('3.1.2', { exact: false }).first()).toBeVisible();
 		});
 	}
