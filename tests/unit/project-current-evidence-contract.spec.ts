@@ -49,7 +49,7 @@ describe('audited current project evidence', () => {
 		expect(en).toContain('Django 5.2.3');
 		expect(en).toContain('Django REST Framework 3.16.0');
 		expect(en).toContain('NO WEBSOCKET OR PRODUCTION-READINESS CLAIM');
-		expect(en).not.toContain('Django Channels');
+		expect(en).toContain('Older portfolio copy described Django Channels/WebSockets');
 		expect(metadata).toContain("sourceAccess: 'mixed'");
 	});
 
@@ -69,7 +69,7 @@ describe('audited current project evidence', () => {
 		expect(en).toContain('AuctionAnalytics');
 		expect(en).toContain('PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS MODULE');
 		expect(en).toContain('NO CURRENT DRF OR WEBSOCKET CLAIM');
-		expect(en).not.toContain('Django Channels');
+		expect(en).toContain('do not expose DRF or Django Channels as the active application surface');
 		expect(en).toContain('does not call the current implementation concurrency-safe');
 	});
 
