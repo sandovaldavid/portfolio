@@ -33,7 +33,7 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		},
 		{
 			path: '/es/projects/campus-map',
-			status: 'MANTENIDO · CÓDIGO NEXT.JS 16',
+			status: 'MANTENIDO · CODEBASE NEXT.JS 16',
 			source: 'https://github.com/sandovaldavid/unp-campus-map',
 			boundary: 'EL MAPA INTERACTIVO NO SE PRESENTA COMO ENTREGADO',
 		},
@@ -49,7 +49,6 @@ test.describe('Recruiter evidence, access and status contract', () => {
 
 	test('/projects/fluentreads keeps source and its verified live demo actionable', async ({ page }) => {
 		await page.goto('/projects/fluentreads');
-
 		await expect(page.getByText('LIVE DEMO', { exact: true })).toBeVisible();
 		await expect(page.locator('a[href="https://fluentreads.vercel.app"]')).toBeVisible();
 		await expect(page.locator('a[href="https://github.com/sandovaldavid/fluentreads"]')).toBeVisible();
