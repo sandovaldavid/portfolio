@@ -3,6 +3,11 @@ import { describe, expect, it } from 'vitest';
 
 const experience = readFileSync('src/widgets/experience/ui/Experience.astro', 'utf8');
 const detail = readFileSync('src/widgets/experience/ui/ExperienceDetail.astro', 'utf8');
+const technologyPill = readFileSync(
+	'src/entities/experience/ui/ExperienceTechnologyPill.astro',
+	'utf8'
+);
+const atenaDetails = readFileSync('src/widgets/atena-details/ui/AtenaDetails.astro', 'utf8');
 const tab = readFileSync('src/widgets/experience/ui/ExperienceTab.astro', 'utf8');
 
 describe('Experience motion contract', () => {
@@ -49,17 +54,27 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('isCurrent: boolean');
 	});
 
-	it('renders icons only when semantic technology metadata provides one', () => {
-		expect(detail).toContain("import AngularIcon from '@assets/technologies/Angular.astro'");
-		expect(detail).toContain("import DotNetIcon from '@assets/technologies/DotNet.astro'");
-		expect(detail).toContain("import TypeScriptIcon from '@assets/technologies/TypeScript.astro'");
-		expect(detail).toContain("import JavaIcon from '@assets/technologies/Java.astro'");
-		expect(detail).toContain("import ReactIcon from '@assets/technologies/React.astro'");
-		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
-		expect(detail).toContain(
-			'icon={technology.iconKey ? technologyIcons[technology.iconKey] : undefined}'
+	it('centralizes semantic technology icons for both Experience and the Atena page', () => {
+		expect(technologyPill).toContain(
+			"import AngularIcon from '@assets/technologies/Angular.astro'"
 		);
-		expect(detail).toContain('label={technology.label}');
+		expect(technologyPill).toContain(
+			"import DotNetIcon from '@assets/technologies/DotNet.astro'"
+		);
+		expect(technologyPill).toContain(
+			"import TypeScriptIcon from '@assets/technologies/TypeScript.astro'"
+		);
+		expect(technologyPill).toContain("import JavaIcon from '@assets/technologies/Java.astro'");
+		expect(technologyPill).toContain("import ReactIcon from '@assets/technologies/React.astro'");
+		expect(technologyPill).toContain(
+			'const Icon = technology.iconKey ? technologyIcons[technology.iconKey] : undefined'
+		);
+		expect(technologyPill).toContain('label={technology.label}');
+		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
+		expect(detail).toContain('<ExperienceTechnologyPill technology={technology} size="sm" />');
+		expect(atenaDetails).toContain(
+			'<ExperienceTechnologyPill technology={technology} size="md" />'
+		);
 	});
 
 	it('uses whitespace for achievements and keeps only the footer divider with a primary current-role CTA', () => {
