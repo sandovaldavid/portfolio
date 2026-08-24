@@ -89,7 +89,14 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).toContain('const backEdges = edges.filter');
 		expect(mermaid).toContain('to.level <= from.level');
 		expect(mermaid).toContain('targetLevels.length > 0');
+		expect(mermaid).toContain('const backEdgeOffset = 36');
+		expect(mermaid).toContain('const backEdgeStep = 16');
+		expect(mermaid).toContain('const unclampedLaneY');
+		expect(mermaid).toContain('const unclampedLaneX');
 		expect(mermaid).toContain('class="mx-auto block max-w-none"');
+		expect(mermaid).toContain('diagram-scroll overflow-x-auto overscroll-x-contain');
+		expect(mermaid).toContain('scrollbar-width: none');
+		expect(mermaid).toContain('.diagram-scroll::-webkit-scrollbar');
 		expect(mermaid).toContain('stroke-width="4"');
 		expect(mermaid).toContain('role="img"');
 		expect(mermaid).not.toContain('<ol');
