@@ -1,0 +1,94 @@
+---
+projectId: auctions
+locale: en
+title: Auctions
+description: "A server-rendered Django auction application with authenticated listings, bid validation, watchlists, comments, categories and owner-controlled auction closing."
+category: "Django Web Application"
+imageAlt: "Auctions Django listing and bidding interface preview"
+caseStudy:
+  kicker: "PROJECT CASE STUDY · SERVER-RENDERED WEB"
+  status:
+    lifecycle: "MAINTAINED · DJANGO APPLICATION"
+    source: "PUBLIC SOURCE"
+    demo: "NO PUBLIC DEMO"
+---
+
+<CaseStudySection eyebrow="PUBLIC EVIDENCE" title="The source repository is the current evidence surface" width="reading">
+  <ProjectResources projectId="auctions" resources={['source']} />
+
+  The repository contains the Django models, views, forms, templates and deployment configuration for the auction workflow. An older README still shows a placeholder Heroku demo URL, but the portfolio does not present that placeholder as a live deployment.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEM" title="An auction is a lifecycle, not only a CRUD screen">
+  Listings need an owner, a starting price, active/inactive state and a winner. Participants need to place bids, follow listings and comment without being able to close someone else's auction. The application models those relationships explicitly and keeps the core workflow server-rendered rather than introducing a separate SPA and API for an educational monolith.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="DOMAIN MODEL" title="Listings coordinate bids, comments, watchlists and closing" surface="highlight">
+  <MermaidDiagram
+    title="Auctions domain relationships"
+    description="A Django user owns listings and can place bids, comments and watchlist entries. Listings collect those related records. When the owner closes an auction, the current highest recorded bid determines the winner."
+    chart={`flowchart LR
+      User["User"] -->|owns| Listing["Listing\nstarting bid · current bid · active"]
+      User --> Bid["Bid"]
+      Bid --> Listing
+      User --> Comment["Comment"]
+      Comment --> Listing
+      User --> Watchlist["Watchlist entry"]
+      Watchlist --> Listing
+      Listing -->|owner closes| Close["Close auction"]
+      Bid -->|highest recorded bid| Close
+      Close --> Winner["Winner"]`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="WORKFLOW" title="Core auction mechanics live near the model and views">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="BIDDING" title="A NEW BID MUST EXCEED THE CURRENT BID" tone="primary">
+      `Listing.place_bid` rejects a value that is less than or equal to the current bid, updates `current_bid` and creates the corresponding `Bid` record.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="OWNERSHIP" title="ONLY THE LISTING OWNER CAN CLOSE" tone="primary">
+      The close view checks that the authenticated caller owns the listing. It then selects the highest recorded bid as winner, marks the listing inactive and persists the result.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="DISCOVERY" title="CATEGORIES AND WATCHLISTS STAY SERVER-RENDERED" tone="primary">
+      Active listings are paginated, category pages filter server-side and each authenticated user can toggle watchlist entries without a separate frontend state store.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PERSISTENCE" title="Local SQLite and environment-driven PostgreSQL share one Django model" surface="highlight">
+  The settings module uses SQLite by default for local development and switches to a `DATABASE_URL` configuration through `dj-database-url` when one is provided. Production-oriented configuration also includes Gunicorn, WhiteNoise and secure cookie/header settings in the repository dependencies and Django settings.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFIED IN SOURCE" title="DJANGO 5.1–5.2 COMPATIBILITY · AUTH · FORMS · ORM" tone="verified">
+      `requirements.txt` pins Django to the 5.1–5.2 range and includes PostgreSQL, Gunicorn and WhiteNoise support. The public source directly exposes the `User`, `Listing`, `Bid`, `Comment` and `Watchlist` models and the listing, bidding, category, comment and close-auction views.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="BOUNDARY" title="NO LIVE DEMO OR CONCURRENCY GUARANTEE" tone="boundary">
+      The repository's old hosted-demo text is a placeholder rather than a current verifiable deployment. The bid rule performs a read/check/update sequence without explicit row locking or a transaction boundary in `place_bid`, so this case study does not call the current implementation concurrency-safe.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="TRADE-OFFS" title="Server-rendered Django keeps the educational scope understandable" surface="highlight">
+  Django templates, forms, sessions and ORM provide one deployable application and a short path from request to persisted state. The trade-off is that richer real-time bidding and stronger concurrent-bid guarantees would require additional design rather than emerging automatically from the current monolith.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="LEARNINGS" title="What this project made concrete">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="LEARNING 01" title="MODEL THE LIFECYCLE, NOT ONLY THE TABLES" tone="success">
+      Listing ownership, active state and winner selection make the closing transition explicit instead of treating an auction as generic CRUD data.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 02" title="VALIDATION IS NOT THE SAME AS CONCURRENCY CONTROL" tone="success">
+      Checking that a bid exceeds the current value is necessary, but simultaneous writes need their own transaction and locking strategy if the application must guarantee ordering under contention.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 03" title="SERVER RENDERING CAN BE THE SIMPLEST CORRECT BOUNDARY" tone="success">
+      For a compact CRUD-heavy application, Django forms, views and templates can keep authentication and persistence behavior easier to inspect than adding a second client application by default.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
