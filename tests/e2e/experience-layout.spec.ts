@@ -3,6 +3,17 @@ import { expect, test } from './fixtures';
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 
+async function getRelativeTitleTop(
+	page: Parameters<Parameters<typeof test>[1]>[0]['page'],
+	sectionId: string
+) {
+	const section = page.locator(`#${sectionId}`);
+	const title = section.locator('.title-section').first();
+	const sectionBox = (await section.boundingBox())!;
+	const titleBox = (await title.boundingBox())!;
+	return titleBox.y - sectionBox.y;
+}
+
 test.describe('Experience responsive composition', () => {
 	test('desktop uses the viewport with a balanced selector and evidence panel', async ({
 		page,
@@ -55,27 +66,33 @@ test.describe('Experience responsive composition', () => {
 		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
 	});
 
-	test('viewport sections use the lowered title rhythm while Core Stack remains compact', async ({
+	test('all viewport section titles share the Experience anchor while Core Stack stays compact', async ({
 		page,
 	}) => {
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/');
+		await page.evaluate(() => document.fonts.ready);
+
+		const experienceTitleTop = await getRelativeTitleTop(page, 'experience');
+		expect(Math.round(experienceTitleTop)).toBe(128);
 
 		for (const id of ['projects', 'research', 'about-me']) {
 			const shell = page.locator(`#${id} [data-home-viewport-shell="true"]`);
-			await shell.scrollIntoViewIfNeeded();
-			await expect(shell).toBeVisible();
+			await expect(shell).toBeAttached();
+			expect(await shell.evaluate(element => getComputedStyle(element).display)).toBe('grid');
 			expect(await shell.evaluate(element => getComputedStyle(element).paddingTop)).toBe(
 				'128px'
 			);
 			expect(await shell.evaluate(element => getComputedStyle(element).paddingBottom)).toBe(
 				'40px'
 			);
+
+			const titleTop = await getRelativeTitleTop(page, id);
+			expect(Math.abs(titleTop - experienceTitleTop)).toBeLessThanOrEqual(1);
 		}
 
 		const coreStack = page.locator('#technologies [data-home-compact-shell="true"]');
-		await coreStack.scrollIntoViewIfNeeded();
-		await expect(coreStack).toBeVisible();
+		await expect(coreStack).toBeAttached();
 		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingTop)).toBe(
 			'64px'
 		);
