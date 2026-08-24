@@ -53,6 +53,8 @@ interface ProjectMetadata {
 	lifecycle: ProjectLifecycle;
 	sourceAccess: ProjectSourceAccess;
 	demoAccess: ProjectDemoAccess;
+	/** Current project release when the project has one stable, recruiter-facing version. */
+	version?: string;
 	link?: string;
 	/** Primary repository used by compact surfaces such as ProjectCard. */
 	github?: string;
@@ -86,6 +88,7 @@ const projectMetadata = {
 		lifecycle: 'active',
 		sourceAccess: 'public',
 		demoAccess: 'unavailable',
+		version: '3.1.2',
 		resources: {
 			docs: 'https://kioku.sandovaldavid.com',
 			package: 'https://www.nuget.org/packages/kioku-mcp-server',
