@@ -77,7 +77,7 @@ describe('localized project MDX content', () => {
 		}
 	});
 
-	it('keeps language-neutral URLs, assets, ordering and technology IDs in metadata', () => {
+	it('keeps language-neutral URLs, repository sets, assets, ordering and technology IDs in metadata', () => {
 		const metadata = readSource('src/entities/project/model/metadata.ts');
 		const slugs = [...metadata.matchAll(/slug: '([^']+)'/g)].map(match => match[1]);
 		const orders = [...metadata.matchAll(/order: (\d+)/g)].map(match => Number(match[1]));
@@ -87,6 +87,10 @@ describe('localized project MDX content', () => {
 		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10]);
 		expect(metadata).toContain("docs: 'https://kioku.sandovaldavid.com'");
 		expect(metadata).toContain("package: 'https://www.nuget.org/packages/kioku-mcp-server'");
+		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
+		expect(metadata).toContain(
+			"{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }"
+		);
 		expect(metadata).toContain("link: 'https://fluentreads.vercel.app'");
 
 		for (const locale of locales) {
