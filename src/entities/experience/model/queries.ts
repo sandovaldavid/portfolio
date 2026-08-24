@@ -28,7 +28,7 @@ function toExperienceItem(entry: ExperienceContentEntry): LocalizedExperienceIte
 		title,
 		company,
 		description: [...achievements],
-		technologies: metadata.technologyIds.map(id => EXPERIENCE_TECHNOLOGIES[id]),
+		technologies: metadata.technologyIds.map(id => ({ ...EXPERIENCE_TECHNOLOGIES[id] })),
 		startDate: metadata.startDate,
 		endDate: metadata.endDate,
 		isCurrent: metadata.isCurrent,
