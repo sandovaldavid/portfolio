@@ -53,7 +53,7 @@ const lifecycleBadgeVariant = {
 						{status.lifecycle}
 					</Badge>
 					{
-						project.github && project.sourceAccess === 'public' ? (
+						project.github && project.sourceAccess !== 'private' ? (
 							<a
 								href={project.github}
 								target="_blank"
