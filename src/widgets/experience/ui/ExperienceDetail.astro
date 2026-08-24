@@ -1,14 +1,12 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
-import AngularIcon from '@assets/technologies/Angular.astro';
-import DotNetIcon from '@assets/technologies/DotNet.astro';
-import JavaIcon from '@assets/technologies/Java.astro';
-import ReactIcon from '@assets/technologies/React.astro';
-import TypeScriptIcon from '@assets/technologies/TypeScript.astro';
-import type { ExperienceItem as ExperienceItemData } from '@entities/experience';
+import {
+	ExperienceTechnologyPill,
+	type ExperienceItem as ExperienceItemData,
+} from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { LinkButton, TechPill } from '@shared/ui';
+import { LinkButton } from '@shared/ui';
 
 type Props = Pick<
 	ExperienceItemData,
@@ -24,13 +22,6 @@ const visibleAchievements = description.slice(0, 4);
 const companyContext = isCurrent
 	? `${company.toUpperCase()} · ${tExperience('currentDomain')}`
 	: company.toUpperCase();
-const technologyIcons = {
-	dotnet: DotNetIcon,
-	angular: AngularIcon,
-	typescript: TypeScriptIcon,
-	java: JavaIcon,
-	react: ReactIcon,
-};
 ---
 
 <div
@@ -114,12 +105,7 @@ const technologyIcons = {
 				>
 					{visibleTechnologies.map(technology => (
 						<li data-experience-technology-kind={technology.kind}>
-							<TechPill
-								label={technology.label}
-								icon={technology.iconKey ? technologyIcons[technology.iconKey] : undefined}
-								size="sm"
-								variant="stack"
-							/>
+							<ExperienceTechnologyPill technology={technology} size="sm" />
 						</li>
 					))}
 				</ul>
