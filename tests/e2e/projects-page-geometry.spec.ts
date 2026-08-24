@@ -57,13 +57,15 @@ for (const localePrefix of ['', '/es']) {
 							.boundingBox())!;
 						expect(Math.round(introPanelBox.x)).toBeGreaterThanOrEqual(860);
 
-						// 592 + 32 + 592 uses 1216px of the 1280px shell.
+						// The 1280px shell starts at x80. Two 592px cards anchor to
+						// opposite shell edges and let the remaining 96px become auto space.
 						const first = (await cards.nth(0).boundingBox())!;
 						const second = (await cards.nth(1).boundingBox())!;
 						expect(first.width).toBe(592);
 						expect(second.width).toBe(592);
-						expect(Math.round(first.x)).toBe(112);
-						expect(Math.round(second.x)).toBe(736);
+						expect(Math.round(first.x)).toBe(80);
+						expect(Math.round(second.x)).toBe(768);
+						expect(Math.round(second.x - (first.x + first.width))).toBe(96);
 					}
 
 					if (viewport.label === 'tablet') {
