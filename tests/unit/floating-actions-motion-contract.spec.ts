@@ -16,12 +16,15 @@ describe('Floating quick links motion contract', () => {
 		expect(recruiterHud).not.toContain("panel.classList.toggle('hidden'");
 	});
 
-	it('keeps the Home contact rail visible initially, collapsible after scroll and hover/focus revealable', () => {
+	it('keeps Home expanded initially while every other page starts collapsed and revealable', () => {
 		expect(contactRail).toContain(
 			"Astro.url.pathname === '/' || Astro.url.pathname === '/es/'"
 		);
+		expect(contactRail).toContain('const defaultCollapsed = !isHome');
+		expect(contactRail).toContain('data-collapsed={String(defaultCollapsed)}');
+		expect(contactRail).toContain('data-default-collapsed={String(defaultCollapsed)}');
+		expect(contactRail).toContain('aria-hidden={defaultCollapsed}');
 		expect(contactRail).toContain('const COLLAPSE_SCROLL_OFFSET = 96');
-		expect(contactRail).toContain('data-collapsed="false"');
 		expect(contactRail).toContain(
 			".contact-sidebar[data-collapsed='true'] .contact-sidebar-rail"
 		);
@@ -31,6 +34,9 @@ describe('Floating quick links motion contract', () => {
 			"window.addEventListener('scroll', syncFromScroll, { passive: true })"
 		);
 		expect(contactRail).toContain('rail.inert = collapsed');
+		expect(contactRail).toContain(
+			'setContactRailCollapsed(root, collapseAtRest || window.scrollY > COLLAPSE_SCROLL_OFFSET)'
+		);
 		expect(contactRail).toContain('@media (prefers-reduced-motion: reduce)');
 	});
 });
