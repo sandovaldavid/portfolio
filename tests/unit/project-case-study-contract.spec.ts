@@ -58,6 +58,8 @@ describe('Project Case Study MDX contract', () => {
 		expect(gallery).toContain('data-gallery-dialog');
 		expect(gallery).toContain('dialog.showModal()');
 		expect(gallery).toContain("stage.dataset.zoomed");
+		expect(gallery).toContain('object-contain');
+		expect(gallery).not.toContain('object-cover');
 	});
 
 	it('renders controlled Mermaid flow authoring as a real semantic-color SVG graph', () => {
