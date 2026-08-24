@@ -1,5 +1,9 @@
 ---
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
+import BookOpenIcon from '@assets/icons/BookOpen.astro';
 import LinkIcon from '@assets/icons/Link.astro';
+import ShareIcon from '@assets/icons/Share.astro';
+import GitHubIcon from '@assets/technologies/GitHub.astro';
 import { PROJECT_METADATA, type ProjectId, type ProjectResourceKind } from '@entities/project';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 
@@ -7,60 +11,183 @@ export type RequestedProjectResource = 'source' | 'demo' | ProjectResourceKind;
 
 interface Props {
 	projectId: ProjectId;
-	resources: RequestedProjectResource[];
+	/**
+	 * Kept temporarily so existing MDX calls remain valid while the resource bar
+	 * moves into the shared ProjectCaseStudy shell. Inline invocations render nothing.
+	 */
+	resources?: RequestedProjectResource[];
 }
 
-const { projectId, resources } = Astro.props;
+const { projectId } = Astro.props;
+const isLegacyInlineInvocation = Array.isArray(Astro.props.resources);
 const metadata = PROJECT_METADATA[projectId];
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tPage = createScopedUiTranslator(lang, 'pages.projects');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
-const labelKeys: Record<RequestedProjectResource, Parameters<typeof tPage>[0]> = {
-	source: 'resourceSource',
-	demo: 'resourceDemo',
-	docs: 'resourceDocs',
-	package: 'resourcePackage',
-	related: 'resourceRelated',
-};
+const repositories =
+	metadata.sourceAccess === 'private'
+		? []
+		: metadata.repositories?.length
+			? [...metadata.repositories]
+			: metadata.github
+				? [{ label: tPage('resourceSource'), url: metadata.github }]
+				: [];
 
-const urls: Record<RequestedProjectResource, string | undefined> = {
-	source: metadata.sourceAccess !== 'private' ? metadata.github : undefined,
-	demo: metadata.link,
-	docs: metadata.resources?.docs,
-	package: metadata.resources?.package,
-	related: metadata.resources?.related,
-};
-
-const resolvedResources = resources
-	.map(kind => ({ kind, href: urls[kind], label: tPage(labelKeys[kind]) }))
-	.filter((resource): resource is { kind: RequestedProjectResource; href: string; label: string } =>
-		Boolean(resource.href)
-	);
+const docs = metadata.resources?.docs;
+const packageUrl = metadata.resources?.package;
+const related = metadata.resources?.related;
+const liveDemo = metadata.link && metadata.demoAccess !== 'unavailable' ? metadata.link : undefined;
+const hasExternalResources =
+	repositories.length > 0 || Boolean(docs || packageUrl || related || liveDemo);
 ---
 
 {
-	resolvedResources.length > 0 && (
-		<nav aria-label={tPage('resourcesTitle')} data-project-resources>
-			<p class="text-editorial-label-compact uppercase text-content-muted">
-				{tPage('resourcesTitle')}
-			</p>
-			<ul class="mt-3 flex flex-wrap gap-3">
-				{resolvedResources.map(resource => (
+	!isLegacyInlineInvocation && (
+		<nav
+			aria-label={tPage('resourcesTitle')}
+			class="w-full bg-channel-background-canvas px-5 pb-8 md:px-8 md:pb-10 lg:px-20 lg:pb-12"
+			data-project-resources
+		>
+			<div class="mx-auto w-full max-w-320 border-t border-edge-subtle pt-5 md:pt-6">
+				<p class="text-editorial-label-compact uppercase text-content-muted">
+					{tPage('resourcesTitle')}
+				</p>
+				<ul class="mt-3 flex flex-wrap gap-3">
+					{repositories.map(repository => (
+						<li>
+							<a
+								href={repository.url}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+								data-project-resource="repository"
+							>
+								<GitHubIcon class="size-4" />
+								<span>{repository.label}</span>
+								<span class="sr-only"> {tAccessibility('externalLink')}</span>
+							</a>
+						</li>
+					))}
+
+					{docs && (
+						<li>
+							<a
+								href={docs}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+								data-project-resource="docs"
+							>
+								<BookOpenIcon class="size-4" />
+								<span>{tPage('resourceDocs')}</span>
+								<span class="sr-only"> {tAccessibility('externalLink')}</span>
+							</a>
+						</li>
+					)}
+
+					{liveDemo && (
+						<li>
+							<a
+								href={liveDemo}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+								data-project-resource="demo"
+							>
+								<ArrowUpRightIcon class="size-4" />
+								<span>{tPage('resourceDemo')}</span>
+								<span class="sr-only"> {tAccessibility('externalLink')}</span>
+							</a>
+						</li>
+					)}
+
+					{packageUrl && (
+						<li>
+							<a
+								href={packageUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+								data-project-resource="package"
+							>
+								<LinkIcon class="size-4" />
+								<span>{tPage('resourcePackage')}</span>
+								<span class="sr-only"> {tAccessibility('externalLink')}</span>
+							</a>
+						</li>
+					)}
+
+					{related && (
+						<li>
+							<a
+								href={related}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+								data-project-resource="related"
+							>
+								<LinkIcon class="size-4" />
+								<span>{tPage('resourceRelated')}</span>
+								<span class="sr-only"> {tAccessibility('externalLink')}</span>
+							</a>
+						</li>
+					)}
+
 					<li>
-						<a
-							href={resource.href}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+						<button
+							type="button"
+							class="inline-flex min-h-11 cursor-pointer items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							data-project-share
+							data-share-label={tPage('resourceShare')}
+							data-share-copied={tPage('shareCopied')}
 						>
-							<LinkIcon class="size-4" />
-							<span>{resource.label}</span>
-							<span class="sr-only"> {tAccessibility('externalLink')}</span>
-						</a>
+							<ShareIcon class="size-4" />
+							<span data-share-text>{tPage('resourceShare')}</span>
+						</button>
 					</li>
-				))}
-			</ul>
+				</ul>
+				<p class="sr-only" aria-live="polite" data-share-status></p>
+				{!hasExternalResources && <span class="sr-only">{tPage('shareOnlyHint')}</span>}
+			</div>
 		</nav>
 	)
 }
+
+<script>
+	function setupProjectShare() {
+		document.querySelectorAll<HTMLButtonElement>('[data-project-share]').forEach(button => {
+			if (button.dataset.shareReady === 'true') return;
+			button.dataset.shareReady = 'true';
+
+			button.addEventListener('click', async () => {
+				const text = button.querySelector<HTMLElement>('[data-share-text]');
+				const nav = button.closest('[data-project-resources]');
+				const status = nav?.querySelector<HTMLElement>('[data-share-status]');
+				const label = button.dataset.shareLabel ?? '';
+				const copied = button.dataset.shareCopied ?? label;
+				const shareData = { title: document.title, url: window.location.href };
+
+				try {
+					if (navigator.share) {
+						await navigator.share(shareData);
+						return;
+					}
+
+					await navigator.clipboard.writeText(shareData.url);
+					if (text) text.textContent = copied;
+					if (status) status.textContent = copied;
+					window.setTimeout(() => {
+						if (text) text.textContent = label;
+						if (status) status.textContent = '';
+					}, 1800);
+				} catch {
+					if (status) status.textContent = label;
+				}
+			});
+		});
+	}
+
+	setupProjectShare();
+	document.addEventListener('astro:page-load', setupProjectShare);
+</script>
