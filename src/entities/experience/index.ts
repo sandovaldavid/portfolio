@@ -9,5 +9,9 @@ export type {
 	ExperienceId,
 	ExperienceItem,
 	ExperienceList,
+	ExperienceTechnology,
+	ExperienceTechnologyIconKey,
 	ExperienceTechnologyId,
+	ExperienceTechnologyKind,
 } from './model';
+export { default as ExperienceTechnologyPill } from './ui/ExperienceTechnologyPill.astro';
