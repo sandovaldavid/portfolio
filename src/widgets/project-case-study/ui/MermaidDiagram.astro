@@ -139,8 +139,7 @@ const nodeOrder = new Map(nodeList.map((node, index) => [node.id, index]));
 const isForwardEdge = (edge: DiagramEdge) =>
 	(nodeOrder.get(edge.to) ?? 0) > (nodeOrder.get(edge.from) ?? 0);
 
-// Longest-path ranks keep the authored left-to-right / top-to-bottom flow readable.
-// Cyclic/back edges are excluded from rank inflation and routed locally after layout.
+// Authored order establishes the principal direction. Back/cyclic edges do not inflate ranks.
 for (let pass = 0; pass < nodeList.length; pass += 1) {
 	let changed = false;
 	for (const edge of edges) {
@@ -157,8 +156,7 @@ for (let pass = 0; pass < nodeList.length; pass += 1) {
 	if (!changed) break;
 }
 
-// Secondary workers/migrators are often authored after the main chain. If they only feed a deep
-// target, place them beside that target's previous rank instead of leaving them at the far-left root.
+// Root-like workers that feed a deep target belong beside the target's previous architectural layer.
 for (const node of nodeList) {
 	if (node.level !== 0) continue;
 	const incomingForward = edges.some(edge => edge.to === node.id && isForwardEdge(edge));
@@ -167,9 +165,7 @@ for (const node of nodeList) {
 		.filter(edge => edge.from === node.id && isForwardEdge(edge))
 		.map(edge => nodes.get(edge.to)?.level ?? 0)
 		.filter(level => level > 1);
-	if (targetLevels.length > 0) {
-		node.level = Math.max(0, Math.min(...targetLevels) - 1);
-	}
+	if (targetLevels.length > 0) node.level = Math.max(0, Math.min(...targetLevels) - 1);
 }
 
 const levels = new Map<number, DiagramNode[]>();
@@ -180,13 +176,13 @@ for (const node of nodeList) {
 }
 const levelList = [...levels.entries()].sort(([left], [right]) => left - right);
 
-const nodeWidth = 220;
-const nodeHeight = 100;
-const mainGap = 92;
-const crossGap = 24;
-const margin = 56;
-const backEdgeOffset = 36;
-const backEdgeStep = 16;
+const nodeWidth = 232;
+const nodeHeight = 108;
+const mainGap = 116;
+const crossGap = 32;
+const margin = 64;
+const backEdgeOffset = 42;
+const backEdgeStep = 18;
 const maxCrossCount = Math.max(...levelList.map(([, levelNodes]) => levelNodes.length));
 const levelCount = levelList.length;
 const graphWidth =
@@ -243,7 +239,7 @@ const edgePath = (edge: DiagramEdge) => {
 		return {
 			path: `M ${startX} ${fromCenterY} C ${controlX} ${fromCenterY}, ${controlX} ${toCenterY}, ${endX} ${toCenterY}`,
 			labelX: controlX,
-			labelY: (fromCenterY + toCenterY) / 2 - 14,
+			labelY: (fromCenterY + toCenterY) / 2 - 16,
 		};
 	}
 
@@ -254,37 +250,41 @@ const edgePath = (edge: DiagramEdge) => {
 		return {
 			path: `M ${fromCenterX} ${startY} C ${fromCenterX} ${controlY}, ${toCenterX} ${controlY}, ${toCenterX} ${endY}`,
 			labelX: (fromCenterX + toCenterX) / 2,
-			labelY: controlY - 14,
+			labelY: controlY - 16,
 		};
 	}
 
 	const laneIndex = Math.max(0, backEdges.indexOf(edge));
 	const laneOffset = backEdgeOffset + laneIndex * backEdgeStep;
 	if (direction === 'LR') {
-		const useTopLane = fromCenterY <= toCenterY;
-		const unclampedLaneY = useTopLane
-			? Math.min(from.y, to.y) - laneOffset
-			: Math.max(from.y + nodeHeight, to.y + nodeHeight) + laneOffset;
-		const laneY = Math.max(12, Math.min(graphHeight - 12, unclampedLaneY));
+		const topBoundary = Math.min(from.y, to.y);
+		const bottomBoundary = Math.max(from.y + nodeHeight, to.y + nodeHeight);
+		const topRoom = topBoundary;
+		const bottomRoom = graphHeight - bottomBoundary;
+		const useTopLane = topRoom >= bottomRoom;
+		const unclampedLaneY = useTopLane ? topBoundary - laneOffset : bottomBoundary + laneOffset;
+		const laneY = Math.max(16, Math.min(graphHeight - 16, unclampedLaneY));
 		const startX = from.x;
 		const endX = to.x + nodeWidth;
 		return {
-			path: `M ${startX} ${fromCenterY} C ${startX} ${laneY}, ${endX} ${laneY}, ${endX} ${toCenterY}`,
+			path: `M ${startX} ${fromCenterY} C ${startX - 26} ${laneY}, ${endX + 26} ${laneY}, ${endX} ${toCenterY}`,
 			labelX: (startX + endX) / 2,
-			labelY: laneY + (useTopLane ? -10 : 10),
+			labelY: laneY + (useTopLane ? -12 : 12),
 		};
 	}
 
-	const useLeftLane = fromCenterX <= toCenterX;
-	const unclampedLaneX = useLeftLane
-		? Math.min(from.x, to.x) - laneOffset
-		: Math.max(from.x + nodeWidth, to.x + nodeWidth) + laneOffset;
-	const laneX = Math.max(12, Math.min(graphWidth - 12, unclampedLaneX));
+	const leftBoundary = Math.min(from.x, to.x);
+	const rightBoundary = Math.max(from.x + nodeWidth, to.x + nodeWidth);
+	const leftRoom = leftBoundary;
+	const rightRoom = graphWidth - rightBoundary;
+	const useLeftLane = leftRoom >= rightRoom;
+	const unclampedLaneX = useLeftLane ? leftBoundary - laneOffset : rightBoundary + laneOffset;
+	const laneX = Math.max(16, Math.min(graphWidth - 16, unclampedLaneX));
 	const startY = from.y;
 	const endY = to.y + nodeHeight;
 	return {
-		path: `M ${fromCenterX} ${startY} C ${laneX} ${startY}, ${laneX} ${endY}, ${toCenterX} ${endY}`,
-		labelX: laneX + (useLeftLane ? -10 : 10),
+		path: `M ${fromCenterX} ${startY} C ${laneX} ${startY - 26}, ${laneX} ${endY + 26}, ${toCenterX} ${endY}`,
+		labelX: laneX + (useLeftLane ? -12 : 12),
 		labelY: (startY + endY) / 2,
 	};
 };
@@ -298,7 +298,7 @@ const titleId = `diagram-title-${diagramHash}`;
 const descriptionId = `diagram-description-${diagramHash}`;
 ---
 
-<figure class="w-full" data-mermaid-figure data-diagram-direction={direction}>
+<figure class="w-full" data-mermaid-figure data-diagram-direction={direction} data-diagram-density="balanced">
 	<div
 		class="diagram-scroll overflow-x-auto overscroll-x-contain border-2 border-edge-strong bg-channel-surface-default p-3 shadow-retro-md md:p-5"
 		data-mermaid-host
@@ -308,7 +308,7 @@ const descriptionId = `diagram-description-${diagramHash}`;
 			width={graphWidth}
 			height={graphHeight}
 			viewBox={`0 0 ${graphWidth} ${graphHeight}`}
-			class="mx-auto block max-w-none"
+			class="mx-auto block h-auto max-w-none md:max-w-full"
 			role="img"
 			aria-labelledby={`${titleId} ${descriptionId}`}
 			data-diagram-svg
@@ -316,26 +316,10 @@ const descriptionId = `diagram-description-${diagramHash}`;
 			<title id={titleId}>{title}</title>
 			<desc id={descriptionId}>{description}</desc>
 			<defs>
-				<marker
-					id={solidMarkerId}
-					viewBox="0 0 10 10"
-					refX="9"
-					refY="5"
-					markerWidth="7"
-					markerHeight="7"
-					orient="auto-start-reverse"
-				>
+				<marker id={solidMarkerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
 					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-accent-primary)"></path>
 				</marker>
-				<marker
-					id={optionalMarkerId}
-					viewBox="0 0 10 10"
-					refX="9"
-					refY="5"
-					markerWidth="7"
-					markerHeight="7"
-					orient="auto-start-reverse"
-				>
+				<marker id={optionalMarkerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
 					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-content-muted)"></path>
 				</marker>
 			</defs>
@@ -344,11 +328,9 @@ const descriptionId = `diagram-description-${diagramHash}`;
 				{
 					edges.map(edge => {
 						const geometry = edgePath(edge);
-						const stroke = edge.optional
-							? 'var(--channel-content-muted)'
-							: 'var(--channel-accent-primary)';
+						const stroke = edge.optional ? 'var(--channel-content-muted)' : 'var(--channel-accent-primary)';
 						const marker = edge.optional ? optionalMarkerId : solidMarkerId;
-						const labelWidth = edge.label ? Math.max(64, edge.label.length * 7.25 + 20) : 0;
+						const labelWidth = edge.label ? Math.max(72, edge.label.length * 7.5 + 24) : 0;
 						return (
 							<g data-diagram-edge data-edge-optional={String(edge.optional)}>
 								<path
@@ -357,28 +339,22 @@ const descriptionId = `diagram-description-${diagramHash}`;
 									stroke={stroke}
 									stroke-width={edge.optional ? '1.75' : '2.25'}
 									stroke-dasharray={edge.optional ? '8 7' : undefined}
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									vector-effect="non-scaling-stroke"
 									marker-end={`url(#${marker})`}
 								></path>
 								{edge.label && (
-									<g
-										transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 12})`}
-									>
+									<g transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 13})`}>
 										<rect
 											width={labelWidth}
-											height="24"
+											height="26"
 											fill="var(--channel-surface-default)"
 											stroke="var(--color-edge-subtle)"
 											stroke-width="1"
+											vector-effect="non-scaling-stroke"
 										></rect>
-										<text
-											x={labelWidth / 2}
-											y="16"
-											text-anchor="middle"
-											font-family="var(--font-mono)"
-											font-size="12"
-											font-weight="700"
-											fill="var(--channel-content-default)"
-										>
+										<text x={labelWidth / 2} y="17" text-anchor="middle" font-family="var(--font-mono)" font-size="12" font-weight="700" fill="var(--channel-content-default)">
 											{edge.label}
 										</text>
 									</g>
@@ -393,44 +369,15 @@ const descriptionId = `diagram-description-${diagramHash}`;
 				{
 					nodeList.map(node => {
 						const tone = toneTokens[node.tone];
-						const lineHeight = 18;
-						const firstLineY =
-							node.y + nodeHeight / 2 - ((node.lines.length - 1) * lineHeight) / 2 + 5;
+						const lineHeight = 19;
+						const firstLineY = node.y + nodeHeight / 2 - ((node.lines.length - 1) * lineHeight) / 2 + 5;
 						return (
 							<g data-diagram-node data-node-id={node.id} data-node-tone={node.tone}>
-								<rect
-									x={node.x}
-									y={node.y}
-									width={nodeWidth}
-									height={nodeHeight}
-									fill={tone.background}
-									stroke={tone.foreground}
-									stroke-width="2"
-								></rect>
-								<line
-									x1={node.x + 2}
-									y1={node.y + 2}
-									x2={node.x + nodeWidth - 2}
-									y2={node.y + 2}
-									stroke={tone.foreground}
-									stroke-width="4"
-								></line>
-								<text
-									x={node.x + nodeWidth / 2}
-									y={firstLineY}
-									text-anchor="middle"
-									font-family="var(--font-mono)"
-									font-size="13"
-									font-weight="700"
-									fill={tone.foreground}
-								>
+								<rect x={node.x} y={node.y} width={nodeWidth} height={nodeHeight} fill={tone.background} stroke={tone.foreground} stroke-width="2" vector-effect="non-scaling-stroke"></rect>
+								<line x1={node.x + 2} y1={node.y + 2} x2={node.x + nodeWidth - 2} y2={node.y + 2} stroke={tone.foreground} stroke-width="5" vector-effect="non-scaling-stroke"></line>
+								<text x={node.x + nodeWidth / 2} y={firstLineY} text-anchor="middle" font-family="var(--font-mono)" font-size="14" font-weight="700" fill={tone.foreground}>
 									{node.lines.map((line, index) => (
-										<tspan
-											x={node.x + nodeWidth / 2}
-											dy={index === 0 ? 0 : lineHeight}
-										>
-											{line}
-										</tspan>
+										<tspan x={node.x + nodeWidth / 2} dy={index === 0 ? 0 : lineHeight}>{line}</tspan>
 									))}
 								</text>
 								<title>{node.label}</title>
@@ -449,6 +396,7 @@ const descriptionId = `diagram-description-${diagramHash}`;
 <style>
 	.diagram-scroll {
 		scrollbar-width: none;
+		touch-action: pan-x pan-y;
 	}
 
 	.diagram-scroll::-webkit-scrollbar {
