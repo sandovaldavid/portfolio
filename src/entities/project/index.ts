@@ -17,6 +17,7 @@ export type {
 	ProjectItem,
 	ProjectLifecycle,
 	ProjectList,
+	ProjectRepository,
 	ProjectResourceKind,
 	ProjectSourceAccess,
 	ProjectTechnologyId,
