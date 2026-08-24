@@ -46,4 +46,27 @@ describe('Portfolio v2 icon contract', () => {
 
 		expect(close).toContain('M6 6L18 18M18 6L6 18');
 	});
+
+	it('normalizes every TechPill brand mark inside the same 24px icon frame', () => {
+		const techPill = read('src/shared/ui/tech-pill/TechPill.astro');
+
+		expect(techPill).toContain('tech-pill-icon-frame flex size-6');
+		expect(techPill).toContain("iconClasses = 'block size-full max-h-6 max-w-6 shrink-0'");
+		expect(techPill).toContain('<Icon class={iconClasses} aria-hidden="true" />');
+	});
+
+	it('uses official .NET and C# artwork instead of custom approximations', () => {
+		const dotnet = read('src/assets/technologies/DotNet.astro');
+		const csharp = read('src/assets/technologies/CSharp.astro');
+
+		expect(dotnet).toContain('Official .NET logo from dotnet/brand');
+		expect(dotnet).toContain('viewBox="0 0 456 456"');
+		expect(dotnet).toContain('<rect width="456" height="456" fill="#512BD4" />');
+
+		expect(csharp).toContain('Official C# language mark from dotnet/brand');
+		expect(csharp).toContain('viewBox="0 0 72 72"');
+		expect(csharp).toContain('stop-color="#927BE5"');
+		expect(csharp).toContain('stop-color="#512BD4"');
+		expect(csharp).not.toContain('stroke="currentColor"');
+	});
 });
