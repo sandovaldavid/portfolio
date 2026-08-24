@@ -64,7 +64,7 @@ test.describe('Floating contact rail', () => {
 		}
 	});
 
-	test('a collapsed non-Home rail opens from the hotspot and collapses again after focus leaves', async ({
+	test('a collapsed non-Home rail opens from keyboard focus and activation, then collapses after focus leaves', async ({
 		page,
 	}) => {
 		await page.setViewportSize(DESKTOP);
@@ -73,11 +73,15 @@ test.describe('Floating contact rail', () => {
 		const sidebar = page.locator('#contact-sidebar');
 		const rail = page.locator('#contact-sidebar-rail');
 		const reveal = page.locator('#contact-sidebar-reveal');
+		const firstContactLink = rail.locator('a').first();
 
-		await reveal.click();
+		await reveal.focus();
 		await expect.poll(() => sidebar.getAttribute('data-collapsed')).toBe('false');
 		await expect(rail).toHaveAttribute('aria-hidden', 'false');
-		await expect(rail.locator('a').first()).toBeFocused();
+		await expect(reveal).toBeFocused();
+
+		await page.keyboard.press('Enter');
+		await expect(firstContactLink).toBeFocused();
 
 		await page.locator('header a').first().focus();
 		await expect.poll(() => sidebar.getAttribute('data-collapsed')).toBe('true');
