@@ -1,0 +1,111 @@
+---
+projectId: project-detail-fixture
+locale: en
+title: Project Detail Fixture
+description: "Development-only kitchen-sink case study used to validate every Project Detail capability without publishing a fake portfolio project."
+category: "Internal UI Fixture"
+imageAlt: "Development-only Project Detail fixture preview"
+caseStudy:
+  kicker: "INTERNAL FIXTURE · PROJECT DETAIL SYSTEM"
+  status:
+    lifecycle: "DEVELOPMENT ONLY"
+    source: "PUBLIC TEST RESOURCES"
+    demo: "FIXTURE DEMO"
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection eyebrow="DEVELOPMENT FIXTURE" title="One page that exercises every Project Detail capability">
+  This is **not a real portfolio project**. It exists only in development so the Project Detail content system can be reviewed with all optional resources and MDX primitives enabled at the same time.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEM" title="A shared system needs a safe place to test optional content">
+  Real projects intentionally omit resources they do not have. That makes it difficult to visually inspect every combination of repositories, documentation, live demo, package links, galleries, video and diagrams from a single route.
+
+  This fixture provides that route without adding fake production evidence.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="SYSTEM" title="All Project Detail primitives in one development route" surface="highlight">
+  <MermaidDiagram
+    title="Project Detail fixture system"
+    description="The fixture exercises resources, narrative sections, media, evidence and diagram actors while remaining excluded from production project queries."
+    tones={{ Route: 'brand', Shell: 'info', Resources: 'success', MDX: 'secondary', Media: 'warning', Evidence: 'danger' }}
+    chart={`flowchart LR
+      Route["Development route"] --> Shell["ProjectCaseStudy shell"]
+      Shell --> Resources["Project resources"]
+      Shell --> MDX["MDX narrative"]
+      MDX --> Media["Video + gallery"]
+      MDX --> Evidence["Evidence + learnings"]
+      Evidence -. optional .-> Resources`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="DECISIONS" title="The fixture covers reusable composition patterns">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="OPTION 01" title="MULTIPLE REPOSITORIES" tone="primary">
+      The shared resource bar renders more than one GitHub destination together with documentation, demo, package, related-resource and share actions.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="OPTION 02" title="PROJECT-SPECIFIC MEDIA" tone="primary">
+      MDX can place video and image galleries exactly where the project narrative needs them instead of forcing every project into one fixed template.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="OPTION 03" title="ACCESSIBLE EVIDENCE" tone="primary">
+      Diagrams, captions, image alternative text, keyboard-operable zoom and semantic sections remain part of the shared system.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="VIDEO" title="Embedded demo media is optional per project" surface="highlight">
+  <ProjectVideo
+    title="Development fixture video"
+    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+    caption="CC0 sample media used only to exercise the ProjectVideo player in this development-only fixture."
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="GALLERY" title="Screenshots and diagrams can be inspected at full size">
+  <ProjectGallery
+    label="Project Detail fixture gallery"
+    columns={2}
+    items={[
+      {
+        src: fixtureOverview,
+        alt: 'Abstract overview of the Project Detail development fixture',
+        caption: 'Overview fixture image used to validate object-contain thumbnails and the zoomable lightbox.'
+      },
+      {
+        src: fixtureDetail,
+        alt: 'Abstract UI composition for the Project Detail development fixture',
+        caption: 'Second fixture image used to validate multi-item responsive galleries, captions and zoom.'
+      }
+    ]}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCE" title="Both evidence states can be reviewed together" surface="highlight">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFIED FIXTURE BEHAVIOR" title="THE PAGE EXERCISES THE COMPLETE PRESENTATION SYSTEM" tone="verified">
+      The route intentionally includes the shared hero, lifecycle/source/version badges, every resource action, Mermaid, cards, evidence, video and a zoomable gallery.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="BOUNDARY" title="THIS CONTENT MUST NEVER BECOME A PRODUCTION PROJECT" tone="boundary">
+      The language-neutral metadata marks the fixture as `developmentOnly`. Production project queries exclude it before catalog and static route generation.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="LEARNINGS" title="Use the fixture to review future Project Detail changes">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="CHECK 01" title="RESOURCE COMBINATIONS" tone="success">
+      Verify optional actions, multiple repositories, wrapping and responsive behavior without changing a real project.
+    </CaseStudyCard>
+    <CaseStudyCard label="CHECK 02" title="RICH MEDIA" tone="success">
+      Validate video, gallery, lightbox, zoom, diagrams and captions against Light/Dark and responsive layouts.
+    </CaseStudyCard>
+    <CaseStudyCard label="CHECK 03" title="PRODUCTION EXCLUSION" tone="success">
+      Keep the fixture available to developers while ensuring production catalog, project routes and SEO remain clean.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
