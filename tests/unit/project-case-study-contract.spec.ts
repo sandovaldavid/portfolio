@@ -1,64 +1,63 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
-const caseStudy = readSource('src/widgets/project-case-study/ui/ProjectCaseStudy.astro');
-const legacy = readSource('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro');
-const types = readSource('src/entities/project/model/types.ts');
-const queries = readSource('src/entities/project/model/queries.ts');
+const shell = readSource('src/widgets/project-case-study/ui/ProjectCaseStudy.astro');
+const components = readSource('src/widgets/project-case-study/ui/mdx-components.ts');
+const mermaid = readSource('src/widgets/project-case-study/ui/MermaidDiagram.astro');
+const resources = readSource('src/widgets/project-case-study/ui/ProjectResources.astro');
 const config = readSource('src/content.config.ts');
-const englishKioku = readSource('src/content/projects/en/kioku.json');
-const spanishKioku = readSource('src/content/projects/es/kioku.json');
-const englishRoute = readSource('src/pages/projects/[slug].astro');
-const spanishRoute = readSource('src/pages/es/projects/[slug].astro');
 
-describe('Project Case Study v2 contract', () => {
-	it('keeps concise presentation separate from detailed evidence', () => {
-		expect(types).toContain('export interface CaseStudyPresentation');
-		expect(types).toContain('presentation?: CaseStudyPresentation');
-		expect(types).toContain('evidence?: CaseStudyEvidence');
-		expect(config).toContain('presentation: projectPresentation.optional()');
-		expect(queries).toContain('function toPresentation');
-		expect(queries).toContain('...(presentation ? { presentation } : {})');
+describe('Project Case Study MDX contract', () => {
+	it('keeps shared identity and status in frontmatter while narrative lives in MDX', () => {
+		expect(config).toContain("pattern: '**/*.mdx'");
+		expect(config).toContain('kicker: nonEmptyString');
+		expect(config).toContain('status: projectStatus');
+		expect(config).not.toContain('problem: nonEmptyString');
+		expect(config).not.toContain('evidence:');
+		expect(config).not.toContain('presentation:');
 	});
 
-	it('uses Figma-owned localized Kioku presentation copy without deleting detailed content', () => {
-		expect(englishKioku).toContain('"kicker": "PROJECT CASE STUDY · BACKEND ENGINEERING"');
-		expect(spanishKioku).toContain('"kicker": "CASO DE ESTUDIO · INGENIERÍA BACKEND"');
-		expect(englishKioku).toContain('"title": "SESSION CONTEXT IS NOT DURABLE"');
-		expect(spanishKioku).toContain('"title": "EL CONTEXTO DE SESIÓN NO ES DURABLE"');
-		expect(englishKioku).toContain('"evidence": {');
-		expect(spanishKioku).toContain('"evidence": {');
-		expect(englishKioku).toContain('"implemented": [');
-		expect(spanishKioku).toContain('"implemented": [');
+	it('renders one reusable shell without project-specific narrative assumptions', () => {
+		expect(shell).toContain('data-project-case-study="mdx"');
+		expect(shell).toContain('data-case-study-hero-shell');
+		expect(shell).toContain('<slot />');
+		expect(shell).toContain('project.caseStudy.kicker');
+		expect(shell).toContain('project.sourceAccess === \'public\'');
+		expect(shell).not.toContain('ProjectCaseStudyLegacy');
+		expect(shell).not.toContain('ContentPanel');
+		expect(shell).not.toContain('TechPill');
+		expect(existsSync('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro')).toBe(false);
 	});
 
-	it('renders the clean Figma hierarchy and keeps source evidence directly reachable', () => {
-		expect(caseStudy).toContain('data-project-case-study="v2"');
-		expect(caseStudy).toContain('data-case-study-hero-shell');
-		expect(caseStudy).toContain('data-case-study-narrative-shell');
-		expect(caseStudy).toContain('data-case-study-evidence-shell');
-		expect(caseStudy).toContain('data-case-study-learnings-shell');
-		expect(caseStudy).toContain('lg:grid-cols-[minmax(0,640px)_minmax(0,560px)]');
-		expect(caseStudy).toContain('lg:grid-cols-2 lg:gap-16');
-		expect(caseStudy).toContain('bg-channel-surface-highlight');
-		expect(caseStudy).toContain("project.sourceAccess === 'public'");
-		expect(caseStudy).toContain('href={project.github}');
-		expect(caseStudy).not.toContain("from 'astro:assets'");
-		expect(caseStudy).not.toContain('TechPill');
-		expect(caseStudy).not.toContain('ContentPanel');
-		expect(caseStudy).not.toContain('LinkButton');
-	});
-
-	it('keeps unreviewed case studies on an explicit temporary migration fallback', () => {
-		expect(caseStudy).toContain(
-			"import ProjectCaseStudyLegacy from './ProjectCaseStudyLegacy.astro'"
-		);
-		expect(caseStudy).toContain('<ProjectCaseStudyLegacy {project} {backLink} {lang} />');
-		expect(legacy).toContain('Transitional renderer for case studies');
-		expect(legacy).toContain('Delete this file once every project');
-		for (const route of [englishRoute, spanishRoute]) {
-			expect(route).toContain("project.caseStudy.presentation ? 'flush' : 'default'");
+	it('exposes only approved design-system-aware MDX components', () => {
+		for (const component of [
+			'CaseStudyCard',
+			'CaseStudyGrid',
+			'CaseStudySection',
+			'EvidenceBlock',
+			'MermaidDiagram',
+			'ProjectResources',
+		]) {
+			expect(components).toContain(component);
 		}
+	});
+
+	it('keeps Mermaid lazy, strict and theme-aware with accessible fallback', () => {
+		expect(mermaid).toContain("securityLevel: 'strict'");
+		expect(mermaid).toContain('IntersectionObserver');
+		expect(mermaid).toContain('data-mermaid-source');
+		expect(mermaid).toContain('role="img"');
+		expect(mermaid).toContain('var(--channel-surface-highlight)');
+		expect(mermaid).toContain('var(--channel-accent-primary)');
+	});
+
+	it('resolves external resources from language-neutral metadata', () => {
+		expect(resources).toContain('PROJECT_METADATA[projectId]');
+		expect(resources).toContain("metadata.sourceAccess === 'public'");
+		expect(resources).toContain('metadata.resources?.docs');
+		expect(resources).toContain('metadata.resources?.package');
+		expect(resources).toContain('metadata.resources?.related');
+		expect(resources).toContain('metadata.link');
 	});
 });
