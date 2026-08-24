@@ -45,6 +45,7 @@ for (const localePrefix of ['', '/es']) {
 
 					await expectNoHorizontalOverflow(page);
 					await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+					await expect(page.locator('[data-projects-catalog-snapshot]')).toBeVisible();
 
 					const cards = page.locator('article');
 					await expect(cards.first()).toBeVisible();
@@ -64,13 +65,13 @@ for (const localePrefix of ['', '/es']) {
 							.boundingBox())!;
 						expect(Math.round(introPanelBox.x)).toBeGreaterThanOrEqual(860);
 
-						// Centered card pair: 520 + 32 + 520 inside the 1280 grid
-						// (columns at abs x184 / x736).
+						// Expanded catalog pair: 592 + 32 + 592 uses 1216px of the
+						// 1280 shell, leaving only a 32px inset on either side.
 						const first = (await cards.nth(0).boundingBox())!;
 						const second = (await cards.nth(1).boundingBox())!;
-						expect(first.width).toBe(520);
-						expect(second.width).toBe(520);
-						expect(Math.round(first.x)).toBe(184);
+						expect(first.width).toBe(592);
+						expect(second.width).toBe(592);
+						expect(Math.round(first.x)).toBe(112);
 						expect(Math.round(second.x)).toBe(736);
 					}
 
