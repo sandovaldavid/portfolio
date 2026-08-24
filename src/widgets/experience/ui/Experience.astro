@@ -19,9 +19,9 @@ const EXPERIENCE = await getExperienceData(lang);
 >
 	<div
 		data-experience-shell
-		class="mx-auto grid w-full max-w-320 grid-cols-1 gap-8 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:grid-rows-[auto_1fr] md:gap-8 md:px-8 md:pt-24 md:pb-8 lg:gap-10 lg:px-0 lg:pt-32 lg:pb-10"
+		class="mx-auto flex w-full max-w-320 flex-col justify-center gap-10 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:gap-12 md:px-8 md:py-12 lg:gap-14 lg:px-0 lg:py-14"
 	>
-		<TitleSection align="center" className="w-full md:mb-2">
+		<TitleSection align="center" className="w-full">
 			<ChevronRightIcon
 				class="text-channel-accent-primary"
 				aria-hidden="true"
@@ -32,7 +32,7 @@ const EXPERIENCE = await getExperienceData(lang);
 
 		<div
 			data-experience-stage
-			class="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:self-center md:grid-cols-[280px_minmax(0,1fr)] md:gap-8 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-12"
+			class="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:grid-cols-[280px_minmax(0,1fr)] md:gap-8 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-12"
 		>
 			<div
 				id="experience-tablist"
