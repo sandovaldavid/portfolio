@@ -13,6 +13,14 @@ const CRITICAL_ROUTES = [
 	'/es/projects/yukidoke',
 	'/projects/kioku',
 	'/es/projects/kioku',
+	'/projects/campus-map',
+	'/es/projects/campus-map',
+	'/projects/mad-ai',
+	'/es/projects/mad-ai',
+	'/projects/fluentreads',
+	'/es/projects/fluentreads',
+	'/projects/auctions',
+	'/es/projects/auctions',
 ] as const;
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;
 
@@ -113,40 +121,39 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			detailRoute: '/projects/campus-map',
 			category: 'Full-Stack Development',
 			lifecycle: 'Maintained',
-			banner: 'Project case study · Full-Stack Development',
-			timeline: '3 months',
-			role: 'Solo Developer',
-			imageAlt: 'UNP Campus Map interactive campus directory preview',
-			forbidden: ['3 meses', 'Desarrollador independiente'],
+			imageAlt: 'UNP Campus Map academic faculty and school directory preview',
+			kicker: 'PROJECT CASE STUDY · ACADEMIC DIRECTORY',
+			status: 'MAINTAINED · NEXT.JS 16 CODEBASE',
+			evidenceHeading: 'The current repository defines the product boundary',
+			forbidden: ['3 months', 'Solo Developer', 'BOSS FIGHT // CASE STUDY'],
 		},
 		{
 			catalogRoute: '/es/projects',
 			detailRoute: '/es/projects/campus-map',
 			category: 'Desarrollo Full-Stack',
 			lifecycle: 'Mantenido',
-			banner: 'Caso de estudio · Desarrollo Full-Stack',
-			timeline: '3 meses',
-			role: 'Desarrollador independiente',
-			imageAlt: 'Vista previa del directorio interactivo UNP Campus Map',
-			forbidden: ['3 months', 'Solo Developer', 'BOSS FIGHT // CASE STUDY'],
+			imageAlt: 'Vista previa del directorio académico de facultades y escuelas UNP Campus Map',
+			kicker: 'CASO DE ESTUDIO · DIRECTORIO ACADÉMICO',
+			status: 'MANTENIDO · CODEBASE NEXT.JS 16',
+			evidenceHeading: 'El repositorio actual define el límite del producto',
+			forbidden: ['3 meses', 'Desarrollador independiente', 'BOSS FIGHT // CASE STUDY'],
 		},
 	] as const) {
-		test(`${scenario.detailRoute} renders localized project and case-study content`, async ({
-			page,
-		}) => {
+		test(`${scenario.detailRoute} renders localized MDX project evidence`, async ({ page }) => {
 			await page.goto(scenario.catalogRoute);
 			await expect(page.getByText(scenario.category).first()).toBeVisible();
 			await expect(page.getByText(scenario.lifecycle, { exact: true }).first()).toBeVisible();
 			await expect(page.getByRole('img', { name: scenario.imageAlt }).first()).toBeVisible();
 
 			await page.goto(scenario.detailRoute);
+			await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();
 			await expect(
 				page.getByRole('heading', { level: 1, name: 'UNP Campus Map' })
 			).toBeVisible();
-			await expect(page.getByText(scenario.banner)).toBeVisible();
-			await expect(page.getByText(scenario.timeline, { exact: true })).toBeVisible();
-			await expect(page.getByText(scenario.role, { exact: true })).toBeVisible();
-			await expect(page.getByRole('img', { name: scenario.imageAlt })).toBeVisible();
+			await expect(page.getByText(scenario.kicker, { exact: true })).toBeVisible();
+			await expect(page.getByText(scenario.status, { exact: true })).toBeVisible();
+			await expect(page.getByRole('heading', { name: scenario.evidenceHeading })).toBeVisible();
+			await expect(page.locator('[data-mermaid-figure]')).toHaveCount(1);
 
 			for (const forbidden of scenario.forbidden) {
 				await expect(page.getByText(forbidden, { exact: true })).toHaveCount(0);
