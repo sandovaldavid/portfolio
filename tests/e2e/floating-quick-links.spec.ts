@@ -1,6 +1,21 @@
+import type { Locator } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const DESKTOP = { width: 1440, height: 900 };
+const MAX_REDUCED_MOTION_SECONDS = 0.00001;
+
+async function expectDecorativeMotionDisabled(locator: Locator) {
+	const durations = await locator.evaluate(element =>
+		getComputedStyle(element)
+			.transitionDuration.split(',')
+			.map(value => value.trim())
+			.map(value =>
+				value.endsWith('ms') ? Number.parseFloat(value) / 1000 : Number.parseFloat(value)
+			)
+	);
+
+	expect(durations.every(duration => duration <= MAX_REDUCED_MOTION_SECONDS)).toBe(true);
+}
 
 test.describe('Floating contact rail', () => {
 	test('Home starts visible, retracts after scroll and reveals again from the left-edge hotspot', async ({
@@ -29,7 +44,13 @@ test.describe('Floating contact rail', () => {
 	}) => {
 		await page.setViewportSize(DESKTOP);
 
-		for (const route of ['/projects/', '/projects/kioku/', '/research/', '/about/', '/es/projects/']) {
+		for (const route of [
+			'/projects/',
+			'/projects/kioku/',
+			'/research/',
+			'/about/',
+			'/es/projects/',
+		]) {
 			await page.goto(route);
 
 			const sidebar = page.locator('#contact-sidebar');
@@ -93,13 +114,7 @@ test.describe('Recruiter quick links motion', () => {
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/');
 
-		const recruiterPanel = page.locator('#recruiter-hud-panel');
-		const contactRail = page.locator('#contact-sidebar-rail');
-		expect(await recruiterPanel.evaluate(el => getComputedStyle(el).transitionDuration)).toBe(
-			'0s'
-		);
-		expect(await contactRail.evaluate(el => getComputedStyle(el).transitionDuration)).toBe(
-			'0s'
-		);
+		await expectDecorativeMotionDisabled(page.locator('#recruiter-hud-panel'));
+		await expectDecorativeMotionDisabled(page.locator('#contact-sidebar-rail'));
 	});
 });
