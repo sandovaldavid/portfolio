@@ -14,7 +14,9 @@ interface Props {
 const { lang = getLanguageFromLocale(Astro.currentLocale) } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.projects');
 const projects = await getProjectsData(lang);
-const publishedProjects = projects.filter(project => !PROJECT_METADATA[project.projectId].developmentOnly);
+const publishedProjects = projects.filter(
+	project => !PROJECT_METADATA[project.projectId].developmentOnly
+);
 const inspectableSourceCount = publishedProjects.filter(
 	project => project.sourceAccess !== 'private'
 ).length;
@@ -79,7 +81,9 @@ const formatCount = (value: number) => String(value).padStart(2, '0');
 						{tPage('snapshotPublished')}
 					</span>
 				</div>
-				<div class="flex min-w-0 flex-col gap-1 border-l border-edge-subtle px-3 py-4 md:px-5 md:py-5">
+				<div
+					class="flex min-w-0 flex-col gap-1 border-l border-edge-subtle px-3 py-4 md:px-5 md:py-5"
+				>
 					<strong class="font-mono text-2xl leading-none text-content-strong md:text-3xl">
 						{formatCount(inspectableSourceCount)}
 					</strong>
@@ -87,7 +91,9 @@ const formatCount = (value: number) => String(value).padStart(2, '0');
 						{tPage('snapshotInspectable')}
 					</span>
 				</div>
-				<div class="flex min-w-0 flex-col gap-1 border-l border-edge-subtle px-3 py-4 md:px-5 md:py-5">
+				<div
+					class="flex min-w-0 flex-col gap-1 border-l border-edge-subtle px-3 py-4 md:px-5 md:py-5"
+				>
 					<strong class="font-mono text-2xl leading-none text-content-strong md:text-3xl">
 						{formatCount(activeProjectCount)}
 					</strong>
@@ -97,7 +103,9 @@ const formatCount = (value: number) => String(value).padStart(2, '0');
 				</div>
 			</div>
 
-			<div class="border-t border-edge-subtle px-4 py-4 md:px-5 md:py-5 lg:border-l lg:border-t-0">
+			<div
+				class="border-t border-edge-subtle px-4 py-4 md:px-5 md:py-5 lg:border-l lg:border-t-0"
+			>
 				<p class="text-editorial-label-compact uppercase text-channel-accent-primary">
 					{tPage('snapshotTechnologies')}
 				</p>
