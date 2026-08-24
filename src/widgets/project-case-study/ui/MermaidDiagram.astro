@@ -14,6 +14,7 @@ interface DiagramEdge {
 	from: string;
 	to: string;
 	label?: string;
+	optional: boolean;
 }
 
 const { title, description, chart } = Astro.props;
@@ -29,87 +30,82 @@ if (!header) {
 const direction = header[1].toUpperCase() as 'LR' | 'TD';
 const nodes = new Map<string, DiagramNode>();
 const edges: DiagramEdge[] = [];
-const nodePattern = /^([A-Za-z0-9_-]+)\[(?:"([^"]+)"|([^\]]+))\]$/;
-const edgePattern = /^([A-Za-z0-9_-]+)\s*-->\s*(?:\|([^|]+)\|\s*)?([A-Za-z0-9_-]+)$/;
+const nodeTokenPattern = /^([A-Za-z0-9_-]+)(?:\[(?:"([\s\S]+)"|([^\]]+))\])?$/;
+
+const parseNode = (token: string): DiagramNode => {
+	const match = token.trim().match(nodeTokenPattern);
+	if (!match) throw new Error(`Unsupported node syntax in diagram "${title}": ${token}`);
+	const id = match[1];
+	const label = (match[2] ?? match[3] ?? nodes.get(id)?.label ?? id)
+		.replaceAll('\\n', ' · ')
+		.trim();
+	const node = { id, label };
+	nodes.set(id, node);
+	return node;
+};
 
 for (const line of lines.slice(1)) {
-	const nodeMatch = line.match(nodePattern);
-	if (nodeMatch) {
-		nodes.set(nodeMatch[1], { id: nodeMatch[1], label: (nodeMatch[2] ?? nodeMatch[3]).trim() });
+	const dotted = line.match(/^(.+?)\s*-\.\s*(.*?)\s*\.->\s*(.+)$/);
+	if (dotted) {
+		const from = parseNode(dotted[1]);
+		const to = parseNode(dotted[3]);
+		edges.push({ from: from.id, to: to.id, label: dotted[2].trim() || undefined, optional: true });
 		continue;
 	}
 
-	const edgeMatch = line.match(edgePattern);
-	if (edgeMatch) {
-		edges.push({
-			from: edgeMatch[1],
-			to: edgeMatch[3],
-			...(edgeMatch[2]?.trim() ? { label: edgeMatch[2].trim() } : {}),
-		});
+	const solid = line.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
+	if (solid) {
+		const from = parseNode(solid[1]);
+		const to = parseNode(solid[3]);
+		edges.push({ from: from.id, to: to.id, label: solid[2]?.trim() || undefined, optional: false });
 		continue;
 	}
 
-	throw new Error(`Unsupported case-study Mermaid statement for "${title}": ${line}`);
+	parseNode(line);
 }
 
-const orderedNodes: DiagramNode[] = [];
-const seen = new Set<string>();
-for (const edge of edges) {
-	for (const id of [edge.from, edge.to]) {
-		if (seen.has(id)) continue;
-		const node = nodes.get(id);
-		if (!node) throw new Error(`Diagram "${title}" references undefined node "${id}".`);
-		orderedNodes.push(node);
-		seen.add(id);
-	}
-}
-for (const node of nodes.values()) {
-	if (!seen.has(node.id)) orderedNodes.push(node);
-}
+if (nodes.size === 0) throw new Error(`Diagram "${title}" has no nodes.`);
+const nodeList = [...nodes.values()];
 ---
 
 <figure class="w-full" data-mermaid-figure data-diagram-direction={direction}>
 	<div
-		class="overflow-x-auto border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md md:p-6"
+		class="border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md md:p-6"
 		role="img"
 		aria-label={description}
 		data-mermaid-host
 		data-mermaid-state="rendered"
 	>
-		<div
-			class:list={[
-				'mx-auto flex min-w-max items-stretch',
-				direction === 'LR' ? 'flex-row' : 'flex-col',
-			]}
-		>
+		<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-diagram-nodes>
 			{
-				orderedNodes.map((node, index) => {
-					const next = orderedNodes[index + 1];
-					const edge = next
-						? edges.find(candidate => candidate.from === node.id && candidate.to === next.id)
-						: undefined;
-					return (
-						<>
-							<div class="flex min-w-48 max-w-64 items-center justify-center border-2 border-edge-strong bg-channel-surface-highlight px-4 py-3 text-center text-code font-bold text-content-strong">
-								{node.label}
-							</div>
-							{next && (
-								<div
-									class:list={[
-										'flex shrink-0 items-center justify-center text-channel-accent-primary',
-										direction === 'LR' ? 'min-w-20 flex-col px-2' : 'min-h-16 flex-row py-2',
-									]}
-									aria-hidden="true"
-								>
-									{edge?.label && <span class="mb-1 text-caption text-content-muted">{edge.label}</span>}
-									<span class="font-mono text-2xl">{direction === 'LR' ? '→' : '↓'}</span>
-								</div>
-							)}
-						</>
-					);
-				})
+				nodeList.map(node => (
+					<div class="flex min-h-16 items-center justify-center border-2 border-edge-strong bg-channel-surface-highlight px-4 py-3 text-center text-code font-bold text-content-strong">
+						{node.label}
+					</div>
+				))
 			}
 		</div>
+
+		{
+			edges.length > 0 && (
+				<ol class="mt-5 grid gap-2" data-diagram-edges>
+					{edges.map(edge => (
+						<li class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-caption md:text-secondary">
+							<span class="min-w-0 border border-edge-subtle bg-channel-background-canvas px-2 py-1 text-right font-mono text-content-strong">
+								{nodes.get(edge.from)?.label}
+							</span>
+							<span class:list={['flex min-w-14 flex-col items-center text-center font-mono', edge.optional ? 'text-content-muted' : 'text-channel-accent-primary']}>
+								{edge.label && <span class="max-w-28 text-[0.6875rem] leading-4">{edge.label}</span>}
+								<span aria-hidden="true">{edge.optional ? '⇢' : '→'}</span>
+							</span>
+							<span class="min-w-0 border border-edge-subtle bg-channel-background-canvas px-2 py-1 font-mono text-content-strong">
+								{nodes.get(edge.to)?.label}
+							</span>
+						</li>
+					))}
+				</ol>
+			)
+		}
 	</div>
 	<figcaption class="mt-3 text-caption text-content-muted">
 		<span class="font-bold text-content-strong">{title}.</span> {description}
