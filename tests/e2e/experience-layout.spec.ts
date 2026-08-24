@@ -118,22 +118,26 @@ test.describe('Experience responsive composition', () => {
 		expect(researchFooterBox.y).toBeGreaterThan(researchMainBox.y + researchMainBox.height);
 
 		const researchSummary = researchHome.locator('[data-research-summary]');
-		const researchPipelineLabel = researchHome.locator('[data-research-pipeline-label]').first();
+		const researchPipelineLabel = researchHome
+			.locator('[data-research-pipeline-label]')
+			.first();
 		const researchSignalLabel = researchHome.locator('[data-research-signal-label]').first();
 		const researchMethodology = researchHome.locator('[data-research-methodology]');
-		const researchTechPill = researchHome.locator('[data-research-tech-stack] .tech-pill').first();
+		const researchTechPill = researchHome
+			.locator('[data-research-tech-stack] .tech-pill')
+			.first();
 		expect(await researchSummary.evaluate(element => getComputedStyle(element).fontSize)).toBe(
 			'16px'
 		);
-		expect(await researchPipelineLabel.evaluate(element => getComputedStyle(element).fontSize)).toBe(
-			'14px'
-		);
-		expect(await researchSignalLabel.evaluate(element => getComputedStyle(element).fontSize)).toBe(
-			'14px'
-		);
-		expect(await researchMethodology.evaluate(element => getComputedStyle(element).fontSize)).toBe(
-			'14px'
-		);
+		expect(
+			await researchPipelineLabel.evaluate(element => getComputedStyle(element).fontSize)
+		).toBe('14px');
+		expect(
+			await researchSignalLabel.evaluate(element => getComputedStyle(element).fontSize)
+		).toBe('14px');
+		expect(
+			await researchMethodology.evaluate(element => getComputedStyle(element).fontSize)
+		).toBe('14px');
 		expect(await researchTechPill.evaluate(element => getComputedStyle(element).fontSize)).toBe(
 			'14px'
 		);
