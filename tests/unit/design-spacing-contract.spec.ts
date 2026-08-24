@@ -26,6 +26,8 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/widgets/project-case-study/ui/CaseStudyCard.astro',
 	'src/widgets/project-case-study/ui/EvidenceBlock.astro',
 	'src/widgets/project-case-study/ui/ProjectResources.astro',
+	'src/widgets/project-case-study/ui/ProjectVideo.astro',
+	'src/widgets/project-case-study/ui/ProjectGallery.astro',
 	'src/widgets/project-case-study/ui/MermaidDiagram.astro',
 	'src/widgets/research/ui/Research.astro',
 	'src/widgets/about-me/ui/AboutMe.astro',
