@@ -96,10 +96,22 @@ test.describe('Experience responsive composition', () => {
 			await expectCenteredComposition(shell, 56);
 		}
 
+		const projectGrid = page.locator('[data-projects-layout="home"]');
+		const projectCards = projectGrid.locator('[data-project-card-variant="secondary"]');
+		await expect(projectCards).toHaveCount(2);
+		const firstCard = (await projectCards.nth(0).boundingBox())!;
+		const secondCard = (await projectCards.nth(1).boundingBox())!;
+		expect(Math.round(firstCard.width)).toBe(560);
+		expect(Math.round(secondCard.width)).toBe(560);
+		expect(Math.round(secondCard.x - (firstCard.x + firstCard.width))).toBe(48);
+		const firstMedia = (await projectCards.nth(0).locator('figure').boundingBox())!;
+		expect(Math.round(firstMedia.height)).toBe(136);
+
 		const coreStack = page.locator('#technologies [data-home-compact-shell="true"]');
 		await expect(coreStack).toBeAttached();
 		const coreGeometry = await getCompositionGeometry(coreStack);
 		expect(Math.abs(coreGeometry.gap - 56)).toBeLessThanOrEqual(1);
+		await expectNoHorizontalOverflow(page);
 	});
 
 	test('mobile keeps role selection horizontal and the detail panel inside the content gutter', async ({
