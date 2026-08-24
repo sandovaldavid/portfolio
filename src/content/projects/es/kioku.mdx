@@ -14,8 +14,6 @@ caseStudy:
 ---
 
 <CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="Inspeccionar el proyecto más allá de este portafolio" width="reading">
-  <ProjectResources projectId="kioku" resources={['docs', 'source', 'package', 'related']} />
-
   Kioku funciona especialmente bien como evidencia de portafolio porque su implementación, paquete, documentación operativa e historial de releases son inspeccionables de forma independiente. El sitio de documentación es el mejor punto de entrada al contrato público; el repositorio sigue siendo la fuente de verdad de la implementación.
 </CaseStudySection>
 
@@ -29,6 +27,7 @@ caseStudy:
   <MermaidDiagram
     title="Límite de ejecución de Kioku"
     description="Clientes MCP llegan a un servidor Kioku en .NET 10 mediante stdio local o Streamable HTTP autenticado. El servidor lee directamente el vault de Obsidian; el retrieval semántico y el bridge de Obsidian son integraciones opcionales."
+    tones={{ Client: 'brand', Server: 'info', Vault: 'success', Retrieval: 'secondary', Ollama: 'warning', Bridge: 'danger' }}
     chart={`flowchart LR
       Client["Clientes MCP\nClaude · Codex · OpenCode"] --> Server["Kioku.Mcp.Server\n.NET 10"]
       Server --> Vault["Vault de Obsidian\nMarkdown + YAML"]
@@ -58,6 +57,7 @@ caseStudy:
   <MermaidDiagram
     title="Workflow de ingeniería durable"
     description="Kioku separa requerimiento, plan de implementación y handoff de ejecución para que un agente nuevo pueda recuperar tanto la intención como el estado actual."
+    tones={{ Request: 'brand', Spec: 'info', Plan: 'secondary', Session: 'warning', Handoff: 'success', Context: 'danger' }}
     chart={`flowchart LR
       Request["Solicitud / issue"] --> Spec["SPEC de ingeniería"]
       Spec --> Plan["PLAN de implementación"]
