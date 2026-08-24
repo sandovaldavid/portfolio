@@ -23,7 +23,8 @@ const {
 
 /*
  * Tech Pill contract (spec/03): border 2 strong edge, hard shadow 1.5px,
- * optional 24px icon, min-width driven so long translated labels never clip.
+ * optional icon inside a fixed 24x24 frame, min-width driven so long
+ * translated labels never clip.
  * Card SM h30/min126/px12/gap6 default surface label 12
  * Card MD h30/min138/px12/gap6 default surface label 14
  * Stack SM h34/min124/px10/gap8 highlight surface label 12
@@ -51,20 +52,28 @@ const containerClasses = [
 	.filter(Boolean)
 	.join(' ');
 
-// Contract icon size: 24px for every combo.
-const iconClasses = 'size-6 shrink-0';
+const iconFrameClasses = 'tech-pill-icon-frame flex size-6 shrink-0 items-center justify-center';
+const iconClasses = 'block size-full max-h-6 max-w-6 shrink-0';
 ---
 
 {
 	href ? (
 		<a href={href} class={containerClasses} rel="noopener noreferrer" target="_blank">
-			{Icon && <Icon class={iconClasses} aria-hidden="true" />}
+			{Icon && (
+				<span class={iconFrameClasses} aria-hidden="true">
+					<Icon class={iconClasses} aria-hidden="true" />
+				</span>
+			)}
 			<span>{label}</span>
 			{newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 		</a>
 	) : (
 		<span class={containerClasses}>
-			{Icon && <Icon class={iconClasses} aria-hidden="true" />}
+			{Icon && (
+				<span class={iconFrameClasses} aria-hidden="true">
+					<Icon class={iconClasses} aria-hidden="true" />
+				</span>
+			)}
 			<span>{label}</span>
 		</span>
 	)
