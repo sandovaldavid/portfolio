@@ -1,6 +1,7 @@
 ---
 import { Badge } from '@shared/ui';
 import type { ProjectItem } from '@entities/project';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import ProjectResources from './ProjectResources.astro';
 
 interface Props {
@@ -8,13 +9,36 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { status } = project.caseStudy;
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.projects');
+const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+
 const lifecycleBadgeVariant = {
 	active: 'success',
-	maintained: 'default',
+	maintained: 'info',
 	experimental: 'warning',
 	archived: 'default',
 	deprecated: 'danger',
+} as const;
+
+const lifecycleLabel = {
+	active: tProjects('lifecycle.active'),
+	maintained: tProjects('lifecycle.maintained'),
+	experimental: tProjects('lifecycle.experimental'),
+	archived: tProjects('lifecycle.archived'),
+	deprecated: tProjects('lifecycle.deprecated'),
+}[project.lifecycle];
+
+const sourceLabel = {
+	public: tPage('sourcePublic'),
+	private: tPage('sourcePrivate'),
+	mixed: tPage('sourceMixed'),
+}[project.sourceAccess];
+
+const sourceBadgeVariant = {
+	public: 'info',
+	private: 'default',
+	mixed: 'warning',
 } as const;
 ---
 
@@ -38,15 +62,20 @@ const lifecycleBadgeVariant = {
 
 			<div class="flex min-w-0 flex-col gap-4">
 				<p class="text-secondary text-content-default md:text-body">{project.description}</p>
-				<div
-					class="flex flex-wrap items-center gap-3"
-					aria-label={`${status.lifecycle}, ${status.source}, ${status.demo}`}
-				>
+				<div class="flex flex-wrap items-center gap-3" aria-label={`${lifecycleLabel}, ${sourceLabel}`}>
 					<Badge variant={lifecycleBadgeVariant[project.lifecycle]} size="sm">
-						{status.lifecycle}
+						{lifecycleLabel}
 					</Badge>
-					<Badge variant="info" size="sm">{status.source}</Badge>
-					<Badge variant="default" size="sm">{status.demo}</Badge>
+					<Badge variant={sourceBadgeVariant[project.sourceAccess]} size="sm">
+						{sourceLabel}
+					</Badge>
+					{
+						project.version && (
+							<Badge variant="secondary" size="sm">
+								{tPage('versionPrefix')}{project.version}
+							</Badge>
+						)
+					}
 				</div>
 			</div>
 		</div>
