@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
+import GitHubIcon from '@assets/technologies/GitHub.astro';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
 import type { ProjectItem, ProjectLifecycle } from '../model';
 
@@ -11,7 +12,7 @@ interface Props {
 	sourceText?: string;
 	newTabLabel: string;
 	lifecycleText: string;
-	variant?: 'primary' | 'secondary';
+	variant?: 'primary' | 'secondary' | 'catalog';
 	priority?: boolean;
 	showSecondaryAction?: boolean;
 	headingLevel?: 'h2' | 'h3';
@@ -33,7 +34,9 @@ const {
 const Heading = headingLevel;
 const { image, imageAlt, title, description, tags, github, category, lifecycle } = project;
 const isPrimary = variant === 'primary';
-const visibleTags = tags.slice(0, 3);
+const isCatalog = variant === 'catalog';
+const visibleTags = tags.slice(0, isCatalog ? 4 : 3);
+const repositoryName = github?.replace(/\/$/, '').split('/').filter(Boolean).at(-1) ?? sourceText;
 
 const LIFECYCLE_BADGE_VARIANT: Record<
 	ProjectLifecycle,
@@ -46,16 +49,26 @@ const LIFECYCLE_BADGE_VARIANT: Record<
 	deprecated: 'default',
 };
 
-const cardHeight = isPrimary ? 'h-131.5 md:h-134.5 lg:h-116' : 'h-116.5 md:h-119.5 lg:h-93.5';
-const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
+const cardHeight = isPrimary
+	? 'h-131.5 md:h-134.5 lg:h-116'
+	: isCatalog
+		? 'h-116.5 md:h-119.5 lg:h-110'
+		: 'h-116.5 md:h-119.5 lg:h-93.5';
+const mediaHeight = isPrimary
+	? 'h-47.5 lg:h-52.5'
+	: isCatalog
+		? 'h-32.5 lg:h-40'
+		: 'h-32.5 lg:h-30';
 ---
 
 <article class="group h-full w-full">
 	<div
 		class:list={[
-			'relative mx-auto flex w-full max-w-85 flex-col overflow-hidden border-2 border-edge-strong bg-channel-surface-default p-0.5 shadow-retro-md transition-[box-shadow] duration-150 group-hover:shadow-retro-3xl md:max-w-92.25 lg:max-w-130',
+			'relative mx-auto flex w-full max-w-85 flex-col overflow-hidden border-2 border-edge-strong bg-channel-surface-default p-0.5 shadow-retro-md transition-[box-shadow] duration-150 group-hover:shadow-retro-3xl md:max-w-92.25',
+			isCatalog ? 'lg:max-w-148' : 'lg:max-w-130',
 			cardHeight,
 		]}
+		data-project-card-variant={variant}
 	>
 		<figure class:list={['relative w-full shrink-0 overflow-hidden', mediaHeight]}>
 			<div
@@ -71,8 +84,8 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 			>
 				<Image
 					src={image}
-					width={isPrimary ? 800 : 600}
-					height={isPrimary ? 500 : 380}
+					width={isPrimary || isCatalog ? 800 : 600}
+					height={isPrimary || isCatalog ? 500 : 380}
 					class="absolute inset-0 size-full object-cover"
 					decoding={priority ? 'sync' : 'async'}
 					loading={priority ? 'eager' : 'lazy'}
@@ -82,7 +95,7 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 			</div>
 		</figure>
 
-		<div class="flex min-h-0 grow flex-col gap-2 px-3.5 py-2 lg:px-5">
+		<div class:list={['flex min-h-0 grow flex-col gap-2 px-3.5 py-2 lg:px-5', isCatalog && 'lg:py-3']}>
 			<div class="flex min-h-0 grow flex-col gap-2 overflow-hidden">
 				<div class="flex items-start justify-between gap-2">
 					{
@@ -102,7 +115,10 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 				>
 
 				<p
-					class="line-clamp-3 text-secondary text-content-default md:text-body lg:line-clamp-2"
+					class:list={[
+						'line-clamp-3 text-secondary text-content-default md:text-body',
+						isCatalog ? 'lg:line-clamp-3' : 'lg:line-clamp-2',
+					]}
 				>
 					{description}
 				</p>
@@ -125,9 +141,7 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 				}
 			</div>
 
-			<footer
-				class="mt-auto flex min-h-14 w-full shrink-0 items-end justify-between gap-2 pb-3"
-			>
+			<footer class="mt-auto flex min-h-14 w-full shrink-0 flex-wrap items-end gap-2 pb-3">
 				{
 					caseStudyText && caseStudyLink && (
 						<LinkButton href={caseStudyLink} target="_self" class="w-fit shrink-0 px-3">
@@ -137,16 +151,17 @@ const mediaHeight = isPrimary ? 'h-47.5 lg:h-52.5' : 'h-32.5 lg:h-30';
 					)
 				}
 				{
-					github && showSecondaryAction && sourceText && (
+					github && showSecondaryAction && repositoryName && (
 						<div class="hidden shrink-0 md:block">
 							<LinkButton
 								href={github}
 								{newTabLabel}
 								variant="secondary"
 								class="w-fit px-3"
+								data-project-card-repository
 							>
-								<ArrowUpRightIcon class="size-4" aria-hidden="true" />
-								{sourceText}
+								<GitHubIcon class="size-4" aria-hidden="true" />
+								{repositoryName}
 							</LinkButton>
 						</div>
 					)
