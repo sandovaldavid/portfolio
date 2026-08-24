@@ -1,0 +1,94 @@
+---
+projectId: auctions
+locale: es
+title: Auctions
+description: "Una aplicación de subastas renderizada en servidor con Django, listings autenticados, validación de pujas, watchlists, comentarios, categorías y cierre controlado por el propietario."
+category: "Aplicación Web Django"
+imageAlt: "Vista previa de la interfaz de listings y pujas de Auctions en Django"
+caseStudy:
+  kicker: "CASO DE ESTUDIO · WEB RENDERIZADA EN SERVIDOR"
+  status:
+    lifecycle: "MANTENIDO · APLICACIÓN DJANGO"
+    source: "CÓDIGO PÚBLICO"
+    demo: "SIN DEMO PÚBLICA"
+---
+
+<CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="El repositorio de código es la superficie verificable actual" width="reading">
+  <ProjectResources projectId="auctions" resources={['source']} />
+
+  El repositorio contiene modelos, vistas, formularios, templates y configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue en vivo.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEMA" title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD">
+  Los listings necesitan propietario, precio inicial, estado activo/inactivo y ganador. Los participantes necesitan pujar, seguir listings y comentar sin poder cerrar una subasta ajena. La aplicación modela esas relaciones explícitamente y mantiene el workflow principal server-rendered en lugar de introducir una SPA y API separadas para un monolito educativo.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="MODELO DE DOMINIO" title="Listings coordinan pujas, comentarios, watchlists y cierre" surface="highlight">
+  <MermaidDiagram
+    title="Relaciones de dominio de Auctions"
+    description="Un usuario Django posee listings y puede crear pujas, comentarios y entradas de watchlist. Los listings agrupan esos registros. Cuando el propietario cierra una subasta, la mayor puja registrada determina al ganador."
+    chart={`flowchart LR
+      User["Usuario"] -->|posee| Listing["Listing\npuja inicial · puja actual · activo"]
+      User --> Bid["Puja"]
+      Bid --> Listing
+      User --> Comment["Comentario"]
+      Comment --> Listing
+      User --> Watchlist["Entrada watchlist"]
+      Watchlist --> Listing
+      Listing -->|propietario cierra| Close["Cerrar subasta"]
+      Bid -->|mayor puja registrada| Close
+      Close --> Winner["Ganador"]`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="WORKFLOW" title="La mecánica principal vive cerca del modelo y las vistas">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="PUJAS" title="UNA NUEVA PUJA DEBE SUPERAR LA ACTUAL" tone="primary">
+      `Listing.place_bid` rechaza un valor menor o igual que la puja actual, actualiza `current_bid` y crea el registro `Bid` correspondiente.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="OWNERSHIP" title="SÓLO EL PROPIETARIO PUEDE CERRAR" tone="primary">
+      La vista de cierre verifica que el usuario autenticado sea propietario del listing. Luego selecciona la mayor puja registrada como ganador, marca el listing inactivo y persiste el resultado.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="DESCUBRIMIENTO" title="CATEGORÍAS Y WATCHLISTS SIGUEN SERVER-RENDERED" tone="primary">
+      Los listings activos están paginados, las categorías filtran en servidor y cada usuario autenticado puede alternar entradas de watchlist sin un store de estado frontend separado.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PERSISTENCIA" title="SQLite local y PostgreSQL por entorno comparten el mismo modelo Django" surface="highlight">
+  El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración `DATABASE_URL` mediante `dj-database-url` cuando existe. Las dependencias y settings también incluyen Gunicorn, WhiteNoise y configuración de cookies/headers de seguridad para escenarios de producción.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFICADO EN CÓDIGO" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
+      `requirements.txt` restringe Django al rango 5.1–5.2 e incluye soporte para PostgreSQL, Gunicorn y WhiteNoise. El código público expone directamente los modelos `User`, `Listing`, `Bid`, `Comment` y `Watchlist`, además de vistas para listings, pujas, categorías, comentarios y cierre de subastas.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="LÍMITE" title="SIN DEMO EN VIVO NI GARANTÍA DE CONCURRENCIA" tone="boundary">
+      El texto antiguo de demo alojada del repositorio es un placeholder y no un despliegue verificable actual. La regla de puja realiza una secuencia lectura/verificación/actualización sin row locking explícito ni un límite transaccional en `place_bid`, por lo que este caso de estudio no llama concurrency-safe a la implementación actual.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="TRADE-OFFS" title="Django server-rendered mantiene comprensible el alcance educativo" surface="highlight">
+  Templates, forms, sesiones y ORM de Django proporcionan una sola aplicación desplegable y un recorrido corto desde request hasta estado persistido. El trade-off es que pujas en tiempo real y garantías más fuertes ante escrituras concurrentes necesitarían diseño adicional en vez de aparecer automáticamente en el monolito actual.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="APRENDIZAJES" title="Qué hizo concreto este proyecto">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="APRENDIZAJE 01" title="MODELA EL CICLO DE VIDA, NO SÓLO LAS TABLAS" tone="success">
+      Ownership del listing, estado activo y selección del ganador hacen explícita la transición de cierre en lugar de tratar la subasta como datos CRUD genéricos.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APRENDIZAJE 02" title="VALIDACIÓN NO ES LO MISMO QUE CONTROL DE CONCURRENCIA" tone="success">
+      Verificar que una puja supere el valor actual es necesario, pero escrituras simultáneas requieren su propia estrategia transaccional y de locking si la aplicación debe garantizar orden bajo contención.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APRENDIZAJE 03" title="SERVER RENDERING PUEDE SER EL LÍMITE CORRECTO MÁS SIMPLE" tone="success">
+      Para una aplicación CRUD compacta, forms, views y templates de Django pueden mantener autenticación y persistencia más fáciles de inspeccionar que agregar por defecto una segunda aplicación cliente.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
