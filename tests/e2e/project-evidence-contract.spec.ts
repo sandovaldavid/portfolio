@@ -151,7 +151,9 @@ test.describe('Recruiter evidence, access and status contract', () => {
 				name: 'The maintained codebase grew beyond the original course workflow',
 			})
 		).toBeVisible();
-		await expect(page.getByText('AuctionAnalytics', { exact: false }).first()).toBeVisible();
+		await expect(
+			page.locator('[data-diagram-node][data-node-id="Analytics"] text')
+		).toContainText('AuctionAnalytics');
 		await expect(
 			page.getByRole('heading', { name: 'NO LIVE DEMO OR CONCURRENCY GUARANTEE' })
 		).toBeVisible();
