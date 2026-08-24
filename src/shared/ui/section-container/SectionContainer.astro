@@ -13,10 +13,11 @@ const { class: className, id, layout = 'contained', surface = 'canvas' } = Astro
  *
  * - contained: ordinary max-width section used by internal pages;
  * - viewport: full-bleed surface with a max-1440 shell that reserves the
- *   usable viewport from Tablet upward and uses a lower visual center so the
- *   section title sits inside the upper whitespace instead of hugging its top;
+ *   usable viewport from Tablet upward. The title owns the first grid row and
+ *   the section content is centered in the remaining row so every Home
+ *   viewport section shares the same title anchor as Experience;
  * - compact: same full-bleed surface/shell without a viewport minimum or the
- *   lowered viewport rhythm.
+ *   viewport title/content grid.
  *
  * Hero and Experience own dedicated widgets because their internal layout
  * contracts differ from the generic section shell.
@@ -34,9 +35,10 @@ const surfaceClass =
 				data-home-viewport-shell={layout === 'viewport' ? 'true' : undefined}
 				data-home-compact-shell={layout === 'compact' ? 'true' : undefined}
 				class:list={[
-					'mx-auto flex w-full max-w-360 flex-col justify-center px-5 md:px-8 lg:px-20',
-					layout === 'viewport' &&
-						'md:min-h-[calc(100svh-4.5rem)] md:pt-24 md:pb-8 lg:pt-32 lg:pb-10',
+					'mx-auto w-full max-w-360 px-5 md:px-8 lg:px-20',
+					layout === 'viewport'
+						? 'flex flex-col justify-center gap-y-6 md:grid md:grid-rows-[auto_1fr] md:justify-normal md:gap-y-8 md:min-h-[calc(100svh-4.5rem)] md:pt-24 md:pb-8 md:[&>*:nth-child(2)]:self-center lg:gap-y-10 lg:pt-32 lg:pb-10'
+						: 'flex flex-col justify-center',
 					className,
 				]}
 			>
