@@ -33,9 +33,12 @@ describe('Home viewport section contract', () => {
 		expect(sectionContainer).toContain("surface?: 'canvas' | 'highlight'");
 		expect(sectionContainer).not.toContain('HOME_VIEWPORT_SECTIONS');
 		expect(sectionContainer).not.toContain('HOME_COMPACT_SECTIONS');
-		expect(sectionContainer).toContain(
-			"layout === 'viewport' && 'md:min-h-[calc(100svh-4.5rem)]'"
-		);
+		expect(sectionContainer).toContain("layout === 'viewport'");
+		expect(sectionContainer).toContain('md:min-h-[calc(100svh-4.5rem)]');
+		expect(sectionContainer).toContain('md:grid-rows-[auto_1fr]');
+		expect(sectionContainer).toContain('md:[&>*:nth-child(2)]:self-center');
+		expect(sectionContainer).toContain('md:pt-24 md:pb-8');
+		expect(sectionContainer).toContain('lg:pt-32 lg:pb-10');
 		expect(sectionContainer).toContain('data-home-compact-shell');
 
 		for (const id of ['projects', 'research', 'about-me']) {
