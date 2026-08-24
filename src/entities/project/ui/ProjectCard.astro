@@ -152,13 +152,12 @@ const mediaHeight = isPrimary
 				}
 				{
 					github && showSecondaryAction && repositoryName && (
-						<div class="hidden shrink-0 md:block">
+						<div class="hidden shrink-0 md:block" data-project-card-repository>
 							<LinkButton
 								href={github}
 								{newTabLabel}
 								variant="secondary"
 								class="w-fit px-3"
-								data-project-card-repository
 							>
 								<GitHubIcon class="size-4" aria-hidden="true" />
 								{repositoryName}
