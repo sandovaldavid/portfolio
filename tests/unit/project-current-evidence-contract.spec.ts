@@ -70,7 +70,7 @@ describe('audited current project evidence', () => {
 		expect(en).toContain('PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS MODULE');
 		expect(en).toContain('NO CURRENT DRF OR WEBSOCKET CLAIM');
 		expect(en).not.toContain('Django Channels');
-		expect(en).not.toContain('concurrency-safe');
+		expect(en).toContain('does not call the current implementation concurrency-safe');
 	});
 
 	it('keeps the audited evidence boundaries mirrored in Spanish', () => {
