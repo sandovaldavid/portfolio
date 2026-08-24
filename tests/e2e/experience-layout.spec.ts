@@ -1,19 +1,45 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 
-async function getRelativeTitleTop(page: Page, sectionId: string) {
-	const section = page.locator(`#${sectionId}`);
-	const title = section.locator('.title-section').first();
-	const sectionBox = (await section.boundingBox())!;
+async function getCompositionGeometry(shell: Locator) {
+	const title = shell.locator(':scope > .title-section').first();
+	const content = shell.locator(':scope > :nth-child(2)').first();
+	const shellBox = (await shell.boundingBox())!;
 	const titleBox = (await title.boundingBox())!;
-	return titleBox.y - sectionBox.y;
+	const contentBox = (await content.boundingBox())!;
+	const blockTop = titleBox.y;
+	const blockBottom = contentBox.y + contentBox.height;
+
+	return {
+		shellBox,
+		titleBox,
+		contentBox,
+		gap: contentBox.y - (titleBox.y + titleBox.height),
+		blockCenter: blockTop + (blockBottom - blockTop) / 2,
+		shellCenter: shellBox.y + shellBox.height / 2,
+	};
+}
+
+async function expectCenteredComposition(shell: Locator, expectedGap: number) {
+	await expect(shell).toBeAttached();
+	const geometry = await getCompositionGeometry(shell);
+	expect(Math.abs(geometry.gap - expectedGap)).toBeLessThanOrEqual(1);
+	expect(Math.abs(geometry.blockCenter - geometry.shellCenter)).toBeLessThanOrEqual(2);
+}
+
+async function expectNoHorizontalOverflow(page: Page) {
+	const overflow = await page.evaluate(() => ({
+		clientWidth: document.documentElement.clientWidth,
+		scrollWidth: document.documentElement.scrollWidth,
+	}));
+	expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
 }
 
 test.describe('Experience responsive composition', () => {
-	test('desktop uses the viewport with a balanced selector and evidence panel', async ({
+	test('desktop centers the Experience title and evidence stage as one composition', async ({
 		page,
 	}) => {
 		await page.setViewportSize(DESKTOP);
@@ -21,9 +47,7 @@ test.describe('Experience responsive composition', () => {
 		await page.locator('#experience').scrollIntoViewIfNeeded();
 		await page.evaluate(() => document.fonts.ready);
 
-		const section = page.locator('#experience');
 		const shell = page.locator('[data-experience-shell]');
-		const title = page.locator('#experience .title-section');
 		const stage = page.locator('[data-experience-stage]');
 		const tablist = page.locator('#experience-tablist');
 		const activePanel = page.locator('.experience-panel[data-active="true"]');
@@ -34,15 +58,11 @@ test.describe('Experience responsive composition', () => {
 		await expect(stage).toBeVisible();
 		await expect(detail).toBeVisible();
 		expect(Math.round((await shell.boundingBox())!.width)).toBe(1280);
-
-		const sectionBox = (await section.boundingBox())!;
-		const titleBox = (await title.boundingBox())!;
-		const stageBox = (await stage.boundingBox())!;
-		const titleCenter = titleBox.y + titleBox.height / 2;
-		const upperWhitespaceHeight = stageBox.y - sectionBox.y;
-		const titlePositionRatio = (titleCenter - sectionBox.y) / upperWhitespaceHeight;
-		expect(titlePositionRatio).toBeGreaterThan(0.35);
-		expect(titlePositionRatio).toBeLessThan(0.65);
+		expect(await shell.evaluate(element => getComputedStyle(element).display)).toBe('flex');
+		expect(await shell.evaluate(element => getComputedStyle(element).justifyContent)).toBe(
+			'center'
+		);
+		await expectCenteredComposition(shell, 56);
 
 		const tablistBox = (await tablist.boundingBox())!;
 		const detailBox = (await detail.boundingBox())!;
@@ -56,47 +76,30 @@ test.describe('Experience responsive composition', () => {
 		const firstAchievement = (await achievements.nth(0).boundingBox())!;
 		const secondAchievement = (await achievements.nth(1).boundingBox())!;
 		expect(Math.round(firstAchievement.y)).toBe(Math.round(secondAchievement.y));
-
-		const overflow = await page.evaluate(() => ({
-			clientWidth: document.documentElement.clientWidth,
-			scrollWidth: document.documentElement.scrollWidth,
-		}));
-		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+		await expectNoHorizontalOverflow(page);
 	});
 
-	test('all viewport section titles share the Experience anchor while Core Stack stays compact', async ({
+	test('all Home sections share the title-to-content rhythm and viewport sections center the whole block', async ({
 		page,
 	}) => {
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/');
 		await page.evaluate(() => document.fonts.ready);
 
-		const experienceTitleTop = await getRelativeTitleTop(page, 'experience');
-		expect(Math.round(experienceTitleTop)).toBe(128);
-
 		for (const id of ['projects', 'research', 'about-me']) {
 			const shell = page.locator(`#${id} [data-home-viewport-shell="true"]`);
 			await expect(shell).toBeAttached();
-			expect(await shell.evaluate(element => getComputedStyle(element).display)).toBe('grid');
-			expect(await shell.evaluate(element => getComputedStyle(element).paddingTop)).toBe(
-				'128px'
+			expect(await shell.evaluate(element => getComputedStyle(element).display)).toBe('flex');
+			expect(await shell.evaluate(element => getComputedStyle(element).justifyContent)).toBe(
+				'center'
 			);
-			expect(await shell.evaluate(element => getComputedStyle(element).paddingBottom)).toBe(
-				'40px'
-			);
-
-			const titleTop = await getRelativeTitleTop(page, id);
-			expect(Math.abs(titleTop - experienceTitleTop)).toBeLessThanOrEqual(1);
+			await expectCenteredComposition(shell, 56);
 		}
 
 		const coreStack = page.locator('#technologies [data-home-compact-shell="true"]');
 		await expect(coreStack).toBeAttached();
-		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingTop)).toBe(
-			'64px'
-		);
-		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingBottom)).toBe(
-			'64px'
-		);
+		const coreGeometry = await getCompositionGeometry(coreStack);
+		expect(Math.abs(coreGeometry.gap - 56)).toBeLessThanOrEqual(1);
 	});
 
 	test('mobile keeps role selection horizontal and the detail panel inside the content gutter', async ({
@@ -106,6 +109,7 @@ test.describe('Experience responsive composition', () => {
 		await page.goto('/');
 		await page.locator('#experience').scrollIntoViewIfNeeded();
 
+		const shell = page.locator('[data-experience-shell]');
 		const tabs = page.locator('#experience-tablist [role="tab"]');
 		const detail = page.locator(
 			'.experience-panel[data-active="true"] [data-experience-detail]'
@@ -113,17 +117,15 @@ test.describe('Experience responsive composition', () => {
 		await expect(tabs).toHaveCount(3);
 		await expect(detail).toBeVisible();
 
+		const geometry = await getCompositionGeometry(shell);
+		expect(Math.abs(geometry.gap - 40)).toBeLessThanOrEqual(1);
+
 		const firstTab = (await tabs.nth(0).boundingBox())!;
 		const secondTab = (await tabs.nth(1).boundingBox())!;
 		expect(Math.round(firstTab.width)).toBe(250);
 		expect(secondTab.x).toBeGreaterThan(firstTab.x);
 		expect(Math.round((await detail.boundingBox())!.width)).toBe(350);
-
-		const overflow = await page.evaluate(() => ({
-			clientWidth: document.documentElement.clientWidth,
-			scrollWidth: document.documentElement.scrollWidth,
-		}));
-		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+		await expectNoHorizontalOverflow(page);
 	});
 });
 
