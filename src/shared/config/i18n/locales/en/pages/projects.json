@@ -16,5 +16,13 @@
 	"resourceDemo": "Live demo",
 	"resourceDocs": "Documentation",
 	"resourcePackage": "Package",
-	"resourceRelated": "Related project"
+	"resourceRelated": "Related project",
+	"resourceShare": "Share",
+	"shareCopied": "Link copied",
+	"shareOnlyHint": "Share this project",
+	"galleryLabel": "Project gallery",
+	"galleryOpen": "Open image",
+	"galleryClose": "Close image viewer",
+	"galleryZoomIn": "Zoom in",
+	"galleryZoomOut": "Zoom out"
 }
