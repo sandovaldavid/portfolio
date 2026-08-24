@@ -2,9 +2,9 @@
 projectId: auctions
 locale: en
 title: Auctions
-description: "A server-rendered Django auction application with authenticated listings, bid validation, watchlists, comments, categories and owner-controlled auction closing."
+description: "A server-rendered Django auction application with authenticated listings, bid validation, watchlists, comments, categories, owner-controlled closing and an administrative analytics surface."
 category: "Django Web Application"
-imageAlt: "Auctions Django listing and bidding interface preview"
+imageAlt: "Auctions Django listing, bidding and administrative analytics interface preview"
 caseStudy:
   kicker: "PROJECT CASE STUDY · SERVER-RENDERED WEB"
   status:
@@ -16,7 +16,7 @@ caseStudy:
 <CaseStudySection eyebrow="PUBLIC EVIDENCE" title="The source repository is the current evidence surface" width="reading">
   <ProjectResources projectId="auctions" resources={['source']} />
 
-  The repository contains the Django models, views, forms, templates and deployment configuration for the auction workflow. An older README still shows a placeholder Heroku demo URL, but the portfolio does not present that placeholder as a live deployment.
+  The repository contains the Django models, views, forms, templates, administrative analytics and deployment configuration for the auction workflow. An older README still shows a placeholder Heroku demo URL, but the portfolio does not present that placeholder as a live deployment.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="An auction is a lifecycle, not only a CRUD screen">
@@ -61,20 +61,43 @@ caseStudy:
   The settings module uses SQLite by default for local development and switches to a `DATABASE_URL` configuration through `dj-database-url` when one is provided. Production-oriented configuration also includes Gunicorn, WhiteNoise and secure cookie/header settings in the repository dependencies and Django settings.
 </CaseStudySection>
 
+<CaseStudySection eyebrow="ADMIN ANALYTICS" title="The maintained codebase grew beyond the original course workflow">
+  <MermaidDiagram
+    title="Administrative analytics path"
+    description="Administrative routes query auction data through Django ORM. AuctionAnalytics aggregates listings, bids, users, comments and watchlists, then prepares metrics and Plotly-oriented analysis for dashboard and reporting views."
+    chart={`flowchart LR
+      Admin["Admin routes\ndashboard · analytics · reports"] --> ORM["Django ORM"]
+      ORM --> Data["Listings · bids · users\ncomments · watchlists"]
+      Data --> Analytics["AuctionAnalytics\npandas · NumPy · scikit-learn"]
+      Analytics --> Charts["Metrics · time series\ncategories · bid analysis"]
+      Charts --> Dashboard["Plotly dashboard / export"]`}
+  />
+
+  The current URL configuration exposes administrative dashboard, analytics, reports, export, listings and user-management routes plus JSON metrics/chart endpoints used by the admin UI. `AuctionAnalytics` computes system metrics, time series, category and user-behavior analysis, bid distributions and a guarded prediction path that returns an insufficient-data result instead of fabricating a model when the historical sample is too small.
+</CaseStudySection>
+
 <CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="VERIFIED IN SOURCE" title="DJANGO 5.1–5.2 COMPATIBILITY · AUTH · FORMS · ORM" tone="verified">
+    <EvidenceBlock label="VERIFIED IN SOURCE" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
       `requirements.txt` pins Django to the 5.1–5.2 range and includes PostgreSQL, Gunicorn and WhiteNoise support. The public source directly exposes the `User`, `Listing`, `Bid`, `Comment` and `Watchlist` models and the listing, bidding, category, comment and close-auction views.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="VERIFIED ADMIN TOOLING" title="PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS MODULE" tone="verified">
+      The maintained repository includes analytics dependencies and an `AuctionAnalytics` module used by admin routes. This is presented as implementation evidence for administrative analysis tooling, not as proof that predictive models have production accuracy or business impact.
     </EvidenceBlock>
 
     <EvidenceBlock label="BOUNDARY" title="NO LIVE DEMO OR CONCURRENCY GUARANTEE" tone="boundary">
       The repository's old hosted-demo text is a placeholder rather than a current verifiable deployment. The bid rule performs a read/check/update sequence without explicit row locking or a transaction boundary in `place_bid`, so this case study does not call the current implementation concurrency-safe.
     </EvidenceBlock>
+
+    <EvidenceBlock label="BOUNDARY" title="NO CURRENT DRF OR WEBSOCKET CLAIM" tone="boundary">
+      Release history records experiments with APIs and realtime notifications, but the current `develop` requirements, installed apps, ASGI wiring and URL configuration do not expose DRF or Django Channels as the active application surface. Executable state wins over historical changelog wording.
+    </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Server-rendered Django keeps the educational scope understandable" surface="highlight">
-  Django templates, forms, sessions and ORM provide one deployable application and a short path from request to persisted state. The trade-off is that richer real-time bidding and stronger concurrent-bid guarantees would require additional design rather than emerging automatically from the current monolith.
+<CaseStudySection eyebrow="TRADE-OFFS" title="Server-rendered Django keeps the core workflow understandable" surface="highlight">
+  Django templates, forms, sessions and ORM provide one deployable application and a short path from request to persisted state. The admin analytics layer adds useful operational inspection without requiring a second frontend, while richer real-time bidding and stronger concurrent-bid guarantees would still require additional design.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LEARNINGS" title="What this project made concrete">
@@ -87,8 +110,8 @@ caseStudy:
       Checking that a bid exceeds the current value is necessary, but simultaneous writes need their own transaction and locking strategy if the application must guarantee ordering under contention.
     </CaseStudyCard>
 
-    <CaseStudyCard label="LEARNING 03" title="SERVER RENDERING CAN BE THE SIMPLEST CORRECT BOUNDARY" tone="success">
-      For a compact CRUD-heavy application, Django forms, views and templates can keep authentication and persistence behavior easier to inspect than adding a second client application by default.
+    <CaseStudyCard label="LEARNING 03" title="HISTORY IS NOT THE SAME AS CURRENT WIRING" tone="success">
+      Changelogs can preserve experiments that the current dependency graph no longer exposes. A case study should read executable settings, routes and manifests before turning historical features into present-tense claims.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
