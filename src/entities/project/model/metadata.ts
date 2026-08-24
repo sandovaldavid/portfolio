@@ -35,8 +35,14 @@ export type ProjectLifecycle = 'active' | 'maintained' | 'experimental' | 'archi
 export type ProjectSourceAccess = 'public' | 'private' | 'mixed';
 /** What kind of demo evidence, if any, is publicly reachable. */
 export type ProjectDemoAccess = 'live' | 'preview' | 'video' | 'screenshots' | 'unavailable';
-/** Optional public resources that add evidence beyond the source repository and demo. */
+/** Optional public resources that add evidence beyond source repositories and demo. */
 export type ProjectResourceKind = 'docs' | 'package' | 'related';
+
+/** A publicly inspectable repository that belongs to one project. */
+export interface ProjectRepository {
+	label: string;
+	url: string;
+}
 
 interface ProjectMetadata {
 	slug: string;
@@ -48,7 +54,10 @@ interface ProjectMetadata {
 	sourceAccess: ProjectSourceAccess;
 	demoAccess: ProjectDemoAccess;
 	link?: string;
+	/** Primary repository used by compact surfaces such as ProjectCard. */
 	github?: string;
+	/** All public repositories exposed by the detailed case study. */
+	repositories?: readonly ProjectRepository[];
 	resources?: Partial<Record<ProjectResourceKind, string>>;
 }
 
@@ -66,6 +75,10 @@ const projectMetadata = {
 	kioku: {
 		slug: 'kioku',
 		github: 'https://github.com/sandovaldavid/kioku',
+		repositories: [
+			{ label: 'Server', url: 'https://github.com/sandovaldavid/kioku' },
+			{ label: 'Obsidian plugin', url: 'https://github.com/sandovaldavid/kioku-obsidian' },
+		],
 		image: kiokuImg,
 		technologyIds: ['csharp', 'markdown'],
 		featured: true,
@@ -76,7 +89,6 @@ const projectMetadata = {
 		resources: {
 			docs: 'https://kioku.sandovaldavid.com',
 			package: 'https://www.nuget.org/packages/kioku-mcp-server',
-			related: 'https://github.com/sandovaldavid/kioku-obsidian',
 		},
 	},
 	'campus-map': {
