@@ -102,7 +102,10 @@ for (const viewport of VIEWPORTS) {
 				viewport.rowGap
 			);
 		} else {
-			expect(Math.round(secondBox!.x - (firstBox!.x + firstBox!.width))).toBe(32);
+			const expectedColumnSpace = viewport.name === 'desktop' ? 96 : 32;
+			expect(Math.round(secondBox!.x - (firstBox!.x + firstBox!.width))).toBe(
+				expectedColumnSpace
+			);
 			const thirdBox = await cards.nth(2).boundingBox();
 			expect(Math.round(thirdBox!.y - (firstBox!.y + firstBox!.height))).toBe(
 				viewport.rowGap
@@ -135,10 +138,20 @@ test('Projects Catalog surfaces a recruiter-oriented portfolio index and reposit
 	const kiokuCard = page.locator('article', {
 		has: page.getByRole('heading', { name: 'Kioku', exact: true }),
 	});
+	const caseStudyAction = kiokuCard.getByRole('link', { name: 'Case Study', exact: true });
 	const repositoryAction = kiokuCard.locator('[data-project-card-repository] a');
+	await expect(caseStudyAction).toBeVisible();
 	await expect(repositoryAction).toBeVisible();
 	await expect(repositoryAction).toContainText('kioku');
 	await expect(repositoryAction).toHaveAttribute('href', 'https://github.com/sandovaldavid/kioku');
+
+	const cardBox = (await kiokuCard.boundingBox())!;
+	const caseStudyBox = (await caseStudyAction.boundingBox())!;
+	const repositoryBox = (await repositoryAction.boundingBox())!;
+	expect(caseStudyBox.x - cardBox.x).toBeLessThanOrEqual(24);
+	expect(cardBox.x + cardBox.width - (repositoryBox.x + repositoryBox.width)).toBeLessThanOrEqual(
+		24
+	);
 });
 
 test('Projects Catalog keeps EN and ES intro and index copy localized without duplicating layout markup', async ({
