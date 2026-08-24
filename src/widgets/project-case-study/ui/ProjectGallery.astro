@@ -2,6 +2,7 @@
 import type { ImageMetadata } from 'astro';
 import CloseIcon from '@assets/icons/Close.astro';
 import ZoomInIcon from '@assets/icons/ZoomIn.astro';
+import ZoomOutIcon from '@assets/icons/ZoomOut.astro';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 
 interface ProjectGalleryItem {
@@ -75,7 +76,8 @@ const resolvedItems = items.map(item => ({
 								data-label-in={tPage('galleryZoomIn')}
 								data-label-out={tPage('galleryZoomOut')}
 							>
-								<ZoomInIcon class="size-5" />
+								<span data-gallery-zoom-in-icon><ZoomInIcon class="size-5" /></span>
+								<span class="hidden" data-gallery-zoom-out-icon><ZoomOutIcon class="size-5" /></span>
 							</button>
 							<button
 								type="button"
@@ -143,9 +145,11 @@ const resolvedItems = items.map(item => ({
 			const caption = gallery.querySelector<HTMLElement>('[data-gallery-caption]');
 			const stage = gallery.querySelector<HTMLElement>('[data-gallery-stage]');
 			const zoom = gallery.querySelector<HTMLButtonElement>('[data-gallery-zoom]');
+			const zoomInIcon = gallery.querySelector<HTMLElement>('[data-gallery-zoom-in-icon]');
+			const zoomOutIcon = gallery.querySelector<HTMLElement>('[data-gallery-zoom-out-icon]');
 			const close = gallery.querySelector<HTMLButtonElement>('[data-gallery-close]');
 			const openers = [...gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-open]')];
-			if (!dialog || !image || !caption || !stage || !zoom || !close) return;
+			if (!dialog || !image || !caption || !stage || !zoom || !zoomInIcon || !zoomOutIcon || !close) return;
 
 			let opener: HTMLButtonElement | null = null;
 			const data: GalleryItemData[] = openers.map(button => {
@@ -161,6 +165,8 @@ const resolvedItems = items.map(item => ({
 			const setZoomed = (value: boolean) => {
 				stage.dataset.zoomed = String(value);
 				zoom.setAttribute('aria-label', value ? zoom.dataset.labelOut || '' : zoom.dataset.labelIn || '');
+				zoomInIcon.classList.toggle('hidden', value);
+				zoomOutIcon.classList.toggle('hidden', !value);
 			};
 
 			const openAt = (index: number, source: HTMLButtonElement) => {
