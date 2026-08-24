@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 const locales = ['en', 'es'] as const;
-const expectedIds = [
+const productionIds = [
 	'auctions',
 	'campus-map',
 	'fluentreads',
@@ -11,6 +11,8 @@ const expectedIds = [
 	'mad-ai',
 	'yukidoke',
 ] as const;
+const developmentOnlyIds = ['project-detail-fixture'] as const;
+const allIds = [...productionIds, ...developmentOnlyIds] as const;
 
 function projectFiles(locale: (typeof locales)[number]) {
 	return readdirSync(`src/content/projects/${locale}`)
@@ -40,15 +42,15 @@ describe('localized project MDX content', () => {
 		expect(config).not.toContain('projectPresentation');
 	});
 
-	it('keeps exactly one MDX source per stable project and locale', () => {
+	it('keeps exactly one MDX source per project or development fixture and locale', () => {
 		for (const locale of locales) {
 			const files = projectFiles(locale);
-			expect(files).toEqual(expectedIds.map(id => `${id}.mdx`).sort());
+			expect(files).toEqual(allIds.map(id => `${id}.mdx`).sort());
 			expect(
 				readdirSync(`src/content/projects/${locale}`).filter(file => file.endsWith('.json'))
 			).toEqual([]);
 
-			for (const projectId of expectedIds) {
+			for (const projectId of allIds) {
 				const source = projectSource(locale, projectId);
 				expect(frontmatterScalar(source, 'projectId')).toBe(projectId);
 				expect(frontmatterScalar(source, 'locale')).toBe(locale);
@@ -65,7 +67,7 @@ describe('localized project MDX content', () => {
 	});
 
 	it('keeps English and Spanish project identities paired while allowing unique narratives', () => {
-		for (const projectId of expectedIds) {
+		for (const projectId of allIds) {
 			const english = projectSource('en', projectId);
 			const spanish = projectSource('es', projectId);
 			expect(frontmatterScalar(english, 'projectId')).toBe(frontmatterScalar(spanish, 'projectId'));
@@ -82,9 +84,9 @@ describe('localized project MDX content', () => {
 		const slugs = [...metadata.matchAll(/slug: '([^']+)'/g)].map(match => match[1]);
 		const orders = [...metadata.matchAll(/order: (\d+)/g)].map(match => Number(match[1]));
 
-		expect(slugs.sort()).toEqual([...expectedIds]);
-		expect(new Set(slugs).size).toBe(expectedIds.length);
-		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10]);
+		expect(slugs.sort()).toEqual([...allIds].sort());
+		expect(new Set(slugs).size).toBe(allIds.length);
+		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10, 0]);
 		expect(metadata).toContain("docs: 'https://kioku.sandovaldavid.com'");
 		expect(metadata).toContain("package: 'https://www.nuget.org/packages/kioku-mcp-server'");
 		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
@@ -94,9 +96,40 @@ describe('localized project MDX content', () => {
 		expect(metadata).toContain("link: 'https://fluentreads.vercel.app'");
 
 		for (const locale of locales) {
-			for (const projectId of expectedIds) {
+			for (const projectId of productionIds) {
 				expect(projectSource(locale, projectId)).not.toContain('https://');
 			}
+		}
+	});
+
+	it('keeps the kitchen-sink Project Detail fixture development-only and fully representative', () => {
+		const metadata = readSource('src/entities/project/model/metadata.ts');
+		const queries = readSource('src/entities/project/model/queries.ts');
+		const fixtureBlock =
+			metadata.match(/'project-detail-fixture': \{([\s\S]*?)\n\t\},\n\} as const/)?.[1] ?? '';
+
+		expect(metadata).toContain('developmentOnly?: boolean');
+		expect(metadata).toContain(
+			'export function isProjectVisible(projectId: ProjectId, development = import.meta.env.DEV)'
+		);
+		expect(fixtureBlock).toContain('developmentOnly: true');
+		expect(fixtureBlock).toContain("version: '0.0.0-dev'");
+		expect(fixtureBlock).toContain("demoAccess: 'live'");
+		expect(fixtureBlock).toContain('repositories: [');
+		expect(fixtureBlock).toContain('docs:');
+		expect(fixtureBlock).toContain('package:');
+		expect(fixtureBlock).toContain('related:');
+		expect(queries).toContain('if (!isProjectVisible(entry.data.projectId)) continue;');
+		expect(queries).toContain('isProjectVisible(projectId)');
+
+		for (const locale of locales) {
+			const fixture = projectSource(locale, 'project-detail-fixture');
+			expect(fixture).toContain('<ProjectVideo');
+			expect(fixture).toContain('<ProjectGallery');
+			expect(fixture).toContain('<MermaidDiagram');
+			expect(fixture).toContain('<EvidenceBlock');
+			expect(fixture).toContain('<CaseStudyGrid');
+			expect(fixture).toContain('<CaseStudyCard');
 		}
 	});
 
@@ -124,6 +157,7 @@ describe('localized project MDX content', () => {
 			expect(route).toContain('const { Content } = await render(entry)');
 			expect(route).toContain('<Content components={projectCaseStudyComponents} />');
 			expect(route).toContain('contentLayout="flush"');
+			expect(route).toContain('getProjectsData');
 		}
 	});
 
