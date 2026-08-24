@@ -1,8 +1,9 @@
 ---
 /**
- * Home-only floating contact shortcuts.
- * Visible on initial Home load, retracts after the user scrolls and can be
- * revealed again from the left-edge hotspot by pointer or keyboard focus.
+ * Global floating contact shortcuts.
+ * Home starts expanded and retracts after scrolling. Other pages start
+ * collapsed and can be revealed from the left-edge hotspot by pointer or
+ * keyboard focus.
  */
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
@@ -17,6 +18,7 @@ const tRecruiter = createScopedUiTranslator(lang, 'recruiter');
 const tFooter = createScopedUiTranslator(lang, 'footer');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const isHome = Astro.url.pathname === '/' || Astro.url.pathname === '/es/';
+const defaultCollapsed = !isHome;
 
 const links = [
 	{
@@ -57,59 +59,55 @@ const links = [
 ];
 ---
 
-{
-	isHome && (
-		<aside
-			id="contact-sidebar"
-			class="contact-sidebar fixed left-0 top-1/2 z-40 hidden w-14 -translate-y-1/2 xl:flex"
-			data-collapsed="false"
+<aside
+	id="contact-sidebar"
+	class="contact-sidebar fixed left-0 top-1/2 z-40 hidden w-14 -translate-y-1/2 xl:flex"
+	data-collapsed={String(defaultCollapsed)}
+	data-default-collapsed={String(defaultCollapsed)}
+	aria-label={tAccessibility('socialContactLinks')}
+>
+	<div
+		id="contact-sidebar-rail"
+		class="contact-sidebar-rail flex flex-col items-center"
+		aria-hidden={String(defaultCollapsed)}
+		inert={defaultCollapsed ? true : undefined}
+	>
+		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
+
+		<nav
+			class="flex flex-col border-2 border-edge-strong bg-channel-surface-default shadow-retro-md"
 			aria-label={tAccessibility('socialContactLinks')}
 		>
-			<div
-				id="contact-sidebar-rail"
-				class="contact-sidebar-rail flex flex-col items-center"
-				aria-hidden="false"
-			>
-				<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
-
-				<nav
-					class="flex flex-col border-2 border-edge-strong bg-channel-surface-default shadow-retro-md"
-					aria-label={tAccessibility('socialContactLinks')}
+			{links.map(({ label, href, tooltip, external, Icon }) => (
+				<a
+					href={href}
+					target={external ? '_blank' : undefined}
+					rel={external ? 'noopener noreferrer' : undefined}
+					title={tooltip}
+					aria-label={external ? `${label}, ${tAccessibility('externalLink')}` : label}
+					class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
 				>
-					{links.map(({ label, href, tooltip, external, Icon }) => (
-						<a
-							href={href}
-							target={external ? '_blank' : undefined}
-							rel={external ? 'noopener noreferrer' : undefined}
-							title={tooltip}
-							aria-label={
-								external ? `${label}, ${tAccessibility('externalLink')}` : label
-							}
-							class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
-						>
-							<Icon class="size-5" aria-hidden="true" />
-							<span class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
-								{tooltip}
-							</span>
-						</a>
-					))}
-				</nav>
+					<Icon class="size-5" aria-hidden="true" />
+					<span class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
+						{tooltip}
+					</span>
+				</a>
+			))}
+		</nav>
 
-				<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
-			</div>
+		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
+	</div>
 
-			<button
-				id="contact-sidebar-reveal"
-				type="button"
-				class="contact-sidebar-hotspot absolute inset-y-0 left-0 grid w-6 cursor-pointer place-items-center bg-transparent opacity-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
-				aria-label={tRecruiter('showContactShortcuts')}
-				tabindex="-1"
-			>
-				<span class="h-16 w-1 bg-channel-accent-primary" aria-hidden="true" />
-			</button>
-		</aside>
-	)
-}
+	<button
+		id="contact-sidebar-reveal"
+		type="button"
+		class="contact-sidebar-hotspot absolute inset-y-0 left-0 grid w-6 cursor-pointer place-items-center bg-transparent opacity-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+		aria-label={tRecruiter('showContactShortcuts')}
+		tabindex={defaultCollapsed ? 0 : -1}
+	>
+		<span class="h-16 w-1 bg-channel-accent-primary" aria-hidden="true" />
+	</button>
+</aside>
 
 <style>
 	.contact-sidebar-rail {
@@ -170,11 +168,12 @@ const links = [
 		const rail = root.querySelector<HTMLElement>('#contact-sidebar-rail');
 		if (!reveal || !rail) return;
 
+		const collapseAtRest = root.dataset.defaultCollapsed === 'true';
 		let pointerInside = false;
 		let frame = 0;
 
 		const shouldCollapse = () =>
-			window.scrollY > COLLAPSE_SCROLL_OFFSET &&
+			(collapseAtRest || window.scrollY > COLLAPSE_SCROLL_OFFSET) &&
 			!pointerInside &&
 			!root.contains(document.activeElement);
 
@@ -189,7 +188,7 @@ const links = [
 		};
 		const onPointerLeave = () => {
 			pointerInside = false;
-			if (window.scrollY > COLLAPSE_SCROLL_OFFSET) setContactRailCollapsed(root, true);
+			if (shouldCollapse()) setContactRailCollapsed(root, true);
 		};
 		const onFocusIn = () => setContactRailCollapsed(root, false);
 		const onFocusOut = () => {
@@ -209,7 +208,7 @@ const links = [
 		reveal.addEventListener('click', onReveal);
 		window.addEventListener('scroll', syncFromScroll, { passive: true });
 
-		setContactRailCollapsed(root, window.scrollY > COLLAPSE_SCROLL_OFFSET);
+		setContactRailCollapsed(root, collapseAtRest || window.scrollY > COLLAPSE_SCROLL_OFFSET);
 
 		contactRailCleanup = () => {
 			cancelAnimationFrame(frame);
