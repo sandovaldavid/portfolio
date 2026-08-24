@@ -14,7 +14,9 @@ test.describe('Kioku public backend case study', () => {
 		{
 			path: '/projects/kioku',
 			kicker: 'PROJECT CASE STUDY · BACKEND ENGINEERING',
-			status: 'ACTIVE · STABLE 3.1.2 + DEVELOPMENT',
+			lifecycle: 'Active',
+			source: 'Public source',
+			version: 'v3.1.2',
 			problem: 'Agent context should survive the session that created it',
 			system: 'Local-first MCP boundary',
 			evidence: 'What is verifiable today',
@@ -25,7 +27,9 @@ test.describe('Kioku public backend case study', () => {
 		{
 			path: '/es/projects/kioku',
 			kicker: 'CASO DE ESTUDIO · INGENIERÍA BACKEND',
-			status: 'ACTIVO · ESTABLE 3.1.2 + DESARROLLO',
+			lifecycle: 'Activo',
+			source: 'Código público',
+			version: 'v3.1.2',
 			problem: 'El contexto de un agente debe sobrevivir a la sesión que lo creó',
 			system: 'Límite MCP local-first',
 			evidence: 'Qué puede verificarse hoy',
@@ -41,7 +45,9 @@ test.describe('Kioku public backend case study', () => {
 			await expect(caseStudy).toBeVisible();
 			await expect(page.getByRole('heading', { level: 1, name: 'Kioku' })).toBeVisible();
 			await expect(page.getByText(locale.kicker, { exact: true })).toBeVisible();
-			await expect(page.getByText(locale.status, { exact: true })).toBeVisible();
+			await expect(page.getByText(locale.lifecycle, { exact: true })).toBeVisible();
+			await expect(page.getByText(locale.source, { exact: true })).toBeVisible();
+			await expect(page.getByText(locale.version, { exact: true })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.problem })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.system })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.evidence })).toBeVisible();
@@ -50,6 +56,15 @@ test.describe('Kioku public backend case study', () => {
 			const resources = page.getByRole('navigation', { name: locale.resources });
 			await expect(resources).toBeVisible();
 			await expect(resources.locator('[data-project-resource="repository"]')).toHaveCount(2);
+			await expect(resources.locator('[data-resource-tone="info"]')).toHaveCount(2);
+			await expect(resources.locator('[data-project-resource="docs"]')).toHaveAttribute(
+				'data-resource-tone',
+				'brand'
+			);
+			await expect(resources.locator('[data-project-resource="package"]')).toHaveAttribute(
+				'data-resource-tone',
+				'secondary'
+			);
 			await expect(resources.getByRole('button', { name: locale.share })).toBeVisible();
 
 			for (const href of [
@@ -73,7 +88,6 @@ test.describe('Kioku public backend case study', () => {
 					.evaluateAll(nodes => new Set(nodes.map(node => node.getAttribute('data-node-tone'))).size);
 				expect(tones).toBeGreaterThanOrEqual(3);
 			}
-			await expect(page.getByText('3.1.2', { exact: false }).first()).toBeVisible();
 		});
 	}
 });
