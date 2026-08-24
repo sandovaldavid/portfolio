@@ -40,6 +40,8 @@ const sourceBadgeVariant = {
 	private: 'default',
 	mixed: 'warning',
 } as const;
+const versionLabel = project.version ? `${tPage('versionPrefix')}${project.version}` : undefined;
+const heroStatusLabel = [versionLabel, sourceLabel, lifecycleLabel].filter(Boolean).join(', ');
 ---
 
 <article class="w-full pt-18" data-project-case-study="mdx">
@@ -62,20 +64,20 @@ const sourceBadgeVariant = {
 
 			<div class="flex min-w-0 flex-col gap-4">
 				<p class="text-secondary text-content-default md:text-body">{project.description}</p>
-				<div class="flex flex-wrap items-center gap-3" aria-label={`${lifecycleLabel}, ${sourceLabel}`}>
-					<Badge variant={lifecycleBadgeVariant[project.lifecycle]} size="sm">
-						{lifecycleLabel}
-					</Badge>
-					<Badge variant={sourceBadgeVariant[project.sourceAccess]} size="sm">
-						{sourceLabel}
-					</Badge>
+				<div class="flex flex-wrap items-center gap-3" aria-label={heroStatusLabel} data-project-status>
 					{
-						project.version && (
+						versionLabel && (
 							<Badge variant="secondary" size="sm">
-								{tPage('versionPrefix')}{project.version}
+								{versionLabel}
 							</Badge>
 						)
 					}
+					<Badge variant={sourceBadgeVariant[project.sourceAccess]} size="sm">
+						{sourceLabel}
+					</Badge>
+					<Badge variant={lifecycleBadgeVariant[project.lifecycle]} size="sm">
+						{lifecycleLabel}
+					</Badge>
 				</div>
 			</div>
 		</div>
