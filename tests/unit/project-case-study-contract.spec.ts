@@ -11,7 +11,8 @@ const video = readSource('src/widgets/project-case-study/ui/ProjectVideo.astro')
 const gallery = readSource('src/widgets/project-case-study/ui/ProjectGallery.astro');
 const metadata = readSource('src/entities/project/model/metadata.ts');
 const config = readSource('src/content.config.ts');
-const projectsSchema = config.match(/const projects = defineCollection\(\{([\s\S]*?)\n\}\);/)?.[1] ?? '';
+const projectsSchema =
+	config.match(/const projects = defineCollection\(\{([\s\S]*?)\n\}\);/)?.[1] ?? '';
 const kiokuEn = readSource('src/content/projects/en/kioku.mdx');
 const kiokuEs = readSource('src/content/projects/es/kioku.mdx');
 
