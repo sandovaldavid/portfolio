@@ -107,6 +107,16 @@ test.describe('Experience responsive composition', () => {
 		const firstMedia = (await projectCards.nth(0).locator('figure').boundingBox())!;
 		expect(Math.round(firstMedia.height)).toBe(136);
 
+		const researchHome = page.locator('[data-research-home]');
+		const researchMain = researchHome.locator('[data-research-home-main]');
+		const researchFooter = researchHome.locator('[data-research-home-footer]');
+		await expect(researchFooter).toBeVisible();
+		const researchBox = (await researchHome.boundingBox())!;
+		const researchMainBox = (await researchMain.boundingBox())!;
+		const researchFooterBox = (await researchFooter.boundingBox())!;
+		expect(Math.round(researchFooterBox.width)).toBe(Math.round(researchBox.width));
+		expect(researchFooterBox.y).toBeGreaterThan(researchMainBox.y + researchMainBox.height);
+
 		const coreStack = page.locator('#technologies [data-home-compact-shell="true"]');
 		await expect(coreStack).toBeAttached();
 		const coreGeometry = await getCompositionGeometry(coreStack);
