@@ -135,7 +135,7 @@ test('Projects Catalog surfaces a recruiter-oriented portfolio index and reposit
 	const kiokuCard = page.locator('article', {
 		has: page.getByRole('heading', { name: 'Kioku', exact: true }),
 	});
-	const repositoryAction = kiokuCard.locator('[data-project-card-repository]');
+	const repositoryAction = kiokuCard.locator('[data-project-card-repository] a');
 	await expect(repositoryAction).toBeVisible();
 	await expect(repositoryAction).toContainText('kioku');
 	await expect(repositoryAction).toHaveAttribute('href', 'https://github.com/sandovaldavid/kioku');
