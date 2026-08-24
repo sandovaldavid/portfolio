@@ -1,12 +1,10 @@
+import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 
-async function getRelativeTitleTop(
-	page: Parameters<Parameters<typeof test>[1]>[0]['page'],
-	sectionId: string
-) {
+async function getRelativeTitleTop(page: Page, sectionId: string) {
 	const section = page.locator(`#${sectionId}`);
 	const title = section.locator('.title-section').first();
 	const sectionBox = (await section.boundingBox())!;
