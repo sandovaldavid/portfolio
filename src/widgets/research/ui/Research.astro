@@ -47,7 +47,9 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 				{tResearch('title')}
 			</h3>
 
-			<p class="max-w-168 text-body text-content-default">{tResearch('summary')}</p>
+			<p class="max-w-168 text-body text-content-default" data-research-summary>
+				{tResearch('summary')}
+			</p>
 
 			<div
 				class="flex max-w-168 flex-col gap-2 border-l-2 border-edge-strong bg-badge-brand-bg px-4 py-3"
@@ -89,7 +91,10 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 								<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
 									{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="min-w-0 text-secondary text-content-default">
+								<span
+									class="min-w-0 text-secondary text-content-default"
+									data-research-pipeline-label
+								>
 									{step}
 								</span>
 							</li>
@@ -109,7 +114,10 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 								<span class="shrink-0 text-editorial-label-compact text-channel-accent-primary">
 									{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="min-w-0 text-secondary text-content-default">
+								<span
+									class="min-w-0 text-secondary text-content-default"
+									data-research-signal-label
+								>
 									{signal}
 								</span>
 							</li>
@@ -121,25 +129,28 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 	</div>
 
 	<div
-		class="mt-5 grid w-full gap-5 border-t-2 border-edge-strong pt-5 md:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] md:items-end md:gap-8 lg:mt-6"
+		class="mt-5 grid w-full gap-4 border-t border-edge-subtle pt-4 md:grid-cols-[minmax(0,1fr)_minmax(280px,420px)] md:items-end md:gap-8 lg:mt-6"
 		data-research-home-footer
 	>
 		<div class="flex min-w-0 flex-col gap-3">
 			<p class="text-editorial-label text-channel-accent-primary">
 				{tResearch('techStackLabel')}
 			</p>
-			<ul class="flex flex-wrap gap-2">
+			<ul class="flex flex-wrap gap-2" data-research-tech-stack>
 				{
 					techStack.map(tag => (
 						<li>
-							<TechPill label={tag.label} icon={tag.icon} size="sm" variant="stack" />
+							<TechPill label={tag.label} icon={tag.icon} size="md" variant="stack" />
 						</li>
 					))
 				}
 			</ul>
 		</div>
 
-		<p class="max-w-105 text-secondary text-content-muted md:justify-self-end md:text-right">
+		<p
+			class="max-w-105 text-secondary text-content-muted md:justify-self-end md:text-right"
+			data-research-methodology
+		>
 			{tResearch('methodologyHint')}
 		</p>
 	</div>
