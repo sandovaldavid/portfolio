@@ -1,0 +1,96 @@
+---
+projectId: mad-ai
+locale: es
+title: MAD AI
+description: "Un cliente administrativo en Angular 20 con SSR, rutas protegidas y capas explícitas de dominio, aplicación, infraestructura y presentación para autenticación, usuarios, roles y notificaciones."
+category: "Arquitectura Frontend"
+imageAlt: "Vista previa del dashboard del cliente administrativo MAD AI en Angular"
+caseStudy:
+  kicker: "CASO DE ESTUDIO · ARQUITECTURA FRONTEND"
+  status:
+    lifecycle: "MANTENIDO · CLIENTE ANGULAR 20"
+    source: "CÓDIGO PÚBLICO"
+    demo: "SIN DEMO PÚBLICA"
+---
+
+<CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="El repositorio frontend es el límite verificable" width="reading">
+  <ProjectResources projectId="mad-ai" resources={['source']} />
+
+  MAD AI se entiende mejor como un **cliente administrativo en Angular**, no como un despliegue full-stack verificado. El repositorio público contiene la aplicación Angular, la entrada de servidor SSR, la arquitectura frontend por capas, implementaciones de repositorios HTTP y notas de contratos de API. No contiene un backend Django ni un esquema PostgreSQL, por lo que este caso de estudio no presenta esas tecnologías como evidencia entregada del proyecto.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEMA" title="Los flujos administrativos acumulan responsabilidades transversales rápidamente">
+  Autenticación, navegación protegida, administración de usuarios, roles y notificaciones necesitan compartir estado de aplicación sin convertir los componentes de presentación en clientes HTTP. La implementación separa estas responsabilidades en contratos de dominio, casos de uso de aplicación, adaptadores de infraestructura y rutas de presentación.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="SISTEMA" title="Angular posee el límite del cliente; la API permanece externa" surface="highlight">
+  <MermaidDiagram
+    title="Arquitectura del cliente MAD AI"
+    description="Las rutas y componentes Angular llaman casos de uso y contratos de dominio. Las implementaciones de repositorios de infraestructura traducen esas operaciones hacia una API REST externa. SSR usa el build de servidor de Angular y Express."
+    chart={`flowchart LR
+      Browser["Navegador"] --> Routes["Rutas Angular 20\nAuth + shell protegido"]
+      SSR["Angular SSR\nExpress 5"] --> Routes
+      Routes --> Presentation["Presentación\ncomponentes + layouts"]
+      Presentation --> Application["Aplicación\ncasos de uso"]
+      Application --> Domain["Dominio\nentidades + contratos de repositorio"]
+      Infrastructure["Infraestructura\nrepositorios HTTP"] --> Domain
+      Infrastructure --> API["API REST externa\n/api/v1"]
+      Guard["AuthGuard"] --> Routes`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="ARQUITECTURA" title="Los nombres de las capas corresponden a límites reales del repositorio">
+  <CaseStudyGrid columns={2}>
+    <CaseStudyCard label="DOMINIO" title="CONTRATOS ANTES QUE TRANSPORTE" tone="primary">
+      Entidades y abstracciones de repositorio de dominio definen lo que autenticación, usuarios, roles y notificaciones necesitan sin incrustar detalles HTTP en los componentes enrutados.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APLICACIÓN" title="LOS CASOS DE USO COORDINAN LA INTENCIÓN" tone="primary">
+      La capa de aplicación se ubica entre presentación e infraestructura para que los flujos UI expresen acciones mediante casos de uso en lugar de acoplar cada componente a la mecánica de endpoints.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="INFRAESTRUCTURA" title="LOS REPOSITORIOS HTTP ADAPTAN LA API" tone="primary">
+      El repositorio contiene implementaciones concretas para autenticación, notificaciones, roles y usuarios. Estos adaptadores encapsulan DTOs e interacción con la API detrás de los contratos.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="PRESENTACIÓN" title="LAS RUTAS SEPARAN ÁREAS PÚBLICAS Y PROTEGIDAS" tone="primary">
+      `/auth` usa su propio layout, mientras dashboard y gestión de usuarios viven detrás de `AuthGuard` dentro del shell protegido.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="AUTENTICACIÓN" title="El cliente documenta un contrato de API basado en tokens" surface="highlight">
+  Las notas públicas de API describen login, logout, refresh token, registro, confirmación de correo y usuario actual. El environment frontend apunta a un servicio externo `/api/v1`, por lo que el portfolio trata esos archivos como **evidencia del contrato consumido por el cliente**, no como prueba de cómo el backend almacena usuarios o valida tokens internamente.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="NOTIFICACIONES" title="Un workflow reutilizable de notificaciones atraviesa las mismas capas">
+  El repositorio documenta notificaciones de éxito, error, advertencia e información con posiciones y cierre configurables. Para este caso de estudio, lo relevante es que esa feature sigue la misma separación dominio → aplicación → infraestructura → presentación en lugar de convertirse en un componente global aislado con conocimiento del transporte.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFICADO EN MANIFEST Y CÓDIGO" title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4" tone="verified">
+      `package.json` declara Angular 20, Angular SSR, Express 5, RxJS y Tailwind CSS 4. El árbol de código expone directorios explícitos `domain`, `application`, `infrastructure` y `presentation`, además de rutas protegidas e implementaciones concretas de repositorios.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="LÍMITE" title="LA IMPLEMENTACIÓN BACKEND NO ESTÁ EN ESTE REPOSITORIO" tone="boundary">
+      La documentación de API y los adaptadores frontend muestran el contrato HTTP esperado, pero este repositorio público no contiene la implementación del servidor, persistencia ni un despliegue público. Por eso esta página no afirma Django, PostgreSQL, WebSockets, readiness de producción ni adopción.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="APRENDIZAJES" title="Qué demuestra este repositorio" surface="highlight">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="APRENDIZAJE 01" title="LA ARQUITECTURA CLIENTE TAMBIÉN PUEDE TENER LÍMITES REALES" tone="success">
+      Un frontend puede separar intención de dominio de adaptadores HTTP en lugar de tratar cada componente como un wrapper directo de un endpoint.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APRENDIZAJE 02" title="EL ROUTING FORMA PARTE DEL MODELO DE SEGURIDAD" tone="success">
+      Las rutas públicas de autenticación y las rutas administrativas protegidas son más fáciles de razonar cuando la separación existe en el árbol de rutas y no sólo dentro de templates.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APRENDIZAJE 03" title="UN CONTRATO DE API DOCUMENTADO NO ES EVIDENCIA DEL BACKEND" tone="success">
+      Un cliente puede demostrar qué consume sin demostrar cómo está implementado el servicio remoto. Mantener esa diferencia explícita hace el caso de estudio más creíble.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
