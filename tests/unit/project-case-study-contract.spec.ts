@@ -23,7 +23,7 @@ describe('Project Case Study MDX contract', () => {
 		expect(shell).toContain('data-case-study-hero-shell');
 		expect(shell).toContain('<slot />');
 		expect(shell).toContain('project.caseStudy.kicker');
-		expect(shell).toContain('project.sourceAccess === \'public\'');
+		expect(shell).toContain("project.sourceAccess !== 'private'");
 		expect(shell).not.toContain('ProjectCaseStudyLegacy');
 		expect(shell).not.toContain('ContentPanel');
 		expect(shell).not.toContain('TechPill');
@@ -43,18 +43,21 @@ describe('Project Case Study MDX contract', () => {
 		}
 	});
 
-	it('keeps Mermaid lazy, strict and theme-aware with accessible fallback', () => {
-		expect(mermaid).toContain("securityLevel: 'strict'");
-		expect(mermaid).toContain('IntersectionObserver');
-		expect(mermaid).toContain('data-mermaid-source');
+	it('renders a controlled Mermaid flow subset at build time without external runtime code', () => {
+		expect(mermaid).toContain('flowchart\\s+(LR|TD)');
+		expect(mermaid).toContain('data-mermaid-state="rendered"');
+		expect(mermaid).toContain('data-diagram-nodes');
+		expect(mermaid).toContain('data-diagram-edges');
 		expect(mermaid).toContain('role="img"');
-		expect(mermaid).toContain('var(--channel-surface-highlight)');
-		expect(mermaid).toContain('var(--channel-accent-primary)');
+		expect(mermaid).toContain('Mermaid source');
+		expect(mermaid).not.toContain('cdn.jsdelivr.net');
+		expect(mermaid).not.toContain('IntersectionObserver');
+		expect(mermaid).not.toContain('<script');
 	});
 
 	it('resolves external resources from language-neutral metadata', () => {
 		expect(resources).toContain('PROJECT_METADATA[projectId]');
-		expect(resources).toContain("metadata.sourceAccess === 'public'");
+		expect(resources).toContain("metadata.sourceAccess !== 'private'");
 		expect(resources).toContain('metadata.resources?.docs');
 		expect(resources).toContain('metadata.resources?.package');
 		expect(resources).toContain('metadata.resources?.related');
