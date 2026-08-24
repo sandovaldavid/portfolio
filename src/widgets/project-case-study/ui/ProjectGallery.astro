@@ -36,7 +36,7 @@ const resolvedItems = items.map(item => ({
 					<figure class="min-w-0" role="listitem">
 						<button
 							type="button"
-							class="group relative block w-full cursor-zoom-in overflow-hidden border-2 border-edge-strong bg-channel-surface-default shadow-retro-sm transition-[box-shadow,transform] duration-150 hover:shadow-retro-lg active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							class="group relative block w-full cursor-zoom-in overflow-hidden border-2 border-edge-strong bg-channel-surface-highlight shadow-retro-sm transition-[box-shadow,transform] duration-150 hover:shadow-retro-lg active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 							aria-label={`${tPage('galleryOpen')}: ${item.alt}`}
 							data-gallery-open
 							data-gallery-index={String(index)}
@@ -44,7 +44,7 @@ const resolvedItems = items.map(item => ({
 							<img
 								src={item.src}
 								alt={item.alt}
-								class="aspect-video w-full object-cover transition-transform duration-200 group-hover:scale-[1.02]"
+								class="aspect-video w-full object-contain transition-transform duration-200 group-hover:scale-[1.02]"
 								loading="lazy"
 								decoding="async"
 							/>
