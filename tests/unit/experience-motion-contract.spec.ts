@@ -49,6 +49,15 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('isCurrent: boolean');
 	});
 
+	it('uses whitespace for achievements and keeps only the footer divider with a primary current-role CTA', () => {
+		expect(detail).not.toContain('my-5 h-px w-full bg-edge-subtle');
+		expect(detail).not.toContain('group min-w-0 border-t border-edge-subtle pt-4');
+		expect(detail).toContain('data-experience-detail-footer');
+		expect(detail).toContain('border-t border-edge-subtle pt-5');
+		expect(detail).toContain('variant="primary"');
+		expect(detail).not.toContain('variant="secondary"');
+	});
+
 	it('keeps tablet and desktop viewport-filling while mobile remains content-driven', () => {
 		expect(experience).toContain('md:min-h-[calc(100svh-4.5rem)]');
 		expect(experience).not.toContain('min-h-[calc(100svh-4.5rem)] md:min-h-0');
