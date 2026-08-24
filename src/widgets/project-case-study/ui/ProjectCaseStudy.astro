@@ -1,12 +1,10 @@
 ---
 import { Badge } from '@shared/ui';
 import type { ProjectItem } from '@entities/project';
-import type { Language } from '@shared/config/i18n';
 import ProjectResources from './ProjectResources.astro';
 
 interface Props {
 	project: ProjectItem;
-	lang?: Language;
 }
 
 const { project } = Astro.props;
