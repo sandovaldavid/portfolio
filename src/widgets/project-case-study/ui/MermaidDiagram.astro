@@ -97,7 +97,7 @@ const nodeList = [...nodes.values()];
 								{nodes.get(edge.from)?.label}
 							</span>
 							<span class:list={['flex min-w-14 flex-col items-center text-center font-mono', edge.optional ? 'text-content-muted' : 'text-channel-accent-primary']}>
-								{edge.label && <span class="max-w-28 text-[0.6875rem] leading-4">{edge.label}</span>}
+								{edge.label && <span class="max-w-28 text-caption">{edge.label}</span>}
 								<span aria-hidden="true">{edge.optional ? '⇢' : '→'}</span>
 							</span>
 							<span class="min-w-0 border border-edge-subtle bg-channel-background-canvas px-2 py-1 font-mono text-content-strong">
