@@ -3,7 +3,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import type { ExperienceItem as ExperienceItemData } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { LinkInline, TechPill } from '@shared/ui';
+import { LinkButton, TechPill } from '@shared/ui';
 
 type Props = Pick<
 	ExperienceItemData,
@@ -14,58 +14,85 @@ const { title, date, description, technologies, company, isCurrent } = Astro.pro
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const currentRoleUrl = getRelativeLocaleUrl(lang, 'atena');
-const visibleTechnologies = technologies.slice(0, 3);
+const visibleTechnologies = technologies.slice(0, 4);
+const visibleAchievements = description.slice(0, 4);
 const companyContext = isCurrent
 	? `${company.toUpperCase()} · ${tExperience('currentDomain')}`
 	: company.toUpperCase();
 ---
 
-<!--
-	Open editorial evidence block. Width is owned by the Experience grid rather
-	than duplicated here, which prevents the Mobile 360px design target from
-	overflowing the runtime's 350px content gutter.
--->
-<div class="flex w-full min-w-0 flex-col gap-4 md:gap-5">
+<div
+	data-experience-detail
+	class="flex min-h-100 w-full min-w-0 flex-col border-2 border-edge-strong bg-channel-surface-default p-5 shadow-retro-md md:min-h-104 md:p-6 lg:min-h-110 lg:p-8"
+>
 	<header
-		class="flex min-h-17.5 flex-col items-start gap-1 md:min-h-16 md:flex-row md:justify-between lg:min-h-15"
+		data-experience-detail-header
+		class="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:gap-8"
 	>
-		<h3
-			class="max-w-80 uppercase text-component-title text-content-strong md:w-62.5 lg:w-auto lg:max-w-none"
+		<div class="min-w-0">
+			<p class="mb-2 text-editorial-label uppercase text-channel-accent-primary">
+				{companyContext}
+			</p>
+			<h3 class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title">
+				{title}
+			</h3>
+		</div>
+
+		<div
+			class="flex min-h-9 w-fit items-center gap-2 border border-edge-subtle bg-channel-surface-highlight px-3 py-2 md:justify-self-end"
 		>
-			{title}
-		</h3>
-		<p class="uppercase text-caption text-channel-status-online md:w-32 lg:w-auto">{date}</p>
+			{isCurrent && <span class="size-2 bg-channel-status-online" aria-hidden="true"></span>}
+			<p class="font-mono text-caption uppercase text-channel-status-online">{date}</p>
+		</div>
 	</header>
 
-	<p class="text-editorial-label text-channel-accent-primary">{companyContext}</p>
+	<div class="my-5 h-px w-full bg-edge-subtle md:my-6" aria-hidden="true"></div>
 
-	<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
-
-	<ul class="flex flex-col gap-4 lg:grid lg:grid-cols-3 lg:gap-6">
+	<ul
+		data-experience-achievements
+		class="grid min-w-0 grid-cols-1 content-start gap-x-8 gap-y-5 lg:grid-cols-2 lg:gap-y-6"
+	>
 		{
-			description.slice(0, 3).map(point => (
-				<li class="flex min-w-0 items-start gap-2.5">
-					<ArrowRightIcon
-						class="mt-1 size-4 shrink-0 text-channel-accent-primary"
-						aria-hidden="true"
-						focusable="false"
-					/>
-					<span class="min-w-0 flex-1 text-secondary text-content-default md:text-body">
-						{point}
-					</span>
-				</li>
-			))
+			visibleAchievements.map((point, index) => {
+				const isLastOdd = visibleAchievements.length % 2 === 1 && index === visibleAchievements.length - 1;
+				const itemNumber = String(index + 1).padStart(2, '0');
+
+				return (
+					<li
+						data-experience-achievement
+						class:list={[
+							'group min-w-0 border-t border-edge-subtle pt-4',
+							isLastOdd && 'lg:col-span-2',
+						]}
+					>
+						<div class:list={['flex min-w-0 items-start gap-3', isLastOdd && 'lg:max-w-180']}>
+							<div class="flex shrink-0 items-center gap-2 pt-0.5">
+								<span class="font-mono text-caption text-channel-accent-primary">{itemNumber}</span>
+								<ArrowRightIcon
+									class="size-4 text-channel-accent-primary transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none"
+									aria-hidden="true"
+									focusable="false"
+								/>
+							</div>
+							<span class="min-w-0 flex-1 text-secondary text-content-default md:text-body">
+								{point}
+							</span>
+						</div>
+					</li>
+				);
+			})
 		}
 	</ul>
 
 	<footer
-		class="mt-auto flex flex-col items-start gap-4 pt-1 lg:flex-row lg:items-center lg:justify-between"
+		data-experience-detail-footer
+		class="mt-auto flex flex-col items-start gap-4 border-t border-edge-subtle pt-5 md:mt-6 md:flex-row md:items-end md:justify-between md:gap-6 lg:pt-6"
 	>
 		{
 			visibleTechnologies.length > 0 && (
 				<ul
 					data-experience-technologies
-					class="flex w-full flex-wrap justify-center gap-2 md:w-auto md:justify-start"
+					class="flex w-full flex-wrap justify-start gap-2 md:w-auto"
 				>
 					{visibleTechnologies.map(tech => (
 						<li>
@@ -78,9 +105,15 @@ const companyContext = isCurrent
 
 		{
 			isCurrent && (
-				<LinkInline href={currentRoleUrl} icon={ArrowRightIcon} iconPosition="trailing">
+				<LinkButton
+					href={currentRoleUrl}
+					target="_self"
+					variant="secondary"
+					class="w-fit shrink-0"
+				>
 					{tExperience('viewCurrentRole')}
-				</LinkInline>
+					<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
+				</LinkButton>
 			)
 		}
 	</footer>
