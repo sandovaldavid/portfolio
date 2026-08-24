@@ -69,8 +69,8 @@ describe('Portfolio v2 spacing contract', () => {
 
 		expect(profileRecord).toContain('md:grid-cols-[220px_minmax(0,1fr)]');
 		expect(hero).toContain('md:min-h-[calc(100svh-4.5rem)]');
-		expect(experience).toContain('md:grid-cols-[300px_minmax(0,446px)]');
-		expect(experience).toContain('lg:grid-cols-[400px_minmax(0,840px)]');
+		expect(experience).toContain('md:grid-cols-[280px_minmax(0,1fr)]');
+		expect(experience).toContain('lg:grid-cols-[360px_minmax(0,1fr)]');
 		expect(sectionContainer).toContain('md:min-h-[calc(100svh-4.5rem)]');
 		expect(contactRail).toContain('translateX(calc(-100% - 0.5rem))');
 		expect(profileRecord).toContain('p-0.5');
