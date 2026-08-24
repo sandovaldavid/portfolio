@@ -23,13 +23,15 @@ describe('Project Case Study MDX contract', () => {
 		expect(config).not.toContain('presentation:');
 	});
 
-	it('renders one reusable shell with a shared project action bar', () => {
+	it('renders one presentation-only shell with a shared project action bar', () => {
 		expect(shell).toContain('data-project-case-study="mdx"');
 		expect(shell).toContain('data-case-study-hero-shell');
 		expect(shell).toContain('<ProjectResources projectId={project.projectId} />');
 		expect(shell).toContain('<slot />');
 		expect(shell).toContain('project.caseStudy.kicker');
-		expect(shell).toContain("project.sourceAccess !== 'private'");
+		expect(shell).not.toContain("project.sourceAccess !== 'private'");
+		expect(shell).not.toContain('project.github');
+		expect(shell).not.toContain('project.link');
 		expect(shell).not.toContain('ProjectCaseStudyLegacy');
 		expect(shell).not.toContain('ContentPanel');
 		expect(shell).not.toContain('TechPill');
