@@ -49,10 +49,10 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).toContain('data-diagram-nodes');
 		expect(mermaid).toContain('data-diagram-edges');
 		expect(mermaid).toContain('role="img"');
-		expect(mermaid).toContain('Mermaid source');
 		expect(mermaid).not.toContain('cdn.jsdelivr.net');
 		expect(mermaid).not.toContain('IntersectionObserver');
 		expect(mermaid).not.toContain('<script');
+		expect(mermaid).not.toContain('Mermaid source');
 	});
 
 	it('resolves external resources from language-neutral metadata', () => {
