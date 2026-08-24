@@ -49,27 +49,27 @@ const VIEWPORTS: CaseStudyViewport[] = [
 ];
 
 for (const viewport of VIEWPORTS) {
-	test(`Kioku v2 case study matches the ${viewport.name} composition`, async ({ page }) => {
+	test(`Kioku MDX case study preserves the ${viewport.name} shell contract`, async ({ page }) => {
 		await page.setViewportSize({ width: viewport.width, height: viewport.height });
 		await page.goto('/projects/kioku');
 		await page.evaluate(() => document.fonts.ready);
 
-		const caseStudy = page.locator('[data-project-case-study="v2"]');
+		const caseStudy = page.locator('[data-project-case-study="mdx"]');
 		const heroShell = page.locator('[data-case-study-hero-shell]');
-		const narrativeShell = page.locator('[data-case-study-narrative-shell]');
-		const evidence = page.locator('[data-case-study-evidence]');
-		const evidenceShell = page.locator('[data-case-study-evidence-shell]');
-		const learningsShell = page.locator('[data-case-study-learnings-shell]');
+		const firstSection = page.locator('[data-case-study-section]').first();
+		const firstSectionInner = firstSection.locator(':scope > div');
 		const title = page.getByRole('heading', { level: 1, name: 'Kioku' });
-		const evidenceTitle = page.getByRole('heading', { name: 'Evidence and limitations' });
+		const sectionTitle = page.getByRole('heading', {
+			name: 'Inspect the project beyond this portfolio',
+		});
 
 		await expect(caseStudy).toBeVisible();
-		for (const shell of [heroShell, narrativeShell, evidenceShell, learningsShell]) {
-			expect(Math.round((await shell.boundingBox())!.width)).toBe(viewport.shellWidth);
-		}
-		const heroBox = await heroShell.boundingBox();
-		expect(Math.round(heroBox!.y)).toBe(viewport.heroShellY);
-		expect(Math.round((await evidence.boundingBox())!.width)).toBe(viewport.width);
+		expect(Math.round((await heroShell.boundingBox())!.width)).toBe(viewport.shellWidth);
+		expect(Math.round((await firstSectionInner.boundingBox())!.width)).toBeLessThanOrEqual(
+			viewport.shellWidth
+		);
+		expect(Math.round((await heroShell.boundingBox())!.y)).toBe(viewport.heroShellY);
+		expect(Math.round((await firstSection.boundingBox())!.width)).toBe(viewport.width);
 
 		const titleStyle = await title.evaluate(element => {
 			const style = getComputedStyle(element);
@@ -80,7 +80,7 @@ for (const viewport of VIEWPORTS) {
 			lineHeight: viewport.titleLineHeight,
 		});
 
-		const sectionTitleStyle = await evidenceTitle.evaluate(element => {
+		const sectionTitleStyle = await sectionTitle.evaluate(element => {
 			const style = getComputedStyle(element);
 			return { fontSize: style.fontSize, lineHeight: style.lineHeight };
 		});
@@ -88,18 +88,6 @@ for (const viewport of VIEWPORTS) {
 			fontSize: viewport.sectionTitleSize,
 			lineHeight: viewport.sectionTitleLineHeight,
 		});
-
-		const narrativeColumns = narrativeShell.locator(':scope > div');
-		await expect(narrativeColumns).toHaveCount(2);
-		const firstColumn = await narrativeColumns.nth(0).boundingBox();
-		const secondColumn = await narrativeColumns.nth(1).boundingBox();
-		if (viewport.name === 'desktop') {
-			expect(secondColumn!.x).toBeGreaterThan(firstColumn!.x + firstColumn!.width);
-		} else {
-			expect(secondColumn!.y).toBeGreaterThan(firstColumn!.y);
-		}
-
-		await expect(page.locator('[data-case-study-learnings-shell] h3')).toHaveCount(3);
 
 		const overflow = await page.evaluate(() => ({
 			clientWidth: document.documentElement.clientWidth,
@@ -109,11 +97,35 @@ for (const viewport of VIEWPORTS) {
 	});
 }
 
-test('unreviewed project details remain on the migration fallback', async ({ page }) => {
-	await page.goto('/projects/yukidoke');
-	await expect(page.locator('[data-project-case-study="v2"]')).toHaveCount(0);
-	await expect(page.getByRole('link', { name: 'Back to projects' })).toBeVisible();
-	await expect(
-		page.getByRole('heading', { name: 'IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION' })
-	).toBeVisible();
-});
+const PROJECT_ROUTES = [
+	['/projects/yukidoke', 'Yukidoke'],
+	['/projects/kioku', 'Kioku'],
+	['/projects/campus-map', 'UNP Campus Map'],
+	['/projects/mad-ai', 'MAD AI'],
+	['/projects/fluentreads', 'FluentReads'],
+	['/projects/auctions', 'Auctions'],
+	['/es/projects/yukidoke', 'Yukidoke'],
+	['/es/projects/kioku', 'Kioku'],
+	['/es/projects/campus-map', 'UNP Campus Map'],
+	['/es/projects/mad-ai', 'MAD AI'],
+	['/es/projects/fluentreads', 'FluentReads'],
+	['/es/projects/auctions', 'Auctions'],
+] as const;
+
+for (const [route, title] of PROJECT_ROUTES) {
+	test(`${route} renders a complete MDX case study without document overflow`, async ({ page }) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await page.goto(route);
+
+		await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();
+		await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
+		expect(await page.locator('[data-case-study-section]').count()).toBeGreaterThanOrEqual(5);
+		expect(await page.locator('[data-mermaid-figure]').count()).toBeGreaterThanOrEqual(1);
+
+		const overflow = await page.evaluate(() => ({
+			clientWidth: document.documentElement.clientWidth,
+			scrollWidth: document.documentElement.scrollWidth,
+		}));
+		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+	});
+}
