@@ -1,0 +1,111 @@
+---
+projectId: project-detail-fixture
+locale: es
+title: Fixture de Project Detail
+description: "Case study interno y exclusivo de desarrollo usado para validar todas las capacidades de Project Detail sin publicar un proyecto falso en el portfolio."
+category: "Fixture interno de UI"
+imageAlt: "Vista previa del fixture de desarrollo de Project Detail"
+caseStudy:
+  kicker: "FIXTURE INTERNO · SISTEMA DE PROJECT DETAIL"
+  status:
+    lifecycle: "SOLO DESARROLLO"
+    source: "RECURSOS PÚBLICOS DE PRUEBA"
+    demo: "DEMO DEL FIXTURE"
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection eyebrow="FIXTURE DE DESARROLLO" title="Una sola página que ejercita todas las capacidades de Project Detail">
+  Este **no es un proyecto real del portfolio**. Existe únicamente en desarrollo para revisar el sistema de contenido de Project Detail con todos los recursos opcionales y primitives MDX habilitados al mismo tiempo.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEMA" title="Un sistema compartido necesita un lugar seguro para probar contenido opcional">
+  Los proyectos reales omiten intencionalmente los recursos que no poseen. Eso dificulta inspeccionar visualmente todas las combinaciones de repositorios, documentación, live demo, package, galerías, video y diagramas desde una sola ruta.
+
+  Este fixture proporciona esa ruta sin añadir evidencia falsa a producción.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="SISTEMA" title="Todos los primitives de Project Detail en una ruta de desarrollo" surface="highlight">
+  <MermaidDiagram
+    title="Sistema del fixture de Project Detail"
+    description="El fixture ejercita recursos, secciones narrativas, media, evidencia y actores de diagramas mientras permanece excluido de las consultas de proyectos en producción."
+    tones={{ Route: 'brand', Shell: 'info', Resources: 'success', MDX: 'secondary', Media: 'warning', Evidence: 'danger' }}
+    chart={`flowchart LR
+      Route["Ruta de desarrollo"] --> Shell["Shell ProjectCaseStudy"]
+      Shell --> Resources["Recursos del proyecto"]
+      Shell --> MDX["Narrativa MDX"]
+      MDX --> Media["Video + galería"]
+      MDX --> Evidence["Evidencia + aprendizajes"]
+      Evidence -. opcional .-> Resources`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="DECISIONES" title="El fixture cubre patrones de composición reutilizables">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="OPCIÓN 01" title="MÚLTIPLES REPOSITORIOS" tone="primary">
+      La barra compartida de recursos muestra más de un destino de GitHub junto con documentación, demo, package, recurso relacionado y la acción para compartir.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="OPCIÓN 02" title="MEDIA ESPECÍFICA POR PROYECTO" tone="primary">
+      MDX puede colocar video y galerías exactamente donde la narrativa del proyecto los necesite en lugar de forzar todos los proyectos a una plantilla fija.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="OPCIÓN 03" title="EVIDENCIA ACCESIBLE" tone="primary">
+      Diagramas, captions, texto alternativo de imágenes, zoom operable con teclado y secciones semánticas siguen formando parte del sistema compartido.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="VIDEO" title="La demo en video es opcional por proyecto" surface="highlight">
+  <ProjectVideo
+    title="Video del fixture de desarrollo"
+    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+    caption="Media de ejemplo CC0 usada únicamente para ejercitar el reproductor ProjectVideo dentro de este fixture de desarrollo."
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="GALERÍA" title="Screenshots y diagramas pueden inspeccionarse a tamaño completo">
+  <ProjectGallery
+    label="Galería del fixture de Project Detail"
+    columns={2}
+    items={[
+      {
+        src: fixtureOverview,
+        alt: 'Vista abstracta general del fixture de desarrollo de Project Detail',
+        caption: 'Imagen general usada para validar thumbnails object-contain y el lightbox con zoom.'
+      },
+      {
+        src: fixtureDetail,
+        alt: 'Composición abstracta de UI para el fixture de desarrollo de Project Detail',
+        caption: 'Segunda imagen usada para validar galerías responsive de múltiples elementos, captions y zoom.'
+      }
+    ]}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCIA" title="Los dos estados de evidencia pueden revisarse juntos" surface="highlight">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="COMPORTAMIENTO VERIFICABLE DEL FIXTURE" title="LA PÁGINA EJERCITA TODO EL SISTEMA DE PRESENTACIÓN" tone="verified">
+      La ruta incluye intencionalmente el hero compartido, badges de lifecycle/source/version, todas las acciones de recursos, Mermaid, cards, evidencia, video y una galería con zoom.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="LÍMITE" title="ESTE CONTENIDO NUNCA DEBE CONVERTIRSE EN UN PROYECTO DE PRODUCCIÓN" tone="boundary">
+      La metadata language-neutral marca el fixture como `developmentOnly`. Las consultas de proyectos de producción lo excluyen antes de generar el catálogo y las rutas estáticas.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="APRENDIZAJES" title="Usa el fixture para revisar futuros cambios de Project Detail">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="CHECK 01" title="COMBINACIONES DE RECURSOS" tone="success">
+      Verifica acciones opcionales, múltiples repositorios, wrapping y comportamiento responsive sin modificar un proyecto real.
+    </CaseStudyCard>
+    <CaseStudyCard label="CHECK 02" title="RICH MEDIA" tone="success">
+      Valida video, galería, lightbox, zoom, diagramas y captions contra Light/Dark y layouts responsive.
+    </CaseStudyCard>
+    <CaseStudyCard label="CHECK 03" title="EXCLUSIÓN DE PRODUCCIÓN" tone="success">
+      Mantén el fixture disponible para desarrollo garantizando que catálogo, rutas de proyecto y SEO de producción permanezcan limpios.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
