@@ -28,7 +28,7 @@ const isCatalog = layout === 'catalog';
 		class:list={[
 			'w-full items-stretch',
 			isCatalog
-				? 'grid grid-cols-1 justify-items-center gap-y-6 md:grid-cols-[repeat(2,minmax(0,369px))] md:justify-center md:gap-x-8 lg:grid-cols-[repeat(2,minmax(0,520px))] lg:gap-y-8'
+				? 'grid grid-cols-1 justify-items-center gap-y-6 md:grid-cols-[repeat(2,minmax(0,369px))] md:justify-center md:gap-x-8 lg:grid-cols-[repeat(2,minmax(0,592px))] lg:gap-y-8'
 				: 'grid grid-cols-1 justify-center gap-8 md:grid-cols-[repeat(2,minmax(0,369px))] lg:grid-cols-[repeat(2,minmax(0,520px))] lg:gap-20',
 		]}
 	>
@@ -37,12 +37,12 @@ const isCatalog = layout === 'catalog';
 				<div
 					class:list={[
 						'h-full min-w-0',
-						isCatalog && 'w-full max-w-85 md:max-w-92.25 lg:max-w-130',
+						isCatalog && 'w-full max-w-85 md:max-w-92.25 lg:max-w-148',
 					]}
 				>
 					<ProjectCard
 						project={project}
-						variant="secondary"
+						variant={isCatalog ? 'catalog' : 'secondary'}
 						headingLevel={showAll ? 'h2' : 'h3'}
 						caseStudyText={tProjects('caseStudy')}
 						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
