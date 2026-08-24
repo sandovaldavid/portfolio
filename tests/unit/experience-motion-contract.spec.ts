@@ -64,9 +64,7 @@ describe('Experience motion contract', () => {
 		expect(technologyPill).toContain(
 			"import TypeScriptIcon from '@assets/technologies/TypeScript.astro'"
 		);
-		expect(technologyPill).toContain(
-			"import JavaIcon from '@assets/technologies/Java.astro'"
-		);
+		expect(technologyPill).toContain("import JavaIcon from '@assets/technologies/Java.astro'");
 		expect(technologyPill).toContain(
 			"import ReactIcon from '@assets/technologies/React.astro'"
 		);
