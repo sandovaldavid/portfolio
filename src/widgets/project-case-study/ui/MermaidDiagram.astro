@@ -47,16 +47,25 @@ const toneCycle: DiagramTone[] = ['brand', 'info', 'success', 'secondary', 'warn
 const toneTokens: Record<DiagramTone, { background: string; foreground: string }> = {
 	brand: { background: 'var(--color-badge-brand-bg)', foreground: 'var(--color-badge-brand-text)' },
 	info: { background: 'var(--color-badge-info-bg)', foreground: 'var(--color-badge-info-text)' },
-	success: { background: 'var(--color-status-success-bg)', foreground: 'var(--color-status-success-text)' },
+	success: {
+		background: 'var(--color-status-success-bg)',
+		foreground: 'var(--color-status-success-text)',
+	},
 	secondary: {
 		background: 'var(--color-badge-secondary-bg)',
 		foreground: 'var(--color-badge-secondary-text)',
 	},
-	warning: { background: 'var(--color-badge-warning-bg)', foreground: 'var(--color-badge-warning-text)' },
-	danger: { background: 'var(--color-badge-danger-bg)', foreground: 'var(--color-badge-danger-text)' },
+	warning: {
+		background: 'var(--color-badge-warning-bg)',
+		foreground: 'var(--color-badge-warning-text)',
+	},
+	danger: {
+		background: 'var(--color-badge-danger-bg)',
+		foreground: 'var(--color-badge-danger-text)',
+	},
 };
 
-const wrapLabel = (value: string, maxLength = 24): string[] => {
+const wrapLabel = (value: string, maxLength = 28): string[] => {
 	const explicitLines = value.replaceAll('\\n', '\n').split('\n');
 	const wrapped: string[] = [];
 
@@ -127,17 +136,19 @@ for (const line of lines.slice(1)) {
 if (nodes.size === 0) throw new Error(`Diagram "${title}" has no nodes.`);
 const nodeList = [...nodes.values()].sort((left, right) => left.index - right.index);
 const nodeOrder = new Map(nodeList.map((node, index) => [node.id, index]));
+const isForwardEdge = (edge: DiagramEdge) =>
+	(nodeOrder.get(edge.to) ?? 0) > (nodeOrder.get(edge.from) ?? 0);
 
-// Assign graph ranks from forward edges. Back edges remain visible but do not inflate the layout indefinitely.
+// Longest-path ranks keep the authored left-to-right / top-to-bottom flow readable.
+// Back edges (for example API -> browser recovery paths) are routed outside the graph instead of
+// forcing cyclic rank inflation.
 for (let pass = 0; pass < nodeList.length; pass += 1) {
 	let changed = false;
 	for (const edge of edges) {
+		if (!isForwardEdge(edge)) continue;
 		const from = nodes.get(edge.from);
 		const to = nodes.get(edge.to);
 		if (!from || !to) continue;
-		const fromOrder = nodeOrder.get(from.id) ?? 0;
-		const toOrder = nodeOrder.get(to.id) ?? 0;
-		if (toOrder <= fromOrder) continue;
 		const nextLevel = from.level + 1;
 		if (nextLevel > to.level) {
 			to.level = nextLevel;
@@ -145,6 +156,21 @@ for (let pass = 0; pass < nodeList.length; pass += 1) {
 		}
 	}
 	if (!changed) break;
+}
+
+// Secondary workers/migrators are often authored after the main chain. If they only feed a deep
+// target, place them beside that target's previous rank instead of leaving them at the far-left root.
+for (const node of nodeList) {
+	if (node.level !== 0) continue;
+	const incomingForward = edges.some(edge => edge.to === node.id && isForwardEdge(edge));
+	if (incomingForward) continue;
+	const targetLevels = edges
+		.filter(edge => edge.from === node.id && isForwardEdge(edge))
+		.map(edge => nodes.get(edge.to)?.level ?? 0)
+		.filter(level => level > 1);
+	if (targetLevels.length > 0) {
+		node.level = Math.max(0, Math.min(...targetLevels) - 1);
+	}
 }
 
 const levels = new Map<number, DiagramNode[]>();
@@ -155,11 +181,11 @@ for (const node of nodeList) {
 }
 const levelList = [...levels.entries()].sort(([left], [right]) => left - right);
 
-const nodeWidth = 190;
-const nodeHeight = 104;
-const mainGap = 56;
-const crossGap = 20;
-const margin = 24;
+const nodeWidth = 220;
+const nodeHeight = 100;
+const mainGap = 92;
+const crossGap = 24;
+const margin = 56;
 const maxCrossCount = Math.max(...levelList.map(([, levelNodes]) => levelNodes.length));
 const levelCount = levelList.length;
 const graphWidth =
@@ -192,40 +218,66 @@ for (let levelIndex = 0; levelIndex < levelList.length; levelIndex += 1) {
 	}
 }
 
+const backEdges = edges.filter(edge => {
+	const from = nodes.get(edge.from);
+	const to = nodes.get(edge.to);
+	return Boolean(from && to && to.level <= from.level);
+});
+
 const edgePath = (edge: DiagramEdge) => {
 	const from = nodes.get(edge.from);
 	const to = nodes.get(edge.to);
 	if (!from || !to) return { path: '', labelX: 0, labelY: 0 };
+
 	const fromCenterX = from.x + nodeWidth / 2;
 	const fromCenterY = from.y + nodeHeight / 2;
 	const toCenterX = to.x + nodeWidth / 2;
 	const toCenterY = to.y + nodeHeight / 2;
-	const horizontal = Math.abs(toCenterX - fromCenterX) >= Math.abs(toCenterY - fromCenterY);
+	const backward = to.level <= from.level;
 
-	if (horizontal) {
-		const forward = toCenterX >= fromCenterX;
-		const startX = forward ? from.x + nodeWidth : from.x;
-		const endX = forward ? to.x : to.x + nodeWidth;
-		const startY = fromCenterY;
-		const endY = toCenterY;
+	if (direction === 'LR' && !backward) {
+		const startX = from.x + nodeWidth;
+		const endX = to.x;
 		const controlX = (startX + endX) / 2;
 		return {
-			path: `M ${startX} ${startY} C ${controlX} ${startY}, ${controlX} ${endY}, ${endX} ${endY}`,
+			path: `M ${startX} ${fromCenterY} C ${controlX} ${fromCenterY}, ${controlX} ${toCenterY}, ${endX} ${toCenterY}`,
 			labelX: controlX,
-			labelY: (startY + endY) / 2 - 8,
+			labelY: (fromCenterY + toCenterY) / 2 - 14,
 		};
 	}
 
-	const forward = toCenterY >= fromCenterY;
-	const startX = fromCenterX;
-	const endX = toCenterX;
-	const startY = forward ? from.y + nodeHeight : from.y;
-	const endY = forward ? to.y : to.y + nodeHeight;
-	const controlY = (startY + endY) / 2;
+	if (direction === 'TD' && !backward) {
+		const startY = from.y + nodeHeight;
+		const endY = to.y;
+		const controlY = (startY + endY) / 2;
+		return {
+			path: `M ${fromCenterX} ${startY} C ${fromCenterX} ${controlY}, ${toCenterX} ${controlY}, ${toCenterX} ${endY}`,
+			labelX: (fromCenterX + toCenterX) / 2,
+			labelY: controlY - 14,
+		};
+	}
+
+	const laneIndex = Math.max(0, backEdges.indexOf(edge));
+	if (direction === 'LR') {
+		const useTopLane = laneIndex % 2 === 0;
+		const laneY = useTopLane ? margin / 2 : graphHeight - margin / 2;
+		const startX = from.x;
+		const endX = to.x + nodeWidth;
+		return {
+			path: `M ${startX} ${fromCenterY} C ${startX} ${laneY}, ${endX} ${laneY}, ${endX} ${toCenterY}`,
+			labelX: (startX + endX) / 2,
+			labelY: useTopLane ? laneY - 8 : laneY + 8,
+		};
+	}
+
+	const useLeftLane = laneIndex % 2 === 0;
+	const laneX = useLeftLane ? margin / 2 : graphWidth - margin / 2;
+	const startY = from.y;
+	const endY = to.y + nodeHeight;
 	return {
-		path: `M ${startX} ${startY} C ${startX} ${controlY}, ${endX} ${controlY}, ${endX} ${endY}`,
-		labelX: (startX + endX) / 2,
-		labelY: controlY - 8,
+		path: `M ${fromCenterX} ${startY} C ${laneX} ${startY}, ${laneX} ${endY}, ${toCenterX} ${endY}`,
+		labelX: useLeftLane ? laneX - 8 : laneX + 8,
+		labelY: (startY + endY) / 2,
 	};
 };
 
@@ -248,7 +300,7 @@ const descriptionId = `diagram-description-${diagramHash}`;
 			width={graphWidth}
 			height={graphHeight}
 			viewBox={`0 0 ${graphWidth} ${graphHeight}`}
-			class="block max-w-none"
+			class="mx-auto block max-w-none"
 			role="img"
 			aria-labelledby={`${titleId} ${descriptionId}`}
 			data-diagram-svg
@@ -288,35 +340,36 @@ const descriptionId = `diagram-description-${diagramHash}`;
 							? 'var(--channel-content-muted)'
 							: 'var(--channel-accent-primary)';
 						const marker = edge.optional ? optionalMarkerId : solidMarkerId;
-						const labelWidth = edge.label ? Math.max(56, edge.label.length * 7 + 16) : 0;
+						const labelWidth = edge.label ? Math.max(64, edge.label.length * 7.25 + 20) : 0;
 						return (
 							<g data-diagram-edge data-edge-optional={String(edge.optional)}>
 								<path
 									d={geometry.path}
 									fill="none"
 									stroke={stroke}
-									stroke-width="2"
-									stroke-dasharray={edge.optional ? '7 6' : undefined}
+									stroke-width={edge.optional ? '1.75' : '2.25'}
+									stroke-dasharray={edge.optional ? '8 7' : undefined}
 									marker-end={`url(#${marker})`}
 								></path>
 								{edge.label && (
 									<g
-										transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 11})`}
+										transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 12})`}
 									>
 										<rect
 											width={labelWidth}
-											height="22"
-											fill="var(--channel-background-canvas)"
+											height="24"
+											fill="var(--channel-surface-default)"
 											stroke="var(--color-edge-subtle)"
 											stroke-width="1"
 										></rect>
 										<text
 											x={labelWidth / 2}
-											y="15"
+											y="16"
 											text-anchor="middle"
 											font-family="var(--font-mono)"
-											font-size="11"
-											fill="var(--channel-content-muted)"
+											font-size="12"
+											font-weight="700"
+											fill="var(--channel-content-default)"
 										>
 											{edge.label}
 										</text>
@@ -332,7 +385,7 @@ const descriptionId = `diagram-description-${diagramHash}`;
 				{
 					nodeList.map(node => {
 						const tone = toneTokens[node.tone];
-						const lineHeight = 17;
+						const lineHeight = 18;
 						const firstLineY =
 							node.y + nodeHeight / 2 - ((node.lines.length - 1) * lineHeight) / 2 + 5;
 						return (
@@ -346,12 +399,20 @@ const descriptionId = `diagram-description-${diagramHash}`;
 									stroke={tone.foreground}
 									stroke-width="2"
 								></rect>
+								<line
+									x1={node.x + 2}
+									y1={node.y + 2}
+									x2={node.x + nodeWidth - 2}
+									y2={node.y + 2}
+									stroke={tone.foreground}
+									stroke-width="4"
+								></line>
 								<text
 									x={node.x + nodeWidth / 2}
 									y={firstLineY}
 									text-anchor="middle"
 									font-family="var(--font-mono)"
-									font-size="12"
+									font-size="13"
 									font-weight="700"
 									fill={tone.foreground}
 								>
@@ -372,7 +433,7 @@ const descriptionId = `diagram-description-${diagramHash}`;
 			</g>
 		</svg>
 	</div>
-	<figcaption class="mt-3 text-caption text-content-muted">
+	<figcaption class="mt-3 text-caption leading-relaxed text-content-muted">
 		<span class="font-bold text-content-strong">{title}.</span> {description}
 	</figcaption>
 </figure>
