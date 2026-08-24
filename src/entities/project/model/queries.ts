@@ -13,6 +13,7 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 	const metadata = PROJECT_METADATA[projectId];
 	const link = metadata.link ? { link: metadata.link } : {};
 	const github = metadata.github ? { github: metadata.github } : {};
+	const version = metadata.version ? { version: metadata.version } : {};
 
 	return {
 		projectId,
@@ -33,6 +34,7 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 		},
 		...link,
 		...github,
+		...version,
 	};
 }
 
