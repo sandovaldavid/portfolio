@@ -11,17 +11,18 @@ const video = readSource('src/widgets/project-case-study/ui/ProjectVideo.astro')
 const gallery = readSource('src/widgets/project-case-study/ui/ProjectGallery.astro');
 const metadata = readSource('src/entities/project/model/metadata.ts');
 const config = readSource('src/content.config.ts');
+const projectsSchema = config.match(/const projects = defineCollection\(\{([\s\S]*?)\n\}\);/)?.[1] ?? '';
 const kiokuEn = readSource('src/content/projects/en/kioku.mdx');
 const kiokuEs = readSource('src/content/projects/es/kioku.mdx');
 
 describe('Project Case Study MDX contract', () => {
-	it('keeps shared identity and status in frontmatter while narrative lives in MDX', () => {
-		expect(config).toContain("pattern: '**/*.mdx'");
-		expect(config).toContain('kicker: nonEmptyString');
-		expect(config).toContain('status: projectStatus');
-		expect(config).not.toContain('problem: nonEmptyString');
-		expect(config).not.toContain('evidence:');
-		expect(config).not.toContain('presentation:');
+	it('keeps shared identity and status in project frontmatter while narrative lives in MDX', () => {
+		expect(projectsSchema).toContain("pattern: '**/*.mdx'");
+		expect(projectsSchema).toContain('kicker: nonEmptyString');
+		expect(projectsSchema).toContain('status: projectStatus');
+		expect(projectsSchema).not.toContain('problem: nonEmptyString');
+		expect(projectsSchema).not.toContain('evidence:');
+		expect(projectsSchema).not.toContain('presentation:');
 	});
 
 	it('renders one presentation-only shell with concise informational status badges and a shared action bar', () => {
