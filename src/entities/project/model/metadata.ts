@@ -76,8 +76,8 @@ const projectMetadata = {
 		slug: 'kioku',
 		github: 'https://github.com/sandovaldavid/kioku',
 		repositories: [
-			{ label: 'Server', url: 'https://github.com/sandovaldavid/kioku' },
-			{ label: 'Obsidian plugin', url: 'https://github.com/sandovaldavid/kioku-obsidian' },
+			{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' },
+			{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' },
 		],
 		image: kiokuImg,
 		technologyIds: ['csharp', 'markdown'],
