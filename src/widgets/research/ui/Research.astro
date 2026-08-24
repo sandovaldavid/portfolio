@@ -1,13 +1,22 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
+import GitHubIcon from '@assets/technologies/GitHub.astro';
+import PythonIcon from '@assets/technologies/Python.astro';
+import { getResearchContent } from '@entities/research';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tResearch = createScopedUiTranslator(lang, 'sections.research');
 const tCommon = createScopedUiTranslator(lang, 'common');
-const techStack = ['BiLSTM', 'Python', 'TensorFlow', 'GitHub API'];
+const research = await getResearchContent(lang);
+const techStack = [
+	{ label: 'BiLSTM' },
+	{ label: 'Python', icon: PythonIcon },
+	{ label: 'TensorFlow' },
+	{ label: 'GitHub API', icon: GitHubIcon },
+];
 const pipeline = [
 	tResearch('pipeline.githubApi'),
 	tResearch('pipeline.raw'),
@@ -16,13 +25,14 @@ const pipeline = [
 	tResearch('pipeline.bilstm'),
 	tResearch('pipeline.classifier'),
 ];
+const modeledSignals = research.engineeredFeatures.slice(0, 4);
 ---
 
-<div class="w-full">
+<div class="w-full" data-research-home>
 	<div
-		class="grid w-full min-w-0 gap-10 lg:grid-cols-[minmax(0,760px)_minmax(0,456px)] lg:gap-16"
+		class="grid w-full min-w-0 gap-10 lg:grid-cols-[minmax(0,672px)_minmax(0,544px)] lg:gap-16"
 	>
-		<div class="flex min-w-0 flex-col gap-4">
+		<div class="flex min-w-0 flex-col gap-5">
 			<div
 				class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"
 			>
@@ -32,13 +42,16 @@ const pipeline = [
 				<Badge variant="info" size="sm">{tCommon('status.inProgress')}</Badge>
 			</div>
 
-			<h3 class="max-w-190 uppercase text-feature-title text-content-strong">
+			<h3 class="max-w-168 uppercase text-feature-title text-content-strong">
 				{tResearch('title')}
 			</h3>
 
-			<p class="max-w-190 text-body text-content-default">{tResearch('summary')}</p>
+			<p class="max-w-168 text-body text-content-default">{tResearch('summary')}</p>
 
-			<div class="flex flex-col gap-2 pt-1">
+			<div
+				class="flex max-w-168 flex-col gap-2 border-l-2 border-edge-strong bg-badge-brand-bg px-4 py-3"
+				data-research-hypothesis
+			>
 				<p class="text-editorial-label text-channel-accent-primary">
 					{tResearch('hypothesisLabel')}
 				</p>
@@ -49,35 +62,58 @@ const pipeline = [
 				href={getRelativeLocaleUrl(lang, 'research')}
 				target="_self"
 				variant="primary"
-				class="mt-1 w-full sm:w-47.5"
+				class="w-full sm:w-47.5"
 			>
 				<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 				{tResearch('viewFull')}
 			</LinkButton>
 		</div>
 
-		<aside class="flex min-w-0 flex-col gap-5 lg:pt-1" aria-label={tResearch('pipelineTitle')}>
+		<aside
+			class="flex min-w-0 flex-col gap-5 border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md transition-[box-shadow] duration-150 hover:shadow-retro-3xl motion-reduce:transition-none md:p-5 lg:p-6"
+			aria-label={tResearch('pipelineTitle')}
+			data-research-home-panel
+		>
 			<div class="flex flex-col gap-3">
 				<h4 class="text-component-title text-content-strong">
 					{tResearch('pipelineTitle')}
 				</h4>
-				<ol class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2 lg:grid-cols-3">
+				<ol class="grid grid-cols-1 gap-2 sm:grid-cols-2">
 					{
 						pipeline.map((step, index) => (
-							<li class="flex min-w-0 items-center gap-2 py-1.5">
+							<li
+								class="flex min-h-16 min-w-0 items-start gap-3 border border-edge-subtle px-3 py-3 transition-[transform,box-shadow,border-color] duration-150 hover:-translate-y-0.5 hover:border-edge-strong hover:shadow-retro-md motion-reduce:transform-none motion-reduce:transition-none"
+								data-research-pipeline-step
+							>
 								<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
 									{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="min-w-0 text-secondary text-content-default">
-									{step}
-								</span>
+								<span class="min-w-0 text-secondary text-content-default">{step}</span>
 							</li>
 						))
 					}
 				</ol>
 			</div>
 
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-col gap-3 border-t border-edge-subtle pt-4">
+				<p class="text-editorial-label text-channel-accent-primary">
+					{tResearch('signalsLabel')}
+				</p>
+				<ul class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
+					{
+						modeledSignals.map((signal, index) => (
+							<li class="flex min-w-0 items-start gap-2" data-research-signal>
+								<span class="shrink-0 text-editorial-label-compact text-channel-accent-primary">
+									{String(index + 1).padStart(2, '0')}
+								</span>
+								<span class="min-w-0 text-secondary text-content-default">{signal}</span>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+
+			<div class="flex flex-col gap-3 border-t border-edge-subtle pt-4">
 				<p class="text-editorial-label text-channel-accent-primary">
 					{tResearch('techStackLabel')}
 				</p>
@@ -85,15 +121,14 @@ const pipeline = [
 					{
 						techStack.map(tag => (
 							<li>
-								<TechPill label={tag} size="sm" variant="stack" />
+								<TechPill label={tag.label} icon={tag.icon} size="sm" variant="stack" />
 							</li>
 						))
 					}
 				</ul>
 			</div>
 
-			<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
-			<p class="max-w-114 text-secondary text-content-muted">
+			<p class="border-t border-edge-subtle pt-4 text-secondary text-content-muted">
 				{tResearch('methodologyHint')}
 			</p>
 		</aside>
