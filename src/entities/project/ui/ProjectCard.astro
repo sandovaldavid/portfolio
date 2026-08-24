@@ -53,19 +53,19 @@ const cardHeight = isPrimary
 	? 'h-131.5 md:h-134.5 lg:h-116'
 	: isCatalog
 		? 'h-116.5 md:h-119.5 lg:h-110'
-		: 'h-116.5 md:h-119.5 lg:h-93.5';
+		: 'h-116.5 md:h-119.5 lg:h-97.5';
 const mediaHeight = isPrimary
 	? 'h-47.5 lg:h-52.5'
 	: isCatalog
 		? 'h-32.5 lg:h-40'
-		: 'h-32.5 lg:h-30';
+		: 'h-32.5 lg:h-34';
 ---
 
 <article class="group h-full w-full">
 	<div
 		class:list={[
 			'relative mx-auto flex w-full max-w-85 flex-col overflow-hidden border-2 border-edge-strong bg-channel-surface-default p-0.5 shadow-retro-md transition-[box-shadow] duration-150 group-hover:shadow-retro-3xl md:max-w-92.25',
-			isCatalog ? 'lg:max-w-148' : 'lg:max-w-130',
+			isCatalog ? 'lg:max-w-148' : 'lg:max-w-140',
 			cardHeight,
 		]}
 		data-project-card-variant={variant}
