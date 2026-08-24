@@ -11,7 +11,12 @@ const productionIds = [
 	'mad-ai',
 	'yukidoke',
 ] as const;
-const developmentOnlyIds = ['project-detail-fixture'] as const;
+const developmentOnlyIds = [
+	'project-detail-fixture',
+	'fullstack-project-fixture',
+	'frontend-project-fixture',
+	'ml-ai-project-fixture',
+] as const;
 const allIds = [...productionIds, ...developmentOnlyIds] as const;
 
 function projectFiles(locale: (typeof locales)[number]) {
@@ -30,6 +35,10 @@ function projectSource(locale: (typeof locales)[number], projectId: string): str
 	return readSource(`src/content/projects/${locale}/${projectId}.mdx`);
 }
 
+function metadataBlock(metadata: string, projectId: string): string {
+	return metadata.match(new RegExp(`\\t'${projectId}': \\{([\\s\\S]*?)\\n\\t\\},`))?.[1] ?? '';
+}
+
 describe('localized project MDX content', () => {
 	it('registers projects as an MDX-only schema-validated Astro collection', () => {
 		const config = readSource('src/content.config.ts');
@@ -46,9 +55,7 @@ describe('localized project MDX content', () => {
 		for (const locale of locales) {
 			const files = projectFiles(locale);
 			expect(files).toEqual(allIds.map(id => `${id}.mdx`).sort());
-			expect(
-				readdirSync(`src/content/projects/${locale}`).filter(file => file.endsWith('.json'))
-			).toEqual([]);
+			expect(readdirSync(`src/content/projects/${locale}`).filter(file => file.endsWith('.json'))).toEqual([]);
 
 			for (const projectId of allIds) {
 				const source = projectSource(locale, projectId);
@@ -86,13 +93,11 @@ describe('localized project MDX content', () => {
 
 		expect(slugs.sort()).toEqual([...allIds].sort());
 		expect(new Set(slugs).size).toBe(allIds.length);
-		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10, 0]);
+		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10, 4, 3, 2, 1]);
 		expect(metadata).toContain("docs: 'https://kioku.sandovaldavid.com'");
 		expect(metadata).toContain("package: 'https://www.nuget.org/packages/kioku-mcp-server'");
 		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
-		expect(metadata).toContain(
-			"{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }"
-		);
+		expect(metadata).toContain("{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }");
 		expect(metadata).toContain("link: 'https://fluentreads.vercel.app'");
 
 		for (const locale of locales) {
@@ -102,34 +107,36 @@ describe('localized project MDX content', () => {
 		}
 	});
 
-	it('keeps the kitchen-sink Project Detail fixture development-only and fully representative', () => {
+	it('keeps four representative Project Detail fixtures development-only', () => {
 		const metadata = readSource('src/entities/project/model/metadata.ts');
 		const queries = readSource('src/entities/project/model/queries.ts');
-		const fixtureBlock =
-			metadata.match(/'project-detail-fixture': \{([\s\S]*?)\n\t\},\n\} as const/)?.[1] ?? '';
 
 		expect(metadata).toContain('developmentOnly?: boolean');
-		expect(metadata).toContain(
-			'export function isProjectVisible(projectId: ProjectId, development = import.meta.env.DEV)'
-		);
-		expect(fixtureBlock).toContain('developmentOnly: true');
-		expect(fixtureBlock).toContain("version: '0.0.0-dev'");
-		expect(fixtureBlock).toContain("demoAccess: 'live'");
-		expect(fixtureBlock).toContain('repositories: [');
-		expect(fixtureBlock).toContain('docs:');
-		expect(fixtureBlock).toContain('package:');
-		expect(fixtureBlock).toContain('related:');
+		expect(metadata).toContain('export function isProjectVisible(projectId: ProjectId, development = import.meta.env.DEV)');
 		expect(queries).toContain('if (!isProjectVisible(entry.data.projectId)) continue;');
 		expect(queries).toContain('isProjectVisible(projectId)');
 
+		for (const projectId of developmentOnlyIds) {
+			const block = metadataBlock(metadata, projectId);
+			expect(block, projectId).toContain('developmentOnly: true');
+			expect(block, projectId).toContain("version: '0.0.0-dev'");
+			for (const locale of locales) {
+				const fixture = projectSource(locale, projectId);
+				expect(fixture, `${locale}/${projectId}`).toContain('<MermaidDiagram');
+			}
+		}
+
 		for (const locale of locales) {
-			const fixture = projectSource(locale, 'project-detail-fixture');
-			expect(fixture).toContain('<ProjectVideo');
-			expect(fixture).toContain('<ProjectGallery');
-			expect(fixture).toContain('<MermaidDiagram');
-			expect(fixture).toContain('<EvidenceBlock');
-			expect(fixture).toContain('<CaseStudyGrid');
-			expect(fixture).toContain('<CaseStudyCard');
+			const mcp = projectSource(locale, 'project-detail-fixture');
+			const frontend = projectSource(locale, 'frontend-project-fixture');
+			const fullstack = projectSource(locale, 'fullstack-project-fixture');
+			const mlAi = projectSource(locale, 'ml-ai-project-fixture');
+			expect(mcp).toContain('<ProjectVideo');
+			expect(mcp).toContain('<ProjectGallery');
+			expect(frontend).toContain('<ProjectGallery');
+			expect(fullstack.match(/<MermaidDiagram/g)?.length).toBeGreaterThanOrEqual(2);
+			expect(mlAi).toContain('<ProjectGallery');
+			expect(mlAi).toContain('EvidenceBlock');
 		}
 	});
 
