@@ -6,6 +6,7 @@ import {
 	getLanguageFromLocale,
 	type Language,
 } from '@shared/config/i18n';
+import ProjectResources from './ProjectResources.astro';
 
 interface Props {
 	project: ProjectItem;
@@ -86,6 +87,8 @@ const lifecycleBadgeVariant = {
 			</div>
 		</div>
 	</header>
+
+	<ProjectResources projectId={project.projectId} />
 
 	<div class="w-full" data-case-study-content>
 		<slot />
