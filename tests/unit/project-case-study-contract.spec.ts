@@ -75,9 +75,10 @@ describe('Project Case Study MDX contract', () => {
 		expect(gallery).not.toContain('object-cover');
 	});
 
-	it('renders controlled Mermaid authoring as a routed semantic-color SVG graph', () => {
+	it('renders controlled Mermaid authoring as a readable routed semantic-color SVG graph', () => {
 		expect(mermaid).toContain('flowchart\\s+(LR|TD)');
 		expect(mermaid).toContain('data-mermaid-state="rendered"');
+		expect(mermaid).toContain('data-diagram-density="balanced"');
 		expect(mermaid).toContain('data-diagram-svg');
 		expect(mermaid).toContain('data-diagram-node');
 		expect(mermaid).toContain('data-diagram-edge');
@@ -86,18 +87,25 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).toContain("'brand', 'info', 'success', 'secondary', 'warning', 'danger'");
 		expect(mermaid).toContain('var(--color-badge-brand-bg)');
 		expect(mermaid).toContain('var(--color-status-success-bg)');
+		expect(mermaid).toContain('const nodeWidth = 232');
+		expect(mermaid).toContain('const nodeHeight = 108');
+		expect(mermaid).toContain('const mainGap = 116');
+		expect(mermaid).toContain('const crossGap = 32');
 		expect(mermaid).toContain('const backEdges = edges.filter');
 		expect(mermaid).toContain('to.level <= from.level');
 		expect(mermaid).toContain('targetLevels.length > 0');
-		expect(mermaid).toContain('const backEdgeOffset = 36');
-		expect(mermaid).toContain('const backEdgeStep = 16');
-		expect(mermaid).toContain('const unclampedLaneY');
-		expect(mermaid).toContain('const unclampedLaneX');
-		expect(mermaid).toContain('class="mx-auto block max-w-none"');
+		expect(mermaid).toContain('const backEdgeOffset = 42');
+		expect(mermaid).toContain('const backEdgeStep = 18');
+		expect(mermaid).toContain('const topRoom = topBoundary');
+		expect(mermaid).toContain('const leftRoom = leftBoundary');
+		expect(mermaid).toContain('class="mx-auto block h-auto max-w-none md:max-w-full"');
 		expect(mermaid).toContain('diagram-scroll overflow-x-auto overscroll-x-contain');
 		expect(mermaid).toContain('scrollbar-width: none');
-		expect(mermaid).toContain('.diagram-scroll::-webkit-scrollbar');
-		expect(mermaid).toContain('stroke-width="4"');
+		expect(mermaid).toContain('touch-action: pan-x pan-y');
+		expect(mermaid).toContain('vector-effect="non-scaling-stroke"');
+		expect(mermaid).toContain('stroke-linecap="round"');
+		expect(mermaid).toContain('stroke-width="5"');
+		expect(mermaid).toContain('font-size="14"');
 		expect(mermaid).toContain('role="img"');
 		expect(mermaid).not.toContain('<ol');
 		expect(mermaid).not.toContain('cdn.jsdelivr.net');
@@ -114,9 +122,7 @@ describe('Project Case Study MDX contract', () => {
 		expect(metadata).toContain('version?: string');
 		expect(metadata).toContain("version: '3.1.2'");
 		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
-		expect(metadata).toContain(
-			"{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }"
-		);
+		expect(metadata).toContain("{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }");
 		expect(resources).toContain('PROJECT_METADATA[projectId]');
 		expect(resources).toContain("metadata.sourceAccess === 'private'");
 		expect(resources).toContain('metadata.repositories?.length');
