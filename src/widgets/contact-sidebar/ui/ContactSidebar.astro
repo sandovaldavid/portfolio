@@ -10,7 +10,11 @@ import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
 import MailIcon from '@assets/icons/Mail.astro';
 import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
-import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
+import {
+	createScopedUiTranslator,
+	getLanguageFromLocale,
+	Language,
+} from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
@@ -69,7 +73,7 @@ const links = [
 	<div
 		id="contact-sidebar-rail"
 		class="contact-sidebar-rail flex flex-col items-center"
-		aria-hidden={String(defaultCollapsed)}
+		aria-hidden={defaultCollapsed}
 		inert={defaultCollapsed ? true : undefined}
 	>
 		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
