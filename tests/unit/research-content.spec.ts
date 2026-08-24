@@ -92,7 +92,7 @@ describe('localized research content', () => {
 		expect(spanishRoute).toContain("'pages.research'");
 	});
 
-	it('uses a dense, data-backed Home research panel with semantic technology icons', () => {
+	it('uses a balanced, data-backed Home research composition with a shared technology footer', () => {
 		const homeResearch = readSource('src/widgets/research/ui/Research.astro');
 		const englishSection = readJson<Record<string, unknown>>(
 			'src/shared/config/i18n/locales/en/sections/research.json'
@@ -104,9 +104,15 @@ describe('localized research content', () => {
 		expect(homeResearch).toContain('getResearchContent');
 		expect(homeResearch).toContain('research.engineeredFeatures.slice(0, 4)');
 		expect(homeResearch).toContain('lg:grid-cols-[minmax(0,672px)_minmax(0,544px)]');
+		expect(homeResearch).toContain('data-research-home-main');
 		expect(homeResearch).toContain('data-research-home-panel');
 		expect(homeResearch).toContain('data-research-pipeline-step');
 		expect(homeResearch).toContain('data-research-signal');
+		expect(homeResearch).toContain('data-research-home-footer');
+		expect(homeResearch).toContain('md:grid-cols-[minmax(0,1fr)_minmax(280px,420px)]');
+		expect(homeResearch.indexOf('data-research-home-footer')).toBeGreaterThan(
+			homeResearch.indexOf('</aside>')
+		);
 		expect(homeResearch).toContain(
 			"import PythonIcon from '@assets/technologies/Python.astro'"
 		);
