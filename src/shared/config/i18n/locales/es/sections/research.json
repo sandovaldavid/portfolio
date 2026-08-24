@@ -15,6 +15,7 @@
 		"bilstm": "BILSTM",
 		"classifier": "CLASIFICADOR"
 	},
+	"signalsLabel": "SEÑALES MODELADAS",
 	"techStackLabel": "STACK TECNOLÓGICO",
 	"methodologyHint": "Metodología, arquitectura y pipeline completos en la página de investigación.",
 	"viewFull": "Ver investigación"
