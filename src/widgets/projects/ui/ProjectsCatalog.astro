@@ -20,7 +20,9 @@ const publishedProjects = projects.filter(
 const inspectableSourceCount = publishedProjects.filter(
 	project => project.sourceAccess !== 'private'
 ).length;
-const activeProjectCount = publishedProjects.filter(project => project.lifecycle === 'active').length;
+const activeProjectCount = publishedProjects.filter(
+	project => project.lifecycle === 'active'
+).length;
 const technologyCounts = new Map<string, number>();
 
 for (const project of publishedProjects) {
@@ -112,11 +114,13 @@ const formatCount = (value: number) => String(value).padStart(2, '0');
 				<ul class="mt-3 flex flex-wrap gap-2" data-projects-top-technologies>
 					{
 						topTechnologies.map(([technology, count]) => (
-							<li
-								class="inline-flex min-h-8 items-center gap-2 border border-edge-subtle bg-channel-surface-default px-3 py-1.5 text-sm text-content-default"
-							>
-								<span class="font-mono font-bold text-content-strong">{technology}</span>
-								<span class="font-mono text-xs text-channel-accent-primary">×{count}</span>
+							<li class="inline-flex min-h-8 items-center gap-2 border border-edge-subtle bg-channel-surface-default px-3 py-1.5 text-sm text-content-default">
+								<span class="font-mono font-bold text-content-strong">
+									{technology}
+								</span>
+								<span class="font-mono text-xs text-channel-accent-primary">
+									×{count}
+								</span>
 							</li>
 						))
 					}

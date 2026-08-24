@@ -143,7 +143,10 @@ test('Projects Catalog surfaces a recruiter-oriented portfolio index and reposit
 	await expect(caseStudyAction).toBeVisible();
 	await expect(repositoryAction).toBeVisible();
 	await expect(repositoryAction).toContainText('kioku');
-	await expect(repositoryAction).toHaveAttribute('href', 'https://github.com/sandovaldavid/kioku');
+	await expect(repositoryAction).toHaveAttribute(
+		'href',
+		'https://github.com/sandovaldavid/kioku'
+	);
 
 	const cardBox = (await kiokuCard.boundingBox())!;
 	const caseStudyBox = (await caseStudyAction.boundingBox())!;

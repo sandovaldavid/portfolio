@@ -59,7 +59,7 @@ describe('Projects Catalog composition contract', () => {
 	it('gives catalog cards a distinct desktop composition and balanced footer actions', () => {
 		expect(card).toContain("variant?: 'primary' | 'secondary' | 'catalog'");
 		expect(card).toContain("const isCatalog = variant === 'catalog'");
-		expect(card).toContain("tags.slice(0, isCatalog ? 4 : 3)");
+		expect(card).toContain('tags.slice(0, isCatalog ? 4 : 3)');
 		expect(card).toContain("github?.replace(/\\/$/, '').split('/').filter(Boolean).at(-1)");
 		expect(card).toContain("isCatalog ? 'lg:max-w-148' : 'lg:max-w-130'");
 		expect(card).toContain('items-end justify-between gap-2');
