@@ -88,7 +88,9 @@ const links = [
 					target={external ? '_blank' : undefined}
 					rel={external ? 'noopener noreferrer' : undefined}
 					title={tooltip}
-					aria-label={external ? `${label}, ${tAccessibility('externalLink')}` : label}
+					aria-label={
+						external ? `${label}, ${tAccessibility('externalLink')}` : label
+					}
 					class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
 				>
 					<Icon class="size-5" aria-hidden="true" />
