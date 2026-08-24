@@ -2,8 +2,8 @@ import { expect, test } from './fixtures';
 
 const DESKTOP = { width: 1440, height: 900 };
 
-test.describe('Home floating contact rail', () => {
-	test('starts visible, retracts after scroll and reveals again from the left-edge hotspot', async ({
+test.describe('Floating contact rail', () => {
+	test('Home starts visible, retracts after scroll and reveals again from the left-edge hotspot', async ({
 		page,
 	}) => {
 		await page.setViewportSize(DESKTOP);
@@ -24,10 +24,43 @@ test.describe('Home floating contact rail', () => {
 		await expect.poll(() => sidebar.getAttribute('data-collapsed')).toBe('true');
 	});
 
-	test('is scoped to Home instead of following the user across the site', async ({ page }) => {
+	test('non-Home pages mount the rail collapsed by default and keep it keyboard-revealable', async ({
+		page,
+	}) => {
+		await page.setViewportSize(DESKTOP);
+
+		for (const route of ['/projects/', '/projects/kioku/', '/research/', '/about/', '/es/projects/']) {
+			await page.goto(route);
+
+			const sidebar = page.locator('#contact-sidebar');
+			const rail = page.locator('#contact-sidebar-rail');
+			const reveal = page.locator('#contact-sidebar-reveal');
+
+			await expect(sidebar).toBeVisible();
+			await expect(sidebar).toHaveAttribute('data-collapsed', 'true');
+			await expect(rail).toHaveAttribute('aria-hidden', 'true');
+			await expect(reveal).toHaveAttribute('tabindex', '0');
+		}
+	});
+
+	test('a collapsed non-Home rail opens from the hotspot and collapses again after focus leaves', async ({
+		page,
+	}) => {
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/projects/');
-		await expect(page.locator('#contact-sidebar')).toHaveCount(0);
+
+		const sidebar = page.locator('#contact-sidebar');
+		const rail = page.locator('#contact-sidebar-rail');
+		const reveal = page.locator('#contact-sidebar-reveal');
+
+		await reveal.click();
+		await expect.poll(() => sidebar.getAttribute('data-collapsed')).toBe('false');
+		await expect(rail).toHaveAttribute('aria-hidden', 'false');
+		await expect(rail.locator('a').first()).toBeFocused();
+
+		await page.locator('header a').first().focus();
+		await expect.poll(() => sidebar.getAttribute('data-collapsed')).toBe('true');
+		await expect(rail).toHaveAttribute('aria-hidden', 'true');
 	});
 });
 
