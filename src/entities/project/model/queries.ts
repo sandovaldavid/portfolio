@@ -57,7 +57,9 @@ async function getLocalizedProjectEntries(lang: Language): Promise<ProjectConten
 		}
 
 		if (!isProjectId(entry.data.projectId)) {
-			throw new Error(`Missing language-neutral metadata for project "${entry.data.projectId}".`);
+			throw new Error(
+				`Missing language-neutral metadata for project "${entry.data.projectId}".`
+			);
 		}
 
 		if (!isProjectVisible(entry.data.projectId)) continue;

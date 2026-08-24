@@ -8,10 +8,14 @@ const fixtures = [
 ] as const;
 
 test.describe('Project Detail development fixtures production boundary', () => {
-	test('does not expose development fixtures in the production project catalog', async ({ page }) => {
+	test('does not expose development fixtures in the production project catalog', async ({
+		page,
+	}) => {
 		await page.goto('/projects/');
 		for (const fixture of fixtures) {
-			await expect(page.getByRole('heading', { name: fixture.title, exact: true })).toHaveCount(0);
+			await expect(
+				page.getByRole('heading', { name: fixture.title, exact: true })
+			).toHaveCount(0);
 			await expect(page.locator(`a[href*="${fixture.slug}"]`)).toHaveCount(0);
 		}
 	});

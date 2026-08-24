@@ -2,30 +2,48 @@
 projectId: mad-ai
 locale: es
 title: MAD AI
-description: "Un cliente administrativo en Angular 20 con SSR y capas explícitas de dominio/aplicación/infraestructura/presentación, acompañado por una API REST privada en Django 5.2 mantenida por separado."
-category: "Arquitectura Full-Stack"
-imageAlt: "Vista previa del cliente administrativo MAD AI y su arquitectura en capas"
+description: 'Un cliente administrativo en Angular 20 con SSR y capas explícitas de dominio/aplicación/infraestructura/presentación, acompañado por una API REST privada en Django 5.2 mantenida por separado.'
+category: 'Arquitectura Full-Stack'
+imageAlt: 'Vista previa del cliente administrativo MAD AI y su arquitectura en capas'
 caseStudy:
-  kicker: "CASO DE ESTUDIO · ARQUITECTURA FULL-STACK"
-  status:
-    lifecycle: "MANTENIDO · ANGULAR 20 + DJANGO 5.2"
-    source: "CLIENTE PÚBLICO · API PRIVADA"
-    demo: "SIN DEMO PÚBLICA"
+    kicker: 'CASO DE ESTUDIO · ARQUITECTURA FULL-STACK'
+    status:
+        lifecycle: 'MANTENIDO · ANGULAR 20 + DJANGO 5.2'
+        source: 'CLIENTE PÚBLICO · API PRIVADA'
+        demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection eyebrow="LÍMITE DE EVIDENCIA" title="El cliente es público; la API compañera es privada">
-  El repositorio público `MAD-AI` expone la aplicación Angular, la entrada SSR, la arquitectura cliente por capas y sus adaptadores HTTP. Un repositorio separado `MAD-AI-API` contiene el servicio Django REST, pero ese repositorio es privado. Este caso de estudio usa el backend privado como contexto verificable por el propietario y mantiene el badge de código público enlazado sólo al frontend que un reclutador puede inspeccionar de forma independiente.
+<CaseStudySection
+	eyebrow="LÍMITE DE EVIDENCIA"
+	title="El cliente es público; la API compañera es privada"
+>
+	El repositorio público `MAD-AI` expone la aplicación Angular, la entrada SSR, la arquitectura
+	cliente por capas y sus adaptadores HTTP. Un repositorio separado `MAD-AI-API` contiene el
+	servicio Django REST, pero ese repositorio es privado. Este caso de estudio usa el backend
+	privado como contexto verificable por el propietario y mantiene el badge de código público
+	enlazado sólo al frontend que un reclutador puede inspeccionar de forma independiente.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="Los flujos administrativos acumulan responsabilidades transversales rápidamente">
-  Autenticación, navegación protegida, administración de usuarios, roles, notificaciones y reporting necesitan comportamiento compartido sin convertir los componentes en clientes de transporte. El proyecto separa estas responsabilidades en ambos extremos: un cliente Angular con capas explícitas y un servicio Django REST con sus propios límites de aplicación, dominio e infraestructura.
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="Los flujos administrativos acumulan responsabilidades transversales rápidamente"
+>
+	Autenticación, navegación protegida, administración de usuarios, roles, notificaciones y
+	reporting necesitan comportamiento compartido sin convertir los componentes en clientes de
+	transporte. El proyecto separa estas responsabilidades en ambos extremos: un cliente Angular con
+	capas explícitas y un servicio Django REST con sus propios límites de aplicación, dominio e
+	infraestructura.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Dos repositorios, dos límites arquitectónicos independientes" surface="highlight">
-  <MermaidDiagram
-    title="Límite actual del sistema MAD AI"
-    description="El cliente público Angular 20 renderiza en navegador o SSR y consume una API REST privada en Django 5.2. El backend usa adaptadores DRF/JWT y soporte PostgreSQL; Celery está presente para trabajo asíncrono."
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Dos repositorios, dos límites arquitectónicos independientes"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Límite actual del sistema MAD AI"
+		description="El cliente público Angular 20 renderiza en navegador o SSR y consume una API REST privada en Django 5.2. El backend usa adaptadores DRF/JWT y soporte PostgreSQL; Celery está presente para trabajo asíncrono."
+		chart={`flowchart LR
       Browser["Navegador"] --> Angular["Cliente Angular 20\nrutas + presentación"]
       SSR["Angular SSR\nExpress 5"] --> Angular
       Angular --> App["Contratos de aplicación + dominio"]
@@ -34,7 +52,7 @@ caseStudy:
       API --> Service["Capa de aplicación / servicios"]
       Service --> DB["PostgreSQL\nDjango ORM"]
       Service -. asíncrono .-> Celery["Tareas Celery"]`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="FRONTEND" title="Los nombres de las capas corresponden a límites reales de Angular">
@@ -54,17 +72,21 @@ caseStudy:
     <CaseStudyCard label="PRESENTACIÓN" title="LAS RUTAS SEPARAN ÁREAS PÚBLICAS Y PROTEGIDAS" tone="primary">
       Las rutas de autenticación usan su propio layout; dashboard y administración de usuarios viven detrás de `AuthGuard` dentro del shell protegido. Angular SSR y Express proporcionan la entrada renderizada en servidor.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="BACKEND" title="La API privada usa una arquitectura Django modular y pragmática" surface="highlight">
   El manifest del backend fija **Django 5.2.3** y **Django REST Framework 3.16.0**, con JWT/cryptography, PostgreSQL mediante `psycopg2`, filtering, tooling OpenAPI y Celery. Su documento de arquitectura describe un enfoque híbrido modular que combina service layer, modelos Django centrados en dominio y ports/adapters en lugar de forzar un dominio agnóstico que duplique el ORM.
 
-  Como el repositorio es privado, estos datos no se presentan como evidencia pública inspeccionable de forma independiente. Explican la arquitectura que construí y mantengo; el cliente público sigue siendo la superficie que un revisor externo sí puede verificar.
+Como el repositorio es privado, estos datos no se presentan como evidencia pública inspeccionable de forma independiente. Explican la arquitectura que construí y mantengo; el cliente público sigue siendo la superficie que un revisor externo sí puede verificar.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="REPORTING" title="El cliente posee visualización y exportación">
-  El manifest Angular incluye ECharts, jsPDF y PapaParse. Mantener charting y exportación en el cliente permite convertir respuestas de API en visualizaciones interactivas y representaciones descargables sin devolver preocupaciones de presentación al servicio REST.
+	El manifest Angular incluye ECharts, jsPDF y PapaParse. Mantener charting y exportación en el
+	cliente permite convertir respuestas de API en visualizaciones interactivas y representaciones
+	descargables sin devolver preocupaciones de presentación al servicio REST.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
@@ -84,6 +106,7 @@ caseStudy:
     <EvidenceBlock label="LÍMITE" title="SIN MÉTRICAS DE ADOPCIÓN O IMPACTO DE CLIENTE" tone="boundary">
       Este caso de estudio explica implementación y decisiones arquitectónicas. No afirma adopción externa, uso por clientes, carga productiva ni impacto comercial que los repositorios no respalden.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
@@ -100,5 +123,6 @@ caseStudy:
     <CaseStudyCard label="APRENDIZAJE 03" title="EL NIVEL DE ACCESO FORMA PARTE DE LA CALIDAD DE EVIDENCIA" tone="success">
       Un claim verificable por mí en un repositorio privado no equivale a evidencia que un reclutador puede inspeccionar. El case study debe expresar esa diferencia en vez de resumir ambos como “código público”.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

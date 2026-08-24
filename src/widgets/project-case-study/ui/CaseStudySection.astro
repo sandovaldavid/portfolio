@@ -7,13 +7,7 @@ interface Props {
 	id?: string;
 }
 
-const {
-	eyebrow,
-	title,
-	surface = 'canvas',
-	width = 'wide',
-	id,
-} = Astro.props;
+const { eyebrow, title, surface = 'canvas', width = 'wide', id } = Astro.props;
 ---
 
 <section
@@ -25,7 +19,10 @@ const {
 	data-case-study-section
 >
 	<div class="mx-auto w-full max-w-320">
-		<div class:list={[width === 'reading' ? 'max-w-210' : 'w-full']} data-case-study-section-content>
+		<div
+			class:list={[width === 'reading' ? 'max-w-210' : 'w-full']}
+			data-case-study-section-content
+		>
 			{
 				eyebrow && (
 					<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
@@ -33,7 +30,12 @@ const {
 					</p>
 				)
 			}
-			<h2 class:list={['text-feature-title text-content-strong md:text-section-title', eyebrow && 'mt-2']}>
+			<h2
+				class:list={[
+					'text-feature-title text-content-strong md:text-section-title',
+					eyebrow && 'mt-2',
+				]}
+			>
 				{title}
 			</h2>
 			<div class="case-study-copy mt-5 text-body text-content-default">

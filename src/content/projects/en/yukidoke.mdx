@@ -2,29 +2,42 @@
 projectId: yukidoke
 locale: en
 title: Yukidoke
-description: "A household-scoped personal-finance platform built with Angular 22 and a .NET 10 modular monolith. The active V1 beta keeps identity, household authorization and financial authority in separate boundaries."
-category: "Enterprise Software"
-imageAlt: "Yukidoke household-finance platform architecture preview"
+description: 'A household-scoped personal-finance platform built with Angular 22 and a .NET 10 modular monolith. The active V1 beta keeps identity, household authorization and financial authority in separate boundaries.'
+category: 'Enterprise Software'
+imageAlt: 'Yukidoke household-finance platform architecture preview'
 caseStudy:
-  kicker: "PROJECT CASE STUDY · HOUSEHOLD FINANCE"
-  status:
-    lifecycle: "ACTIVE · V1 BETA / CROSS-REPO HARDENING"
-    source: "PRIVATE SOURCE"
-    demo: "NO PUBLIC DEMO"
+    kicker: 'PROJECT CASE STUDY · HOUSEHOLD FINANCE'
+    status:
+        lifecycle: 'ACTIVE · V1 BETA / CROSS-REPO HARDENING'
+        source: 'PRIVATE SOURCE'
+        demo: 'NO PUBLIC DEMO'
 ---
 
 <CaseStudySection eyebrow="PROBLEM" title="Shared household money still contains private information">
   A household finance product has to represent obligations that are genuinely shared while preventing one member's private financial records from becoming household-wide data by default. Cards, debts, income, budgets and recommendations also need one authoritative calculation path instead of slightly different formulas in every client.
 
-  Yukidoke therefore treats **authentication**, **household membership** and **per-record financial visibility** as separate boundaries rather than one generic “logged-in user” check.
+Yukidoke therefore treats **authentication**, **household membership** and **per-record financial visibility** as separate boundaries rather than one generic “logged-in user” check.
+
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SYSTEM" title="Presentation is separated from financial authority" surface="highlight">
-  <MermaidDiagram
-    title="Yukidoke V1 system boundary"
-    description="Angular owns interaction and transient client state. Keycloak establishes identity. The .NET 10 API owns household authorization and financial rules, while PostgreSQL is the durable system of record. Worker and migrator processes share the modular-monolith codebase."
-    tones={{ Web: 'brand', Keycloak: 'info', API: 'success', Modules: 'secondary', Worker: 'danger', Migrator: 'info', DB: 'warning' }}
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Presentation is separated from financial authority"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Yukidoke V1 system boundary"
+		description="Angular owns interaction and transient client state. Keycloak establishes identity. The .NET 10 API owns household authorization and financial rules, while PostgreSQL is the durable system of record. Worker and migrator processes share the modular-monolith codebase."
+		tones={{
+			Web: 'brand',
+			Keycloak: 'info',
+			API: 'success',
+			Modules: 'secondary',
+			Worker: 'danger',
+			Migrator: 'info',
+			DB: 'warning',
+		}}
+		chart={`flowchart LR
       Web["Angular 22 SPA\nroutes · signal stores · typed clients"] --> Keycloak["Keycloak\nOIDC + PKCE"]
       Web -->|REST durable state| API[".NET 10 API\nhousehold scope + financial rules"]
       API --> Modules["Modules\nHouseholds · Accounting · Cards · Debts\nIncomes · Planning · Notifications · Overview"]
@@ -34,7 +47,7 @@ caseStudy:
       Worker --> DB
       Migrator --> DB
       API -. SignalR .-> Web`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ARCHITECTURE" title="A modular monolith keeps V1 transactions understandable">
@@ -50,13 +63,15 @@ caseStudy:
     <CaseStudyCard label="BOUNDARY 03" title="POSTGRESQL OWNS DURABLE STATE" tone="primary">
       Modules persist through PostgreSQL with EF Core migrations and optimistic concurrency. The database migrator is the process responsible for applying migrations instead of every application process mutating schema on startup.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="DATA FLOW" title="REST recovers truth; realtime is incremental">
   The web repository documents typed REST clients, pagination normalization and ProblemDetails handling. Notification state is designed to recover from durable REST state and use SignalR for incremental updates, so losing a realtime connection does not redefine the source of truth.
 
-  This distinction matters in finance: a websocket event can improve responsiveness, but it should not be the only record that a balance, notification or household action exists.
+This distinction matters in finance: a websocket event can improve responsiveness, but it should not be the only record that a balance, notification or household action exists.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="CURRENT IMPLEMENTATION" title="What the V1 beta demonstrates today" surface="highlight">
@@ -68,19 +83,32 @@ caseStudy:
     <EvidenceBlock label="API" title=".NET 10 MODULAR MONOLITH" tone="verified">
       `Directory.Build.props` targets **net10.0**. The API documentation describes Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications and Overview modules, PostgreSQL 16 persistence, Keycloak authentication, Worker and Database Migrator processes, and real PostgreSQL/Keycloak integration paths.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PRIVACY" title="Resource existence is part of the authorization model">
   The API documentation explicitly allows household-scoped endpoints to conceal a resource from non-members rather than revealing that it exists. That is a stronger privacy boundary than simply returning “forbidden” after exposing an identifier.
 
-  The remaining hardening work is also treated as product evidence, not hidden polish: privacy enforcement, exports/directory surfaces, balances and settlements, final authentication acceptance and clean-stack production-readiness gates remain active work.
+The remaining hardening work is also treated as product evidence, not hidden polish: privacy enforcement, exports/directory surfaces, balances and settlements, final authentication acceptance and clean-stack production-readiness gates remain active work.
+
 </CaseStudySection>
 
-<CaseStudySection eyebrow="BOUNDARIES" title="What this case study does not claim" surface="highlight">
-  <EvidenceBlock label="ACCESS AND EVIDENCE LIMITATIONS" title="PRIVATE REPOSITORIES, NO PRODUCTION CLAIM" tone="boundary">
-    Both implementation repositories are private, so a public reviewer cannot inspect their source, tests or ADR history directly. There is no recruiter-facing live deployment presented as safe for real household financial data, and this portfolio makes no claim about adoption, revenue or production scale.
-  </EvidenceBlock>
+<CaseStudySection
+	eyebrow="BOUNDARIES"
+	title="What this case study does not claim"
+	surface="highlight"
+>
+	<EvidenceBlock
+		label="ACCESS AND EVIDENCE LIMITATIONS"
+		title="PRIVATE REPOSITORIES, NO PRODUCTION CLAIM"
+		tone="boundary"
+	>
+		Both implementation repositories are private, so a public reviewer cannot inspect their
+		source, tests or ADR history directly. There is no recruiter-facing live deployment
+		presented as safe for real household financial data, and this portfolio makes no claim about
+		adoption, revenue or production scale.
+	</EvidenceBlock>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LEARNINGS" title="Engineering lessons from the household boundary">
@@ -96,5 +124,6 @@ caseStudy:
     <CaseStudyCard label="LEARNING 03" title="A MODULAR MONOLITH CAN BE A DELIBERATE CHOICE" tone="success">
       Domain boundaries, migration ownership and transaction consistency can be explicit without paying the operational cost of distributed services before V1 needs them.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

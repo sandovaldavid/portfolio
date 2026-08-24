@@ -2,30 +2,47 @@
 projectId: fluentreads
 locale: es
 title: FluentReads
-description: "Una experiencia de comercio estático para libros de inglés, material de exámenes y packs de estudio, construida con Astro 7, islas React, content collections, carrito en localStorage y checkout por WhatsApp."
-category: "Comercio Estático"
-imageAlt: "Vista previa de la tienda estática de aprendizaje de inglés FluentReads"
+description: 'Una experiencia de comercio estático para libros de inglés, material de exámenes y packs de estudio, construida con Astro 7, islas React, content collections, carrito en localStorage y checkout por WhatsApp.'
+category: 'Comercio Estático'
+imageAlt: 'Vista previa de la tienda estática de aprendizaje de inglés FluentReads'
 caseStudy:
-  kicker: "CASO DE ESTUDIO · COMERCIO ESTÁTICO"
-  status:
-    lifecycle: "MANTENIDO · STOREFRONT ESTÁTICO EN ASTRO"
-    source: "CÓDIGO PÚBLICO"
-    demo: "DEMO EN VIVO"
+    kicker: 'CASO DE ESTUDIO · COMERCIO ESTÁTICO'
+    status:
+        lifecycle: 'MANTENIDO · STOREFRONT ESTÁTICO EN ASTRO'
+        source: 'CÓDIGO PÚBLICO'
+        demo: 'DEMO EN VIVO'
 ---
 
-<CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="El código y el storefront alojado son inspeccionables">
-  FluentReads evita deliberadamente un backend de comercio tradicional. El contenido de productos se compila en páginas estáticas, el carrito permanece en el navegador y el checkout entrega el resumen del pedido a WhatsApp en lugar de simular un procesador de pagos o sistema de órdenes que el repositorio no contiene.
+<CaseStudySection
+	eyebrow="EVIDENCIA PÚBLICA"
+	title="El código y el storefront alojado son inspeccionables"
+>
+	FluentReads evita deliberadamente un backend de comercio tradicional. El contenido de productos
+	se compila en páginas estáticas, el carrito permanece en el navegador y el checkout entrega el
+	resumen del pedido a WhatsApp en lugar de simular un procesador de pagos o sistema de órdenes
+	que el repositorio no contiene.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="Un catálogo pequeño no necesita automáticamente un backend transaccional">
-  Vender un conjunto enfocado de libros digitales, recursos de exámenes y packs de estudio necesita buena descubribilidad, detalle de producto, estado de carrito y una ruta clara para contactar al vendedor. No necesariamente justifica autenticación, una sesión de compra respaldada por base de datos o una pasarela de pagos cuando el proceso comercial ya termina mediante comunicación directa y transferencia bancaria.
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="Un catálogo pequeño no necesita automáticamente un backend transaccional"
+>
+	Vender un conjunto enfocado de libros digitales, recursos de exámenes y packs de estudio
+	necesita buena descubribilidad, detalle de producto, estado de carrito y una ruta clara para
+	contactar al vendedor. No necesariamente justifica autenticación, una sesión de compra
+	respaldada por base de datos o una pasarela de pagos cuando el proceso comercial ya termina
+	mediante comunicación directa y transferencia bancaria.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Contenido estático, estado del navegador y checkout externo permanecen separados" surface="highlight">
-  <MermaidDiagram
-    title="Límite de comercio estático de FluentReads"
-    description="Los datos del catálogo se validan en build y Astro genera el sitio. El código interactivo administra el carrito en localStorage y emite eventos cartUpdated. El checkout sale hacia WhatsApp y un service worker agrega cache same-origin."
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Contenido estático, estado del navegador y checkout externo permanecen separados"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Límite de comercio estático de FluentReads"
+		description="Los datos del catálogo se validan en build y Astro genera el sitio. El código interactivo administra el carrito en localStorage y emite eventos cartUpdated. El checkout sale hacia WhatsApp y un service worker agrega cache same-origin."
+		chart={`flowchart LR
       Content["JSON de catálogo + Content Collections"] --> Build["Build Astro 7"]
       Build --> Static["Storefront HTML estático"]
       Static --> Browser["Navegador"]
@@ -34,13 +51,14 @@ caseStudy:
       Browser --> SW["Service worker\ncache same-origin"]
       CMS["Configuración Decap CMS"] -. edición .-> GitHub["Contenido en GitHub"]
       GitHub -. rebuild .-> Build`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="MODELO DE CONTENIDO" title="El catálogo es un contrato de build">
   El repositorio define content collections tipadas para libros, packs, exámenes, editoriales, testimonios, ofertas, categorías, FAQs y contenido legal. Esto mantiene el storefront público estático sin dispersar los datos comerciales entre templates sin esquema.
 
-  Existe configuración de Decap CMS bajo `/admin` que mapea formularios de edición hacia el catálogo JSON. La configuración versionada actualmente apunta a una rama de feature, por lo que este caso de estudio la trata como una integración de authoring implementada y no afirma que todo cambio de producción ya fluya por el CMS.
+Existe configuración de Decap CMS bajo `/admin` que mapea formularios de edición hacia el catálogo JSON. La configuración versionada actualmente apunta a una rama de feature, por lo que este caso de estudio la trata como una integración de authoring implementada y no afirma que todo cambio de producción ya fluya por el CMS.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ESTADO CLIENTE" title="El comportamiento del carrito es explícito y recuperable" surface="highlight">
@@ -56,11 +74,18 @@ caseStudy:
     <CaseStudyCard label="CHECKOUT" title="WHATSAPP ES UN HANDOFF EXTERNO" tone="primary">
       El repositorio describe el checkout como un traspaso del resumen de orden hacia WhatsApp. Los pagos permanecen fuera de esta aplicación, manteniendo claro qué responsabilidad pertenece realmente al sitio.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="COMPORTAMIENTO OFFLINE" title="Un service worker pequeño mejora la navegación repetida">
-  El service worker cachea respuestas GET same-origin y puede servir contenido cacheado mientras actualiza en segundo plano. Cuando una navegación HTML falla offline, puede usar la raíz cacheada como fallback. Es una capa de resiliencia alrededor de un sitio estático, no una afirmación de que el checkout funcione offline.
+<CaseStudySection
+	eyebrow="COMPORTAMIENTO OFFLINE"
+	title="Un service worker pequeño mejora la navegación repetida"
+>
+	El service worker cachea respuestas GET same-origin y puede servir contenido cacheado mientras
+	actualiza en segundo plano. Cuando una navegación HTML falla offline, puede usar la raíz
+	cacheada como fallback. Es una capa de resiliencia alrededor de un sitio estático, no una
+	afirmación de que el checkout funcione offline.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy" surface="highlight">
@@ -72,11 +97,18 @@ caseStudy:
     <EvidenceBlock label="LÍMITE" title="SIN BASE DE DATOS, AUTH NI PASARELA DE PAGO ONLINE" tone="boundary">
       La documentación describe explícitamente el storefront como estático y serverless. Este portfolio no afirma ventas, adopción, procesamiento de pagos ni órdenes respaldadas por base de datos y tampoco repite puntuaciones antiguas de Lighthouse no revalidadas.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Static-first reduce infraestructura pero mueve responsabilidad al navegador">
-  Un storefront estático es barato de alojar y sencillo de cachear, pero almacenamiento del navegador no es un sistema de cuentas y checkout por WhatsApp no es un backend transaccional. Ese trade-off funciona sólo porque el límite del producto es intencionalmente pequeño y el proceso operativo termina fuera del sitio.
+<CaseStudySection
+	eyebrow="TRADE-OFFS"
+	title="Static-first reduce infraestructura pero mueve responsabilidad al navegador"
+>
+	Un storefront estático es barato de alojar y sencillo de cachear, pero almacenamiento del
+	navegador no es un sistema de cuentas y checkout por WhatsApp no es un backend transaccional.
+	Ese trade-off funciona sólo porque el límite del producto es intencionalmente pequeño y el
+	proceso operativo termina fuera del sitio.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué reforzó este storefront">
@@ -92,5 +124,6 @@ caseStudy:
     <CaseStudyCard label="APRENDIZAJE 03" title="EL AUTHORING DE CONTENIDO ES UNA PREOCUPACIÓN ARQUITECTÓNICA" tone="success">
       Un CMS puede editar contenido de build sin convertir la aplicación pública en un servidor dinámico, pero ownership de rama y despliegue deben permanecer explícitos.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

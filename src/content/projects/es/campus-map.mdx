@@ -2,30 +2,46 @@
 projectId: campus-map
 locale: es
 title: UNP Campus Map
-description: "Un directorio académico open-source e independiente para facultades y escuelas de la Universidad Nacional de Piura, construido con Next.js 16 App Router, búsqueda respaldada por base de datos, CRUD administrativo y media en Cloudinary."
-category: "Desarrollo Full-Stack"
-imageAlt: "Vista previa del directorio académico de facultades y escuelas UNP Campus Map"
+description: 'Un directorio académico open-source e independiente para facultades y escuelas de la Universidad Nacional de Piura, construido con Next.js 16 App Router, búsqueda respaldada por base de datos, CRUD administrativo y media en Cloudinary.'
+category: 'Desarrollo Full-Stack'
+imageAlt: 'Vista previa del directorio académico de facultades y escuelas UNP Campus Map'
 caseStudy:
-  kicker: "CASO DE ESTUDIO · DIRECTORIO ACADÉMICO"
-  status:
-    lifecycle: "MANTENIDO · CODEBASE NEXT.JS 16"
-    source: "CÓDIGO PÚBLICO"
-    demo: "SIN DEMO PÚBLICA"
+    kicker: 'CASO DE ESTUDIO · DIRECTORIO ACADÉMICO'
+    status:
+        lifecycle: 'MANTENIDO · CODEBASE NEXT.JS 16'
+        source: 'CÓDIGO PÚBLICO'
+        demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="El repositorio actual define el límite del producto">
-  El repositorio es un proyecto open-source independiente y no un producto oficial de la Universidad Nacional de Piura. Su superficie ejecutable actual es un directorio académico con búsqueda y administración de contenido; el mapa geoespacial interactivo descrito en la dirección de producto más antigua continúa como roadmap y no como capacidad entregada.
+<CaseStudySection
+	eyebrow="EVIDENCIA PÚBLICA"
+	title="El repositorio actual define el límite del producto"
+>
+	El repositorio es un proyecto open-source independiente y no un producto oficial de la
+	Universidad Nacional de Piura. Su superficie ejecutable actual es un directorio académico con
+	búsqueda y administración de contenido; el mapa geoespacial interactivo descrito en la dirección
+	de producto más antigua continúa como roadmap y no como capacidad entregada.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="La información del campus es más útil cuando está estructurada y se puede buscar">
-  Nombres de facultades, escuelas, referencias de pabellón y enlaces oficiales son más utilizables cuando viven en un directorio consultable en lugar de redescubrirse en páginas o documentos separados. La implementación se centra por ello en **descubrimiento de facultades y escuelas** sin afirmar un sistema de navegación interactivo que el código actual no entrega.
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="La información del campus es más útil cuando está estructurada y se puede buscar"
+>
+	Nombres de facultades, escuelas, referencias de pabellón y enlaces oficiales son más utilizables
+	cuando viven en un directorio consultable en lugar de redescubrirse en páginas o documentos
+	separados. La implementación se centra por ello en **descubrimiento de facultades y escuelas**
+	sin afirmar un sistema de navegación interactivo que el código actual no entrega.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Next.js controla tanto el directorio público como su superficie administrativa" surface="highlight">
-  <MermaidDiagram
-    title="Arquitectura actual de UNP Campus Map"
-    description="Superficies públicas y administrativas del App Router llegan a código API y de servicios. Un servicio de facultades consulta mediante Knex, que puede usar la configuración MySQL por defecto o PostgreSQL. Cloudinary almacena media administrada."
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Next.js controla tanto el directorio público como su superficie administrativa"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Arquitectura actual de UNP Campus Map"
+		description="Superficies públicas y administrativas del App Router llegan a código API y de servicios. Un servicio de facultades consulta mediante Knex, que puede usar la configuración MySQL por defecto o PostgreSQL. Cloudinary almacena media administrada."
+		chart={`flowchart LR
       Public["Directorio público\nfacultades · escuelas · búsqueda"] --> Next["Next.js 16 App Router"]
       Admin["UI administrativa\nCRUD de facultades"] --> Next
       Next --> API["Route handlers / API"]
@@ -34,7 +50,7 @@ caseStudy:
       Knex --> MySQL["MySQL\nconfiguración por defecto"]
       Knex -. soportado .-> Postgres["PostgreSQL"]
       Next --> Cloudinary["Cloudinary\nmedia administrada"]`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="IMPLEMENTACIÓN" title="Qué soporta realmente el código">
@@ -50,6 +66,7 @@ caseStudy:
     <CaseStudyCard label="MEDIA + DATOS" title="CLOUDINARY + KNEX" tone="primary">
       La media se separa mediante Cloudinary. El acceso a datos se centraliza detrás de Knex y el repositorio incluye esquemas tanto para MySQL como PostgreSQL, en lugar de acoplar cada consulta a un único driver.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
@@ -62,13 +79,15 @@ caseStudy:
     <EvidenceBlock label="LÍMITE" title="EL MAPA INTERACTIVO NO SE PRESENTA COMO ENTREGADO" tone="boundary">
       El roadmap del repositorio todavía describe el mapping interactivo y comportamiento geoespacial como trabajo futuro. Este caso de estudio **no** repite por ello los claims anteriores del portafolio sobre un motor de geolocalización, marcadores de mapa en vivo ni reducciones medidas del tiempo de orientación en campus.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="TRADE-OFFS" title="Primero el directorio, luego el mapa">
   Construir primero el modelo de datos, búsqueda y administración de contenido crea una capa de información verificable que un futuro mapa puede consumir. También evita acoplar el valor del proyecto a GPS o UX geoespacial antes de que los registros de facultades y escuelas sean confiables.
 
-  Knex añade una pequeña capa de abstracción, pero entrega una superficie de consultas común para el MySQL configurado por defecto y la configuración compatible con PostgreSQL documentada por el repositorio.
+Knex añade una pequeña capa de abstracción, pero entrega una superficie de consultas común para el MySQL configurado por defecto y la configuración compatible con PostgreSQL documentada por el repositorio.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué cambió al auditar el repositorio">
@@ -84,5 +103,6 @@ caseStudy:
     <CaseStudyCard label="APRENDIZAJE 03" title="PORTABILIDAD NECESITA UN LÍMITE REAL" tone="success">
       Soportar más de una base de datos es más creíble cuando las consultas pasan por una sola capa adaptadora y existen ambos esquemas, no cuando la portabilidad sólo aparece en un README.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

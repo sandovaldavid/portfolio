@@ -6,9 +6,12 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 describe('project source-access evidence contract', () => {
 	it('models MAD AI as a mixed public-client/private-api project', () => {
 		const metadata = readSource('src/entities/project/model/metadata.ts');
-		const madAiBlock = metadata.match(/'mad-ai': \{([\s\S]*?)\n\t\},\n\tfluentreads:/)?.[1] ?? '';
+		const madAiBlock =
+			metadata.match(/'mad-ai': \{([\s\S]*?)\n\t\},\n\tfluentreads:/)?.[1] ?? '';
 
-		expect(metadata).toContain("export type ProjectSourceAccess = 'public' | 'private' | 'mixed'");
+		expect(metadata).toContain(
+			"export type ProjectSourceAccess = 'public' | 'private' | 'mixed'"
+		);
 		expect(madAiBlock).toContain("sourceAccess: 'mixed'");
 		expect(madAiBlock).toContain("github: 'https://github.com/sandovaldavid/MAD-AI'");
 	});

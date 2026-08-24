@@ -85,7 +85,10 @@ test.describe('Kioku public backend case study', () => {
 				await expect(diagram.locator('[data-diagram-edge]').first()).toBeAttached();
 				const tones = await diagram
 					.locator('[data-diagram-node]')
-					.evaluateAll(nodes => new Set(nodes.map(node => node.getAttribute('data-node-tone'))).size);
+					.evaluateAll(
+						nodes =>
+							new Set(nodes.map(node => node.getAttribute('data-node-tone'))).size
+					);
 				expect(tones).toBeGreaterThanOrEqual(3);
 			}
 		});

@@ -14,7 +14,9 @@ const posterSrc = typeof poster === 'string' ? poster : poster?.src;
 ---
 
 <figure class="w-full" data-project-video>
-	<div class="overflow-hidden border-2 border-edge-strong bg-channel-surface-default shadow-retro-md">
+	<div
+		class="overflow-hidden border-2 border-edge-strong bg-channel-surface-default shadow-retro-md"
+	>
 		{
 			kind === 'embed' ? (
 				<div class="aspect-video w-full">
@@ -26,7 +28,7 @@ const posterSrc = typeof poster === 'string' ? poster : poster?.src;
 						referrerpolicy="strict-origin-when-cross-origin"
 						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
 						allowfullscreen
-					></iframe>
+					/>
 				</div>
 			) : (
 				<video

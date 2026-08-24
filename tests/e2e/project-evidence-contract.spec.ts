@@ -11,9 +11,9 @@ test.describe('Recruiter evidence, access and status contract', () => {
 			has: page.getByRole('heading', { name: 'Yukidoke' }),
 		});
 		await expect(yukidokeCard.getByText('Active', { exact: true })).toBeVisible();
-		await expect(yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]')).toHaveCount(
-			0
-		);
+		await expect(
+			yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]')
+		).toHaveCount(0);
 
 		const kiokuCard = page.locator('article', {
 			has: page.getByRole('heading', { name: 'Kioku' }),
@@ -37,25 +37,32 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		await expect(kiokuResources.locator('[data-resource-tone="info"]')).toHaveCount(2);
 		await expect(kiokuResources.locator('[data-resource-tone="brand"]')).toHaveCount(1);
 		await expect(kiokuResources.locator('[data-resource-tone="secondary"]')).toHaveCount(1);
-		await expect(kiokuResources.locator('a[href="https://github.com/sandovaldavid/kioku"]')).toBeVisible();
+		await expect(
+			kiokuResources.locator('a[href="https://github.com/sandovaldavid/kioku"]')
+		).toBeVisible();
 		await expect(
 			kiokuResources.locator('a[href="https://github.com/sandovaldavid/kioku-obsidian"]')
 		).toBeVisible();
-		await expect(kiokuResources.locator('a[href="https://kioku.sandovaldavid.com"]')).toBeVisible();
+		await expect(
+			kiokuResources.locator('a[href="https://kioku.sandovaldavid.com"]')
+		).toBeVisible();
 
 		await page.goto('/projects/fluentreads');
 		const fluentReadsResources = page.locator('[data-project-resources]');
-		await expect(fluentReadsResources.locator('[data-project-resource="repository"]')).toHaveCount(1);
+		await expect(
+			fluentReadsResources.locator('[data-project-resource="repository"]')
+		).toHaveCount(1);
 		await expect(fluentReadsResources.locator('[data-project-resource="demo"]')).toHaveCount(1);
-		await expect(fluentReadsResources.locator('[data-project-resource="demo"]')).toHaveAttribute(
-			'data-resource-tone',
-			'success'
-		);
+		await expect(
+			fluentReadsResources.locator('[data-project-resource="demo"]')
+		).toHaveAttribute('data-resource-tone', 'success');
 		await expect(fluentReadsResources.locator('[data-project-share]')).toBeVisible();
 
 		await page.goto('/projects/yukidoke');
 		const yukidokeResources = page.locator('[data-project-resources]');
-		await expect(yukidokeResources.locator('[data-project-resource="repository"]')).toHaveCount(0);
+		await expect(yukidokeResources.locator('[data-project-resource="repository"]')).toHaveCount(
+			0
+		);
 		await expect(yukidokeResources.locator('[data-project-resource="docs"]')).toHaveCount(0);
 		await expect(yukidokeResources.locator('[data-project-resource="demo"]')).toHaveCount(0);
 		await expect(yukidokeResources.locator('[data-project-resource="package"]')).toHaveCount(0);
@@ -97,12 +104,18 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		await page.goto('/projects/mad-ai');
 		await expect(page.getByText('Maintained', { exact: true })).toBeVisible();
 		await expect(page.getByText('Mixed source', { exact: true })).toBeVisible();
-		await expect(page.locator('a[href="https://github.com/sandovaldavid/MAD-AI"]')).toBeVisible();
 		await expect(
-			page.getByRole('heading', { name: 'The private API uses a pragmatic modular Django architecture' })
+			page.locator('a[href="https://github.com/sandovaldavid/MAD-AI"]')
+		).toBeVisible();
+		await expect(
+			page.getByRole('heading', {
+				name: 'The private API uses a pragmatic modular Django architecture',
+			})
 		).toBeVisible();
 		await expect(page.getByText('Django 5.2.3', { exact: false })).toBeVisible();
-		await expect(page.getByText('Django REST Framework 3.16.0', { exact: false })).toBeVisible();
+		await expect(
+			page.getByText('Django REST Framework 3.16.0', { exact: false })
+		).toBeVisible();
 		await expect(page.getByText('Django Channels', { exact: true })).toHaveCount(0);
 	});
 
@@ -113,7 +126,9 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		await expect(page.getByText('Maintained', { exact: true })).toBeVisible();
 		await expect(page.getByText('Public source', { exact: true })).toBeVisible();
 		await expect(page.locator('a[href="https://fluentreads.vercel.app"]')).toBeVisible();
-		await expect(page.locator('a[href="https://github.com/sandovaldavid/fluentreads"]')).toBeVisible();
+		await expect(
+			page.locator('a[href="https://github.com/sandovaldavid/fluentreads"]')
+		).toBeVisible();
 		await expect(
 			page.getByRole('heading', { name: 'NO DATABASE, AUTH OR ONLINE PAYMENT GATEWAY' })
 		).toBeVisible();
@@ -127,13 +142,21 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		await expect(page.getByText('Maintained', { exact: true })).toBeVisible();
 		await expect(page.getByText('Public source', { exact: true })).toBeVisible();
 		await expect(page.locator('[data-project-resource="demo"]')).toHaveCount(0);
-		await expect(page.locator('a[href="https://github.com/sandovaldavid/auctions"]')).toBeVisible();
+		await expect(
+			page.locator('a[href="https://github.com/sandovaldavid/auctions"]')
+		).toBeVisible();
 		await expect(page.locator('a[href*="herokuapp.com"]')).toHaveCount(0);
-		await expect(page.getByRole('heading', { name: 'The maintained codebase grew beyond the original course workflow' })).toBeVisible();
+		await expect(
+			page.getByRole('heading', {
+				name: 'The maintained codebase grew beyond the original course workflow',
+			})
+		).toBeVisible();
 		await expect(page.getByText('AuctionAnalytics', { exact: false }).first()).toBeVisible();
 		await expect(
 			page.getByRole('heading', { name: 'NO LIVE DEMO OR CONCURRENCY GUARANTEE' })
 		).toBeVisible();
-		await expect(page.getByRole('heading', { name: 'NO CURRENT DRF OR WEBSOCKET CLAIM' })).toBeVisible();
+		await expect(
+			page.getByRole('heading', { name: 'NO CURRENT DRF OR WEBSOCKET CLAIM' })
+		).toBeVisible();
 	});
 });

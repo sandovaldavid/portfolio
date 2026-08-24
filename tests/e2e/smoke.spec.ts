@@ -132,7 +132,8 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			detailRoute: '/es/projects/campus-map',
 			category: 'Desarrollo Full-Stack',
 			lifecycle: 'Mantenido',
-			imageAlt: 'Vista previa del directorio académico de facultades y escuelas UNP Campus Map',
+			imageAlt:
+				'Vista previa del directorio académico de facultades y escuelas UNP Campus Map',
 			kicker: 'CASO DE ESTUDIO · DIRECTORIO ACADÉMICO',
 			status: 'MANTENIDO · CODEBASE NEXT.JS 16',
 			evidenceHeading: 'El repositorio actual define el límite del producto',
@@ -152,7 +153,9 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			).toBeVisible();
 			await expect(page.getByText(scenario.kicker, { exact: true })).toBeVisible();
 			await expect(page.getByText(scenario.status, { exact: true })).toBeVisible();
-			await expect(page.getByRole('heading', { name: scenario.evidenceHeading })).toBeVisible();
+			await expect(
+				page.getByRole('heading', { name: scenario.evidenceHeading })
+			).toBeVisible();
 			await expect(page.locator('[data-mermaid-figure]')).toHaveCount(1);
 
 			for (const forbidden of scenario.forbidden) {

@@ -113,7 +113,9 @@ const PROJECT_ROUTES = [
 ] as const;
 
 for (const [route, title] of PROJECT_ROUTES) {
-	test(`${route} renders a complete MDX case study without document overflow`, async ({ page }) => {
+	test(`${route} renders a complete MDX case study without document overflow`, async ({
+		page,
+	}) => {
 		await page.setViewportSize({ width: 390, height: 844 });
 		await page.goto(route);
 

@@ -55,7 +55,9 @@ describe('localized project MDX content', () => {
 		for (const locale of locales) {
 			const files = projectFiles(locale);
 			expect(files).toEqual(allIds.map(id => `${id}.mdx`).sort());
-			expect(readdirSync(`src/content/projects/${locale}`).filter(file => file.endsWith('.json'))).toEqual([]);
+			expect(
+				readdirSync(`src/content/projects/${locale}`).filter(file => file.endsWith('.json'))
+			).toEqual([]);
 
 			for (const projectId of allIds) {
 				const source = projectSource(locale, projectId);
@@ -77,7 +79,9 @@ describe('localized project MDX content', () => {
 		for (const projectId of allIds) {
 			const english = projectSource('en', projectId);
 			const spanish = projectSource('es', projectId);
-			expect(frontmatterScalar(english, 'projectId')).toBe(frontmatterScalar(spanish, 'projectId'));
+			expect(frontmatterScalar(english, 'projectId')).toBe(
+				frontmatterScalar(spanish, 'projectId')
+			);
 			expect(english).toContain('<CaseStudySection');
 			expect(spanish).toContain('<CaseStudySection');
 			expect(english).toContain('<MermaidDiagram');
@@ -93,11 +97,17 @@ describe('localized project MDX content', () => {
 
 		expect(slugs.sort()).toEqual([...allIds].sort());
 		expect(new Set(slugs).size).toBe(allIds.length);
-		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 10, 4, 3, 2, 1]);
+		expect(orders.sort((left, right) => right - left)).toEqual([
+			50, 45, 40, 30, 20, 10, 4, 3, 2, 1,
+		]);
 		expect(metadata).toContain("docs: 'https://kioku.sandovaldavid.com'");
 		expect(metadata).toContain("package: 'https://www.nuget.org/packages/kioku-mcp-server'");
-		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
-		expect(metadata).toContain("{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }");
+		expect(metadata).toContain(
+			"{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }"
+		);
+		expect(metadata).toContain(
+			"{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }"
+		);
 		expect(metadata).toContain("link: 'https://fluentreads.vercel.app'");
 
 		for (const locale of locales) {
@@ -112,7 +122,9 @@ describe('localized project MDX content', () => {
 		const queries = readSource('src/entities/project/model/queries.ts');
 
 		expect(metadata).toContain('developmentOnly?: boolean');
-		expect(metadata).toContain('export function isProjectVisible(projectId: ProjectId, development = import.meta.env.DEV)');
+		expect(metadata).toContain(
+			'export function isProjectVisible(projectId: ProjectId, development = import.meta.env.DEV)'
+		);
 		expect(queries).toContain('if (!isProjectVisible(entry.data.projectId)) continue;');
 		expect(queries).toContain('isProjectVisible(projectId)');
 
@@ -142,8 +154,11 @@ describe('localized project MDX content', () => {
 
 	it('aligns MAD AI technology metadata with its public frontend repository', () => {
 		const metadata = readSource('src/entities/project/model/metadata.ts');
-		const madAiBlock = metadata.match(/'mad-ai': \{([\s\S]*?)\n\t\},\n\tfluentreads:/)?.[1] ?? '';
-		expect(madAiBlock).toContain("technologyIds: ['angular', 'tailwind', 'typescript', 'rxjs']");
+		const madAiBlock =
+			metadata.match(/'mad-ai': \{([\s\S]*?)\n\t\},\n\tfluentreads:/)?.[1] ?? '';
+		expect(madAiBlock).toContain(
+			"technologyIds: ['angular', 'tailwind', 'typescript', 'rxjs']"
+		);
 		expect(madAiBlock).not.toContain('django');
 		expect(madAiBlock).not.toContain('python');
 		expect(madAiBlock).not.toContain('postgresql');
@@ -169,7 +184,9 @@ describe('localized project MDX content', () => {
 	});
 
 	it('removes obsolete project data owners and the legacy renderer', () => {
-		expect(existsSync('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro')).toBe(false);
+		expect(existsSync('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro')).toBe(
+			false
+		);
 		expect(existsSync('src/entities/project/model/data.ts')).toBe(false);
 		expect(existsSync('src/shared/config/i18n/dictionaries/index.ts')).toBe(false);
 		for (const locale of locales) {

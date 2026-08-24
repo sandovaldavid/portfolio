@@ -2,39 +2,50 @@
 projectId: kioku
 locale: en
 title: Kioku
-description: "A local-first .NET 10 MCP server that keeps agent decisions, specs, plans, bugs and session handoffs as durable Markdown and YAML records inside an Obsidian vault."
-category: "Backend Engineering"
-imageAlt: "Kioku MCP server architecture and durable agent handoff preview"
+description: 'A local-first .NET 10 MCP server that keeps agent decisions, specs, plans, bugs and session handoffs as durable Markdown and YAML records inside an Obsidian vault.'
+category: 'Backend Engineering'
+imageAlt: 'Kioku MCP server architecture and durable agent handoff preview'
 caseStudy:
-  kicker: "PROJECT CASE STUDY · BACKEND ENGINEERING"
-  status:
-    lifecycle: "ACTIVE · STABLE 3.1.2 + DEVELOPMENT"
-    source: "PUBLIC SOURCE"
-    demo: "NO HOSTED DEMO"
+    kicker: 'PROJECT CASE STUDY · BACKEND ENGINEERING'
+    status:
+        lifecycle: 'ACTIVE · STABLE 3.1.2 + DEVELOPMENT'
+        source: 'PUBLIC SOURCE'
+        demo: 'NO HOSTED DEMO'
 ---
 
 <CaseStudySection eyebrow="PUBLIC EVIDENCE" title="Inspect the project beyond this portfolio">
-  Kioku is useful as a portfolio project because its implementation, package, operational documentation and release history are independently inspectable. The documentation site is the best starting point for the public contract; the repository remains the implementation source of truth.
+	Kioku is useful as a portfolio project because its implementation, package, operational
+	documentation and release history are independently inspectable. The documentation site is the
+	best starting point for the public contract; the repository remains the implementation source of
+	truth.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="Agent context should survive the session that created it">
   Coding agents can make good decisions and still lose the reasoning behind them when a process, terminal or conversation ends. Provider history is not a durable project record, and a handoff should not require the next agent to reconstruct intent from chat logs.
 
-  Kioku treats the vault as durable project memory instead: specs, implementation plans, decisions, bugs, knowledge and session handoffs remain readable as Markdown and YAML even without the MCP server or Obsidian UI running.
+Kioku treats the vault as durable project memory instead: specs, implementation plans, decisions, bugs, knowledge and session handoffs remain readable as Markdown and YAML even without the MCP server or Obsidian UI running.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="SYSTEM" title="Local-first MCP boundary" surface="highlight">
-  <MermaidDiagram
-    title="Kioku runtime boundary"
-    description="MCP clients reach a .NET 10 Kioku server over local stdio or authenticated Streamable HTTP. The server reads the Obsidian vault directly, with semantic retrieval and the Obsidian bridge remaining optional integrations."
-    tones={{ Client: 'brand', Server: 'info', Vault: 'success', Retrieval: 'secondary', Ollama: 'warning', Bridge: 'danger' }}
-    chart={`flowchart LR
+	<MermaidDiagram
+		title="Kioku runtime boundary"
+		description="MCP clients reach a .NET 10 Kioku server over local stdio or authenticated Streamable HTTP. The server reads the Obsidian vault directly, with semantic retrieval and the Obsidian bridge remaining optional integrations."
+		tones={{
+			Client: 'brand',
+			Server: 'info',
+			Vault: 'success',
+			Retrieval: 'secondary',
+			Ollama: 'warning',
+			Bridge: 'danger',
+		}}
+		chart={`flowchart LR
       Client["MCP clients\nClaude · Codex · OpenCode"] --> Server["Kioku.Mcp.Server\n.NET 10"]
       Server --> Vault["Obsidian vault\nMarkdown + YAML"]
       Server --> Retrieval["Full-text + semantic retrieval"]
       Retrieval -. optional .-> Ollama["Local Ollama\nembeddings / generation"]
       Server -. optional .-> Bridge["Obsidian bridge\nUI integration"]`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ENGINEERING DECISIONS" title="Keep storage human-readable and protocol boundaries explicit">
@@ -50,21 +61,33 @@ caseStudy:
     <CaseStudyCard label="DECISION 03" title="REMOTE ACCESS REQUIRES AN EXPLICIT TRUST BOUNDARY" tone="primary">
       Local stdio stays the default. Streamable HTTP binds to loopback by default, and non-loopback exposure requires authentication unless an explicit unsafe override is chosen.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="WORKFLOW" title="Design intent becomes a recoverable project artifact" surface="highlight">
-  <MermaidDiagram
-    title="Durable engineering workflow"
-    description="Kioku separates the requirement, implementation plan and execution handoff so a fresh agent can recover both intent and current state."
-    tones={{ Request: 'brand', Spec: 'info', Plan: 'secondary', Session: 'warning', Handoff: 'success', Context: 'danger' }}
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="WORKFLOW"
+	title="Design intent becomes a recoverable project artifact"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Durable engineering workflow"
+		description="Kioku separates the requirement, implementation plan and execution handoff so a fresh agent can recover both intent and current state."
+		tones={{
+			Request: 'brand',
+			Spec: 'info',
+			Plan: 'secondary',
+			Session: 'warning',
+			Handoff: 'success',
+			Context: 'danger',
+		}}
+		chart={`flowchart LR
       Request["Request / issue"] --> Spec["Engineering SPEC"]
       Spec --> Plan["Implementation PLAN"]
       Plan --> Session["SESSION / execution"]
       Session --> Handoff["Durable handoff"]
       Handoff --> Context["Fresh agent recovers context"]`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
@@ -76,6 +99,7 @@ caseStudy:
     <EvidenceBlock label="BOUNDARIES" title="DEVELOP CAN BE AHEAD OF THE LATEST TAG" tone="boundary">
       The repository explicitly states that `develop` can contain verified but unreleased changes. This case study therefore distinguishes the latest tagged release from active development and does not claim external adoption, production workload or commercial impact.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
@@ -92,5 +116,6 @@ caseStudy:
     <CaseStudyCard label="LEARNING 03" title="LOCAL-FIRST DOES NOT REMOVE SECURITY WORK" tone="success">
       The moment a local protocol becomes remotely reachable, authentication, origin policy, proxy trust and vault boundaries become first-class engineering concerns.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

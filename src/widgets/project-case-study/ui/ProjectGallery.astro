@@ -31,7 +31,11 @@ const resolvedItems = items.map(item => ({
 {
 	resolvedItems.length > 0 && (
 		<div class="w-full" data-project-gallery>
-			<div class:list={['grid gap-4 md:grid-cols-2', gridClass]} role="list" aria-label={resolvedLabel}>
+			<div
+				class:list={['grid gap-4 md:grid-cols-2', gridClass]}
+				role="list"
+				aria-label={resolvedLabel}
+			>
 				{resolvedItems.map((item, index) => (
 					<figure class="min-w-0" role="listitem">
 						<button
@@ -48,11 +52,18 @@ const resolvedItems = items.map(item => ({
 								loading="lazy"
 								decoding="async"
 							/>
-							<span class="absolute right-3 bottom-3 flex size-10 items-center justify-center border-2 border-edge-strong bg-channel-background-canvas text-channel-accent-primary shadow-retro-sm" aria-hidden="true">
+							<span
+								class="absolute right-3 bottom-3 flex size-10 items-center justify-center border-2 border-edge-strong bg-channel-background-canvas text-channel-accent-primary shadow-retro-sm"
+								aria-hidden="true"
+							>
 								<ZoomInIcon class="size-5" />
 							</span>
 						</button>
-						{item.caption && <figcaption class="mt-2 text-caption text-content-muted">{item.caption}</figcaption>}
+						{item.caption && (
+							<figcaption class="mt-2 text-caption text-content-muted">
+								{item.caption}
+							</figcaption>
+						)}
 					</figure>
 				))}
 			</div>
@@ -64,7 +75,10 @@ const resolvedItems = items.map(item => ({
 			>
 				<div class="flex min-h-0 max-h-[92svh] flex-col">
 					<header class="flex shrink-0 items-center justify-between gap-4 border-b border-edge-subtle px-4 py-3 md:px-5">
-						<p class="text-editorial-label-compact uppercase text-content-muted" data-gallery-dialog-label>
+						<p
+							class="text-editorial-label-compact uppercase text-content-muted"
+							data-gallery-dialog-label
+						>
 							{resolvedLabel}
 						</p>
 						<div class="flex items-center gap-2">
@@ -76,8 +90,12 @@ const resolvedItems = items.map(item => ({
 								data-label-in={tPage('galleryZoomIn')}
 								data-label-out={tPage('galleryZoomOut')}
 							>
-								<span data-gallery-zoom-in-icon><ZoomInIcon class="size-5" /></span>
-								<span class="hidden" data-gallery-zoom-out-icon><ZoomOutIcon class="size-5" /></span>
+								<span data-gallery-zoom-in-icon>
+									<ZoomInIcon class="size-5" />
+								</span>
+								<span class="hidden" data-gallery-zoom-out-icon>
+									<ZoomOutIcon class="size-5" />
+								</span>
 							</button>
 							<button
 								type="button"
@@ -90,7 +108,11 @@ const resolvedItems = items.map(item => ({
 						</div>
 					</header>
 
-					<div class="min-h-0 grow overflow-auto bg-channel-surface-highlight p-4 md:p-6" data-gallery-stage data-zoomed="false">
+					<div
+						class="min-h-0 grow overflow-auto bg-channel-surface-highlight p-4 md:p-6"
+						data-gallery-stage
+						data-zoomed="false"
+					>
 						<img
 							src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
 							alt=""
@@ -98,7 +120,10 @@ const resolvedItems = items.map(item => ({
 							data-gallery-active-image
 						/>
 					</div>
-					<p class="shrink-0 px-4 py-3 text-caption text-content-muted md:px-5" data-gallery-caption></p>
+					<p
+						class="shrink-0 px-4 py-3 text-caption text-content-muted md:px-5"
+						data-gallery-caption
+					/>
 				</div>
 			</dialog>
 		</div>
@@ -149,12 +174,25 @@ const resolvedItems = items.map(item => ({
 			const zoomOutIcon = gallery.querySelector<HTMLElement>('[data-gallery-zoom-out-icon]');
 			const close = gallery.querySelector<HTMLButtonElement>('[data-gallery-close]');
 			const openers = [...gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-open]')];
-			if (!dialog || !image || !caption || !stage || !zoom || !zoomInIcon || !zoomOutIcon || !close) return;
+			if (
+				!dialog ||
+				!image ||
+				!caption ||
+				!stage ||
+				!zoom ||
+				!zoomInIcon ||
+				!zoomOutIcon ||
+				!close
+			)
+				return;
 
 			let opener: HTMLButtonElement | null = null;
 			const data: GalleryItemData[] = openers.map(button => {
 				const thumbnail = button.querySelector<HTMLImageElement>('img');
-				const figureCaption = button.closest('figure')?.querySelector('figcaption')?.textContent?.trim();
+				const figureCaption = button
+					.closest('figure')
+					?.querySelector('figcaption')
+					?.textContent?.trim();
 				return {
 					src: thumbnail?.currentSrc || thumbnail?.src || '',
 					alt: thumbnail?.alt || '',
@@ -164,7 +202,10 @@ const resolvedItems = items.map(item => ({
 
 			const setZoomed = (value: boolean) => {
 				stage.dataset.zoomed = String(value);
-				zoom.setAttribute('aria-label', value ? zoom.dataset.labelOut || '' : zoom.dataset.labelIn || '');
+				zoom.setAttribute(
+					'aria-label',
+					value ? zoom.dataset.labelOut || '' : zoom.dataset.labelIn || ''
+				);
 				zoomInIcon.classList.toggle('hidden', value);
 				zoomOutIcon.classList.toggle('hidden', !value);
 			};
@@ -182,7 +223,9 @@ const resolvedItems = items.map(item => ({
 				close.focus();
 			};
 
-			openers.forEach((button, index) => button.addEventListener('click', () => openAt(index, button)));
+			openers.forEach((button, index) =>
+				button.addEventListener('click', () => openAt(index, button))
+			);
 			close.addEventListener('click', () => dialog.close());
 			zoom.addEventListener('click', () => setZoomed(stage.dataset.zoomed !== 'true'));
 			image.addEventListener('click', () => setZoomed(stage.dataset.zoomed !== 'true'));

@@ -2,30 +2,46 @@
 projectId: fluentreads
 locale: en
 title: FluentReads
-description: "A static commerce experience for English-learning books, exam material and study packs, built with Astro 7, React islands, content collections, a localStorage cart and WhatsApp checkout."
-category: "Static Commerce"
-imageAlt: "FluentReads static English-learning storefront preview"
+description: 'A static commerce experience for English-learning books, exam material and study packs, built with Astro 7, React islands, content collections, a localStorage cart and WhatsApp checkout.'
+category: 'Static Commerce'
+imageAlt: 'FluentReads static English-learning storefront preview'
 caseStudy:
-  kicker: "PROJECT CASE STUDY · STATIC COMMERCE"
-  status:
-    lifecycle: "MAINTAINED · STATIC ASTRO STOREFRONT"
-    source: "PUBLIC SOURCE"
-    demo: "LIVE DEMO"
+    kicker: 'PROJECT CASE STUDY · STATIC COMMERCE'
+    status:
+        lifecycle: 'MAINTAINED · STATIC ASTRO STOREFRONT'
+        source: 'PUBLIC SOURCE'
+        demo: 'LIVE DEMO'
 ---
 
-<CaseStudySection eyebrow="PUBLIC EVIDENCE" title="Source and hosted storefront are directly inspectable">
-  FluentReads deliberately avoids a traditional commerce backend. Product content is compiled into static pages, cart state stays in the browser, and checkout hands the order summary to WhatsApp rather than pretending to provide a payment processor or order-management system that the repository does not contain.
+<CaseStudySection
+	eyebrow="PUBLIC EVIDENCE"
+	title="Source and hosted storefront are directly inspectable"
+>
+	FluentReads deliberately avoids a traditional commerce backend. Product content is compiled into
+	static pages, cart state stays in the browser, and checkout hands the order summary to WhatsApp
+	rather than pretending to provide a payment processor or order-management system that the
+	repository does not contain.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEM" title="A small catalog does not automatically need a transactional backend">
-  Selling a focused set of digital books, exam resources and study packs needs good discoverability, product detail, cart state and a clear path to contact the seller. It does not necessarily justify authentication, a database-backed shopping session or a payment gateway when the business process already completes through direct communication and bank transfer.
+<CaseStudySection
+	eyebrow="PROBLEM"
+	title="A small catalog does not automatically need a transactional backend"
+>
+	Selling a focused set of digital books, exam resources and study packs needs good
+	discoverability, product detail, cart state and a clear path to contact the seller. It does not
+	necessarily justify authentication, a database-backed shopping session or a payment gateway when
+	the business process already completes through direct communication and bank transfer.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SYSTEM" title="Static content, browser state and external checkout stay separate" surface="highlight">
-  <MermaidDiagram
-    title="FluentReads static commerce boundary"
-    description="Catalog data is validated at build time and rendered by Astro. Interactive browser code manages cart state in localStorage and dispatches cartUpdated events. Checkout leaves the site through WhatsApp, while a service worker adds same-origin caching."
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Static content, browser state and external checkout stay separate"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="FluentReads static commerce boundary"
+		description="Catalog data is validated at build time and rendered by Astro. Interactive browser code manages cart state in localStorage and dispatches cartUpdated events. Checkout leaves the site through WhatsApp, while a service worker adds same-origin caching."
+		chart={`flowchart LR
       Content["Catalog JSON + Content Collections"] --> Build["Astro 7 build"]
       Build --> Static["Static HTML storefront"]
       Static --> Browser["Browser"]
@@ -34,13 +50,14 @@ caseStudy:
       Browser --> SW["Service worker\nsame-origin cache"]
       CMS["Decap CMS config"] -. content authoring .-> GitHub["GitHub content"]
       GitHub -. rebuild .-> Build`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="CONTENT MODEL" title="The catalog is a build-time contract">
   The repository defines typed content collections for books, packs, exams, editorials, testimonies, offers, categories, FAQs and legal content. That keeps the public storefront static while still giving product records a schema instead of scattering commerce data through templates.
 
-  Decap CMS configuration exists under `/admin` and maps authoring forms back to the JSON catalog. The checked-in CMS configuration currently targets a feature branch, so this case study treats it as an implemented authoring integration rather than claiming that every production content change already flows through the CMS.
+Decap CMS configuration exists under `/admin` and maps authoring forms back to the JSON catalog. The checked-in CMS configuration currently targets a feature branch, so this case study treats it as an implemented authoring integration rather than claiming that every production content change already flows through the CMS.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="CLIENT STATE" title="Cart behavior is explicit and recoverable" surface="highlight">
@@ -56,11 +73,18 @@ caseStudy:
     <CaseStudyCard label="CHECKOUT" title="WHATSAPP IS AN EXTERNAL HANDOFF" tone="primary">
       The repository describes checkout as an order-summary handoff to WhatsApp. Payments remain outside this application, which keeps the implementation honest about what the site actually owns.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="OFFLINE BEHAVIOR" title="A small service worker improves repeat navigation">
-  The service worker caches same-origin GET responses and serves cached content first while refreshing it in the background. When an HTML navigation fails offline, it can fall back to the cached root page. This is a resilience layer around a static site, not a claim that checkout itself works offline.
+<CaseStudySection
+	eyebrow="OFFLINE BEHAVIOR"
+	title="A small service worker improves repeat navigation"
+>
+	The service worker caches same-origin GET responses and serves cached content first while
+	refreshing it in the background. When an HTML navigation fails offline, it can fall back to the
+	cached root page. This is a resilience layer around a static site, not a claim that checkout
+	itself works offline.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today" surface="highlight">
@@ -72,11 +96,18 @@ caseStudy:
     <EvidenceBlock label="BOUNDARY" title="NO DATABASE, AUTH OR ONLINE PAYMENT GATEWAY" tone="boundary">
       The project documentation explicitly describes the storefront as static and serverless. This portfolio therefore makes no sales, customer-adoption, payment-processing or database-backed order claim and does not repeat older unverified Lighthouse score claims.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Static-first reduces infrastructure but moves responsibility to the browser">
-  A static storefront is inexpensive to host and simple to cache, but browser storage is not an account system and WhatsApp checkout is not a transactional commerce backend. That trade-off is acceptable only because the product boundary is intentionally small and the operational process completes outside the site.
+<CaseStudySection
+	eyebrow="TRADE-OFFS"
+	title="Static-first reduces infrastructure but moves responsibility to the browser"
+>
+	A static storefront is inexpensive to host and simple to cache, but browser storage is not an
+	account system and WhatsApp checkout is not a transactional commerce backend. That trade-off is
+	acceptable only because the product boundary is intentionally small and the operational process
+	completes outside the site.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LEARNINGS" title="What this storefront reinforced">
@@ -92,5 +123,6 @@ caseStudy:
     <CaseStudyCard label="LEARNING 03" title="CONTENT AUTHORING IS ITS OWN ARCHITECTURAL CONCERN" tone="success">
       A CMS can edit build-time content without turning the public application into a dynamic server, but branch and deployment ownership still need to be explicit.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

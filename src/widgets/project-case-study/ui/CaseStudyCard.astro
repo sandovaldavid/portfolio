@@ -34,7 +34,12 @@ const labelClasses = {
 			</p>
 		)
 	}
-	<h3 class:list={['text-subheading text-content-strong md:text-component-title', label && 'mt-2']}>
+	<h3
+		class:list={[
+			'text-subheading text-content-strong md:text-component-title',
+			label && 'mt-2',
+		]}
+	>
 		{title}
 	</h3>
 	<div class="case-study-card-copy mt-3 text-secondary text-content-default md:text-body">

@@ -54,17 +54,27 @@ const heroStatusLabel = [versionLabel, sourceLabel, lifecycleLabel].filter(Boole
 			data-case-study-hero-shell
 		>
 			<div class="flex min-w-0 flex-col gap-2">
-				<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+				<p
+					class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
+				>
 					{project.caseStudy.kicker}
 				</p>
-				<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
+				<h1
+					class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display"
+				>
 					{project.title}
 				</h1>
 			</div>
 
 			<div class="flex min-w-0 flex-col gap-4">
-				<p class="text-secondary text-content-default md:text-body">{project.description}</p>
-				<div class="flex flex-wrap items-center gap-3" aria-label={heroStatusLabel} data-project-status>
+				<p class="text-secondary text-content-default md:text-body">
+					{project.description}
+				</p>
+				<div
+					class="flex flex-wrap items-center gap-3"
+					aria-label={heroStatusLabel}
+					data-project-status
+				>
 					{
 						versionLabel && (
 							<Badge variant="secondary" size="sm">

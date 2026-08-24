@@ -2,29 +2,42 @@
 projectId: yukidoke
 locale: es
 title: Yukidoke
-description: "Una plataforma de finanzas personales por hogar construida con Angular 22 y un monolito modular en .NET 10. La beta V1 activa mantiene identidad, autorización del hogar y autoridad financiera como límites separados."
-category: "Software Empresarial"
-imageAlt: "Vista previa de la arquitectura de la plataforma financiera familiar Yukidoke"
+description: 'Una plataforma de finanzas personales por hogar construida con Angular 22 y un monolito modular en .NET 10. La beta V1 activa mantiene identidad, autorización del hogar y autoridad financiera como límites separados.'
+category: 'Software Empresarial'
+imageAlt: 'Vista previa de la arquitectura de la plataforma financiera familiar Yukidoke'
 caseStudy:
-  kicker: "CASO DE ESTUDIO · FINANZAS DEL HOGAR"
-  status:
-    lifecycle: "ACTIVO · BETA V1 / HARDENING CROSS-REPO"
-    source: "CÓDIGO PRIVADO"
-    demo: "SIN DEMO PÚBLICA"
+    kicker: 'CASO DE ESTUDIO · FINANZAS DEL HOGAR'
+    status:
+        lifecycle: 'ACTIVO · BETA V1 / HARDENING CROSS-REPO'
+        source: 'CÓDIGO PRIVADO'
+        demo: 'SIN DEMO PÚBLICA'
 ---
 
 <CaseStudySection eyebrow="PROBLEMA" title="El dinero compartido del hogar todavía contiene información privada">
   Un producto de finanzas familiares debe representar obligaciones realmente compartidas sin convertir por defecto los registros financieros privados de cada miembro en datos visibles para todo el hogar. Tarjetas, deudas, ingresos, presupuestos y recomendaciones también necesitan una sola ruta autoritativa de cálculo, no fórmulas ligeramente distintas en cada cliente.
 
-  Yukidoke trata por ello **autenticación**, **membresía del hogar** y **visibilidad por registro financiero** como límites independientes, no como un único check de “usuario autenticado”.
+Yukidoke trata por ello **autenticación**, **membresía del hogar** y **visibilidad por registro financiero** como límites independientes, no como un único check de “usuario autenticado”.
+
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="La presentación está separada de la autoridad financiera" surface="highlight">
-  <MermaidDiagram
-    title="Límite del sistema Yukidoke V1"
-    description="Angular controla interacción y estado transitorio del cliente. Keycloak establece identidad. La API .NET 10 controla autorización por hogar y reglas financieras, mientras PostgreSQL es el sistema de registro durable. Worker y migrator comparten el código del monolito modular."
-    tones={{ Web: 'brand', Keycloak: 'info', API: 'success', Modules: 'secondary', Worker: 'danger', Migrator: 'info', DB: 'warning' }}
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="La presentación está separada de la autoridad financiera"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Límite del sistema Yukidoke V1"
+		description="Angular controla interacción y estado transitorio del cliente. Keycloak establece identidad. La API .NET 10 controla autorización por hogar y reglas financieras, mientras PostgreSQL es el sistema de registro durable. Worker y migrator comparten el código del monolito modular."
+		tones={{
+			Web: 'brand',
+			Keycloak: 'info',
+			API: 'success',
+			Modules: 'secondary',
+			Worker: 'danger',
+			Migrator: 'info',
+			DB: 'warning',
+		}}
+		chart={`flowchart LR
       Web["SPA Angular 22\nrutas · signal stores · clientes tipados"] --> Keycloak["Keycloak\nOIDC + PKCE"]
       Web -->|estado durable REST| API["API .NET 10\nalcance por hogar + reglas financieras"]
       API --> Modules["Módulos\nHouseholds · Accounting · Cards · Debts\nIncomes · Planning · Notifications · Overview"]
@@ -34,7 +47,7 @@ caseStudy:
       Worker --> DB
       Migrator --> DB
       API -. SignalR .-> Web`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ARQUITECTURA" title="Un monolito modular mantiene comprensibles las transacciones de V1">
@@ -50,13 +63,15 @@ caseStudy:
     <CaseStudyCard label="LÍMITE 03" title="POSTGRESQL CONTROLA EL ESTADO DURABLE" tone="primary">
       Los módulos persisten mediante PostgreSQL con migraciones EF Core y concurrencia optimista. El Database Migrator es el proceso responsable de aplicar migraciones en lugar de permitir que cada proceso de aplicación cambie el esquema al iniciar.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="FLUJO DE DATOS" title="REST recupera la verdad; realtime es incremental">
   El repositorio web documenta clientes REST tipados, normalización de paginación y manejo de ProblemDetails. El estado de notificaciones está diseñado para recuperarse desde estado durable por REST y usar SignalR para actualizaciones incrementales, de modo que perder una conexión realtime no redefina la fuente de verdad.
 
-  Esta diferencia importa en finanzas: un evento websocket puede mejorar la respuesta de la interfaz, pero no debería ser el único registro de que existe un balance, una notificación o una acción del hogar.
+Esta diferencia importa en finanzas: un evento websocket puede mejorar la respuesta de la interfaz, pero no debería ser el único registro de que existe un balance, una notificación o una acción del hogar.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="IMPLEMENTACIÓN ACTUAL" title="Qué demuestra hoy la beta V1" surface="highlight">
@@ -68,19 +83,28 @@ caseStudy:
     <EvidenceBlock label="API" title="MONOLITO MODULAR .NET 10" tone="verified">
       `Directory.Build.props` apunta a **net10.0**. La documentación de API describe módulos Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications y Overview, persistencia PostgreSQL 16, autenticación Keycloak, procesos Worker y Database Migrator y rutas de integración con PostgreSQL/Keycloak reales.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PRIVACIDAD" title="La existencia de un recurso forma parte del modelo de autorización">
   La documentación de la API permite explícitamente que endpoints con alcance por hogar oculten un recurso a quien no es miembro, en vez de revelar primero que existe y responder después con “forbidden”. Es un límite de privacidad más fuerte que una autorización genérica posterior a la resolución del identificador.
 
-  El trabajo de hardening restante también se presenta como evidencia del producto, no como polish oculto: enforcement de privacidad, superficies de exportación/directorio, balances y settlements, aceptación final de autenticación y gates de preparación productiva sobre un stack limpio continúan activos.
+El trabajo de hardening restante también se presenta como evidencia del producto, no como polish oculto: enforcement de privacidad, superficies de exportación/directorio, balances y settlements, aceptación final de autenticación y gates de preparación productiva sobre un stack limpio continúan activos.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LÍMITES" title="Qué no afirma este caso de estudio" surface="highlight">
-  <EvidenceBlock label="LIMITACIONES DE ACCESO Y EVIDENCIA" title="REPOSITORIOS PRIVADOS, SIN AFIRMACIÓN DE PRODUCCIÓN" tone="boundary">
-    Ambos repositorios de implementación son privados, por lo que un revisor público no puede inspeccionar directamente su código, tests o historial de ADRs. No se presenta un despliegue en vivo para reclutadores como seguro para datos financieros reales de hogares y este portafolio no afirma adopción, ingresos ni escala de producción.
-  </EvidenceBlock>
+	<EvidenceBlock
+		label="LIMITACIONES DE ACCESO Y EVIDENCIA"
+		title="REPOSITORIOS PRIVADOS, SIN AFIRMACIÓN DE PRODUCCIÓN"
+		tone="boundary"
+	>
+		Ambos repositorios de implementación son privados, por lo que un revisor público no puede
+		inspeccionar directamente su código, tests o historial de ADRs. No se presenta un despliegue
+		en vivo para reclutadores como seguro para datos financieros reales de hogares y este
+		portafolio no afirma adopción, ingresos ni escala de producción.
+	</EvidenceBlock>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Lecciones de ingeniería del límite por hogar">
@@ -96,5 +120,6 @@ caseStudy:
     <CaseStudyCard label="APRENDIZAJE 03" title="UN MONOLITO MODULAR PUEDE SER UNA DECISIÓN DELIBERADA" tone="success">
       Límites de dominio, ownership de migraciones y consistencia transaccional pueden ser explícitos sin pagar el costo operativo de servicios distribuidos antes de que V1 los necesite.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

@@ -2,30 +2,46 @@
 projectId: auctions
 locale: es
 title: Auctions
-description: "Una aplicación de subastas renderizada en servidor con Django, listings autenticados, validación de pujas, watchlists, comentarios, categorías, cierre por propietario y una superficie administrativa de analítica."
-category: "Aplicación Web Django"
-imageAlt: "Vista previa de listings, pujas y analítica administrativa de Auctions en Django"
+description: 'Una aplicación de subastas renderizada en servidor con Django, listings autenticados, validación de pujas, watchlists, comentarios, categorías, cierre por propietario y una superficie administrativa de analítica.'
+category: 'Aplicación Web Django'
+imageAlt: 'Vista previa de listings, pujas y analítica administrativa de Auctions en Django'
 caseStudy:
-  kicker: "CASO DE ESTUDIO · WEB RENDERIZADA EN SERVIDOR"
-  status:
-    lifecycle: "MANTENIDO · APLICACIÓN DJANGO"
-    source: "CÓDIGO PÚBLICO"
-    demo: "SIN DEMO PÚBLICA"
+    kicker: 'CASO DE ESTUDIO · WEB RENDERIZADA EN SERVIDOR'
+    status:
+        lifecycle: 'MANTENIDO · APLICACIÓN DJANGO'
+        source: 'CÓDIGO PÚBLICO'
+        demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="El repositorio de código es la superficie verificable actual">
-  El repositorio contiene modelos, vistas, formularios, templates, analítica administrativa y configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue en vivo.
+<CaseStudySection
+	eyebrow="EVIDENCIA PÚBLICA"
+	title="El repositorio de código es la superficie verificable actual"
+>
+	El repositorio contiene modelos, vistas, formularios, templates, analítica administrativa y
+	configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra
+	una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue
+	en vivo.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD">
-  Los listings necesitan propietario, precio inicial, estado activo/inactivo y ganador. Los participantes necesitan pujar, seguir listings y comentar sin poder cerrar una subasta ajena. La aplicación modela esas relaciones explícitamente y mantiene el workflow principal server-rendered en lugar de introducir una SPA y API separadas para un monolito educativo.
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD"
+>
+	Los listings necesitan propietario, precio inicial, estado activo/inactivo y ganador. Los
+	participantes necesitan pujar, seguir listings y comentar sin poder cerrar una subasta ajena. La
+	aplicación modela esas relaciones explícitamente y mantiene el workflow principal
+	server-rendered en lugar de introducir una SPA y API separadas para un monolito educativo.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="MODELO DE DOMINIO" title="Listings coordinan pujas, comentarios, watchlists y cierre" surface="highlight">
-  <MermaidDiagram
-    title="Relaciones de dominio de Auctions"
-    description="Un usuario Django posee listings y puede crear pujas, comentarios y entradas de watchlist. Los listings agrupan esos registros. Cuando el propietario cierra una subasta, la mayor puja registrada determina al ganador."
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="MODELO DE DOMINIO"
+	title="Listings coordinan pujas, comentarios, watchlists y cierre"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Relaciones de dominio de Auctions"
+		description="Un usuario Django posee listings y puede crear pujas, comentarios y entradas de watchlist. Los listings agrupan esos registros. Cuando el propietario cierra una subasta, la mayor puja registrada determina al ganador."
+		chart={`flowchart LR
       User["Usuario"] -->|posee| Listing["Listing\npuja inicial · puja actual · activo"]
       User --> Bid["Puja"]
       Bid --> Listing
@@ -36,7 +52,7 @@ caseStudy:
       Listing -->|propietario cierra| Close["Cerrar subasta"]
       Bid -->|mayor puja registrada| Close
       Close --> Winner["Ganador"]`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="WORKFLOW" title="La mecánica principal vive cerca del modelo y las vistas">
@@ -52,11 +68,19 @@ caseStudy:
     <CaseStudyCard label="DESCUBRIMIENTO" title="CATEGORÍAS Y WATCHLISTS SIGUEN SERVER-RENDERED" tone="primary">
       Los listings activos están paginados, las categorías filtran en servidor y cada usuario autenticado puede alternar entradas de watchlist sin un store de estado frontend separado.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PERSISTENCIA" title="SQLite local y PostgreSQL por entorno comparten el mismo modelo Django" surface="highlight">
-  El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración `DATABASE_URL` mediante `dj-database-url` cuando existe. Las dependencias y settings también incluyen Gunicorn, WhiteNoise y configuración de cookies/headers de seguridad para escenarios de producción.
+<CaseStudySection
+	eyebrow="PERSISTENCIA"
+	title="SQLite local y PostgreSQL por entorno comparten el mismo modelo Django"
+	surface="highlight"
+>
+	El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración
+	`DATABASE_URL` mediante `dj-database-url` cuando existe. Las dependencias y settings también
+	incluyen Gunicorn, WhiteNoise y configuración de cookies/headers de seguridad para escenarios de
+	producción.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ANALÍTICA ADMINISTRATIVA" title="El código mantenido creció más allá del workflow original del curso">
@@ -71,7 +95,8 @@ caseStudy:
       Charts --> Dashboard["Dashboard Plotly / export"]`}
   />
 
-  La configuración de URLs actual expone dashboard, analytics, reportes, exportación, listings y administración de usuarios, además de endpoints JSON de métricas/charts usados por el panel admin. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción protegida que devuelve datos insuficientes en vez de inventar un modelo cuando la muestra histórica es demasiado pequeña.
+La configuración de URLs actual expone dashboard, analytics, reportes, exportación, listings y administración de usuarios, además de endpoints JSON de métricas/charts usados por el panel admin. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción protegida que devuelve datos insuficientes en vez de inventar un modelo cuando la muestra histórica es demasiado pequeña.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
@@ -91,11 +116,19 @@ caseStudy:
     <EvidenceBlock label="LÍMITE" title="SIN CLAIM ACTUAL DE DRF O WEBSOCKETS" tone="boundary">
       El historial de releases conserva experimentos con APIs y notificaciones realtime, pero los requirements, apps instaladas, wiring ASGI y URLs del `develop` actual no exponen DRF ni Django Channels como superficie activa. El estado ejecutable prevalece sobre wording histórico del changelog.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Django server-rendered mantiene comprensible el workflow principal" surface="highlight">
-  Templates, forms, sesiones y ORM proporcionan una sola aplicación desplegable y un recorrido corto desde request hasta estado persistido. La capa de analítica administrativa añade inspección operativa útil sin requerir un segundo frontend, mientras pujas realtime y garantías fuertes ante escrituras concurrentes todavía necesitarían diseño adicional.
+<CaseStudySection
+	eyebrow="TRADE-OFFS"
+	title="Django server-rendered mantiene comprensible el workflow principal"
+	surface="highlight"
+>
+	Templates, forms, sesiones y ORM proporcionan una sola aplicación desplegable y un recorrido
+	corto desde request hasta estado persistido. La capa de analítica administrativa añade
+	inspección operativa útil sin requerir un segundo frontend, mientras pujas realtime y garantías
+	fuertes ante escrituras concurrentes todavía necesitarían diseño adicional.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué hizo concreto este proyecto">
@@ -111,5 +144,6 @@ caseStudy:
     <CaseStudyCard label="APRENDIZAJE 03" title="HISTORIAL NO ES LO MISMO QUE WIRING ACTUAL" tone="success">
       Un changelog puede preservar experimentos que el grafo de dependencias actual ya no expone. Un case study debe leer settings, rutas y manifests ejecutables antes de convertir funcionalidades históricas en claims presentes.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

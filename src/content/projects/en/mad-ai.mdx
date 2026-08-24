@@ -2,30 +2,47 @@
 projectId: mad-ai
 locale: en
 title: MAD AI
-description: "An Angular 20 administrative client with SSR and explicit domain/application/infrastructure/presentation layers, paired with a separately maintained private Django 5.2 REST API."
-category: "Full-Stack Architecture"
-imageAlt: "MAD AI Angular administrative client and layered application architecture preview"
+description: 'An Angular 20 administrative client with SSR and explicit domain/application/infrastructure/presentation layers, paired with a separately maintained private Django 5.2 REST API.'
+category: 'Full-Stack Architecture'
+imageAlt: 'MAD AI Angular administrative client and layered application architecture preview'
 caseStudy:
-  kicker: "PROJECT CASE STUDY · FULL-STACK ARCHITECTURE"
-  status:
-    lifecycle: "MAINTAINED · ANGULAR 20 + DJANGO 5.2"
-    source: "PUBLIC CLIENT · PRIVATE API"
-    demo: "NO PUBLIC DEMO"
+    kicker: 'PROJECT CASE STUDY · FULL-STACK ARCHITECTURE'
+    status:
+        lifecycle: 'MAINTAINED · ANGULAR 20 + DJANGO 5.2'
+        source: 'PUBLIC CLIENT · PRIVATE API'
+        demo: 'NO PUBLIC DEMO'
 ---
 
-<CaseStudySection eyebrow="EVIDENCE BOUNDARY" title="The client is public; the companion API is private">
-  The public `MAD-AI` repository exposes the Angular application, SSR entry point, layered client architecture and HTTP adapters. A separate `MAD-AI-API` repository contains the Django REST service, but that repository is private. This case study uses the private backend as owner-verifiable context while keeping the public-source badge linked only to the frontend that a recruiter can inspect independently.
+<CaseStudySection
+	eyebrow="EVIDENCE BOUNDARY"
+	title="The client is public; the companion API is private"
+>
+	The public `MAD-AI` repository exposes the Angular application, SSR entry point, layered client
+	architecture and HTTP adapters. A separate `MAD-AI-API` repository contains the Django REST
+	service, but that repository is private. This case study uses the private backend as
+	owner-verifiable context while keeping the public-source badge linked only to the frontend that
+	a recruiter can inspect independently.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEM" title="Administrative workflows accumulate cross-cutting concerns quickly">
-  Authentication, guarded navigation, user administration, roles, notifications and reporting all need shared application behavior without turning routed components into transport clients. The project separates those concerns at both ends: an Angular client with explicit layers and a Django REST service with its own application/domain/infrastructure boundaries.
+<CaseStudySection
+	eyebrow="PROBLEM"
+	title="Administrative workflows accumulate cross-cutting concerns quickly"
+>
+	Authentication, guarded navigation, user administration, roles, notifications and reporting all
+	need shared application behavior without turning routed components into transport clients. The
+	project separates those concerns at both ends: an Angular client with explicit layers and a
+	Django REST service with its own application/domain/infrastructure boundaries.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SYSTEM" title="Two repositories, two independent architectural boundaries" surface="highlight">
-  <MermaidDiagram
-    title="MAD AI current system boundary"
-    description="The public Angular 20 client renders through browser or SSR and calls a separately maintained Django 5.2 REST API. The backend uses DRF/JWT-oriented adapters and PostgreSQL support; Celery is present for asynchronous work."
-    chart={`flowchart LR
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Two repositories, two independent architectural boundaries"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="MAD AI current system boundary"
+		description="The public Angular 20 client renders through browser or SSR and calls a separately maintained Django 5.2 REST API. The backend uses DRF/JWT-oriented adapters and PostgreSQL support; Celery is present for asynchronous work."
+		chart={`flowchart LR
       Browser["Browser"] --> Angular["Angular 20 client\nroutes + presentation"]
       SSR["Angular SSR\nExpress 5"] --> Angular
       Angular --> App["Application + domain contracts"]
@@ -34,7 +51,7 @@ caseStudy:
       API --> Service["Application / service layer"]
       Service --> DB["PostgreSQL\nDjango ORM"]
       Service -. async .-> Celery["Celery tasks"]`}
-  />
+	/>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="FRONTEND" title="Layer names correspond to real Angular boundaries">
@@ -54,17 +71,21 @@ caseStudy:
     <CaseStudyCard label="PRESENTATION" title="ROUTES DEFINE PUBLIC AND SECURED AREAS" tone="primary">
       Authentication routes use their own layout, while dashboard and user-management surfaces sit behind `AuthGuard` inside the secured shell. Angular SSR and Express provide the server-rendered entry path.
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="BACKEND" title="The private API uses a pragmatic modular Django architecture" surface="highlight">
   The backend dependency manifest pins **Django 5.2.3** and **Django REST Framework 3.16.0**, with JWT/cryptography support, PostgreSQL through `psycopg2`, filtering, OpenAPI tooling and Celery. Its architecture document describes a hybrid modular approach that combines a service layer, domain-centric Django models and ports/adapters rather than forcing a framework-neutral domain that duplicates the ORM.
 
-  Because the repository is private, these facts are not presented as independently inspectable public evidence. They explain the architecture I built and maintain; the public client remains the evidence surface available to external reviewers.
+Because the repository is private, these facts are not presented as independently inspectable public evidence. They explain the architecture I built and maintain; the public client remains the evidence surface available to external reviewers.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="REPORTING" title="The client owns visualization and export concerns">
-  The Angular manifest includes ECharts, jsPDF and PapaParse. Keeping charting/export libraries in the client lets reporting surfaces transform API responses into interactive visualizations and downloadable representations without pushing presentation concerns back into the REST service.
+	The Angular manifest includes ECharts, jsPDF and PapaParse. Keeping charting/export libraries in
+	the client lets reporting surfaces transform API responses into interactive visualizations and
+	downloadable representations without pushing presentation concerns back into the REST service.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
@@ -84,6 +105,7 @@ caseStudy:
     <EvidenceBlock label="BOUNDARY" title="NO ADOPTION OR CLIENT-IMPACT METRICS" tone="boundary">
       This case study explains implementation and architectural decisions. It does not claim external adoption, customer usage, production workload or business impact that the repositories do not substantiate.
     </EvidenceBlock>
+
   </CaseStudyGrid>
 </CaseStudySection>
 
@@ -100,5 +122,6 @@ caseStudy:
     <CaseStudyCard label="LEARNING 03" title="ACCESS LEVEL IS PART OF EVIDENCE QUALITY" tone="success">
       A claim I can verify in a private repository is different from evidence a recruiter can inspect. The case study should state that distinction rather than flattening both into “public source.”
     </CaseStudyCard>
+
   </CaseStudyGrid>
 </CaseStudySection>

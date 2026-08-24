@@ -69,7 +69,9 @@ describe('audited current project evidence', () => {
 		expect(en).toContain('AuctionAnalytics');
 		expect(en).toContain('PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS MODULE');
 		expect(en).toContain('NO CURRENT DRF OR WEBSOCKET CLAIM');
-		expect(en).toContain('do not expose DRF or Django Channels as the active application surface');
+		expect(en).toContain(
+			'do not expose DRF or Django Channels as the active application surface'
+		);
 		expect(en).toContain('does not call the current implementation concurrency-safe');
 	});
 

@@ -39,7 +39,9 @@ describe('Project Case Study MDX contract', () => {
 		expect(shell).not.toContain('ProjectCaseStudyLegacy');
 		expect(shell).not.toContain('ContentPanel');
 		expect(shell).not.toContain('TechPill');
-		expect(existsSync('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro')).toBe(false);
+		expect(existsSync('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro')).toBe(
+			false
+		);
 	});
 
 	it('anchors reading-width sections to the same left grid instead of centering them independently', () => {
@@ -70,7 +72,7 @@ describe('Project Case Study MDX contract', () => {
 		expect(gallery).toContain('data-project-gallery');
 		expect(gallery).toContain('data-gallery-dialog');
 		expect(gallery).toContain('dialog.showModal()');
-		expect(gallery).toContain("stage.dataset.zoomed");
+		expect(gallery).toContain('stage.dataset.zoomed');
 		expect(gallery).toContain('object-contain');
 		expect(gallery).not.toContain('object-cover');
 	});
@@ -121,8 +123,12 @@ describe('Project Case Study MDX contract', () => {
 		expect(metadata).toContain('repositories?: readonly ProjectRepository[]');
 		expect(metadata).toContain('version?: string');
 		expect(metadata).toContain("version: '3.1.2'");
-		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
-		expect(metadata).toContain("{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }");
+		expect(metadata).toContain(
+			"{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }"
+		);
+		expect(metadata).toContain(
+			"{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }"
+		);
 		expect(resources).toContain('PROJECT_METADATA[projectId]');
 		expect(resources).toContain("metadata.sourceAccess === 'private'");
 		expect(resources).toContain('metadata.repositories?.length');

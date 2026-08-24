@@ -36,7 +36,9 @@ const lines = normalizeQuotedDiagramLineBreaks(chart, title)
 	.filter(line => line.length > 0 && !line.startsWith('%%'));
 const header = lines[0]?.match(/^flowchart\s+(LR|TD)$/i);
 if (!header) {
-	throw new Error(`Unsupported case-study Mermaid header for "${title}". Use flowchart LR or flowchart TD.`);
+	throw new Error(
+		`Unsupported case-study Mermaid header for "${title}". Use flowchart LR or flowchart TD.`
+	);
 }
 
 const direction = header[1].toUpperCase() as 'LR' | 'TD';
@@ -45,7 +47,10 @@ const edges: DiagramEdge[] = [];
 const nodeTokenPattern = /^([A-Za-z0-9_-]+)(?:\[(?:"([\s\S]+)"|([^\]]+))\])?$/;
 const toneCycle: DiagramTone[] = ['brand', 'info', 'success', 'secondary', 'warning', 'danger'];
 const toneTokens: Record<DiagramTone, { background: string; foreground: string }> = {
-	brand: { background: 'var(--color-badge-brand-bg)', foreground: 'var(--color-badge-brand-text)' },
+	brand: {
+		background: 'var(--color-badge-brand-bg)',
+		foreground: 'var(--color-badge-brand-text)',
+	},
 	info: { background: 'var(--color-badge-info-bg)', foreground: 'var(--color-badge-info-text)' },
 	success: {
 		background: 'var(--color-status-success-bg)',
@@ -103,7 +108,10 @@ const parseNode = (token: string): DiagramNode => {
 		lines: wrapLabel(rawLabel ?? existing?.label ?? id),
 		index: existing?.index ?? nodes.size,
 		level: existing?.level ?? 0,
-		tone: tones[id] ?? existing?.tone ?? toneCycle[(existing?.index ?? nodes.size) % toneCycle.length],
+		tone:
+			tones[id] ??
+			existing?.tone ??
+			toneCycle[(existing?.index ?? nodes.size) % toneCycle.length],
 		x: 0,
 		y: 0,
 	};
@@ -298,7 +306,12 @@ const titleId = `diagram-title-${diagramHash}`;
 const descriptionId = `diagram-description-${diagramHash}`;
 ---
 
-<figure class="w-full" data-mermaid-figure data-diagram-direction={direction} data-diagram-density="balanced">
+<figure
+	class="w-full"
+	data-mermaid-figure
+	data-diagram-direction={direction}
+	data-diagram-density="balanced"
+>
 	<div
 		class="diagram-scroll overflow-x-auto overscroll-x-contain border-2 border-edge-strong bg-channel-surface-default p-3 shadow-retro-md md:p-5"
 		data-mermaid-host
@@ -316,10 +329,26 @@ const descriptionId = `diagram-description-${diagramHash}`;
 			<title id={titleId}>{title}</title>
 			<desc id={descriptionId}>{description}</desc>
 			<defs>
-				<marker id={solidMarkerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+				<marker
+					id={solidMarkerId}
+					viewBox="0 0 10 10"
+					refX="9"
+					refY="5"
+					markerWidth="7"
+					markerHeight="7"
+					orient="auto-start-reverse"
+				>
 					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-accent-primary)"></path>
 				</marker>
-				<marker id={optionalMarkerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+				<marker
+					id={optionalMarkerId}
+					viewBox="0 0 10 10"
+					refX="9"
+					refY="5"
+					markerWidth="7"
+					markerHeight="7"
+					orient="auto-start-reverse"
+				>
 					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-content-muted)"></path>
 				</marker>
 			</defs>
@@ -328,9 +357,13 @@ const descriptionId = `diagram-description-${diagramHash}`;
 				{
 					edges.map(edge => {
 						const geometry = edgePath(edge);
-						const stroke = edge.optional ? 'var(--channel-content-muted)' : 'var(--channel-accent-primary)';
+						const stroke = edge.optional
+							? 'var(--channel-content-muted)'
+							: 'var(--channel-accent-primary)';
 						const marker = edge.optional ? optionalMarkerId : solidMarkerId;
-						const labelWidth = edge.label ? Math.max(72, edge.label.length * 7.5 + 24) : 0;
+						const labelWidth = edge.label
+							? Math.max(72, edge.label.length * 7.5 + 24)
+							: 0;
 						return (
 							<g data-diagram-edge data-edge-optional={String(edge.optional)}>
 								<path
@@ -343,9 +376,11 @@ const descriptionId = `diagram-description-${diagramHash}`;
 									stroke-linejoin="round"
 									vector-effect="non-scaling-stroke"
 									marker-end={`url(#${marker})`}
-								></path>
+								/>
 								{edge.label && (
-									<g transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 13})`}>
+									<g
+										transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 13})`}
+									>
 										<rect
 											width={labelWidth}
 											height="26"
@@ -353,8 +388,16 @@ const descriptionId = `diagram-description-${diagramHash}`;
 											stroke="var(--color-edge-subtle)"
 											stroke-width="1"
 											vector-effect="non-scaling-stroke"
-										></rect>
-										<text x={labelWidth / 2} y="17" text-anchor="middle" font-family="var(--font-mono)" font-size="12" font-weight="700" fill="var(--channel-content-default)">
+										/>
+										<text
+											x={labelWidth / 2}
+											y="17"
+											text-anchor="middle"
+											font-family="var(--font-mono)"
+											font-size="12"
+											font-weight="700"
+											fill="var(--channel-content-default)"
+										>
 											{edge.label}
 										</text>
 									</g>
@@ -370,14 +413,48 @@ const descriptionId = `diagram-description-${diagramHash}`;
 					nodeList.map(node => {
 						const tone = toneTokens[node.tone];
 						const lineHeight = 19;
-						const firstLineY = node.y + nodeHeight / 2 - ((node.lines.length - 1) * lineHeight) / 2 + 5;
+						const firstLineY =
+							node.y +
+							nodeHeight / 2 -
+							((node.lines.length - 1) * lineHeight) / 2 +
+							5;
 						return (
 							<g data-diagram-node data-node-id={node.id} data-node-tone={node.tone}>
-								<rect x={node.x} y={node.y} width={nodeWidth} height={nodeHeight} fill={tone.background} stroke={tone.foreground} stroke-width="2" vector-effect="non-scaling-stroke"></rect>
-								<line x1={node.x + 2} y1={node.y + 2} x2={node.x + nodeWidth - 2} y2={node.y + 2} stroke={tone.foreground} stroke-width="5" vector-effect="non-scaling-stroke"></line>
-								<text x={node.x + nodeWidth / 2} y={firstLineY} text-anchor="middle" font-family="var(--font-mono)" font-size="14" font-weight="700" fill={tone.foreground}>
+								<rect
+									x={node.x}
+									y={node.y}
+									width={nodeWidth}
+									height={nodeHeight}
+									fill={tone.background}
+									stroke={tone.foreground}
+									stroke-width="2"
+									vector-effect="non-scaling-stroke"
+								/>
+								<line
+									x1={node.x + 2}
+									y1={node.y + 2}
+									x2={node.x + nodeWidth - 2}
+									y2={node.y + 2}
+									stroke={tone.foreground}
+									stroke-width="5"
+									vector-effect="non-scaling-stroke"
+								/>
+								<text
+									x={node.x + nodeWidth / 2}
+									y={firstLineY}
+									text-anchor="middle"
+									font-family="var(--font-mono)"
+									font-size="14"
+									font-weight="700"
+									fill={tone.foreground}
+								>
 									{node.lines.map((line, index) => (
-										<tspan x={node.x + nodeWidth / 2} dy={index === 0 ? 0 : lineHeight}>{line}</tspan>
+										<tspan
+											x={node.x + nodeWidth / 2}
+											dy={index === 0 ? 0 : lineHeight}
+										>
+											{line}
+										</tspan>
 									))}
 								</text>
 								<title>{node.label}</title>
@@ -389,7 +466,8 @@ const descriptionId = `diagram-description-${diagramHash}`;
 		</svg>
 	</div>
 	<figcaption class="mt-3 text-caption leading-relaxed text-content-muted">
-		<span class="font-bold text-content-strong">{title}.</span> {description}
+		<span class="font-bold text-content-strong">{title}.</span>
+		{description}
 	</figcaption>
 </figure>
 
