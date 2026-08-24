@@ -4,7 +4,9 @@ const DESKTOP = { width: 1440, height: 900 };
 const MOBILE = { width: 390, height: 844 };
 
 test.describe('Experience responsive composition', () => {
-	test('desktop uses the viewport with a balanced selector and evidence panel', async ({ page }) => {
+	test('desktop uses the viewport with a balanced selector and evidence panel', async ({
+		page,
+	}) => {
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/');
 		await page.locator('#experience').scrollIntoViewIfNeeded();
@@ -50,7 +52,9 @@ test.describe('Experience responsive composition', () => {
 		await page.locator('#experience').scrollIntoViewIfNeeded();
 
 		const tabs = page.locator('#experience-tablist [role="tab"]');
-		const detail = page.locator('.experience-panel[data-active="true"] [data-experience-detail]');
+		const detail = page.locator(
+			'.experience-panel[data-active="true"] [data-experience-detail]'
+		);
 		await expect(tabs).toHaveCount(3);
 		await expect(detail).toBeVisible();
 
@@ -69,7 +73,9 @@ test.describe('Experience responsive composition', () => {
 });
 
 test.describe('Experience role interaction', () => {
-	test('switches panels with directional motion without changing ARIA tab semantics', async ({ page }) => {
+	test('switches panels with directional motion without changing ARIA tab semantics', async ({
+		page,
+	}) => {
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/');
 		await page.locator('#experience').scrollIntoViewIfNeeded();

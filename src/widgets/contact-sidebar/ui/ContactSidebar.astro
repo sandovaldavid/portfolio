@@ -10,11 +10,7 @@ import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
 import MailIcon from '@assets/icons/Mail.astro';
 import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
-import {
-	createScopedUiTranslator,
-	getLanguageFromLocale,
-	Language,
-} from '@shared/config/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
@@ -76,32 +72,34 @@ const links = [
 		aria-hidden={defaultCollapsed}
 		inert={defaultCollapsed ? true : undefined}
 	>
-		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
+		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true"></div>
 
 		<nav
 			class="flex flex-col border-2 border-edge-strong bg-channel-surface-default shadow-retro-md"
 			aria-label={tAccessibility('socialContactLinks')}
 		>
-			{links.map(({ label, href, tooltip, external, Icon }) => (
-				<a
-					href={href}
-					target={external ? '_blank' : undefined}
-					rel={external ? 'noopener noreferrer' : undefined}
-					title={tooltip}
-					aria-label={
-						external ? `${label}, ${tAccessibility('externalLink')}` : label
-					}
-					class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
-				>
-					<Icon class="size-5" aria-hidden="true" />
-					<span class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
-						{tooltip}
-					</span>
-				</a>
-			))}
+			{
+				links.map(({ label, href, tooltip, external, Icon }) => (
+					<a
+						href={href}
+						target={external ? '_blank' : undefined}
+						rel={external ? 'noopener noreferrer' : undefined}
+						title={tooltip}
+						aria-label={
+							external ? `${label}, ${tAccessibility('externalLink')}` : label
+						}
+						class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
+					>
+						<Icon class="size-5" aria-hidden="true" />
+						<span class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
+							{tooltip}
+						</span>
+					</a>
+				))
+			}
 		</nav>
 
-		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true" />
+		<div class="h-16 w-px bg-edge-strong opacity-60" aria-hidden="true"></div>
 	</div>
 
 	<button
@@ -111,7 +109,7 @@ const links = [
 		aria-label={tRecruiter('showContactShortcuts')}
 		tabindex={defaultCollapsed ? 0 : -1}
 	>
-		<span class="h-16 w-1 bg-channel-accent-primary" aria-hidden="true" />
+		<span class="h-16 w-1 bg-channel-accent-primary" aria-hidden="true"></span>
 	</button>
 </aside>
 

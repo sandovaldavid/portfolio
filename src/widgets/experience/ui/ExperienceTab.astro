@@ -14,18 +14,8 @@ interface Props {
 	focusable: boolean;
 }
 
-const {
-	company,
-	role,
-	date,
-	isCurrent,
-	tabId,
-	panelId,
-	experienceId,
-	index,
-	selected,
-	focusable,
-} = Astro.props;
+const { company, role, date, isCurrent, tabId, panelId, experienceId, index, selected, focusable } =
+	Astro.props;
 const itemNumber = String(index + 1).padStart(2, '0');
 ---
 
@@ -72,8 +62,8 @@ const itemNumber = String(index + 1).padStart(2, '0');
 		{
 			isCurrent && (
 				<span class="flex shrink-0 items-center gap-1.5" aria-hidden="true">
-					<span class="size-1.5 bg-channel-status-online"></span>
-					<span class="h-px w-4 bg-channel-status-online opacity-70"></span>
+					<span class="size-1.5 bg-channel-status-online" />
+					<span class="h-px w-4 bg-channel-status-online opacity-70" />
 				</span>
 			)
 		}

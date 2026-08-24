@@ -212,7 +212,9 @@ const EXPERIENCE = await getExperienceData(lang);
 			};
 
 			const activateTab = (index: number, focus = false) => {
-				const currentIndex = tabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+				const currentIndex = tabs.findIndex(
+					tab => tab.getAttribute('aria-selected') === 'true'
+				);
 				if (index < 0 || index >= tabs.length) return;
 
 				if (currentIndex === index) {

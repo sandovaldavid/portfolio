@@ -30,7 +30,9 @@ const companyContext = isCurrent
 		class="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:gap-8"
 	>
 		<div class="min-w-0">
-			<h3 class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title">
+			<h3
+				class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title"
+			>
 				{title}
 			</h3>
 			<p class="mt-2 text-editorial-label uppercase text-channel-accent-primary">
@@ -41,7 +43,7 @@ const companyContext = isCurrent
 		<div
 			class="flex min-h-9 w-fit items-center gap-2 border border-edge-subtle bg-channel-surface-highlight px-3 py-2 md:justify-self-end"
 		>
-			{isCurrent && <span class="size-2 bg-channel-status-online" aria-hidden="true"></span>}
+			{isCurrent && <span class="size-2 bg-channel-status-online" aria-hidden="true" />}
 			<p class="font-mono text-caption uppercase text-channel-status-online">{date}</p>
 		</div>
 	</header>
@@ -55,7 +57,8 @@ const companyContext = isCurrent
 		{
 			visibleAchievements.map((point, index) => {
 				const isLastOdd =
-					visibleAchievements.length % 2 === 1 && index === visibleAchievements.length - 1;
+					visibleAchievements.length % 2 === 1 &&
+					index === visibleAchievements.length - 1;
 				const itemNumber = String(index + 1).padStart(2, '0');
 
 				return (
@@ -66,9 +69,16 @@ const companyContext = isCurrent
 							isLastOdd && 'lg:col-span-2',
 						]}
 					>
-						<div class:list={['flex min-w-0 items-start gap-3', isLastOdd && 'lg:max-w-180']}>
+						<div
+							class:list={[
+								'flex min-w-0 items-start gap-3',
+								isLastOdd && 'lg:max-w-180',
+							]}
+						>
 							<div class="flex shrink-0 items-center gap-2 pt-0.5">
-								<span class="font-mono text-caption text-channel-accent-primary">{itemNumber}</span>
+								<span class="font-mono text-caption text-channel-accent-primary">
+									{itemNumber}
+								</span>
 								<ArrowRightIcon
 									class="size-4 text-channel-accent-primary transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none"
 									aria-hidden="true"
