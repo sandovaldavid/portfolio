@@ -13,8 +13,10 @@ const { class: className, id, layout = 'contained', surface = 'canvas' } = Astro
  *
  * - contained: ordinary max-width section used by internal pages;
  * - viewport: full-bleed surface with a max-1440 shell that reserves the
- *   usable viewport from Tablet upward;
- * - compact: same full-bleed surface/shell without a viewport minimum.
+ *   usable viewport from Tablet upward and uses a lower visual center so the
+ *   section title sits inside the upper whitespace instead of hugging its top;
+ * - compact: same full-bleed surface/shell without a viewport minimum or the
+ *   lowered viewport rhythm.
  *
  * Hero and Experience own dedicated widgets because their internal layout
  * contracts differ from the generic section shell.
@@ -33,7 +35,8 @@ const surfaceClass =
 				data-home-compact-shell={layout === 'compact' ? 'true' : undefined}
 				class:list={[
 					'mx-auto flex w-full max-w-360 flex-col justify-center px-5 md:px-8 lg:px-20',
-					layout === 'viewport' && 'md:min-h-[calc(100svh-4.5rem)]',
+					layout === 'viewport' &&
+						'md:min-h-[calc(100svh-4.5rem)] md:pt-24 md:pb-8 lg:pt-32 lg:pb-10',
 					className,
 				]}
 			>
