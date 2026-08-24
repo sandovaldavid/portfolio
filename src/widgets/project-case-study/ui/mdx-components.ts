@@ -4,10 +4,9 @@ import CaseStudySection from './CaseStudySection.astro';
 import EvidenceBlock from './EvidenceBlock.astro';
 import MermaidDiagram from './MermaidDiagram.astro';
 import ProjectGallery from './ProjectGallery.astro';
-import ProjectResources from './ProjectResources.astro';
 import ProjectVideo from './ProjectVideo.astro';
 
-/** Approved component surface available to localized project MDX entries. */
+/** Approved project-specific composition surface available to localized project MDX entries. */
 export const projectCaseStudyComponents = {
 	CaseStudyCard,
 	CaseStudyGrid,
@@ -15,6 +14,5 @@ export const projectCaseStudyComponents = {
 	EvidenceBlock,
 	MermaidDiagram,
 	ProjectGallery,
-	ProjectResources,
 	ProjectVideo,
 } as const;
