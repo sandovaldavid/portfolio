@@ -24,6 +24,37 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		).toBeVisible();
 	});
 
+	test('detail action bar adapts repositories, documentation, live demo and share to project evidence', async ({
+		page,
+	}) => {
+		await page.goto('/projects/kioku');
+		const kiokuResources = page.locator('[data-project-resources]');
+		await expect(kiokuResources.locator('[data-project-resource="repository"]')).toHaveCount(2);
+		await expect(kiokuResources.locator('[data-project-resource="docs"]')).toHaveCount(1);
+		await expect(kiokuResources.locator('[data-project-resource="package"]')).toHaveCount(1);
+		await expect(kiokuResources.locator('[data-project-resource="demo"]')).toHaveCount(0);
+		await expect(kiokuResources.locator('[data-project-share]')).toBeVisible();
+		await expect(kiokuResources.locator('a[href="https://github.com/sandovaldavid/kioku"]')).toBeVisible();
+		await expect(
+			kiokuResources.locator('a[href="https://github.com/sandovaldavid/kioku-obsidian"]')
+		).toBeVisible();
+		await expect(kiokuResources.locator('a[href="https://kioku.sandovaldavid.com"]')).toBeVisible();
+
+		await page.goto('/projects/fluentreads');
+		const fluentReadsResources = page.locator('[data-project-resources]');
+		await expect(fluentReadsResources.locator('[data-project-resource="repository"]')).toHaveCount(1);
+		await expect(fluentReadsResources.locator('[data-project-resource="demo"]')).toHaveCount(1);
+		await expect(fluentReadsResources.locator('[data-project-share]')).toBeVisible();
+
+		await page.goto('/projects/yukidoke');
+		const yukidokeResources = page.locator('[data-project-resources]');
+		await expect(yukidokeResources.locator('[data-project-resource="repository"]')).toHaveCount(0);
+		await expect(yukidokeResources.locator('[data-project-resource="docs"]')).toHaveCount(0);
+		await expect(yukidokeResources.locator('[data-project-resource="demo"]')).toHaveCount(0);
+		await expect(yukidokeResources.locator('[data-project-resource="package"]')).toHaveCount(0);
+		await expect(yukidokeResources.locator('[data-project-share]')).toBeVisible();
+	});
+
 	for (const locale of [
 		{
 			path: '/projects/campus-map',
