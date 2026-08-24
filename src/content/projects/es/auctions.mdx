@@ -2,9 +2,9 @@
 projectId: auctions
 locale: es
 title: Auctions
-description: "Una aplicación de subastas renderizada en servidor con Django, listings autenticados, validación de pujas, watchlists, comentarios, categorías y cierre controlado por el propietario."
+description: "Una aplicación de subastas renderizada en servidor con Django, listings autenticados, validación de pujas, watchlists, comentarios, categorías, cierre por propietario y una superficie administrativa de analítica."
 category: "Aplicación Web Django"
-imageAlt: "Vista previa de la interfaz de listings y pujas de Auctions en Django"
+imageAlt: "Vista previa de listings, pujas y analítica administrativa de Auctions en Django"
 caseStudy:
   kicker: "CASO DE ESTUDIO · WEB RENDERIZADA EN SERVIDOR"
   status:
@@ -16,7 +16,7 @@ caseStudy:
 <CaseStudySection eyebrow="EVIDENCIA PÚBLICA" title="El repositorio de código es la superficie verificable actual" width="reading">
   <ProjectResources projectId="auctions" resources={['source']} />
 
-  El repositorio contiene modelos, vistas, formularios, templates y configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue en vivo.
+  El repositorio contiene modelos, vistas, formularios, templates, analítica administrativa y configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue en vivo.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEMA" title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD">
@@ -61,20 +61,43 @@ caseStudy:
   El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración `DATABASE_URL` mediante `dj-database-url` cuando existe. Las dependencias y settings también incluyen Gunicorn, WhiteNoise y configuración de cookies/headers de seguridad para escenarios de producción.
 </CaseStudySection>
 
+<CaseStudySection eyebrow="ANALÍTICA ADMINISTRATIVA" title="El código mantenido creció más allá del workflow original del curso">
+  <MermaidDiagram
+    title="Ruta de analítica administrativa"
+    description="Las rutas administrativas consultan datos de subastas con Django ORM. AuctionAnalytics agrega listings, pujas, usuarios, comentarios y watchlists y prepara métricas y análisis orientados a Plotly para dashboard y reportes."
+    chart={`flowchart LR
+      Admin["Rutas admin\ndashboard · analytics · reports"] --> ORM["Django ORM"]
+      ORM --> Data["Listings · pujas · usuarios\ncomentarios · watchlists"]
+      Data --> Analytics["AuctionAnalytics\npandas · NumPy · scikit-learn"]
+      Analytics --> Charts["Métricas · series temporales\ncategorías · análisis de pujas"]
+      Charts --> Dashboard["Dashboard Plotly / export"]`}
+  />
+
+  La configuración de URLs actual expone dashboard, analytics, reportes, exportación, listings y administración de usuarios, además de endpoints JSON de métricas/charts usados por el panel admin. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción protegida que devuelve datos insuficientes en vez de inventar un modelo cuando la muestra histórica es demasiado pequeña.
+</CaseStudySection>
+
 <CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
   <CaseStudyGrid columns={2}>
     <EvidenceBlock label="VERIFICADO EN CÓDIGO" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
       `requirements.txt` restringe Django al rango 5.1–5.2 e incluye soporte para PostgreSQL, Gunicorn y WhiteNoise. El código público expone directamente los modelos `User`, `Listing`, `Bid`, `Comment` y `Watchlist`, además de vistas para listings, pujas, categorías, comentarios y cierre de subastas.
     </EvidenceBlock>
 
+    <EvidenceBlock label="TOOLING ADMIN VERIFICADO" title="MÓDULO DE ANALÍTICA CON PANDAS · PLOTLY · SCIKIT-LEARN" tone="verified">
+      El repositorio mantenido incluye las dependencias analíticas y un módulo `AuctionAnalytics` consumido por las rutas administrativas. Esto se presenta como evidencia de tooling de análisis, no como prueba de precisión productiva de modelos predictivos ni impacto comercial.
+    </EvidenceBlock>
+
     <EvidenceBlock label="LÍMITE" title="SIN DEMO EN VIVO NI GARANTÍA DE CONCURRENCIA" tone="boundary">
-      El texto antiguo de demo alojada del repositorio es un placeholder y no un despliegue verificable actual. La regla de puja realiza una secuencia lectura/verificación/actualización sin row locking explícito ni un límite transaccional en `place_bid`, por lo que este caso de estudio no llama concurrency-safe a la implementación actual.
+      El texto antiguo de demo alojada es un placeholder y no un despliegue verificable actual. La regla de puja realiza una secuencia lectura/verificación/actualización sin row locking explícito ni un límite transaccional en `place_bid`, por lo que este caso de estudio no llama concurrency-safe a la implementación actual.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="LÍMITE" title="SIN CLAIM ACTUAL DE DRF O WEBSOCKETS" tone="boundary">
+      El historial de releases conserva experimentos con APIs y notificaciones realtime, pero los requirements, apps instaladas, wiring ASGI y URLs del `develop` actual no exponen DRF ni Django Channels como superficie activa. El estado ejecutable prevalece sobre wording histórico del changelog.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Django server-rendered mantiene comprensible el alcance educativo" surface="highlight">
-  Templates, forms, sesiones y ORM de Django proporcionan una sola aplicación desplegable y un recorrido corto desde request hasta estado persistido. El trade-off es que pujas en tiempo real y garantías más fuertes ante escrituras concurrentes necesitarían diseño adicional en vez de aparecer automáticamente en el monolito actual.
+<CaseStudySection eyebrow="TRADE-OFFS" title="Django server-rendered mantiene comprensible el workflow principal" surface="highlight">
+  Templates, forms, sesiones y ORM proporcionan una sola aplicación desplegable y un recorrido corto desde request hasta estado persistido. La capa de analítica administrativa añade inspección operativa útil sin requerir un segundo frontend, mientras pujas realtime y garantías fuertes ante escrituras concurrentes todavía necesitarían diseño adicional.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué hizo concreto este proyecto">
@@ -87,8 +110,8 @@ caseStudy:
       Verificar que una puja supere el valor actual es necesario, pero escrituras simultáneas requieren su propia estrategia transaccional y de locking si la aplicación debe garantizar orden bajo contención.
     </CaseStudyCard>
 
-    <CaseStudyCard label="APRENDIZAJE 03" title="SERVER RENDERING PUEDE SER EL LÍMITE CORRECTO MÁS SIMPLE" tone="success">
-      Para una aplicación CRUD compacta, forms, views y templates de Django pueden mantener autenticación y persistencia más fáciles de inspeccionar que agregar por defecto una segunda aplicación cliente.
+    <CaseStudyCard label="APRENDIZAJE 03" title="HISTORIAL NO ES LO MISMO QUE WIRING ACTUAL" tone="success">
+      Un changelog puede preservar experimentos que el grafo de dependencias actual ya no expone. Un case study debe leer settings, rutas y manifests ejecutables antes de convertir funcionalidades históricas en claims presentes.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
