@@ -88,7 +88,9 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 								<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
 									{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="min-w-0 text-secondary text-content-default">{step}</span>
+								<span class="min-w-0 text-secondary text-content-default">
+									{step}
+								</span>
 							</li>
 						))
 					}
@@ -106,7 +108,9 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 								<span class="shrink-0 text-editorial-label-compact text-channel-accent-primary">
 									{String(index + 1).padStart(2, '0')}
 								</span>
-								<span class="min-w-0 text-secondary text-content-default">{signal}</span>
+								<span class="min-w-0 text-secondary text-content-default">
+									{signal}
+								</span>
 							</li>
 						))
 					}
@@ -121,7 +125,12 @@ const modeledSignals = research.engineeredFeatures.slice(0, 4);
 					{
 						techStack.map(tag => (
 							<li>
-								<TechPill label={tag.label} icon={tag.icon} size="sm" variant="stack" />
+								<TechPill
+									label={tag.label}
+									icon={tag.icon}
+									size="sm"
+									variant="stack"
+								/>
 							</li>
 						))
 					}

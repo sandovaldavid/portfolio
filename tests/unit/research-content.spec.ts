@@ -107,8 +107,12 @@ describe('localized research content', () => {
 		expect(homeResearch).toContain('data-research-home-panel');
 		expect(homeResearch).toContain('data-research-pipeline-step');
 		expect(homeResearch).toContain('data-research-signal');
-		expect(homeResearch).toContain("import PythonIcon from '@assets/technologies/Python.astro'");
-		expect(homeResearch).toContain("import GitHubIcon from '@assets/technologies/GitHub.astro'");
+		expect(homeResearch).toContain(
+			"import PythonIcon from '@assets/technologies/Python.astro'"
+		);
+		expect(homeResearch).toContain(
+			"import GitHubIcon from '@assets/technologies/GitHub.astro'"
+		);
 		expect(homeResearch).toContain('icon={tag.icon}');
 		expect(homeResearch).toContain('motion-reduce:transition-none');
 		expect(englishSection.signalsLabel).toBe('SIGNALS MODELED');
