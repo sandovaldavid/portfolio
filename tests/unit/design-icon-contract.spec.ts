@@ -69,4 +69,53 @@ describe('Portfolio v2 icon contract', () => {
 		expect(csharp).toContain('stop-color="#512BD4"');
 		expect(csharp).not.toContain('stroke="currentColor"');
 	});
+
+	it('keeps the Core Stack on the current official product marks', () => {
+		const techStack = read('src/widgets/tech-stack/ui/TechStack.astro');
+		const angular = read('src/assets/technologies/Angular.astro');
+		const typeScript = read('src/assets/technologies/TypeScript.astro');
+		const astro = read('src/assets/technologies/AstroIcon.astro');
+		const postgres = read('src/assets/technologies/PostgreSQL.astro');
+		const playwright = read('src/assets/technologies/Playwright.astro');
+		const githubActions = read('src/assets/technologies/GitHubActions.astro');
+
+		for (const asset of [
+			'DotNet.astro',
+			'CSharp.astro',
+			'Angular.astro',
+			'TypeScript.astro',
+			'AstroIcon.astro',
+			'PostgreSQL.astro',
+			'Playwright.astro',
+			'GitHubActions.astro',
+		]) {
+			expect(techStack).toContain(`@assets/technologies/${asset}`);
+		}
+
+		// Angular v17+ gradient shield from the current Angular press kit.
+		expect(angular).toContain('viewBox="0 0 242 256"');
+		expect(angular).toContain('stop-color="#E40035"');
+		expect(angular).toContain('stop-color="#6C00F5"');
+
+		// TypeScript primary blue mark from typescriptlang.org/branding.
+		expect(typeScript).toContain('viewBox="0 0 256 256"');
+		expect(typeScript).toContain('fill="#3178C6"');
+
+		// Astro 2023+ official logomark geometry and brand orange.
+		expect(astro).toContain('viewBox="0 0 256 366"');
+		expect(astro).toContain('fill="#FF5D01"');
+
+		// PostgreSQL three-color Slonik elephant mark.
+		expect(postgres).toContain('viewBox="0 0 256 264"');
+		expect(postgres).toContain('fill="#336791"');
+
+		// Playwright site logo, normalized to a 24px SVG coordinate system.
+		expect(playwright).toContain('viewBox="0 0 24 24"');
+		expect(playwright).toContain('fill="#E2574C"');
+		expect(playwright).toContain('fill="#2EAD33"');
+
+		// GitHub Actions product mark used by the Actions sub-brand.
+		expect(githubActions).toContain('viewBox="0 0 24 24"');
+		expect(githubActions).toContain('fill="#2088FF"');
+	});
 });
