@@ -49,7 +49,8 @@ for (const line of lines.slice(1)) {
 	if (dotted) {
 		const from = parseNode(dotted[1]);
 		const to = parseNode(dotted[3]);
-		edges.push({ from: from.id, to: to.id, label: dotted[2].trim() || undefined, optional: true });
+		const label = dotted[2].trim();
+		edges.push({ from: from.id, to: to.id, ...(label ? { label } : {}), optional: true });
 		continue;
 	}
 
@@ -57,7 +58,8 @@ for (const line of lines.slice(1)) {
 	if (solid) {
 		const from = parseNode(solid[1]);
 		const to = parseNode(solid[3]);
-		edges.push({ from: from.id, to: to.id, label: solid[2]?.trim() || undefined, optional: false });
+		const label = solid[2]?.trim();
+		edges.push({ from: from.id, to: to.id, ...(label ? { label } : {}), optional: false });
 		continue;
 	}
 
@@ -110,8 +112,4 @@ const nodeList = [...nodes.values()];
 	<figcaption class="mt-3 text-caption text-content-muted">
 		<span class="font-bold text-content-strong">{title}.</span> {description}
 	</figcaption>
-	<details class="mt-3">
-		<summary class="cursor-pointer text-caption font-medium text-content-muted">Mermaid source</summary>
-		<pre class="mt-2 overflow-x-auto border border-edge-subtle bg-channel-surface-default p-3 text-code text-content-muted"><code>{chart}</code></pre>
-	</details>
 </figure>
