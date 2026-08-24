@@ -5,6 +5,7 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 const layout = readSource('src/app/layouts/Layout.astro');
 const catalog = readSource('src/widgets/projects/ui/ProjectsCatalog.astro');
 const projects = readSource('src/widgets/projects/ui/Projects.astro');
+const card = readSource('src/entities/project/ui/ProjectCard.astro');
 const englishRoute = readSource('src/pages/projects.astro');
 const spanishRoute = readSource('src/pages/es/projects.astro');
 
@@ -19,23 +20,31 @@ describe('Projects Catalog composition contract', () => {
 		expect(catalog).toContain('<div class="w-full pt-18">');
 	});
 
-	it('uses the current Figma intro as open editorial content instead of a legacy panel', () => {
+	it('uses open editorial intro content followed by a data-derived engineering index', () => {
 		expect(catalog).not.toContain('ContentPanel');
 		expect(catalog).toContain('data-projects-catalog-intro-shell');
+		expect(catalog).toContain('data-projects-catalog-snapshot');
+		expect(catalog).toContain('data-projects-top-technologies');
+		expect(catalog).toContain('PROJECT_METADATA[project.projectId].developmentOnly');
+		expect(catalog).toContain("project.sourceAccess !== 'private'");
+		expect(catalog).toContain("project.lifecycle === 'active'");
+		expect(catalog).toContain('technologyCounts');
 		expect(catalog).toContain('max-w-320');
-		expect(catalog).toContain('px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12');
 		expect(catalog).toContain('text-page-title-mobile text-content-strong md:text-page-title');
 		expect(catalog).toContain('<div class="lg:pt-10">');
 		expect(catalog).toContain('text-body text-content-default');
 	});
 
-	it('gives the catalog exact responsive grid geometry while preserving the Home layout', () => {
+	it('uses more of the desktop shell for catalog cards while preserving the Home layout', () => {
 		expect(projects).toContain("layout?: 'home' | 'catalog'");
 		expect(projects).toContain("layout = 'home'");
 		expect(projects).toContain("const isCatalog = layout === 'catalog'");
 		expect(projects).toContain('data-projects-layout={layout}');
 		expect(projects).toContain('md:grid-cols-[repeat(2,minmax(0,369px))]');
+		expect(projects).toContain('lg:grid-cols-[repeat(2,minmax(0,592px))]');
 		expect(projects).toContain('lg:grid-cols-[repeat(2,minmax(0,520px))]');
+		expect(projects).toContain("variant={isCatalog ? 'catalog' : 'secondary'}");
+		expect(projects).toContain('lg:max-w-148');
 		expect(projects).toContain('gap-y-6');
 		expect(projects).toContain('md:gap-x-8');
 		expect(projects).toContain('lg:gap-y-8');
@@ -45,10 +54,21 @@ describe('Projects Catalog composition contract', () => {
 		expect(catalog).toContain('<Projects showAll={true} layout="catalog" />');
 	});
 
+	it('gives catalog cards a distinct desktop composition and repository-aware GitHub action', () => {
+		expect(card).toContain("variant?: 'primary' | 'secondary' | 'catalog'");
+		expect(card).toContain("const isCatalog = variant === 'catalog'");
+		expect(card).toContain("tags.slice(0, isCatalog ? 4 : 3)");
+		expect(card).toContain("github?.replace(/\\/$/, '').split('/').filter(Boolean).at(-1)");
+		expect(card).toContain("isCatalog ? 'lg:max-w-148' : 'lg:max-w-130'");
+		expect(card).toContain('data-project-card-repository');
+		expect(card).toContain('<GitHubIcon');
+		expect(card).toContain('{repositoryName}');
+	});
+
 	it('keeps catalog styles semantic and free of inline presentation', () => {
 		const rawPaletteUtility =
 			/\b(?:bg|text|border|ring|from|via|to)-(?:white|black|primary-\d+|neutral-\d+|success-\d+|warning-\d+|error-\d+)\b/g;
-		for (const source of [catalog, projects]) {
+		for (const source of [catalog, projects, card]) {
 			expect(source.match(rawPaletteUtility) ?? []).toEqual([]);
 			expect(source).not.toMatch(/\sstyle\s*=/i);
 		}
