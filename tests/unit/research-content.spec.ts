@@ -113,6 +113,14 @@ describe('localized research content', () => {
 		expect(homeResearch.indexOf('data-research-home-footer')).toBeGreaterThan(
 			homeResearch.indexOf('</aside>')
 		);
+		expect(homeResearch).toContain('data-research-summary');
+		expect(homeResearch).toContain('data-research-pipeline-label');
+		expect(homeResearch).toContain('data-research-signal-label');
+		expect(homeResearch).toContain('data-research-tech-stack');
+		expect(homeResearch).toContain('data-research-methodology');
+		expect(homeResearch).toContain('border-t border-edge-subtle pt-4');
+		expect(homeResearch).not.toContain('border-t-2 border-edge-strong pt-5');
+		expect(homeResearch).toContain('size="md" variant="stack"');
 		expect(homeResearch).toContain(
 			"import PythonIcon from '@assets/technologies/Python.astro'"
 		);
