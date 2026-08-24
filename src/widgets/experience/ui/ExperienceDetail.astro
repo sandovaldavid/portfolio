@@ -1,6 +1,11 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import AngularIcon from '@assets/technologies/Angular.astro';
+import DotNetIcon from '@assets/technologies/DotNet.astro';
+import JavaIcon from '@assets/technologies/Java.astro';
+import ReactIcon from '@assets/technologies/React.astro';
+import TypeScriptIcon from '@assets/technologies/TypeScript.astro';
 import type { ExperienceItem as ExperienceItemData } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { LinkButton, TechPill } from '@shared/ui';
@@ -19,6 +24,13 @@ const visibleAchievements = description.slice(0, 4);
 const companyContext = isCurrent
 	? `${company.toUpperCase()} · ${tExperience('currentDomain')}`
 	: company.toUpperCase();
+const technologyIcons = {
+	dotnet: DotNetIcon,
+	angular: AngularIcon,
+	typescript: TypeScriptIcon,
+	java: JavaIcon,
+	react: ReactIcon,
+};
 ---
 
 <div
@@ -100,9 +112,14 @@ const companyContext = isCurrent
 					data-experience-technologies
 					class="flex w-full flex-wrap justify-start gap-2 md:w-auto"
 				>
-					{visibleTechnologies.map(tech => (
-						<li>
-							<TechPill label={tech} size="sm" variant="stack" />
+					{visibleTechnologies.map(technology => (
+						<li data-experience-technology-kind={technology.kind}>
+							<TechPill
+								label={technology.label}
+								icon={technology.iconKey ? technologyIcons[technology.iconKey] : undefined}
+								size="sm"
+								variant="stack"
+							/>
 						</li>
 					))}
 				</ul>
