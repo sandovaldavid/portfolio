@@ -67,10 +67,12 @@ describe('Home viewport section contract', () => {
 	});
 
 	it('keeps Home Project Cards fixed-height with minimal metadata and intrinsic actions', () => {
-		expect(projectCard).toContain("'h-116.5 md:h-119.5 lg:h-93.5'");
+		expect(projectCard).toContain("'h-116.5 md:h-119.5 lg:h-97.5'");
 		expect(projectCard).toContain("'h-131.5 md:h-134.5 lg:h-116'");
 		expect(projectCard).toContain("const isCatalog = variant === 'catalog'");
 		expect(projectCard).toContain('tags.slice(0, isCatalog ? 4 : 3)');
+		expect(projectCard).toContain("isCatalog ? 'lg:max-w-148' : 'lg:max-w-140'");
+		expect(projectCard).toContain(": 'h-32.5 lg:h-34'");
 		expect(projectCard).toContain('line-clamp-3');
 		expect(projectCard).toContain('lg:line-clamp-2');
 		expect(projectCard).not.toContain('cardTypeText');
@@ -79,6 +81,7 @@ describe('Home viewport section contract', () => {
 		expect(projectCard).toContain('class="w-fit shrink-0 px-3"');
 		expect(projectCard).toContain('class="hidden shrink-0 md:block"');
 		expect(projectCard).toContain('class="w-fit px-3"');
+		expect(projects).toContain('lg:grid-cols-[repeat(2,minmax(0,560px))] lg:gap-12');
 		expect(projects).toContain("caseStudyText={tProjects('caseStudy')}");
 	});
 
