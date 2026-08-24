@@ -1,111 +1,97 @@
 ---
 projectId: project-detail-fixture
 locale: es
-title: Fixture de Project Detail
-description: "Case study interno y exclusivo de desarrollo usado para validar todas las capacidades de Project Detail sin publicar un proyecto falso en el portfolio."
-category: "Fixture interno de UI"
-imageAlt: "Vista previa del fixture de desarrollo de Project Detail"
+title: Fixture de Sistemas MCP
+description: "Case study interno y exclusivo de desarrollo para revisar una composición de Project Detail enfocada en MCP e infraestructura backend."
+category: "Fixture interno de MCP"
+imageAlt: "Vista previa del fixture de desarrollo de sistemas MCP"
 caseStudy:
-  kicker: "FIXTURE INTERNO · SISTEMA DE PROJECT DETAIL"
+  kicker: "FIXTURE INTERNO · MCP / INFRAESTRUCTURA BACKEND"
   status:
     lifecycle: "SOLO DESARROLLO"
     source: "RECURSOS PÚBLICOS DE PRUEBA"
-    demo: "DEMO DEL FIXTURE"
+    demo: "FIXTURE EN VIDEO"
 ---
 
 import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
 import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
 
-<CaseStudySection eyebrow="FIXTURE DE DESARROLLO" title="Una sola página que ejercita todas las capacidades de Project Detail">
-  Este **no es un proyecto real del portfolio**. Existe únicamente en desarrollo para revisar el sistema de contenido de Project Detail con todos los recursos opcionales y primitives MDX habilitados al mismo tiempo.
+<CaseStudySection eyebrow="FIXTURE DE DESARROLLO" title="Un case study systems-first para un producto MCP">
+  Este **no es un proyecto real del portfolio**. Existe únicamente en desarrollo para revisar un Project Detail donde los límites de protocolo, múltiples repositorios, documentación y arquitectura runtime tengan más peso que los screenshots de producto.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="Un sistema compartido necesita un lugar seguro para probar contenido opcional">
-  Los proyectos reales omiten intencionalmente los recursos que no poseen. Eso dificulta inspeccionar visualmente todas las combinaciones de repositorios, documentación, live demo, package, galerías, video y diagramas desde una sola ruta.
-
-  Este fixture proporciona esa ruta sin añadir evidencia falsa a producción.
+<CaseStudySection eyebrow="PROBLEMA" title="El tooling de agentes necesita contexto durable más allá de un proceso">
+  El fixture modela un servicio MCP local que recibe requests de varios clientes de agentes, persiste registros durables y expone integraciones opcionales de retrieval. La narrativa empieza deliberadamente por el límite del sistema en vez de una superficie visual de producto.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Todos los primitives de Project Detail en una ruta de desarrollo" surface="highlight">
+<CaseStudySection eyebrow="SISTEMA" title="Protocolo, persistencia e integraciones opcionales se entienden de un vistazo" surface="highlight">
   <MermaidDiagram
-    title="Sistema del fixture de Project Detail"
-    description="El fixture ejercita recursos, secciones narrativas, media, evidencia y actores de diagramas mientras permanece excluido de las consultas de proyectos en producción."
-    tones={{ Route: 'brand', Shell: 'info', Resources: 'success', MDX: 'secondary', Media: 'warning', Evidence: 'danger' }}
+    title="Límite runtime del fixture MCP"
+    description="Los clientes de agentes llaman a un servidor MCP. El servidor posee el almacenamiento durable y puede invocar opcionalmente adaptadores de retrieval e inferencia local."
+    tones={{ Clients: 'brand', Server: 'info', Vault: 'success', Retrieval: 'secondary', Model: 'warning', Bridge: 'danger' }}
     chart={`flowchart LR
-      Route["Ruta de desarrollo"] --> Shell["Shell ProjectCaseStudy"]
-      Shell --> Resources["Recursos del proyecto"]
-      Shell --> MDX["Narrativa MDX"]
-      MDX --> Media["Video + galería"]
-      MDX --> Evidence["Evidencia + aprendizajes"]
-      Evidence -. opcional .-> Resources`}
+      Clients["Claude · Codex · OpenCode"] --> Server["Servidor MCP\nstdio + HTTP"]
+      Server --> Vault["Almacenamiento durable\nMarkdown + YAML"]
+      Server --> Retrieval["Retrieval\nfull-text + semantic"]
+      Retrieval -. opcional .-> Model["Inferencia local"]
+      Server -. opcional .-> Bridge["Bridge de UI"]`}
   />
 </CaseStudySection>
 
-<CaseStudySection eyebrow="DECISIONES" title="El fixture cubre patrones de composición reutilizables">
+<CaseStudySection eyebrow="PROTOCOLO" title="La historia técnica se organiza alrededor de contratos">
   <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="OPCIÓN 01" title="MÚLTIPLES REPOSITORIOS" tone="primary">
-      La barra compartida de recursos muestra más de un destino de GitHub junto con documentación, demo, package, recurso relacionado y la acción para compartir.
+    <CaseStudyCard label="LÍMITE 01" title="LOS CLIENTES HABLAN UN SOLO CONTRATO DE TOOLS" tone="primary">
+      El comportamiento específico de cada cliente queda fuera del límite del servicio; el case study puede explicar primero el contrato estable y luego los detalles de implementación.
     </CaseStudyCard>
-
-    <CaseStudyCard label="OPCIÓN 02" title="MEDIA ESPECÍFICA POR PROYECTO" tone="primary">
-      MDX puede colocar video y galerías exactamente donde la narrativa del proyecto los necesite en lugar de forzar todos los proyectos a una plantilla fija.
+    <CaseStudyCard label="LÍMITE 02" title="LA DURABILIDAD PERTENECE AL SERVIDOR" tone="primary">
+      La narrativa central es persistencia y recuperación, por eso el diagrama de arquitectura aparece antes que las capturas de implementación.
     </CaseStudyCard>
-
-    <CaseStudyCard label="OPCIÓN 03" title="EVIDENCIA ACCESIBLE" tone="primary">
-      Diagramas, captions, texto alternativo de imágenes, zoom operable con teclado y secciones semánticas siguen formando parte del sistema compartido.
+    <CaseStudyCard label="LÍMITE 03" title="LAS INTEGRACIONES SIGUEN SIENDO OPCIONALES" tone="primary">
+      Las relaciones discontinuas identifican adaptadores opcionales sin darles visualmente la misma autoridad que al camino principal de persistencia.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="VIDEO" title="La demo en video es opcional por proyecto" surface="highlight">
-  <ProjectVideo
-    title="Video del fixture de desarrollo"
-    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
-    caption="Media de ejemplo CC0 usada únicamente para ejercitar el reproductor ProjectVideo dentro de este fixture de desarrollo."
+<CaseStudySection eyebrow="CICLO DE REQUEST" title="Un segundo diagrama puede concentrarse en secuencia y no en topología">
+  <MermaidDiagram
+    title="Ciclo de request del fixture MCP"
+    description="Un request resuelve un tool, persiste un resultado durable y retorna una respuesta. Retrieval enriquece operaciones seleccionadas sin poseer el registro."
+    tones={{ Request: 'brand', Tool: 'info', Record: 'success', Retrieval: 'secondary', Response: 'warning' }}
+    chart={`flowchart TD
+      Request["Request del cliente"] --> Tool["Contrato del tool"]
+      Tool --> Record["Registro durable"]
+      Tool -. tools seleccionados .-> Retrieval["Contexto de retrieval"]
+      Record --> Response["Respuesta estructurada"]
+      Retrieval --> Response`}
   />
 </CaseStudySection>
 
-<CaseStudySection eyebrow="GALERÍA" title="Screenshots y diagramas pueden inspeccionarse a tamaño completo">
+<CaseStudySection eyebrow="DEMO" title="Los proyectos de sistemas pueden usar video cuando la UI es secundaria" surface="highlight">
+  <ProjectVideo
+    title="Video del fixture MCP"
+    src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+    caption="Media de ejemplo CC0 usada únicamente para ejercitar ProjectVideo dentro de este fixture MCP de desarrollo."
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="ARTEFACTOS" title="Exports de arquitectura y capturas operativas también caben en una galería">
   <ProjectGallery
-    label="Galería del fixture de Project Detail"
+    label="Galería del fixture de sistemas MCP"
     columns={2}
     items={[
-      {
-        src: fixtureOverview,
-        alt: 'Vista abstracta general del fixture de desarrollo de Project Detail',
-        caption: 'Imagen general usada para validar thumbnails object-contain y el lightbox con zoom.'
-      },
-      {
-        src: fixtureDetail,
-        alt: 'Composición abstracta de UI para el fixture de desarrollo de Project Detail',
-        caption: 'Segunda imagen usada para validar galerías responsive de múltiples elementos, captions y zoom.'
-      }
+      { src: fixtureOverview, alt: 'Fixture abstracto de arquitectura MCP', caption: 'Artefacto de arquitectura para validar zoom y object-contain.' },
+      { src: fixtureDetail, alt: 'Fixture abstracto operativo de MCP', caption: 'Artefacto operativo para un case study orientado a sistemas.' }
     ]}
   />
 </CaseStudySection>
 
-<CaseStudySection eyebrow="EVIDENCIA" title="Los dos estados de evidencia pueden revisarse juntos" surface="highlight">
+<CaseStudySection eyebrow="EVIDENCIA" title="Artefactos públicos y límites explícitos permanecen separados" surface="highlight">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="COMPORTAMIENTO VERIFICABLE DEL FIXTURE" title="LA PÁGINA EJERCITA TODO EL SISTEMA DE PRESENTACIÓN" tone="verified">
-      La ruta incluye intencionalmente el hero compartido, badges de lifecycle/source/version, todas las acciones de recursos, Mermaid, cards, evidencia, video y una galería con zoom.
+    <EvidenceBlock label="EVIDENCIA DEL FIXTURE" title="MULTI-REPO · DOCS · PACKAGE · VIDEO" tone="verified">
+      El shell compartido expone múltiples repositorios, documentación y package mientras el cuerpo MDX demuestra diagramas de sistemas, video y galería.
     </EvidenceBlock>
-
-    <EvidenceBlock label="LÍMITE" title="ESTE CONTENIDO NUNCA DEBE CONVERTIRSE EN UN PROYECTO DE PRODUCCIÓN" tone="boundary">
-      La metadata language-neutral marca el fixture como `developmentOnly`. Las consultas de proyectos de producción lo excluyen antes de generar el catálogo y las rutas estáticas.
+    <EvidenceBlock label="LÍMITE" title="CONTENIDO SOLO DE DESARROLLO" tone="boundary">
+      La metadata language-neutral usa `developmentOnly`; este fixture nunca debe generar una ruta de producción ni un claim del portfolio.
     </EvidenceBlock>
-  </CaseStudyGrid>
-</CaseStudySection>
-
-<CaseStudySection eyebrow="APRENDIZAJES" title="Usa el fixture para revisar futuros cambios de Project Detail">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="CHECK 01" title="COMBINACIONES DE RECURSOS" tone="success">
-      Verifica acciones opcionales, múltiples repositorios, wrapping y comportamiento responsive sin modificar un proyecto real.
-    </CaseStudyCard>
-    <CaseStudyCard label="CHECK 02" title="RICH MEDIA" tone="success">
-      Valida video, galería, lightbox, zoom, diagramas y captions contra Light/Dark y layouts responsive.
-    </CaseStudyCard>
-    <CaseStudyCard label="CHECK 03" title="EXCLUSIÓN DE PRODUCCIÓN" tone="success">
-      Mantén el fixture disponible para desarrollo garantizando que catálogo, rutas de proyecto y SEO de producción permanezcan limpios.
-    </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
