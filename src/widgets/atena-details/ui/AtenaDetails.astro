@@ -1,7 +1,7 @@
 ---
-import type { ExperienceItem } from '@entities/experience';
+import { ExperienceTechnologyPill, type ExperienceItem } from '@entities/experience';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { ContentPanel, TechPill, TitleSection } from '@shared/ui';
+import { ContentPanel, TitleSection } from '@shared/ui';
 
 interface Props {
 	lang: Language;
@@ -72,7 +72,7 @@ const tPage = createScopedUiTranslator(lang, 'pages.atena');
 			{
 				experience.technologies.map(technology => (
 					<li>
-						<TechPill label={technology} size="md" variant="stack" />
+						<ExperienceTechnologyPill technology={technology} size="md" />
 					</li>
 				))
 			}
