@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Project Detail development fixture overview</title>
+  <desc id="desc">Abstract development-only preview with content system blocks.</desc>
+  <rect width="1200" height="750" fill="#10141b"/>
+  <rect x="70" y="70" width="1060" height="610" fill="#171d27" stroke="#d6deeb" stroke-width="4"/>
+  <rect x="115" y="120" width="420" height="72" fill="#0c3447" stroke="#00c8ff" stroke-width="3"/>
+  <rect x="115" y="230" width="300" height="155" fill="#15342f" stroke="#42e0ad" stroke-width="3"/>
+  <rect x="450" y="230" width="300" height="155" fill="#342144" stroke="#c89cff" stroke-width="3"/>
+  <rect x="785" y="230" width="300" height="155" fill="#453317" stroke="#f6b817" stroke-width="3"/>
+  <rect x="115" y="435" width="970" height="185" fill="#111720" stroke="#637083" stroke-width="3"/>
+  <g fill="#e8edf4" font-family="monospace" font-weight="700">
+    <text x="145" y="166" font-size="28">PROJECT DETAIL FIXTURE</text>
+    <text x="145" y="285" font-size="22">RESOURCES</text>
+    <text x="480" y="285" font-size="22">MEDIA</text>
+    <text x="815" y="285" font-size="22">MERMAID</text>
+    <text x="145" y="490" font-size="22">DEVELOPMENT ONLY · NOT A REAL PROJECT</text>
+    <text x="145" y="540" font-size="20">MDX · gallery · video · evidence · decisions · diagrams</text>
+  </g>
+</svg>
