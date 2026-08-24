@@ -14,8 +14,6 @@ caseStudy:
 ---
 
 <CaseStudySection eyebrow="PUBLIC EVIDENCE" title="Inspect the project beyond this portfolio" width="reading">
-  <ProjectResources projectId="kioku" resources={['docs', 'source', 'package', 'related']} />
-
   Kioku is useful as a portfolio project because its implementation, package, operational documentation and release history are independently inspectable. The documentation site is the best starting point for the public contract; the repository remains the implementation source of truth.
 </CaseStudySection>
 
@@ -29,6 +27,7 @@ caseStudy:
   <MermaidDiagram
     title="Kioku runtime boundary"
     description="MCP clients reach a .NET 10 Kioku server over local stdio or authenticated Streamable HTTP. The server reads the Obsidian vault directly, with semantic retrieval and the Obsidian bridge remaining optional integrations."
+    tones={{ Client: 'brand', Server: 'info', Vault: 'success', Retrieval: 'secondary', Ollama: 'warning', Bridge: 'danger' }}
     chart={`flowchart LR
       Client["MCP clients\nClaude · Codex · OpenCode"] --> Server["Kioku.Mcp.Server\n.NET 10"]
       Server --> Vault["Obsidian vault\nMarkdown + YAML"]
@@ -58,6 +57,7 @@ caseStudy:
   <MermaidDiagram
     title="Durable engineering workflow"
     description="Kioku separates the requirement, implementation plan and execution handoff so a fresh agent can recover both intent and current state."
+    tones={{ Request: 'brand', Spec: 'info', Plan: 'secondary', Session: 'warning', Handoff: 'success', Context: 'danger' }}
     chart={`flowchart LR
       Request["Request / issue"] --> Spec["Engineering SPEC"]
       Spec --> Plan["Implementation PLAN"]
