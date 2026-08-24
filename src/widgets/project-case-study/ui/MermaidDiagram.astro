@@ -1,15 +1,25 @@
 ---
 import { normalizeQuotedDiagramLineBreaks } from '../model/diagram';
 
+export type DiagramTone = 'brand' | 'info' | 'success' | 'secondary' | 'warning' | 'danger';
+
 interface Props {
 	title: string;
 	description: string;
 	chart: string;
+	/** Optional stable color assignment for important actors. Unassigned nodes rotate through the semantic palette. */
+	tones?: Partial<Record<string, DiagramTone>>;
 }
 
 interface DiagramNode {
 	id: string;
 	label: string;
+	lines: string[];
+	index: number;
+	level: number;
+	tone: DiagramTone;
+	x: number;
+	y: number;
 }
 
 interface DiagramEdge {
@@ -19,7 +29,7 @@ interface DiagramEdge {
 	optional: boolean;
 }
 
-const { title, description, chart } = Astro.props;
+const { title, description, chart, tones = {} } = Astro.props;
 const lines = normalizeQuotedDiagramLineBreaks(chart, title)
 	.split('\n')
 	.map(line => line.trim())
@@ -33,15 +43,61 @@ const direction = header[1].toUpperCase() as 'LR' | 'TD';
 const nodes = new Map<string, DiagramNode>();
 const edges: DiagramEdge[] = [];
 const nodeTokenPattern = /^([A-Za-z0-9_-]+)(?:\[(?:"([\s\S]+)"|([^\]]+))\])?$/;
+const toneCycle: DiagramTone[] = ['brand', 'info', 'success', 'secondary', 'warning', 'danger'];
+const toneTokens: Record<DiagramTone, { background: string; foreground: string }> = {
+	brand: { background: 'var(--color-badge-brand-bg)', foreground: 'var(--color-badge-brand-text)' },
+	info: { background: 'var(--color-badge-info-bg)', foreground: 'var(--color-badge-info-text)' },
+	success: { background: 'var(--color-status-success-bg)', foreground: 'var(--color-status-success-text)' },
+	secondary: {
+		background: 'var(--color-badge-secondary-bg)',
+		foreground: 'var(--color-badge-secondary-text)',
+	},
+	warning: { background: 'var(--color-badge-warning-bg)', foreground: 'var(--color-badge-warning-text)' },
+	danger: { background: 'var(--color-badge-danger-bg)', foreground: 'var(--color-badge-danger-text)' },
+};
+
+const wrapLabel = (value: string, maxLength = 24): string[] => {
+	const explicitLines = value.replaceAll('\\n', '\n').split('\n');
+	const wrapped: string[] = [];
+
+	for (const explicitLine of explicitLines) {
+		const words = explicitLine.trim().split(/\s+/).filter(Boolean);
+		if (words.length === 0) continue;
+		let current = '';
+		for (const word of words) {
+			const next = current ? `${current} ${word}` : word;
+			if (current && next.length > maxLength) {
+				wrapped.push(current);
+				current = word;
+			} else {
+				current = next;
+			}
+		}
+		if (current) wrapped.push(current);
+	}
+
+	return wrapped.length > 0 ? wrapped : [value.trim()];
+};
 
 const parseNode = (token: string): DiagramNode => {
 	const match = token.trim().match(nodeTokenPattern);
 	if (!match) throw new Error(`Unsupported node syntax in diagram "${title}": ${token}`);
 	const id = match[1];
-	const label = (match[2] ?? match[3] ?? nodes.get(id)?.label ?? id)
-		.replaceAll('\\n', ' · ')
-		.trim();
-	const node = { id, label };
+	const existing = nodes.get(id);
+	const rawLabel = match[2] ?? match[3];
+	if (!rawLabel && existing) return existing;
+
+	const label = (rawLabel ?? existing?.label ?? id).replaceAll('\\n', ' · ').trim();
+	const node: DiagramNode = {
+		id,
+		label,
+		lines: wrapLabel(rawLabel ?? existing?.label ?? id),
+		index: existing?.index ?? nodes.size,
+		level: existing?.level ?? 0,
+		tone: tones[id] ?? existing?.tone ?? toneCycle[(existing?.index ?? nodes.size) % toneCycle.length],
+		x: 0,
+		y: 0,
+	};
 	nodes.set(id, node);
 	return node;
 };
@@ -69,47 +125,209 @@ for (const line of lines.slice(1)) {
 }
 
 if (nodes.size === 0) throw new Error(`Diagram "${title}" has no nodes.`);
-const nodeList = [...nodes.values()];
+const nodeList = [...nodes.values()].sort((left, right) => left.index - right.index);
+const nodeOrder = new Map(nodeList.map((node, index) => [node.id, index]));
+
+// Assign graph ranks from forward edges. Back edges remain visible but do not inflate the layout indefinitely.
+for (let pass = 0; pass < nodeList.length; pass += 1) {
+	let changed = false;
+	for (const edge of edges) {
+		const from = nodes.get(edge.from);
+		const to = nodes.get(edge.to);
+		if (!from || !to) continue;
+		const fromOrder = nodeOrder.get(from.id) ?? 0;
+		const toOrder = nodeOrder.get(to.id) ?? 0;
+		if (toOrder <= fromOrder) continue;
+		const nextLevel = from.level + 1;
+		if (nextLevel > to.level) {
+			to.level = nextLevel;
+			changed = true;
+		}
+	}
+	if (!changed) break;
+}
+
+const levels = new Map<number, DiagramNode[]>();
+for (const node of nodeList) {
+	const levelNodes = levels.get(node.level) ?? [];
+	levelNodes.push(node);
+	levels.set(node.level, levelNodes);
+}
+const levelList = [...levels.entries()].sort(([left], [right]) => left - right);
+
+const nodeWidth = 190;
+const nodeHeight = 104;
+const mainGap = 56;
+const crossGap = 20;
+const margin = 24;
+const maxCrossCount = Math.max(...levelList.map(([, levelNodes]) => levelNodes.length));
+const levelCount = levelList.length;
+const graphWidth =
+	direction === 'LR'
+		? margin * 2 + levelCount * nodeWidth + Math.max(0, levelCount - 1) * mainGap
+		: margin * 2 + maxCrossCount * nodeWidth + Math.max(0, maxCrossCount - 1) * crossGap;
+const graphHeight =
+	direction === 'TD'
+		? margin * 2 + levelCount * nodeHeight + Math.max(0, levelCount - 1) * mainGap
+		: margin * 2 + maxCrossCount * nodeHeight + Math.max(0, maxCrossCount - 1) * crossGap;
+
+for (let levelIndex = 0; levelIndex < levelList.length; levelIndex += 1) {
+	const [, levelNodes] = levelList[levelIndex];
+	const crossSize =
+		direction === 'LR'
+			? levelNodes.length * nodeHeight + Math.max(0, levelNodes.length - 1) * crossGap
+			: levelNodes.length * nodeWidth + Math.max(0, levelNodes.length - 1) * crossGap;
+	const crossAvailable = direction === 'LR' ? graphHeight : graphWidth;
+	const crossStart = (crossAvailable - crossSize) / 2;
+
+	for (let nodeIndex = 0; nodeIndex < levelNodes.length; nodeIndex += 1) {
+		const node = levelNodes[nodeIndex];
+		if (direction === 'LR') {
+			node.x = margin + levelIndex * (nodeWidth + mainGap);
+			node.y = crossStart + nodeIndex * (nodeHeight + crossGap);
+		} else {
+			node.x = crossStart + nodeIndex * (nodeWidth + crossGap);
+			node.y = margin + levelIndex * (nodeHeight + mainGap);
+		}
+	}
+}
+
+const edgePath = (edge: DiagramEdge) => {
+	const from = nodes.get(edge.from);
+	const to = nodes.get(edge.to);
+	if (!from || !to) return { path: '', labelX: 0, labelY: 0 };
+	const fromCenterX = from.x + nodeWidth / 2;
+	const fromCenterY = from.y + nodeHeight / 2;
+	const toCenterX = to.x + nodeWidth / 2;
+	const toCenterY = to.y + nodeHeight / 2;
+	const horizontal = Math.abs(toCenterX - fromCenterX) >= Math.abs(toCenterY - fromCenterY);
+
+	if (horizontal) {
+		const forward = toCenterX >= fromCenterX;
+		const startX = forward ? from.x + nodeWidth : from.x;
+		const endX = forward ? to.x : to.x + nodeWidth;
+		const startY = fromCenterY;
+		const endY = toCenterY;
+		const controlX = (startX + endX) / 2;
+		return {
+			path: `M ${startX} ${startY} C ${controlX} ${startY}, ${controlX} ${endY}, ${endX} ${endY}`,
+			labelX: controlX,
+			labelY: (startY + endY) / 2 - 8,
+		};
+	}
+
+	const forward = toCenterY >= fromCenterY;
+	const startX = fromCenterX;
+	const endX = toCenterX;
+	const startY = forward ? from.y + nodeHeight : from.y;
+	const endY = forward ? to.y : to.y + nodeHeight;
+	const controlY = (startY + endY) / 2;
+	return {
+		path: `M ${startX} ${startY} C ${startX} ${controlY}, ${endX} ${controlY}, ${endX} ${endY}`,
+		labelX: (startX + endX) / 2,
+		labelY: controlY - 8,
+	};
+};
+
+const diagramHash = [...title].reduce((hash, character) => (hash * 31 + character.charCodeAt(0)) >>> 0, 7).toString(36);
+const solidMarkerId = `diagram-arrow-${diagramHash}`;
+const optionalMarkerId = `diagram-arrow-muted-${diagramHash}`;
+const titleId = `diagram-title-${diagramHash}`;
+const descriptionId = `diagram-description-${diagramHash}`;
 ---
 
 <figure class="w-full" data-mermaid-figure data-diagram-direction={direction}>
 	<div
-		class="border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md md:p-6"
-		role="img"
-		aria-label={description}
+		class="overflow-x-auto border-2 border-edge-strong bg-channel-surface-default p-3 shadow-retro-md md:p-5"
 		data-mermaid-host
 		data-mermaid-state="rendered"
 	>
-		<div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" data-diagram-nodes>
-			{
-				nodeList.map(node => (
-					<div class="flex min-h-16 items-center justify-center border-2 border-edge-strong bg-channel-surface-highlight px-4 py-3 text-center text-code font-bold text-content-strong">
-						{node.label}
-					</div>
-				))
-			}
-		</div>
+		<svg
+			width={graphWidth}
+			height={graphHeight}
+			viewBox={`0 0 ${graphWidth} ${graphHeight}`}
+			class="block max-w-none"
+			role="img"
+			aria-labelledby={`${titleId} ${descriptionId}`}
+			data-diagram-svg
+		>
+			<title id={titleId}>{title}</title>
+			<desc id={descriptionId}>{description}</desc>
+			<defs>
+				<marker id={solidMarkerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-accent-primary)"></path>
+				</marker>
+				<marker id={optionalMarkerId} viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-content-muted)"></path>
+				</marker>
+			</defs>
 
-		{
-			edges.length > 0 && (
-				<ol class="mt-5 grid gap-2" data-diagram-edges>
-					{edges.map(edge => (
-						<li class="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 text-caption md:text-secondary">
-							<span class="min-w-0 border border-edge-subtle bg-channel-background-canvas px-2 py-1 text-right font-mono text-content-strong">
-								{nodes.get(edge.from)?.label}
-							</span>
-							<span class:list={['flex min-w-14 flex-col items-center text-center font-mono', edge.optional ? 'text-content-muted' : 'text-channel-accent-primary']}>
-								{edge.label && <span class="max-w-28 text-caption">{edge.label}</span>}
-								<span aria-hidden="true">{edge.optional ? '⇢' : '→'}</span>
-							</span>
-							<span class="min-w-0 border border-edge-subtle bg-channel-background-canvas px-2 py-1 font-mono text-content-strong">
-								{nodes.get(edge.to)?.label}
-							</span>
-						</li>
-					))}
-				</ol>
-			)
-		}
+			<g aria-hidden="true" data-diagram-edges>
+				{
+					edges.map(edge => {
+						const geometry = edgePath(edge);
+						const stroke = edge.optional ? 'var(--channel-content-muted)' : 'var(--channel-accent-primary)';
+						const marker = edge.optional ? optionalMarkerId : solidMarkerId;
+						const labelWidth = edge.label ? Math.max(56, edge.label.length * 7 + 16) : 0;
+						return (
+							<g data-diagram-edge data-edge-optional={String(edge.optional)}>
+								<path
+									d={geometry.path}
+									fill="none"
+									stroke={stroke}
+									stroke-width="2"
+									stroke-dasharray={edge.optional ? '7 6' : undefined}
+									marker-end={`url(#${marker})`}
+								></path>
+								{edge.label && (
+									<g transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 11})`}>
+										<rect width={labelWidth} height="22" fill="var(--channel-background-canvas)" stroke="var(--channel-edge-subtle)" stroke-width="1"></rect>
+										<text x={labelWidth / 2} y="15" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--channel-content-muted)">{edge.label}</text>
+									</g>
+								)}
+							</g>
+						);
+					})
+				}
+			</g>
+
+			<g data-diagram-nodes>
+				{
+					nodeList.map(node => {
+						const tone = toneTokens[node.tone];
+						const lineHeight = 17;
+						const firstLineY = node.y + nodeHeight / 2 - ((node.lines.length - 1) * lineHeight) / 2 + 5;
+						return (
+							<g data-diagram-node data-node-id={node.id} data-node-tone={node.tone}>
+								<rect
+									x={node.x}
+									y={node.y}
+									width={nodeWidth}
+									height={nodeHeight}
+									fill={tone.background}
+									stroke={tone.foreground}
+									stroke-width="2"
+								></rect>
+								<text
+									x={node.x + nodeWidth / 2}
+									y={firstLineY}
+									text-anchor="middle"
+									font-family="var(--font-mono)"
+									font-size="12"
+									font-weight="700"
+									fill={tone.foreground}
+								>
+									{node.lines.map((line, index) => (
+										<tspan x={node.x + nodeWidth / 2} dy={index === 0 ? 0 : lineHeight}>{line}</tspan>
+									))}
+								</text>
+								<title>{node.label}</title>
+							</g>
+						);
+					})
+				}
+			</g>
+		</svg>
 	</div>
 	<figcaption class="mt-3 text-caption text-content-muted">
 		<span class="font-bold text-content-strong">{title}.</span> {description}
