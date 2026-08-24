@@ -22,8 +22,8 @@ const VIEWPORTS: CatalogViewport[] = [
 		introShellWidth: 1280,
 		gridShellWidth: 1280,
 		introShellY: 120,
-		cardWidth: 520,
-		cardHeight: 374,
+		cardWidth: 592,
+		cardHeight: 440,
 		rowGap: 32,
 		titleSize: '48px',
 		titleLineHeight: '56px',
@@ -65,6 +65,7 @@ for (const viewport of VIEWPORTS) {
 		await page.evaluate(() => document.fonts.ready);
 
 		const introShell = page.locator('[data-projects-catalog-intro-shell]');
+		const snapshot = page.locator('[data-projects-catalog-snapshot]');
 		const gridShell = page.locator('[data-projects-catalog-grid-shell]');
 		const projectGrid = page.locator('[data-projects-layout="catalog"]');
 		const cards = projectGrid.locator('article > div');
@@ -74,6 +75,7 @@ for (const viewport of VIEWPORTS) {
 		});
 
 		await expect(introShell).toBeVisible();
+		await expect(snapshot).toBeVisible();
 		await expect(gridShell).toBeVisible();
 		await expect(cards).toHaveCount(6);
 		const introBox = await introShell.boundingBox();
@@ -115,7 +117,31 @@ for (const viewport of VIEWPORTS) {
 	});
 }
 
-test('Projects Catalog keeps EN and ES intro copy localized without duplicating layout markup', async ({
+test('Projects Catalog surfaces a recruiter-oriented portfolio index and repository-aware actions', async ({
+	page,
+}) => {
+	await page.setViewportSize({ width: 1440, height: 900 });
+	await page.goto('/projects');
+
+	const snapshot = page.locator('[data-projects-catalog-snapshot]');
+	await expect(snapshot.getByText('Published projects', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('Inspectable source', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('Active builds', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('Most used technologies', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('06', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('05', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('02', { exact: true })).toBeVisible();
+
+	const kiokuCard = page.locator('article', {
+		has: page.getByRole('heading', { name: 'Kioku', exact: true }),
+	});
+	const repositoryAction = kiokuCard.locator('[data-project-card-repository]');
+	await expect(repositoryAction).toBeVisible();
+	await expect(repositoryAction).toContainText('kioku');
+	await expect(repositoryAction).toHaveAttribute('href', 'https://github.com/sandovaldavid/kioku');
+});
+
+test('Projects Catalog keeps EN and ES intro and index copy localized without duplicating layout markup', async ({
 	page,
 }) => {
 	await page.goto('/projects');
@@ -126,6 +152,7 @@ test('Projects Catalog keeps EN and ES intro copy localized without duplicating 
 			name: 'Projects built with evidence, scope and trade-offs.',
 		})
 	).toBeVisible();
+	await expect(page.getByText('Published projects', { exact: true })).toBeVisible();
 
 	await page.goto('/es/projects');
 	await expect(page.getByText('CATÁLOGO DE PROYECTOS', { exact: true })).toBeVisible();
@@ -135,5 +162,6 @@ test('Projects Catalog keeps EN and ES intro copy localized without duplicating 
 			name: 'Proyectos construidos con evidencia, alcance y trade-offs.',
 		})
 	).toBeVisible();
+	await expect(page.getByText('Proyectos publicados', { exact: true })).toBeVisible();
 	await expect(page.getByRole('heading', { level: 1, name: /Projects built/i })).toHaveCount(0);
 });
