@@ -4,22 +4,14 @@ import BookOpenIcon from '@assets/icons/BookOpen.astro';
 import LinkIcon from '@assets/icons/Link.astro';
 import ShareIcon from '@assets/icons/Share.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
-import { PROJECT_METADATA, type ProjectId, type ProjectResourceKind } from '@entities/project';
+import { PROJECT_METADATA, type ProjectId } from '@entities/project';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-
-export type RequestedProjectResource = 'source' | 'demo' | ProjectResourceKind;
 
 interface Props {
 	projectId: ProjectId;
-	/**
-	 * Kept temporarily so existing MDX calls remain valid while the resource bar
-	 * moves into the shared ProjectCaseStudy shell. Inline invocations render nothing.
-	 */
-	resources?: RequestedProjectResource[];
 }
 
 const { projectId } = Astro.props;
-const isLegacyInlineInvocation = Array.isArray(Astro.props.resources);
 const metadata = PROJECT_METADATA[projectId];
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tPage = createScopedUiTranslator(lang, 'pages.projects');
@@ -42,117 +34,123 @@ const hasExternalResources =
 	repositories.length > 0 || Boolean(docs || packageUrl || related || liveDemo);
 ---
 
-{
-	!isLegacyInlineInvocation && (
-		<nav
-			aria-label={tPage('resourcesTitle')}
-			class="w-full bg-channel-background-canvas px-5 pb-8 md:px-8 md:pb-10 lg:px-20 lg:pb-12"
-			data-project-resources
-		>
-			<div class="mx-auto w-full max-w-320 border-t border-edge-subtle pt-5 md:pt-6">
-				<p class="text-editorial-label-compact uppercase text-content-muted">
-					{tPage('resourcesTitle')}
-				</p>
-				<ul class="mt-3 flex flex-wrap gap-3">
-					{repositories.map(repository => (
-						<li>
-							<a
-								href={repository.url}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								data-project-resource="repository"
-							>
-								<GitHubIcon class="size-4" />
-								<span>{repository.label}</span>
-								<span class="sr-only"> {tAccessibility('externalLink')}</span>
-							</a>
-						</li>
-					))}
-
-					{docs && (
-						<li>
-							<a
-								href={docs}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								data-project-resource="docs"
-							>
-								<BookOpenIcon class="size-4" />
-								<span>{tPage('resourceDocs')}</span>
-								<span class="sr-only"> {tAccessibility('externalLink')}</span>
-							</a>
-						</li>
-					)}
-
-					{liveDemo && (
-						<li>
-							<a
-								href={liveDemo}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								data-project-resource="demo"
-							>
-								<ArrowUpRightIcon class="size-4" />
-								<span>{tPage('resourceDemo')}</span>
-								<span class="sr-only"> {tAccessibility('externalLink')}</span>
-							</a>
-						</li>
-					)}
-
-					{packageUrl && (
-						<li>
-							<a
-								href={packageUrl}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								data-project-resource="package"
-							>
-								<LinkIcon class="size-4" />
-								<span>{tPage('resourcePackage')}</span>
-								<span class="sr-only"> {tAccessibility('externalLink')}</span>
-							</a>
-						</li>
-					)}
-
-					{related && (
-						<li>
-							<a
-								href={related}
-								target="_blank"
-								rel="noopener noreferrer"
-								class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-								data-project-resource="related"
-							>
-								<LinkIcon class="size-4" />
-								<span>{tPage('resourceRelated')}</span>
-								<span class="sr-only"> {tAccessibility('externalLink')}</span>
-							</a>
-						</li>
-					)}
-
+<nav
+	aria-label={tPage('resourcesTitle')}
+	class="w-full bg-channel-background-canvas px-5 pb-8 md:px-8 md:pb-10 lg:px-20 lg:pb-12"
+	data-project-resources
+>
+	<div class="mx-auto w-full max-w-320 border-t border-edge-subtle pt-5 md:pt-6">
+		<p class="text-editorial-label-compact uppercase text-content-muted">
+			{tPage('resourcesTitle')}
+		</p>
+		<ul class="mt-3 flex flex-wrap gap-3">
+			{
+				repositories.map(repository => (
 					<li>
-						<button
-							type="button"
-							class="inline-flex min-h-11 cursor-pointer items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
-							data-project-share
-							data-share-label={tPage('resourceShare')}
-							data-share-copied={tPage('shareCopied')}
+						<a
+							href={repository.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							data-project-resource="repository"
 						>
-							<ShareIcon class="size-4" />
-							<span data-share-text>{tPage('resourceShare')}</span>
-						</button>
+							<GitHubIcon class="size-4" />
+							<span>{repository.label}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
 					</li>
-				</ul>
-				<p class="sr-only" aria-live="polite" data-share-status></p>
-				{!hasExternalResources && <span class="sr-only">{tPage('shareOnlyHint')}</span>}
-			</div>
-		</nav>
-	)
-}
+				))
+			}
+
+			{
+				docs && (
+					<li>
+						<a
+							href={docs}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							data-project-resource="docs"
+						>
+							<BookOpenIcon class="size-4" />
+							<span>{tPage('resourceDocs')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			{
+				liveDemo && (
+					<li>
+						<a
+							href={liveDemo}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							data-project-resource="demo"
+						>
+							<ArrowUpRightIcon class="size-4" />
+							<span>{tPage('resourceDemo')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			{
+				packageUrl && (
+					<li>
+						<a
+							href={packageUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							data-project-resource="package"
+						>
+							<LinkIcon class="size-4" />
+							<span>{tPage('resourcePackage')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			{
+				related && (
+					<li>
+						<a
+							href={related}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex min-h-11 items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+							data-project-resource="related"
+						>
+							<LinkIcon class="size-4" />
+							<span>{tPage('resourceRelated')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			<li>
+				<button
+					type="button"
+					class="inline-flex min-h-11 cursor-pointer items-center gap-2 border-2 border-button-border bg-channel-surface-default px-4 py-2 text-button-label text-content-strong shadow-retro-sm transition-[background-color,box-shadow,transform] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-md active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+					data-project-share
+					data-share-label={tPage('resourceShare')}
+					data-share-copied={tPage('shareCopied')}
+				>
+					<ShareIcon class="size-4" />
+					<span data-share-text>{tPage('resourceShare')}</span>
+				</button>
+			</li>
+		</ul>
+		<p class="sr-only" aria-live="polite" data-share-status></p>
+		{!hasExternalResources && <span class="sr-only">{tPage('shareOnlyHint')}</span>}
+	</div>
+</nav>
 
 <script>
 	function setupProjectShare() {
