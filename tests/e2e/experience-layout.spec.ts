@@ -12,7 +12,9 @@ test.describe('Experience responsive composition', () => {
 		await page.locator('#experience').scrollIntoViewIfNeeded();
 		await page.evaluate(() => document.fonts.ready);
 
+		const section = page.locator('#experience');
 		const shell = page.locator('[data-experience-shell]');
+		const title = page.locator('#experience .title-section');
 		const stage = page.locator('[data-experience-stage]');
 		const tablist = page.locator('#experience-tablist');
 		const activePanel = page.locator('.experience-panel[data-active="true"]');
@@ -23,6 +25,15 @@ test.describe('Experience responsive composition', () => {
 		await expect(stage).toBeVisible();
 		await expect(detail).toBeVisible();
 		expect(Math.round((await shell.boundingBox())!.width)).toBe(1280);
+
+		const sectionBox = (await section.boundingBox())!;
+		const titleBox = (await title.boundingBox())!;
+		const stageBox = (await stage.boundingBox())!;
+		const titleCenter = titleBox.y + titleBox.height / 2;
+		const upperWhitespaceHeight = stageBox.y - sectionBox.y;
+		const titlePositionRatio = (titleCenter - sectionBox.y) / upperWhitespaceHeight;
+		expect(titlePositionRatio).toBeGreaterThan(0.35);
+		expect(titlePositionRatio).toBeLessThan(0.65);
 
 		const tablistBox = (await tablist.boundingBox())!;
 		const detailBox = (await detail.boundingBox())!;
@@ -42,6 +53,27 @@ test.describe('Experience responsive composition', () => {
 			scrollWidth: document.documentElement.scrollWidth,
 		}));
 		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+	});
+
+	test('viewport sections use the lowered title rhythm while Core Stack remains compact', async ({
+		page,
+	}) => {
+		await page.setViewportSize(DESKTOP);
+		await page.goto('/');
+
+		for (const id of ['projects', 'research', 'about-me']) {
+			const shell = page.locator(`#${id} [data-home-viewport-shell="true"]`);
+			await shell.scrollIntoViewIfNeeded();
+			await expect(shell).toBeVisible();
+			expect(await shell.evaluate(element => getComputedStyle(element).paddingTop)).toBe('128px');
+			expect(await shell.evaluate(element => getComputedStyle(element).paddingBottom)).toBe('40px');
+		}
+
+		const coreStack = page.locator('#technologies [data-home-compact-shell="true"]');
+		await coreStack.scrollIntoViewIfNeeded();
+		await expect(coreStack).toBeVisible();
+		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingTop)).toBe('64px');
+		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingBottom)).toBe('64px');
 	});
 
 	test('mobile keeps role selection horizontal and the detail panel inside the content gutter', async ({
