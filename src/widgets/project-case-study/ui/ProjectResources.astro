@@ -25,7 +25,7 @@ const labelKeys: Record<RequestedProjectResource, Parameters<typeof tPage>[0]> =
 };
 
 const urls: Record<RequestedProjectResource, string | undefined> = {
-	source: metadata.sourceAccess === 'public' ? metadata.github : undefined,
+	source: metadata.sourceAccess !== 'private' ? metadata.github : undefined,
 	demo: metadata.link,
 	docs: metadata.resources?.docs,
 	package: metadata.resources?.package,
