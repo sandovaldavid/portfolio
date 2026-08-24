@@ -31,8 +31,8 @@ export type ProjectTechnologyId = keyof typeof PROJECT_TECHNOLOGIES;
 
 /** Recruiter-facing lifecycle classification, verified against repository activity. */
 export type ProjectLifecycle = 'active' | 'maintained' | 'experimental' | 'archived' | 'deprecated';
-/** Whether the project's source is publicly inspectable. */
-export type ProjectSourceAccess = 'public' | 'private';
+/** Whether source is wholly public, wholly private, or split across public/private repositories. */
+export type ProjectSourceAccess = 'public' | 'private' | 'mixed';
 /** What kind of demo evidence, if any, is publicly reachable. */
 export type ProjectDemoAccess = 'live' | 'preview' | 'video' | 'screenshots' | 'unavailable';
 /** Optional public resources that add evidence beyond the source repository and demo. */
@@ -98,7 +98,7 @@ const projectMetadata = {
 		featured: true,
 		order: 30,
 		lifecycle: 'maintained',
-		sourceAccess: 'public',
+		sourceAccess: 'mixed',
 		demoAccess: 'unavailable',
 	},
 	fluentreads: {
