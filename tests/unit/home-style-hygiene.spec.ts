@@ -141,7 +141,7 @@ describe('Home style hygiene', () => {
 		expect(layout).toContain('layout="viewport"');
 		expect(layout).toContain('layout="compact"');
 		expect(projects.trimStart()).toContain('<div class="w-full">');
-		expect(research.trimStart()).toContain('<div class="w-full">');
+		expect(research.trimStart()).toContain('<div class="w-full" data-research-home>');
 		expect(projectCard).not.toContain('<article class="group h-full w-full font-sans">');
 		expect(techStack).not.toContain('createScopedUiTranslator');
 	});
