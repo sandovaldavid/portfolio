@@ -20,7 +20,9 @@ describe('project source-access evidence contract', () => {
 		const shell = readSource('src/widgets/project-case-study/ui/ProjectCaseStudy.astro');
 		const resources = readSource('src/widgets/project-case-study/ui/ProjectResources.astro');
 
-		expect(shell).toContain("project.sourceAccess !== 'private'");
-		expect(resources).toContain("metadata.sourceAccess !== 'private'");
+		expect(shell).toContain('<ProjectResources projectId={project.projectId} />');
+		expect(resources).toContain("metadata.sourceAccess === 'private'");
+		expect(resources).toContain('metadata.repositories?.length');
+		expect(resources).toContain('metadata.github');
 	});
 });
