@@ -28,17 +28,19 @@ describe('Home viewport section contract', () => {
 		expect(experience).not.toContain('-translate-x-1/2');
 	});
 
-	it('declares viewport and compact section behavior at the Home call site', () => {
+	it('centers viewport title/content compositions with one shared gap rhythm', () => {
 		expect(sectionContainer).toContain("layout?: 'contained' | 'viewport' | 'compact'");
 		expect(sectionContainer).toContain("surface?: 'canvas' | 'highlight'");
 		expect(sectionContainer).not.toContain('HOME_VIEWPORT_SECTIONS');
 		expect(sectionContainer).not.toContain('HOME_COMPACT_SECTIONS');
+		expect(sectionContainer).toContain('flex w-full max-w-360 flex-col justify-center');
+		expect(sectionContainer).toContain('!gap-y-10');
+		expect(sectionContainer).toContain('md:!gap-y-12');
+		expect(sectionContainer).toContain('lg:!gap-y-14');
 		expect(sectionContainer).toContain("layout === 'viewport'");
 		expect(sectionContainer).toContain('md:min-h-[calc(100svh-4.5rem)]');
-		expect(sectionContainer).toContain('md:grid-rows-[auto_1fr]');
-		expect(sectionContainer).toContain('md:[&>*:nth-child(2)]:self-center');
-		expect(sectionContainer).toContain('md:pt-24 md:pb-8');
-		expect(sectionContainer).toContain('lg:pt-32 lg:pb-10');
+		expect(sectionContainer).not.toContain('md:grid-rows-[auto_1fr]');
+		expect(sectionContainer).not.toContain('md:[&>*:nth-child(2)]:self-center');
 		expect(sectionContainer).toContain('data-home-compact-shell');
 
 		for (const id of ['projects', 'research', 'about-me']) {
@@ -47,6 +49,10 @@ describe('Home viewport section contract', () => {
 		expect(layout).toMatch(/id="technologies"[\s\S]*?layout="compact"/m);
 		expect(hero).toContain('md:min-h-[calc(100svh-4.5rem)]');
 		expect(experience).toContain('md:min-h-[calc(100svh-4.5rem)]');
+		expect(experience).toContain('flex w-full max-w-320 flex-col justify-center');
+		expect(experience).toContain('gap-10');
+		expect(experience).toContain('md:gap-12');
+		expect(experience).toContain('lg:gap-14');
 	});
 
 	it('keeps Experience special and reserves stable panel geometry', () => {
