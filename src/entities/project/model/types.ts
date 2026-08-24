@@ -11,7 +11,7 @@ import type {
 export type ProjectContentEntry = CollectionEntry<'projects'>;
 export type ProjectContentData = ProjectContentEntry['data'];
 
-/** Concise localized status rendered in the shared Project Detail hero. */
+/** Concise localized status retained in content for narrative/evidence copy. */
 export interface CaseStudyStatus {
 	lifecycle: string;
 	source: string;
@@ -37,6 +37,7 @@ export interface ProjectItem {
 	imageAlt: string;
 	link?: string;
 	github?: string;
+	version?: string;
 	image: ImageMetadata;
 	tags: Technology[];
 	featured: boolean;
