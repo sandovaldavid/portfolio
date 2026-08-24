@@ -26,15 +26,14 @@ caseStudy:
     tones={{ Web: 'brand', Keycloak: 'info', API: 'success', Modules: 'secondary', Worker: 'danger', Migrator: 'info', DB: 'warning' }}
     chart={`flowchart LR
       Web["SPA Angular 22\nrutas · signal stores · clientes tipados"] --> Keycloak["Keycloak\nOIDC + PKCE"]
-      Web --> API["API .NET 10\nalcance por hogar + reglas financieras"]
+      Web -->|estado durable REST| API["API .NET 10\nalcance por hogar + reglas financieras"]
       API --> Modules["Módulos\nHouseholds · Accounting · Cards · Debts\nIncomes · Planning · Notifications · Overview"]
       Worker["Worker"]
       Migrator["Database Migrator"]
       Modules --> DB["PostgreSQL 16\nesquema por módulo"]
       Worker --> DB
       Migrator --> DB
-      API -. SignalR .-> Web
-      API -->|estado durable REST| Web`}
+      API -. SignalR .-> Web`}
   />
 </CaseStudySection>
 
