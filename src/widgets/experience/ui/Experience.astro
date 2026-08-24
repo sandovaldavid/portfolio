@@ -12,13 +12,6 @@ const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const EXPERIENCE = await getExperienceData(lang);
 ---
 
-<!--
-	Home Experience is intentionally a special viewport section. From tablet
-	up it owns the usable viewport below the 72px Header, while Mobile remains
-	content-driven. All detail panels share one CSS-grid cell: inactive panels
-	stay visibility-hidden (not display:none), so the grid reserves the tallest
-	localized panel and switching tabs never moves the rest of the page.
--->
 <section
 	id="experience"
 	class="w-full scroll-mt-18 overflow-x-clip bg-channel-surface-highlight"
@@ -26,9 +19,9 @@ const EXPERIENCE = await getExperienceData(lang);
 >
 	<div
 		data-experience-shell
-		class="mx-auto flex w-full max-w-360 flex-col justify-center gap-8 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:gap-10 md:px-8 md:py-12 lg:gap-12 lg:px-20 lg:py-14"
+		class="mx-auto grid w-full max-w-320 grid-cols-1 gap-8 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:grid-rows-[auto_1fr] md:gap-8 md:px-8 md:py-12 lg:gap-10 lg:px-0 lg:py-14"
 	>
-		<TitleSection align="center" className="w-full">
+		<TitleSection align="center" className="w-full md:mb-2">
 			<ChevronRightIcon
 				class="text-channel-accent-primary"
 				aria-hidden="true"
@@ -38,19 +31,22 @@ const EXPERIENCE = await getExperienceData(lang);
 		</TitleSection>
 
 		<div
-			class="grid w-full min-w-0 grid-cols-1 items-start gap-6 md:grid-cols-[300px_minmax(0,446px)] md:gap-6 lg:grid-cols-[400px_minmax(0,840px)] lg:gap-10"
+			data-experience-stage
+			class="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:self-center md:grid-cols-[280px_minmax(0,1fr)] md:gap-8 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-12"
 		>
 			<div
 				id="experience-tablist"
 				role="tablist"
 				aria-label={tAccessibility('experienceTabs')}
-				class="experience-tablist flex w-full min-w-0 items-start gap-2.5 overflow-x-auto bg-channel-surface-default md:w-75 md:flex-col md:overflow-visible lg:w-100"
+				class="experience-tablist flex w-full min-w-0 items-stretch gap-2.5 overflow-x-auto md:flex-col md:overflow-visible md:border-y md:border-edge-subtle md:py-2"
 			>
 				{
 					EXPERIENCE.map((exp, idx) => (
 						<ExperienceTab
 							company={exp.company}
 							role={exp.title}
+							date={exp.date}
+							isCurrent={exp.isCurrent}
 							selected={idx === 0}
 							focusable={idx === 0}
 							tabId={`exp-tab-${exp.experienceId}`}
@@ -72,6 +68,7 @@ const EXPERIENCE = await getExperienceData(lang);
 							aria-labelledby={`exp-tab-${exp.experienceId}`}
 							aria-hidden={idx === 0 ? 'false' : 'true'}
 							data-active={idx === 0 ? 'true' : 'false'}
+							data-motion="idle"
 							data-experience-id={exp.experienceId}
 						>
 							<ExperienceDetail {...exp} />
@@ -97,23 +94,92 @@ const EXPERIENCE = await getExperienceData(lang);
 			pointer-events: none;
 			transform: translateY(0.5rem);
 			visibility: hidden;
+			will-change: opacity, transform;
 			transition:
 				opacity 180ms ease-out,
-				transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
-				visibility 0s linear 220ms;
+				transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+				visibility 0s linear 240ms;
+		}
+
+		.experience-panel[data-motion='enter-forward'] {
+			transform: translateX(0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-motion='enter-backward'] {
+			transform: translateX(-0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-motion='exit-forward'] {
+			transform: translateX(-0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-motion='exit-backward'] {
+			transform: translateX(0.75rem);
+			visibility: visible;
 		}
 
 		.experience-panel[data-active='true'] {
 			opacity: 1;
 			pointer-events: auto;
-			transform: translateY(0);
+			transform: translate(0, 0);
 			visibility: visible;
 			transition-delay: 0s;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-detail-header] {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(1) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(2) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(3) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(4) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-detail-footer] {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 220ms both;
+		}
+
+		@keyframes experience-detail-enter {
+			from {
+				opacity: 0;
+				transform: translateY(0.4rem);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (min-width: 48rem) {
+			.experience-tablist > [role='tab'] {
+				flex: 1 1 0%;
+				min-height: 0;
+			}
 		}
 
 		@media (prefers-reduced-motion: reduce) {
 			.experience-panel {
 				transition: none;
+			}
+
+			.experience-panel[data-active='true'] [data-experience-detail-header],
+			.experience-panel[data-active='true'] [data-experience-achievement],
+			.experience-panel[data-active='true'] [data-experience-detail-footer] {
+				animation: none;
 			}
 		}
 	</style>
@@ -128,8 +194,9 @@ const EXPERIENCE = await getExperienceData(lang);
 			const panels = tabs.map(tab =>
 				document.getElementById(tab.getAttribute('aria-controls') ?? '')
 			);
+			let motionResetTimer: number | undefined;
 
-			const activateTab = (index: number, focus = false) => {
+			const synchronizeSelection = (index: number) => {
 				tabs.forEach((tab, tabIndex) => {
 					const selected = tabIndex === index;
 					tab.setAttribute('aria-selected', String(selected));
@@ -137,12 +204,57 @@ const EXPERIENCE = await getExperienceData(lang);
 					tab.dataset.active = String(selected);
 
 					const panel = panels[tabIndex];
-					if (panel) {
-						panel.dataset.active = String(selected);
-						panel.setAttribute('aria-hidden', String(!selected));
-						panel.inert = !selected;
-					}
+					if (!panel) return;
+					panel.dataset.active = String(selected);
+					panel.setAttribute('aria-hidden', String(!selected));
+					panel.inert = !selected;
 				});
+			};
+
+			const activateTab = (index: number, focus = false) => {
+				const currentIndex = tabs.findIndex(tab => tab.getAttribute('aria-selected') === 'true');
+				if (index < 0 || index >= tabs.length) return;
+
+				if (currentIndex === index) {
+					synchronizeSelection(index);
+					if (focus) tabs[index]?.focus({ preventScroll: true });
+					return;
+				}
+
+				const direction = currentIndex < index ? 'forward' : 'backward';
+				const currentPanel = currentIndex >= 0 ? panels[currentIndex] : null;
+				const nextPanel = panels[index];
+
+				if (motionResetTimer !== undefined) window.clearTimeout(motionResetTimer);
+
+				if (currentPanel) {
+					currentPanel.dataset.motion = `exit-${direction}`;
+					currentPanel.dataset.active = 'false';
+					currentPanel.setAttribute('aria-hidden', 'true');
+					currentPanel.inert = true;
+				}
+
+				tabs.forEach((tab, tabIndex) => {
+					const selected = tabIndex === index;
+					tab.setAttribute('aria-selected', String(selected));
+					tab.tabIndex = selected ? 0 : -1;
+					tab.dataset.active = String(selected);
+				});
+
+				if (nextPanel) {
+					nextPanel.dataset.motion = `enter-${direction}`;
+					nextPanel.dataset.active = 'false';
+					nextPanel.setAttribute('aria-hidden', 'false');
+					nextPanel.inert = false;
+					void nextPanel.offsetWidth;
+					nextPanel.dataset.active = 'true';
+				}
+
+				motionResetTimer = window.setTimeout(() => {
+					if (currentPanel) currentPanel.dataset.motion = 'idle';
+					if (nextPanel) nextPanel.dataset.motion = 'idle';
+					motionResetTimer = undefined;
+				}, 260);
 
 				if (focus) tabs[index]?.focus({ preventScroll: true });
 			};
@@ -172,7 +284,7 @@ const EXPERIENCE = await getExperienceData(lang);
 				});
 			});
 
-			activateTab(0);
+			synchronizeSelection(0);
 		};
 
 		setupExperienceTabs();
