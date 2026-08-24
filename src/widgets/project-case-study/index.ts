@@ -5,6 +5,8 @@ export {
 	EvidenceBlock,
 	MermaidDiagram,
 	ProjectCaseStudy,
+	ProjectGallery,
 	ProjectResources,
+	ProjectVideo,
 	projectCaseStudyComponents,
 } from './ui';
