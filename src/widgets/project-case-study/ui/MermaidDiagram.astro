@@ -5,151 +5,117 @@ interface Props {
 	chart: string;
 }
 
+interface DiagramNode {
+	id: string;
+	label: string;
+}
+
+interface DiagramEdge {
+	from: string;
+	to: string;
+	label?: string;
+}
+
 const { title, description, chart } = Astro.props;
+const lines = chart
+	.split('\n')
+	.map(line => line.trim())
+	.filter(line => line.length > 0 && !line.startsWith('%%'));
+const header = lines[0]?.match(/^flowchart\s+(LR|TD)$/i);
+if (!header) {
+	throw new Error(`Unsupported case-study Mermaid header for "${title}". Use flowchart LR or flowchart TD.`);
+}
+
+const direction = header[1].toUpperCase() as 'LR' | 'TD';
+const nodes = new Map<string, DiagramNode>();
+const edges: DiagramEdge[] = [];
+const nodePattern = /^([A-Za-z0-9_-]+)\[(?:"([^"]+)"|([^\]]+))\]$/;
+const edgePattern = /^([A-Za-z0-9_-]+)\s*-->\s*(?:\|([^|]+)\|\s*)?([A-Za-z0-9_-]+)$/;
+
+for (const line of lines.slice(1)) {
+	const nodeMatch = line.match(nodePattern);
+	if (nodeMatch) {
+		nodes.set(nodeMatch[1], { id: nodeMatch[1], label: (nodeMatch[2] ?? nodeMatch[3]).trim() });
+		continue;
+	}
+
+	const edgeMatch = line.match(edgePattern);
+	if (edgeMatch) {
+		edges.push({
+			from: edgeMatch[1],
+			to: edgeMatch[3],
+			...(edgeMatch[2]?.trim() ? { label: edgeMatch[2].trim() } : {}),
+		});
+		continue;
+	}
+
+	throw new Error(`Unsupported case-study Mermaid statement for "${title}": ${line}`);
+}
+
+const orderedNodes: DiagramNode[] = [];
+const seen = new Set<string>();
+for (const edge of edges) {
+	for (const id of [edge.from, edge.to]) {
+		if (seen.has(id)) continue;
+		const node = nodes.get(id);
+		if (!node) throw new Error(`Diagram "${title}" references undefined node "${id}".`);
+		orderedNodes.push(node);
+		seen.add(id);
+	}
+}
+for (const node of nodes.values()) {
+	if (!seen.has(node.id)) orderedNodes.push(node);
+}
 ---
 
-<figure class="w-full" data-mermaid-figure>
+<figure class="w-full" data-mermaid-figure data-diagram-direction={direction}>
 	<div
-		class="mermaid-host min-h-48 overflow-x-auto border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md md:p-6"
-		data-mermaid-host
-		data-mermaid-state="pending"
+		class="overflow-x-auto border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md md:p-6"
 		role="img"
 		aria-label={description}
+		data-mermaid-host
+		data-mermaid-state="rendered"
 	>
-		<pre
-			class="mermaid-source overflow-x-auto whitespace-pre text-code text-content-muted"
-			data-mermaid-source
-		><code>{chart}</code></pre>
+		<div
+			class:list={[
+				'mx-auto flex min-w-max items-stretch',
+				direction === 'LR' ? 'flex-row' : 'flex-col',
+			]}
+		>
+			{
+				orderedNodes.map((node, index) => {
+					const next = orderedNodes[index + 1];
+					const edge = next
+						? edges.find(candidate => candidate.from === node.id && candidate.to === next.id)
+						: undefined;
+					return (
+						<>
+							<div class="flex min-w-48 max-w-64 items-center justify-center border-2 border-edge-strong bg-channel-surface-highlight px-4 py-3 text-center text-code font-bold text-content-strong">
+								{node.label}
+							</div>
+							{next && (
+								<div
+									class:list={[
+										'flex shrink-0 items-center justify-center text-channel-accent-primary',
+										direction === 'LR' ? 'min-w-20 flex-col px-2' : 'min-h-16 flex-row py-2',
+									]}
+									aria-hidden="true"
+								>
+									{edge?.label && <span class="mb-1 text-caption text-content-muted">{edge.label}</span>}
+									<span class="font-mono text-2xl">{direction === 'LR' ? '→' : '↓'}</span>
+								</div>
+							)}
+						</>
+					);
+				})
+			}
+		</div>
 	</div>
 	<figcaption class="mt-3 text-caption text-content-muted">
 		<span class="font-bold text-content-strong">{title}.</span> {description}
 	</figcaption>
+	<details class="mt-3">
+		<summary class="cursor-pointer text-caption font-medium text-content-muted">Mermaid source</summary>
+		<pre class="mt-2 overflow-x-auto border border-edge-subtle bg-channel-surface-default p-3 text-code text-content-muted"><code>{chart}</code></pre>
+	</details>
 </figure>
-
-<script is:inline type="module">
-	const MERMAID_URL = 'https://cdn.jsdelivr.net/npm/mermaid@11.17.0/dist/mermaid.esm.min.mjs';
-
-	const getState = () => {
-		window.__portfolioMermaid ??= {
-			modulePromise: null,
-			observer: null,
-			counter: 0,
-		};
-		return window.__portfolioMermaid;
-	};
-
-	const loadMermaid = async () => {
-		const state = getState();
-		state.modulePromise ??= import(MERMAID_URL).then(module => module.default);
-		const mermaid = await state.modulePromise;
-		mermaid.initialize({
-			startOnLoad: false,
-			securityLevel: 'strict',
-			theme: 'base',
-			fontFamily: 'JetBrains Mono, monospace',
-			flowchart: { htmlLabels: false, useMaxWidth: true, curve: 'linear' },
-		});
-		return mermaid;
-	};
-
-	const renderDiagram = async host => {
-		if (host.dataset.mermaidState !== 'pending') return;
-		host.dataset.mermaidState = 'loading';
-		const source = host.querySelector('[data-mermaid-source]')?.textContent?.trim();
-		if (!source) {
-			host.dataset.mermaidState = 'failed';
-			return;
-		}
-
-		try {
-			const mermaid = await loadMermaid();
-			const state = getState();
-			state.counter += 1;
-			const { svg, bindFunctions } = await mermaid.render(
-				`portfolio-mermaid-${state.counter}`,
-				source
-			);
-			host.innerHTML = svg;
-			bindFunctions?.(host);
-			host.dataset.mermaidState = 'rendered';
-		} catch {
-			host.dataset.mermaidState = 'failed';
-		}
-	};
-
-	const observe = () => {
-		const state = getState();
-		state.observer ??= new IntersectionObserver(
-			entries => {
-				for (const entry of entries) {
-					if (!entry.isIntersecting) continue;
-					state.observer.unobserve(entry.target);
-					void renderDiagram(entry.target);
-				}
-			},
-			{ rootMargin: '240px 0px' }
-		);
-
-		for (const host of document.querySelectorAll('[data-mermaid-host][data-mermaid-state="pending"]')) {
-			state.observer.observe(host);
-		}
-	};
-
-	if (!window.__portfolioMermaidEventsBound) {
-		window.__portfolioMermaidEventsBound = true;
-		document.addEventListener('astro:after-swap', observe);
-	}
-	observe();
-</script>
-
-<style>
-	.mermaid-host :global(svg) {
-		display: block;
-		width: 100%;
-		min-width: 38rem;
-		height: auto;
-		margin-inline: auto;
-		font-family: var(--font-mono) !important;
-	}
-
-	.mermaid-host :global(.node rect),
-	.mermaid-host :global(.node polygon),
-	.mermaid-host :global(.node circle),
-	.mermaid-host :global(.node ellipse) {
-		fill: var(--channel-surface-highlight) !important;
-		stroke: var(--channel-edge-strong) !important;
-		stroke-width: 2px !important;
-	}
-
-	.mermaid-host :global(.label),
-	.mermaid-host :global(.nodeLabel),
-	.mermaid-host :global(.edgeLabel),
-	.mermaid-host :global(text) {
-		color: var(--channel-content-strong) !important;
-		fill: var(--channel-content-strong) !important;
-		font-family: var(--font-mono) !important;
-	}
-
-	.mermaid-host :global(.edgeLabel rect),
-	.mermaid-host :global(.labelBkg) {
-		fill: var(--channel-background-canvas) !important;
-	}
-
-	.mermaid-host :global(.flowchart-link),
-	.mermaid-host :global(.edge-pattern-solid),
-	.mermaid-host :global(.edge-pattern-dashed) {
-		stroke: var(--channel-accent-primary) !important;
-		stroke-width: 2px !important;
-	}
-
-	.mermaid-host :global(marker path) {
-		fill: var(--channel-accent-primary) !important;
-		stroke: var(--channel-accent-primary) !important;
-	}
-
-	@media (max-width: 47.999rem) {
-		.mermaid-host :global(svg) {
-			min-width: 34rem;
-		}
-	}
-</style>
