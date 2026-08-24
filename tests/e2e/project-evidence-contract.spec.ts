@@ -11,9 +11,9 @@ test.describe('Recruiter evidence, access and status contract', () => {
 			has: page.getByRole('heading', { name: 'Yukidoke' }),
 		});
 		await expect(yukidokeCard.getByText('Active', { exact: true })).toBeVisible();
-		await expect(
-			yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]')
-		).toHaveCount(0);
+		await expect(yukidokeCard.locator('a[href*="github.com/sandovaldavid/yukidoke"]')).toHaveCount(
+			0
+		);
 
 		const kiokuCard = page.locator('article', {
 			has: page.getByRole('heading', { name: 'Kioku' }),
@@ -27,37 +27,41 @@ test.describe('Recruiter evidence, access and status contract', () => {
 	for (const locale of [
 		{
 			path: '/projects/campus-map',
-			lifecycleLabel: 'LIFECYCLE',
-			demo: 'No public demo; the previously hosted preview domain no longer resolves.',
-			previewButton: 'Preview',
+			status: 'MAINTAINED · NEXT.JS 16 CODEBASE',
+			source: 'https://github.com/sandovaldavid/unp-campus-map',
+			boundary: 'THE INTERACTIVE MAP IS NOT PRESENTED AS SHIPPED',
 		},
 		{
 			path: '/es/projects/campus-map',
-			lifecycleLabel: 'CICLO DE VIDA',
-			demo: 'Sin demo pública; el dominio de vista previa que se alojaba anteriormente ya no resuelve.',
-			previewButton: 'Vista previa',
+			status: 'MANTENIDO · CÓDIGO NEXT.JS 16',
+			source: 'https://github.com/sandovaldavid/unp-campus-map',
+			boundary: 'EL MAPA INTERACTIVO NO SE PRESENTA COMO ENTREGADO',
 		},
 	] as const) {
-		test(`${locale.path} discloses the dead demo link instead of presenting it as live`, async ({
-			page,
-		}) => {
+		test(`${locale.path} exposes source while keeping unavailable demo explicit`, async ({ page }) => {
 			await page.goto(locale.path);
-
-			await expect(page.getByText(locale.lifecycleLabel).first()).toBeVisible();
-			await expect(page.getByText(locale.demo, { exact: true })).toBeVisible();
-			await expect(page.getByRole('link', { name: locale.previewButton })).toHaveCount(0);
+			await expect(page.getByText(locale.status, { exact: true })).toBeVisible();
+			await expect(page.locator(`a[href="${locale.source}"]`)).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.boundary })).toBeVisible();
+			await expect(page.locator('a[href*="mapa-unp.sandovaldavid.com"]')).toHaveCount(0);
 		});
 	}
 
-	test('/projects/fluentreads keeps its verified live demo link', async ({ page }) => {
+	test('/projects/fluentreads keeps source and its verified live demo actionable', async ({ page }) => {
 		await page.goto('/projects/fluentreads');
 
+		await expect(page.getByText('LIVE DEMO', { exact: true })).toBeVisible();
+		await expect(page.locator('a[href="https://fluentreads.vercel.app"]')).toBeVisible();
+		await expect(page.locator('a[href="https://github.com/sandovaldavid/fluentreads"]')).toBeVisible();
 		await expect(
-			page.getByText('Live demo available at the hosted preview deployment.')
+			page.getByRole('heading', { name: 'NO DATABASE, AUTH OR ONLINE PAYMENT GATEWAY' })
 		).toBeVisible();
-		await expect(page.getByRole('link', { name: 'Preview' })).toHaveAttribute(
-			'href',
-			'https://fluentreads.vercel.app'
-		);
+	});
+
+	test('/projects/auctions does not surface the historical placeholder demo', async ({ page }) => {
+		await page.goto('/projects/auctions');
+		await expect(page.getByText('NO PUBLIC DEMO', { exact: true })).toBeVisible();
+		await expect(page.locator('a[href="https://github.com/sandovaldavid/auctions"]')).toBeVisible();
+		await expect(page.locator('a[href*="herokuapp.com"]')).toHaveCount(0);
 	});
 });
