@@ -11,9 +11,10 @@ const tAbout = createScopedUiTranslator(lang, 'sections.about');
 const tCommon = createScopedUiTranslator(lang, 'common');
 ---
 
-<div class="flex w-full flex-col gap-8 md:gap-10">
+<div class="mx-auto flex w-full max-w-288 flex-col gap-6 md:gap-8">
 	<div
-		class="grid w-full min-w-0 items-center gap-8 md:grid-cols-[minmax(0,1fr)_184px] lg:grid-cols-[minmax(0,820px)_192px] lg:justify-center"
+		class="grid w-full min-w-0 items-center gap-8 md:grid-cols-[minmax(0,1fr)_184px] lg:grid-cols-[minmax(0,1fr)_192px]"
+		data-about-profile
 	>
 		<div class="flex min-w-0 flex-col items-start gap-3">
 			<p class="text-editorial-label text-channel-accent-primary">{tAbout('profileTitle')}</p>
@@ -39,17 +40,22 @@ const tCommon = createScopedUiTranslator(lang, 'common');
 		</div>
 	</div>
 
-	<div class="h-0.5 w-full bg-edge-subtle" aria-hidden="true"></div>
+	<section
+		class="grid w-full min-w-0 gap-4 border-t border-edge-subtle pt-5 md:pt-6 lg:grid-cols-[200px_minmax(0,1fr)_auto] lg:items-center lg:gap-8"
+		data-about-current-role
+	>
+		<div class="flex min-w-0 flex-col gap-2">
+			<p class="text-editorial-label text-channel-accent-primary">{tAbout('homeCurrentLabel')}</p>
+			<h3 class="text-subheading text-content-strong">{tAbout('homeCurrentMeta')}</h3>
+		</div>
 
-	<section class="mx-auto flex w-full max-w-261 flex-col items-start gap-3">
-		<p class="text-editorial-label text-channel-accent-primary">{tAbout('homeCurrentLabel')}</p>
-		<h3 class="text-subheading text-content-strong">{tAbout('homeCurrentMeta')}</h3>
-		<p class="max-w-225 text-body text-content-default">{profile.currentRoleSummary}</p>
+		<p class="max-w-180 text-body text-content-default">{profile.currentRoleSummary}</p>
+
 		<LinkButton
 			href={getRelativeLocaleUrl(lang, 'atena')}
 			target="_self"
 			variant="primary"
-			class="w-fit"
+			class="w-fit lg:justify-self-end"
 		>
 			<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 			{tCommon('actions.viewWork')}
