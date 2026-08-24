@@ -16,6 +16,13 @@ const { project, lang = getLanguageFromLocale(Astro.currentLocale) } = Astro.pro
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const newTabLabel = tAccessibility('externalLink');
 const { status } = project.caseStudy;
+const lifecycleBadgeVariant = {
+	active: 'success',
+	maintained: 'default',
+	experimental: 'warning',
+	archived: 'default',
+	deprecated: 'danger',
+} as const;
 ---
 
 <article class="w-full pt-18" data-project-case-study="mdx">
@@ -42,7 +49,9 @@ const { status } = project.caseStudy;
 					class="flex flex-wrap items-center gap-3"
 					aria-label={`${status.lifecycle}, ${status.source}, ${status.demo}`}
 				>
-					<Badge variant="success" size="sm">{status.lifecycle}</Badge>
+					<Badge variant={lifecycleBadgeVariant[project.lifecycle]} size="sm">
+						{status.lifecycle}
+					</Badge>
 					{
 						project.github && project.sourceAccess === 'public' ? (
 							<a
