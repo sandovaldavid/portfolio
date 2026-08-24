@@ -49,6 +49,19 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('isCurrent: boolean');
 	});
 
+	it('renders icons only when semantic technology metadata provides one', () => {
+		expect(detail).toContain("import AngularIcon from '@assets/technologies/Angular.astro'");
+		expect(detail).toContain("import DotNetIcon from '@assets/technologies/DotNet.astro'");
+		expect(detail).toContain("import TypeScriptIcon from '@assets/technologies/TypeScript.astro'");
+		expect(detail).toContain("import JavaIcon from '@assets/technologies/Java.astro'");
+		expect(detail).toContain("import ReactIcon from '@assets/technologies/React.astro'");
+		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
+		expect(detail).toContain(
+			'icon={technology.iconKey ? technologyIcons[technology.iconKey] : undefined}'
+		);
+		expect(detail).toContain('label={technology.label}');
+	});
+
 	it('uses whitespace for achievements and keeps only the footer divider with a primary current-role CTA', () => {
 		expect(detail).not.toContain('my-5 h-px w-full bg-edge-subtle');
 		expect(detail).not.toContain('group min-w-0 border-t border-edge-subtle pt-4');
