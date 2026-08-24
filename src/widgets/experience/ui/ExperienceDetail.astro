@@ -48,11 +48,9 @@ const companyContext = isCurrent
 		</div>
 	</header>
 
-	<div class="my-5 h-px w-full bg-edge-subtle md:my-6" aria-hidden="true"></div>
-
 	<ul
 		data-experience-achievements
-		class="grid min-w-0 grid-cols-1 content-start gap-x-8 gap-y-5 lg:grid-cols-2 lg:gap-y-6"
+		class="mt-6 grid min-w-0 grid-cols-1 content-start gap-x-8 gap-y-5 md:mt-7 lg:grid-cols-2 lg:gap-y-6"
 	>
 		{
 			visibleAchievements.map((point, index) => {
@@ -64,10 +62,7 @@ const companyContext = isCurrent
 				return (
 					<li
 						data-experience-achievement
-						class:list={[
-							'group min-w-0 border-t border-edge-subtle pt-4',
-							isLastOdd && 'lg:col-span-2',
-						]}
+						class:list={['group min-w-0 py-1', isLastOdd && 'lg:col-span-2']}
 					>
 						<div
 							class:list={[
@@ -119,7 +114,7 @@ const companyContext = isCurrent
 				<LinkButton
 					href={currentRoleUrl}
 					target="_self"
-					variant="secondary"
+					variant="primary"
 					class="w-fit shrink-0"
 				>
 					{tExperience('viewCurrentRole')}
