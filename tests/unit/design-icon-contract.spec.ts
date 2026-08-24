@@ -61,7 +61,7 @@ describe('Portfolio v2 icon contract', () => {
 
 		expect(dotnet).toContain('Official .NET logo from dotnet/brand');
 		expect(dotnet).toContain('viewBox="0 0 456 456"');
-		expect(dotnet).toContain('<rect width="456" height="456" fill="#512BD4" />');
+		expect(dotnet).toContain('<rect width="456" height="456" fill="#512BD4"></rect>');
 
 		expect(csharp).toContain('Official C# language mark from dotnet/brand');
 		expect(csharp).toContain('viewBox="0 0 72 72"');
