@@ -7,6 +7,7 @@ import campusMapImg from '@assets/projects/project-08-campus-map.webp';
 import madaiImg from '@assets/projects/project-10-MAD-AI.webp';
 import fluentreadsImg from '@assets/projects/project-09-fluentreads.webp';
 import auctionsImg from '@assets/projects/project-02-auctions.webp';
+import projectDetailFixtureImg from '@assets/projects/project-dev-fixture.svg';
 
 export const PROJECT_TECHNOLOGIES = {
 	angular: TAGS.ANGULAR,
@@ -53,6 +54,8 @@ interface ProjectMetadata {
 	lifecycle: ProjectLifecycle;
 	sourceAccess: ProjectSourceAccess;
 	demoAccess: ProjectDemoAccess;
+	/** Internal fixtures can exist in content while remaining absent from production lists and routes. */
+	developmentOnly?: boolean;
 	/** Current project release when the project has one stable, recruiter-facing version. */
 	version?: string;
 	link?: string;
@@ -139,6 +142,32 @@ const projectMetadata = {
 		sourceAccess: 'public',
 		demoAccess: 'unavailable',
 	},
+	'project-detail-fixture': {
+		slug: 'project-detail-fixture',
+		github: 'https://github.com/sandovaldavid/portfolio',
+		repositories: [
+			{ label: 'portfolio', url: 'https://github.com/sandovaldavid/portfolio' },
+			{
+				label: 'project-case-study',
+				url: 'https://github.com/sandovaldavid/portfolio/tree/feature/figma-v2-ui/src/widgets/project-case-study',
+			},
+		],
+		image: projectDetailFixtureImg,
+		technologyIds: ['astro', 'typescript', 'markdown', 'csharp', 'postgresql'],
+		featured: false,
+		order: 0,
+		lifecycle: 'experimental',
+		sourceAccess: 'public',
+		demoAccess: 'live',
+		developmentOnly: true,
+		version: '0.0.0-dev',
+		link: 'https://example.com/portfolio-project-fixture/live',
+		resources: {
+			docs: 'https://example.com/portfolio-project-fixture/docs',
+			package: 'https://example.com/portfolio-project-fixture/package',
+			related: 'https://example.com/portfolio-project-fixture/related',
+		},
+	},
 } as const satisfies Record<string, ProjectMetadata>;
 
 export type ProjectId = keyof typeof projectMetadata;
@@ -146,4 +175,8 @@ export const PROJECT_METADATA: Record<ProjectId, ProjectMetadata> = projectMetad
 
 export function isProjectId(value: string): value is ProjectId {
 	return value in PROJECT_METADATA;
+}
+
+export function isProjectVisible(projectId: ProjectId, development = import.meta.env.DEV): boolean {
+	return !PROJECT_METADATA[projectId].developmentOnly || development;
 }
