@@ -65,15 +65,23 @@ test.describe('Experience responsive composition', () => {
 			const shell = page.locator(`#${id} [data-home-viewport-shell="true"]`);
 			await shell.scrollIntoViewIfNeeded();
 			await expect(shell).toBeVisible();
-			expect(await shell.evaluate(element => getComputedStyle(element).paddingTop)).toBe('128px');
-			expect(await shell.evaluate(element => getComputedStyle(element).paddingBottom)).toBe('40px');
+			expect(await shell.evaluate(element => getComputedStyle(element).paddingTop)).toBe(
+				'128px'
+			);
+			expect(await shell.evaluate(element => getComputedStyle(element).paddingBottom)).toBe(
+				'40px'
+			);
 		}
 
 		const coreStack = page.locator('#technologies [data-home-compact-shell="true"]');
 		await coreStack.scrollIntoViewIfNeeded();
 		await expect(coreStack).toBeVisible();
-		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingTop)).toBe('64px');
-		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingBottom)).toBe('64px');
+		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingTop)).toBe(
+			'64px'
+		);
+		expect(await coreStack.evaluate(element => getComputedStyle(element).paddingBottom)).toBe(
+			'64px'
+		);
 	});
 
 	test('mobile keeps role selection horizontal and the detail panel inside the content gutter', async ({
