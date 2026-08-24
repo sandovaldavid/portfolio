@@ -3,6 +3,7 @@ export type {
 	ProjectDemoAccess,
 	ProjectId,
 	ProjectLifecycle,
+	ProjectRepository,
 	ProjectResourceKind,
 	ProjectSourceAccess,
 	ProjectTechnologyId,
