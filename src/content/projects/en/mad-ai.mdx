@@ -1,0 +1,96 @@
+---
+projectId: mad-ai
+locale: en
+title: MAD AI
+description: "An Angular 20 administrative client with SSR, guarded routing and explicit domain, application, infrastructure and presentation layers for authentication, users, roles and notifications."
+category: "Frontend Architecture"
+imageAlt: "MAD AI Angular administrative client dashboard preview"
+caseStudy:
+  kicker: "PROJECT CASE STUDY · FRONTEND ARCHITECTURE"
+  status:
+    lifecycle: "MAINTAINED · ANGULAR 20 CLIENT"
+    source: "PUBLIC SOURCE"
+    demo: "NO PUBLIC DEMO"
+---
+
+<CaseStudySection eyebrow="PUBLIC EVIDENCE" title="The frontend repository is the verifiable boundary" width="reading">
+  <ProjectResources projectId="mad-ai" resources={['source']} />
+
+  MAD AI is best understood as an administrative **Angular client**, not as a verified full-stack deployment. The public repository contains the Angular application, SSR server entry point, layered frontend architecture, HTTP repository implementations and API-contract notes. It does not contain a Django backend or PostgreSQL schema, so this case study does not present those technologies as shipped project evidence.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEM" title="Administrative workflows accumulate cross-cutting concerns quickly">
+  Authentication, guarded navigation, user administration, roles and notifications all need to share application state without turning presentation components into HTTP clients. The implementation separates those concerns into domain contracts, application use cases, infrastructure adapters and presentation routes instead of letting each screen own its transport logic.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="SYSTEM" title="Angular owns the client boundary; the API stays external" surface="highlight">
+  <MermaidDiagram
+    title="MAD AI client architecture"
+    description="Angular routes and presentation components call application use cases and domain contracts. Infrastructure repository implementations translate those operations to an external REST API. SSR is provided by the Angular server build and Express runtime."
+    chart={`flowchart LR
+      Browser["Browser"] --> Routes["Angular 20 routes\nAuth + secured shell"]
+      SSR["Angular SSR\nExpress 5"] --> Routes
+      Routes --> Presentation["Presentation\ncomponents + layouts"]
+      Presentation --> Application["Application\nuse cases"]
+      Application --> Domain["Domain\nentities + repository contracts"]
+      Infrastructure["Infrastructure\nHTTP repository implementations"] --> Domain
+      Infrastructure --> API["External REST API\n/api/v1"]
+      Guard["AuthGuard"] --> Routes`}
+  />
+</CaseStudySection>
+
+<CaseStudySection eyebrow="ARCHITECTURE" title="Layer names correspond to real repository boundaries">
+  <CaseStudyGrid columns={2}>
+    <CaseStudyCard label="DOMAIN" title="CONTRACTS BEFORE TRANSPORT" tone="primary">
+      Domain-level entities and repository abstractions define what authentication, users, roles and notifications need without embedding HTTP details into routed components.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APPLICATION" title="USE CASES COORDINATE INTENT" tone="primary">
+      Application code sits between presentation and infrastructure so UI flows can express actions through use cases instead of binding every component directly to endpoint mechanics.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="INFRASTRUCTURE" title="HTTP REPOSITORIES ADAPT THE API" tone="primary">
+      The repository contains concrete implementations for authentication, notifications, roles and users. These adapters own DTO/API interaction behind the repository contracts.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="PRESENTATION" title="ROUTES DEFINE PUBLIC AND SECURED AREAS" tone="primary">
+      `/auth` uses its own layout, while dashboard and user-management routes sit behind `AuthGuard` inside the secured application shell.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="AUTHENTICATION" title="The client documents a token-based API contract" surface="highlight">
+  The public API notes describe login, logout, refresh-token, registration, email confirmation and current-user operations. The frontend environment points to an external `/api/v1` service, so the portfolio treats those files as **client contract evidence** rather than proof of how the backend stores users or validates tokens internally.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="NOTIFICATIONS" title="A reusable notification workflow spans the same layers">
+  The repository documents success, error, warning and informational notifications with configurable positions and dismissal behavior. More importantly for this case study, the notification feature follows the same domain → application → infrastructure → presentation split instead of becoming a one-off global component with transport knowledge.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFIED IN MANIFEST AND SOURCE" title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4" tone="verified">
+      `package.json` declares Angular 20, Angular SSR, Express 5, RxJS and Tailwind CSS 4. The source tree exposes explicit `domain`, `application`, `infrastructure` and `presentation` directories plus guarded routes and concrete repository implementations.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="BOUNDARY" title="BACKEND IMPLEMENTATION IS NOT IN THIS REPOSITORY" tone="boundary">
+      API documentation and frontend adapters show the expected HTTP contract, but this public repository does not contain the server implementation, persistence layer or a public deployment. This page therefore makes no Django, PostgreSQL, WebSocket, production-readiness or adoption claim.
+    </EvidenceBlock>
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="LEARNINGS" title="What this repository demonstrates" surface="highlight">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="LEARNING 01" title="CLIENT ARCHITECTURE CAN HAVE REAL BOUNDARIES" tone="success">
+      A frontend can separate domain intent from HTTP adapters instead of treating every component as a thin wrapper around an endpoint.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 02" title="ROUTING IS PART OF THE SECURITY MODEL" tone="success">
+      Public authentication routes and guarded administrative routes are easier to reason about when the distinction exists in the route tree, not only inside component templates.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 03" title="DOCUMENTED API CONTRACTS ARE NOT BACKEND EVIDENCE" tone="success">
+      A client can prove what it consumes without proving how the remote service is implemented. Keeping that distinction explicit makes the case study more credible.
+    </CaseStudyCard>
+  </CaseStudyGrid>
+</CaseStudySection>
