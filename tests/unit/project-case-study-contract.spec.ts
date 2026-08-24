@@ -10,6 +10,8 @@ const video = readSource('src/widgets/project-case-study/ui/ProjectVideo.astro')
 const gallery = readSource('src/widgets/project-case-study/ui/ProjectGallery.astro');
 const metadata = readSource('src/entities/project/model/metadata.ts');
 const config = readSource('src/content.config.ts');
+const kiokuEn = readSource('src/content/projects/en/kioku.mdx');
+const kiokuEs = readSource('src/content/projects/es/kioku.mdx');
 
 describe('Project Case Study MDX contract', () => {
 	it('keeps shared identity and status in frontmatter while narrative lives in MDX', () => {
@@ -34,7 +36,7 @@ describe('Project Case Study MDX contract', () => {
 		expect(existsSync('src/widgets/project-case-study/ui/ProjectCaseStudyLegacy.astro')).toBe(false);
 	});
 
-	it('exposes design-system-aware MDX media primitives without fixing project structure', () => {
+	it('keeps project-specific composition in MDX while resources remain shell-owned', () => {
 		for (const component of [
 			'CaseStudyCard',
 			'CaseStudyGrid',
@@ -42,11 +44,13 @@ describe('Project Case Study MDX contract', () => {
 			'EvidenceBlock',
 			'MermaidDiagram',
 			'ProjectGallery',
-			'ProjectResources',
 			'ProjectVideo',
 		]) {
 			expect(components).toContain(component);
 		}
+		expect(components).not.toContain('ProjectResources');
+		expect(kiokuEn).not.toContain('<ProjectResources');
+		expect(kiokuEs).not.toContain('<ProjectResources');
 		expect(video).toContain('data-project-video');
 		expect(video).toContain('<video');
 		expect(video).toContain('<iframe');
@@ -73,12 +77,17 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).not.toContain('IntersectionObserver');
 		expect(mermaid).not.toContain('<script');
 		expect(mermaid).not.toContain('Mermaid source');
+		expect(kiokuEn).toContain("Client: 'brand'");
+		expect(kiokuEn).toContain("Vault: 'success'");
+		expect(kiokuEs).toContain("Client: 'brand'");
 	});
 
 	it('resolves zero-to-many repositories and optional resources from language-neutral metadata', () => {
 		expect(metadata).toContain('repositories?: readonly ProjectRepository[]');
 		expect(metadata).toContain("{ label: 'kioku', url: 'https://github.com/sandovaldavid/kioku' }");
-		expect(metadata).toContain("{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }");
+		expect(metadata).toContain(
+			"{ label: 'kioku-obsidian', url: 'https://github.com/sandovaldavid/kioku-obsidian' }"
+		);
 		expect(resources).toContain('PROJECT_METADATA[projectId]');
 		expect(resources).toContain("metadata.sourceAccess === 'private'");
 		expect(resources).toContain('metadata.repositories?.length');
