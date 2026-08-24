@@ -23,7 +23,7 @@ const companyContext = isCurrent
 
 <div
 	data-experience-detail
-	class="flex min-h-100 w-full min-w-0 flex-col border-2 border-edge-strong bg-channel-surface-default p-5 shadow-retro-md md:min-h-104 md:p-6 lg:min-h-110 lg:p-8"
+	class="flex h-full min-h-100 w-full min-w-0 flex-col border-2 border-edge-strong bg-channel-surface-default p-5 shadow-retro-md md:min-h-104 md:p-6 lg:min-h-110 lg:p-8"
 >
 	<header
 		data-experience-detail-header
@@ -54,7 +54,8 @@ const companyContext = isCurrent
 	>
 		{
 			visibleAchievements.map((point, index) => {
-				const isLastOdd = visibleAchievements.length % 2 === 1 && index === visibleAchievements.length - 1;
+				const isLastOdd =
+					visibleAchievements.length % 2 === 1 && index === visibleAchievements.length - 1;
 				const itemNumber = String(index + 1).padStart(2, '0');
 
 				return (
