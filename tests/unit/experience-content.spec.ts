@@ -75,7 +75,7 @@ describe('localized professional experience content', () => {
 		}
 	});
 
-	it('keeps ordering and technology metadata language-neutral', () => {
+	it('keeps ordering and semantic technology metadata language-neutral', () => {
 		const orderedIds = Object.entries(EXPERIENCE_METADATA)
 			.sort(([, left], [, right]) => right.order - left.order)
 			.map(([experienceId]) => experienceId);
@@ -89,9 +89,27 @@ describe('localized professional experience content', () => {
 		for (const metadata of Object.values(EXPERIENCE_METADATA)) {
 			expect(metadata.technologyIds.length).toBeGreaterThan(0);
 			for (const technologyId of metadata.technologyIds) {
-				expect(EXPERIENCE_TECHNOLOGIES[technologyId].trim().length).toBeGreaterThan(0);
+				const technology = EXPERIENCE_TECHNOLOGIES[technologyId];
+				expect(technology.label.trim().length).toBeGreaterThan(0);
+				expect(['technology', 'architecture', 'practice', 'capability']).toContain(
+					technology.kind
+				);
 			}
 		}
+
+		expect(EXPERIENCE_TECHNOLOGIES['dotnet-8']).toMatchObject({
+			kind: 'technology',
+			iconKey: 'dotnet',
+		});
+		expect(EXPERIENCE_TECHNOLOGIES['angular-19']).toMatchObject({
+			kind: 'technology',
+			iconKey: 'angular',
+		});
+		expect(EXPERIENCE_TECHNOLOGIES['clean-architecture']).toEqual({
+			label: 'Clean Architecture',
+			kind: 'architecture',
+		});
+		expect(EXPERIENCE_TECHNOLOGIES.cqrs).toEqual({ label: 'CQRS', kind: 'architecture' });
 	});
 
 	it('loads experience and research through canonical entities only', () => {
