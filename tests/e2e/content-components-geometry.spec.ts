@@ -138,14 +138,12 @@ test.describe('Tablet geometry contract', () => {
 });
 
 test.describe('Experience Tab contract', () => {
-	for (const [viewport, expectedWidth, minimumHeight] of [
-		[DESKTOP, 400, 80],
-		[TABLET, 300, 88],
-		[MOBILE, 250, 88],
+	for (const [viewport, expectedWidth] of [
+		[DESKTOP, 400],
+		[TABLET, 300],
+		[MOBILE, 250],
 	] as const) {
-		test(`${viewport.label} tab respects the responsive Figma minimum geometry`, async ({
-			page,
-		}) => {
+		test(`${viewport.label} tab matches the responsive Figma geometry`, async ({ page }) => {
 			await page.setViewportSize({ width: viewport.width, height: viewport.height });
 			await page.goto('/');
 			await setTheme(page, 'light');
@@ -154,11 +152,7 @@ test.describe('Experience Tab contract', () => {
 			await expect(activeTab).toBeVisible();
 			const box = await activeTab.boundingBox();
 			expect(box?.width).toBe(expectedWidth);
-			if (viewport.label === 'desktop') {
-				expect(box?.height).toBe(minimumHeight);
-			} else {
-				expect(box?.height).toBeGreaterThanOrEqual(minimumHeight);
-			}
+			expect(box?.height).toBe(76);
 			expect(await activeTab.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
 				await probeBackground(page, '--color-badge-brand-bg')
 			);
@@ -192,7 +186,7 @@ test.describe('Experience Detail contract', () => {
 	for (const [viewport, expectedWidth] of [
 		[DESKTOP, 840],
 		[TABLET, 446],
-		[MOBILE, 350],
+		[MOBILE, 360],
 	] as const) {
 		test(`${viewport.label} detail is an open editorial block at ${expectedWidth}px`, async ({
 			page,
@@ -214,8 +208,7 @@ test.describe('Experience Detail contract', () => {
 			expect(await role.evaluate(el => getComputedStyle(el).fontWeight)).toBe('500');
 
 			const achievements = detail.locator('ul').first();
-			const display = await achievements.evaluate(el => getComputedStyle(el).display);
-			expect(display).toBe(viewport.label === 'desktop' ? 'grid' : 'flex');
+			expect(await achievements.evaluate(el => getComputedStyle(el).display)).toBe('grid');
 		});
 	}
 
@@ -240,7 +233,7 @@ test.describe('Project Card contract', () => {
 
 		const card = page
 			.locator('article')
-			.filter({ has: page.getByRole('link', { name: /Source/ }) })
+			.filter({ has: page.locator('[data-project-card-repository]') })
 			.first();
 		await card.scrollIntoViewIfNeeded();
 
@@ -260,7 +253,7 @@ test.describe('Project Card contract', () => {
 		expect(after?.width).toBe(before?.width);
 		expect(after?.height).toBe(before?.height);
 
-		const sourceButton = card.getByRole('link', { name: /Source/ }).first();
+		const sourceButton = card.locator('[data-project-card-repository] a').first();
 		await expect(sourceButton).toBeVisible();
 
 		await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
