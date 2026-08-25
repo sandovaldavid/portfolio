@@ -17,17 +17,17 @@ type Props = Pick<
 	| 'technologies'
 	| 'company'
 	| 'isCurrent'
+	| 'domain'
 >;
 
-const { experienceId, title, date, description, technologies, company, isCurrent } = Astro.props;
+const { experienceId, title, date, description, technologies, company, isCurrent, domain } =
+	Astro.props;
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const roleUrl = getRelativeLocaleUrl(lang, `experience/${experienceId}`);
 const visibleTechnologies = technologies.slice(0, 4);
 const visibleAchievements = description.slice(0, 4);
-const companyContext = isCurrent
-	? `${company.toUpperCase()} · ${tExperience('currentDomain')}`
-	: company.toUpperCase();
+const companyContext = domain ? `${company.toUpperCase()} · ${domain}` : company.toUpperCase();
 ---
 
 <div
