@@ -21,7 +21,7 @@ const STABLE_ID_PATTERN = /^[a-z0-9-]+$/;
 const STRUCTURED_COLLECTIONS = Object.freeze({
 	'portfolio-profile': { idField: 'profileId', extensions: JSON_EXTENSIONS },
 	experience: { idField: 'experienceId', extensions: MDX_EXTENSIONS },
-	research: { idField: 'researchId', extensions: JSON_EXTENSIONS },
+	research: { idField: 'researchId', extensions: MDX_EXTENSIONS },
 	projects: { idField: 'projectId', extensions: MDX_EXTENSIONS },
 });
 const EDITORIAL_COLLECTIONS = /** @type {readonly ('blog' | 'devlog')[]} */ (
