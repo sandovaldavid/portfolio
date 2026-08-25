@@ -1,0 +1,51 @@
+---
+interface Props {
+	eyebrow: string;
+	title?: string;
+}
+
+const { eyebrow, title } = Astro.props;
+---
+
+<section
+	class="w-full max-w-210 border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md md:p-5 lg:p-6"
+	data-research-section
+>
+	<header class="mb-4 flex flex-col gap-2">
+		<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+			{eyebrow}
+		</p>
+		{
+			title && (
+				<h2 class="text-component-title text-content-strong md:text-feature-title">{title}</h2>
+			)
+		}
+	</header>
+	<div class="research-prose text-body leading-relaxed text-content-default">
+		<slot />
+	</div>
+</section>
+
+<style>
+	.research-prose :global(p + p),
+	.research-prose :global(p + ul),
+	.research-prose :global(ul + p),
+	.research-prose :global(blockquote + p) {
+		margin-top: 1rem;
+	}
+
+	.research-prose :global(ul) {
+		display: grid;
+		gap: 0.5rem;
+		padding-left: 1.25rem;
+		list-style: square;
+	}
+
+	.research-prose :global(blockquote) {
+		border-left: 2px solid var(--channel-accent-primary);
+		background: var(--color-badge-brand-bg);
+		padding: 0.75rem 1rem;
+		font-style: italic;
+		color: var(--channel-content-strong);
+	}
+</style>
