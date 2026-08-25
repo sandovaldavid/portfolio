@@ -114,17 +114,15 @@ const contentMeasure = variant === 'narrative' ? 'max-w-280' : 'max-w-210';
 	}
 
 	@media (min-width: 48rem) {
+		.research-feature-grid .research-prose :global(ul) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
 		.research-technical-list .research-prose :global(strong) {
 			display: inline-block;
 			min-width: 7rem;
 			margin-right: 1rem;
 			margin-bottom: 0;
-		}
-	}
-
-	@media (min-width: 64rem) {
-		.research-feature-grid .research-prose :global(ul) {
-			grid-template-columns: repeat(2, minmax(0, 1fr));
 		}
 	}
 </style>
