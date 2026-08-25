@@ -105,16 +105,26 @@ test.describe('deduplicated legacy page pairs', () => {
 	for (const scenario of [
 		{
 			route: '/atena',
+			canonicalRoute: '/experience/atena-software-engineer',
 			locale: 'en',
-			heading: 'CURRENT ROLE',
-			forbiddenHeading: 'ROL ACTUAL',
 		},
 		{
 			route: '/es/atena',
+			canonicalRoute: '/es/experience/atena-software-engineer',
 			locale: 'es',
-			heading: 'ROL ACTUAL',
-			forbiddenHeading: 'CURRENT ROLE',
 		},
+	] as const) {
+		test(`${scenario.route} redirects to its canonical localized career route`, async ({ page }) => {
+			const response = await page.goto(scenario.route);
+			expect(response?.ok()).toBe(true);
+			expect(normalizeRoute(page.url())).toBe(scenario.canonicalRoute);
+			await expect(page.locator('html')).toHaveAttribute('lang', scenario.locale);
+			await expect(page.locator('main')).toHaveCount(1);
+			await expect(page.getByRole('heading', { level: 1, name: 'Atena' })).toBeVisible();
+		});
+	}
+
+	for (const scenario of [
 		{
 			route: '/skills',
 			locale: 'en',
