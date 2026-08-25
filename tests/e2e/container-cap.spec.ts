@@ -42,12 +42,15 @@ test.describe('wide viewport container cap', () => {
 			});
 
 			expect(capped, `expected a capped content container on ${route}`).not.toBeNull();
-		expect(capped!.width).toBeLessThanOrEqual(1281);
-		const expectedLeft = (capped!.clientWidth - capped!.width) / 2;
-		expect(Math.abs(capped!.left - expectedLeft)).toBeLessThanOrEqual(2);
-		expect(
-			await page.evaluate(() => document.documentElement.scrollWidth)
-		).toBeLessThanOrEqual(await page.evaluate(() => document.documentElement.clientWidth));
+			expect(capped!.width).toBeLessThanOrEqual(1281);
+			const expectedLeft = (capped!.clientWidth - capped!.width) / 2;
+			expect(Math.abs(capped!.left - expectedLeft)).toBeLessThanOrEqual(2);
+
+			const documentWidths = await page.evaluate(() => ({
+				client: document.documentElement.clientWidth,
+				scroll: document.documentElement.scrollWidth,
+			}));
+			expect(documentWidths.scroll).toBeLessThanOrEqual(documentWidths.client);
 		});
 	}
 });
