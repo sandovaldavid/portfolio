@@ -43,16 +43,22 @@ const statusLabel = tCommon('status.inProgress');
 		<slot />
 	</div>
 
-	<section class="mx-5 mt-14 pb-4 md:mx-8 lg:mx-0 lg:mt-16" aria-label={tPage('keywordsLabel')}>
-		<TitleSection className="mb-8"><BrainIcon />{tPage('keywordsLabel')}</TitleSection>
-		<ul class="flex flex-wrap gap-3">
-			{
-				research.keywords.map(keyword => (
-					<li>
-						<TechPill label={keyword} size="sm" variant="card" />
-					</li>
-				))
-			}
-		</ul>
+	<section
+		class="relative left-1/2 mt-16 w-screen -translate-x-1/2 border-y border-edge-strong bg-channel-surface-highlight py-10"
+		aria-label={tPage('keywordsLabel')}
+		data-research-keywords-band
+	>
+		<div class="mx-auto w-full max-w-320 px-5 md:px-8 lg:px-0">
+			<TitleSection className="mb-6"><BrainIcon />{tPage('keywordsLabel')}</TitleSection>
+			<ul class="flex flex-wrap gap-3">
+				{
+					research.keywords.map(keyword => (
+						<li>
+							<TechPill label={keyword} size="sm" variant="card" />
+						</li>
+					))
+				}
+			</ul>
+		</div>
 	</section>
 </article>
