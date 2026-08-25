@@ -125,14 +125,16 @@ expect(
 expect(
 	dockerCompose.includes(`PLAYWRIGHT_VERSION: '${playwrightVersion}'`) &&
 		dockerCompose.includes(`BUN_VERSION: '${bunVersion}'`) &&
+		dockerCompose.includes("GITHUB_ACTIONS: '${GITHUB_ACTIONS:-}'") &&
 		dockerCompose.includes("E2E_USE_PRODUCTION_PREVIEW: '${E2E_USE_PRODUCTION_PREVIEW:-1}'") &&
 		dockerCompose.includes("'4322:4322'"),
-	'Visual Docker Compose must pin the aligned toolchain and expose the dedicated E2E preview port.'
+	'Visual Docker Compose must pin the aligned toolchain, preserve the provider signal and expose the dedicated E2E preview port.'
 );
 expect(
 	dockerTest.includes('E2E_USE_PRODUCTION_PREVIEW') &&
-		dockerTest.includes('-e E2E_USE_PRODUCTION_PREVIEW'),
-	'Visual Docker wrapper must explicitly select the production preview path.'
+		dockerTest.includes('-e E2E_USE_PRODUCTION_PREVIEW') &&
+		dockerTest.includes('-e GITHUB_ACTIONS'),
+	'Visual Docker wrapper must explicitly select production preview and preserve GitHub-specific policy when present.'
 );
 
 if (failures.length) {
