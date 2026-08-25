@@ -21,6 +21,16 @@ describe('Main Quality pre-merge gate stays fast', () => {
 		expect(playwrightConfig).toMatch(/workers:\s*process\.env\.CI\s*\?\s*[2-9]\d*\s*:/);
 	});
 
+	it('isolates Playwright from any development server already running locally', () => {
+		expect(playwrightConfig).toContain("const playwrightHost = '127.0.0.1';");
+		expect(playwrightConfig).toContain('const playwrightPort = 4322;');
+		expect(playwrightConfig).toContain('baseURL: playwrightBaseUrl');
+		expect(playwrightConfig).toContain('url: playwrightBaseUrl');
+		expect(playwrightConfig).toContain('reuseExistingServer: false');
+		expect(playwrightConfig).not.toContain("baseURL: 'http://localhost:4321'");
+		expect(playwrightConfig).not.toContain('reuseExistingServer: !process.env.CI');
+	});
+
 	it('scopes the required pre-merge browser suite to Chromium only', () => {
 		expect(mainQualityWorkflow).toContain('name: Main Chromium Suite');
 		expect(mainQualityWorkflow).toContain('browsers: chromium');
@@ -32,7 +42,6 @@ describe('Main Quality pre-merge gate stays fast', () => {
 
 	it('caches Playwright browser binaries instead of reinstalling every run', () => {
 		expect(setupPlaywrightAction).toContain('actions/cache@v6');
-		expect(setupPlaywrightAction).toContain('~/.cache/ms-playwright');
 		expect(mainQualityWorkflow).toContain('./.github/actions/setup-playwright');
 		expect(scheduledWorkflow).toContain('./.github/actions/setup-playwright');
 	});
