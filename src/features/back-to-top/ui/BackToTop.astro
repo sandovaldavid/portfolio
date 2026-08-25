@@ -1,0 +1,116 @@
+---
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+---
+
+<div
+	id="back-to-top"
+	class="back-to-top fixed bottom-5 left-5 z-40"
+	data-visible="false"
+	aria-hidden="true"
+>
+	<button
+		id="back-to-top-button"
+		type="button"
+		class="group relative grid size-11 cursor-pointer place-items-center border-2 border-edge-strong bg-channel-surface-default text-content-strong shadow-retro-md transition-[opacity,transform,box-shadow,background-color,color] duration-150 hover:bg-badge-brand-bg hover:text-channel-accent-primary hover:shadow-retro-xl focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas motion-reduce:transition-none"
+		aria-label={tAccessibility('backToTop')}
+		title={tAccessibility('backToTop')}
+		tabindex="-1"
+	>
+		<ArrowRightIcon class="size-5 -rotate-90" aria-hidden="true" />
+		<span
+			class="pointer-events-none absolute bottom-full left-0 mb-3 translate-y-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100 motion-reduce:transition-none"
+		>
+			{tAccessibility('backToTop')}
+		</span>
+	</button>
+</div>
+
+<style>
+	.back-to-top {
+		opacity: 0;
+		pointer-events: none;
+		transform: translateY(0.5rem);
+		visibility: hidden;
+		transition:
+			opacity 160ms ease-out,
+			transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1),
+			visibility 0s linear 200ms;
+	}
+
+	.back-to-top[data-visible='true'] {
+		opacity: 1;
+		pointer-events: auto;
+		transform: translateY(0);
+		visibility: visible;
+		transition-delay: 0s;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.back-to-top {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	let backToTopCleanup: (() => void) | null = null;
+
+	const setupBackToTop = () => {
+		backToTopCleanup?.();
+		backToTopCleanup = null;
+
+		const root = document.getElementById('back-to-top');
+		const button = document.getElementById('back-to-top-button');
+		if (!(root instanceof HTMLElement) || !(button instanceof HTMLButtonElement)) return;
+
+		const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+		const setVisible = (visible: boolean) => {
+			root.dataset.visible = String(visible);
+			root.setAttribute('aria-hidden', String(!visible));
+			button.tabIndex = visible ? 0 : -1;
+			button.inert = !visible;
+		};
+
+		const updateVisibility = () => {
+			setVisible(window.scrollY > window.innerHeight);
+		};
+
+		const focusMainContent = () => {
+			const main = document.getElementById('main-content');
+			if (!(main instanceof HTMLElement)) return;
+			main.tabIndex = -1;
+			main.focus({ preventScroll: true });
+			main.addEventListener(
+				'blur',
+				() => {
+					main.removeAttribute('tabindex');
+				},
+				{ once: true }
+			);
+		};
+
+		const onClick = () => {
+			window.scrollTo({ top: 0, behavior: reducedMotion.matches ? 'auto' : 'smooth' });
+			focusMainContent();
+		};
+
+		window.addEventListener('scroll', updateVisibility, { passive: true });
+		window.addEventListener('resize', updateVisibility);
+		button.addEventListener('click', onClick);
+		updateVisibility();
+
+		backToTopCleanup = () => {
+			window.removeEventListener('scroll', updateVisibility);
+			window.removeEventListener('resize', updateVisibility);
+			button.removeEventListener('click', onClick);
+		};
+	};
+
+	setupBackToTop();
+	document.addEventListener('astro:page-load', setupBackToTop);
+</script>
