@@ -25,6 +25,7 @@ function toExperienceItem(entry: ExperienceContentEntry): LocalizedExperienceIte
 	}
 
 	const metadata = EXPERIENCE_METADATA[experienceId];
+	const domain = metadata.domain ? { domain: metadata.domain } : {};
 	const evidence = metadata.evidenceUrl ? { link: metadata.evidenceUrl } : {};
 
 	return {
@@ -40,6 +41,7 @@ function toExperienceItem(entry: ExperienceContentEntry): LocalizedExperienceIte
 		isCurrent: metadata.isCurrent,
 		featured: metadata.featured,
 		locale,
+		...domain,
 		...evidence,
 	};
 }
