@@ -55,13 +55,14 @@ const portfolioProfile = defineCollection({
 });
 
 const experience = defineCollection({
-	loader: glob({ pattern: '**/*.json', base: './src/content/experience' }),
+	loader: glob({ pattern: '**/*.mdx', base: './src/content/experience' }),
 	schema: z.object({
 		experienceId: stableContentId,
 		locale,
 		company: nonEmptyString,
 		title: nonEmptyString,
 		dateLabel: nonEmptyString,
+		summary: nonEmptyString,
 		achievements: z.array(nonEmptyString).min(1),
 	}),
 });
@@ -119,7 +120,6 @@ const projects = defineCollection({
 			kicker: nonEmptyString,
 			status: projectStatus,
 		}),
-	}),
 });
 
 export const collections = { blog, devlog, portfolioProfile, experience, research, projects };
