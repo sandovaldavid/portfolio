@@ -83,11 +83,11 @@ test('middle career role links backward and forward through history', async ({ p
 	await expect(navigation).toBeVisible();
 	await expect(navigation.getByRole('link', { name: /Previous role/i })).toHaveAttribute(
 		'href',
-		'/experience/municipality-piura-software-developer'
+		'/experience/municipality-piura-software-developer/'
 	);
 	await expect(navigation.getByRole('link', { name: /Next role/i })).toHaveAttribute(
 		'href',
-		'/experience/atena-software-engineer'
+		'/experience/atena-software-engineer/'
 	);
 });
 
