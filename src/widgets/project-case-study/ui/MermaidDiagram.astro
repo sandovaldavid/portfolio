@@ -1,9 +1,5 @@
 ---
-import {
-	getMermaidDirection,
-	prepareMermaidChart,
-	type DiagramTone,
-} from '../model/diagram';
+import { getMermaidDirection, prepareMermaidChart, type DiagramTone } from '../model/diagram';
 
 interface Props {
 	title: string;
@@ -91,11 +87,7 @@ const diagramHash = [...`${title}\u0000${chart}`]
 			const svgElement = host.querySelector('svg');
 			if (!svgElement) throw new Error('Mermaid rendered without an SVG root.');
 
-			const viewBox = svgElement
-				.getAttribute('viewBox')
-				?.trim()
-				.split(/\s+/)
-				.map(Number);
+			const viewBox = svgElement.getAttribute('viewBox')?.trim().split(/\s+/).map(Number);
 			if (viewBox?.length === 4 && viewBox.every(Number.isFinite)) {
 				const [, , width, height] = viewBox;
 				if (width > 0 && height > 0) {

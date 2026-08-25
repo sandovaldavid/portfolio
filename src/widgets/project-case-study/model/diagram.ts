@@ -65,7 +65,9 @@ export function prepareMermaidChart(
 
 	const toneEntries = Object.entries(tones);
 	if (toneEntries.length > 0 && !flowchartHeaderPattern.test(header)) {
-		throw new Error(`Semantic node tones are supported only for Mermaid flowcharts: "${title}".`);
+		throw new Error(
+			`Semantic node tones are supported only for Mermaid flowcharts: "${title}".`
+		);
 	}
 
 	const toneClasses = toneEntries.map(([nodeId, tone]) => {

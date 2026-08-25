@@ -52,9 +52,14 @@ API --> DB["PostgreSQL 16"]`;
 
 	it('rejects semantic tone injection outside flowcharts and unsafe node ids', () => {
 		expect(() =>
-			prepareMermaidChart('sequenceDiagram\nAlice->>Bob: Hello', 'Sequence', 'Sequence test', {
-				Alice: 'brand',
-			})
+			prepareMermaidChart(
+				'sequenceDiagram\nAlice->>Bob: Hello',
+				'Sequence',
+				'Sequence test',
+				{
+					Alice: 'brand',
+				}
+			)
 		).toThrow('Semantic node tones are supported only for Mermaid flowcharts');
 
 		expect(() =>
