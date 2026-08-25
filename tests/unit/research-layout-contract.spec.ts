@@ -23,9 +23,11 @@ describe('Research evidence composition contract', () => {
 		expect(section).toContain(
 			"const contentMeasure = variant === 'narrative' ? 'max-w-280' : 'max-w-210';"
 		);
-		expect(section).toContain("class:list={['mb-4 flex flex-col gap-2', contentMeasure]}");
-		expect(section).toContain(
-			"class:list={['research-prose text-body leading-relaxed text-content-default', contentMeasure]}"
+		expect(section).toMatch(
+			/class:list=\{\[\s*'mb-4 flex flex-col gap-2',\s*contentMeasure,?\s*\]\}/
+		);
+		expect(section).toMatch(
+			/class:list=\{\[\s*'research-prose text-body leading-relaxed text-content-default',\s*contentMeasure,?\s*\]\}/
 		);
 		expect(section).toContain('@media (min-width: 48rem)');
 		expect(section).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));');
