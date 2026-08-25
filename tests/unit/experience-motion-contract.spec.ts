@@ -7,7 +7,10 @@ const technologyPill = readFileSync(
 	'src/entities/experience/ui/ExperienceTechnologyPill.astro',
 	'utf8'
 );
-const atenaDetails = readFileSync('src/widgets/atena-details/ui/AtenaDetails.astro', 'utf8');
+const careerShell = readFileSync(
+	'src/widgets/experience-case-study/ui/ExperienceCaseStudy.astro',
+	'utf8'
+);
 const tab = readFileSync('src/widgets/experience/ui/ExperienceTab.astro', 'utf8');
 
 describe('Experience motion contract', () => {
@@ -54,7 +57,7 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('isCurrent: boolean');
 	});
 
-	it('centralizes semantic technology icons for both Experience and the Atena page', () => {
+	it('centralizes semantic technology icons for both Home and career detail pages', () => {
 		expect(technologyPill).toContain(
 			"import AngularIcon from '@assets/technologies/Angular.astro'"
 		);
@@ -74,18 +77,18 @@ describe('Experience motion contract', () => {
 		expect(technologyPill).toContain('label={technology.label}');
 		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
 		expect(detail).toContain('<ExperienceTechnologyPill technology={technology} size="sm" />');
-		expect(atenaDetails).toContain(
-			'<ExperienceTechnologyPill technology={technology} size="md" />'
-		);
+		expect(careerShell).toContain('<ExperienceTechnologyPill technology={technology} size="md" />');
+		expect(careerShell).toContain("technology.kind === group.kind");
 	});
 
-	it('uses whitespace for achievements and keeps only the footer divider with a primary current-role CTA', () => {
+	it('keeps the Home detail compact while every role links to its archive page', () => {
 		expect(detail).not.toContain('my-5 h-px w-full bg-edge-subtle');
 		expect(detail).not.toContain('group min-w-0 border-t border-edge-subtle pt-4');
 		expect(detail).toContain('data-experience-detail-footer');
 		expect(detail).toContain('border-t border-edge-subtle pt-5');
-		expect(detail).toContain('variant="primary"');
-		expect(detail).not.toContain('variant="secondary"');
+		expect(detail).toContain('`experience/${experienceId}`');
+		expect(detail).toContain("variant={isCurrent ? 'primary' : 'secondary'}");
+		expect(detail).toContain("tExperience('viewRole')");
 	});
 
 	it('keeps tablet and desktop viewport-filling while mobile remains content-driven', () => {
