@@ -13,14 +13,14 @@ const { title, items } = Astro.props;
 ---
 
 <section class="w-full max-w-210" data-evaluation-criteria>
-	<h2 class="mb-4 text-editorial-label uppercase text-channel-accent-primary">
+	<h2 class="mb-4 text-component-title text-content-strong">
 		{title}
 	</h2>
-	<ul class="grid gap-3 sm:grid-cols-2">
+	<ul class="divide-y divide-edge-subtle border-y border-edge-subtle">
 		{
 			items.map(item => (
-				<li class="flex min-w-0 flex-col gap-2 border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-sm">
-					<span class="w-fit bg-channel-accent-primary px-2 py-1 text-editorial-label-compact uppercase text-button-primary-content">
+				<li class="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] gap-4 py-3">
+					<span class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{item.label}
 					</span>
 					<span class="text-secondary leading-relaxed text-content-default">
