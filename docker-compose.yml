@@ -18,6 +18,7 @@ services:
         environment:
             HOME: /home/tester
             CI: '${CI:-}'
+            GITHUB_ACTIONS: '${GITHUB_ACTIONS:-}'
             RUN_VISUAL_TESTS: '${RUN_VISUAL_TESTS:-}'
             E2E_USE_PRODUCTION_PREVIEW: '${E2E_USE_PRODUCTION_PREVIEW:-1}'
         ports:
