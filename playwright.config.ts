@@ -8,11 +8,14 @@ const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 const useProductionPreview = process.env.E2E_USE_PRODUCTION_PREVIEW === '1' || isGitHubActions;
 
 const canonicalChromiumOnlySpecs = [
+	'**/brand-identity.spec.ts',
 	'**/content-components-geometry.spec.ts',
 	'**/design-system-colors.spec.ts',
 	'**/experience-layout.spec.ts',
 	'**/experience-section.spec.ts',
 	'**/identity-system-typography.spec.ts',
+	'**/navigation-focus-geometry.spec.ts',
+	'**/research-page-layout.spec.ts',
 	'**/typography.spec.ts',
 	'**/visual.spec.ts',
 ];
