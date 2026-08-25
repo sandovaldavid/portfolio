@@ -37,7 +37,7 @@ function run(command, args, options = {}) {
 console.log(`[validation] Full in-container log will be written to ${validationLogFile}`);
 
 if (isDevContainer) {
-	run('bash', ['-lc', loggedValidationCommand], {
+	run('bash', ['-c', loggedValidationCommand], {
 		env: { ...process.env, VALIDATION_LOG_FILE: validationLogFile },
 	});
 	process.exit(0);
@@ -71,6 +71,6 @@ run(devcontainer, [
 	'env',
 	...remoteEnvironment,
 	'bash',
-	'-lc',
+	'-c',
 	loggedValidationCommand,
 ]);
