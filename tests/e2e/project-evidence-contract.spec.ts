@@ -155,6 +155,7 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		const analyticsDiagram = page
 			.locator('[data-mermaid-figure]')
 			.filter({ hasText: 'Administrative analytics path' });
+		await analyticsDiagram.scrollIntoViewIfNeeded();
 		await expect(analyticsDiagram.locator('[data-mermaid-host]')).toHaveAttribute(
 			'data-mermaid-state',
 			'rendered'
