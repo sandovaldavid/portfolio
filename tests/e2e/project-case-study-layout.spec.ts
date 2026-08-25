@@ -125,7 +125,11 @@ test('Mermaid initializes again after ClientRouter locale navigation', async ({ 
 		timeout: 15_000,
 	});
 
-	await page.getByRole('link', { name: 'Spanish', exact: true }).first().click();
+	const spanishLink = page.locator(
+		'a[data-language-base-path="/es/projects/kioku"]'
+	).first();
+	await expect(spanishLink).toBeVisible();
+	await spanishLink.click();
 	await expect(page).toHaveURL(/\/es\/projects\/kioku\/?$/);
 
 	const spanishHost = page.locator('[data-mermaid-host]').first();
