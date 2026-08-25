@@ -95,6 +95,7 @@ From the host, prefer `bun run validate:local`. Direct local Playwright executio
 - The compatibility matrix is capability-scoped rather than a blind Cartesian product. Specs that already set their own canonical 390/834/1440-style responsive viewports and verify exact computed geometry/typography/tokens run once on canonical Chromium; Firefox/WebKit/mobile projects retain cross-browser behavior, accessibility, routing, overflow and interaction coverage.
 - Responsive shell tests must follow the product ownership model: Recruiter HUD on desktop and Mobile Menu on tablet/mobile. A mobile project must not make a hidden desktop HUD visible merely to satisfy a desktop-oriented assertion.
 - Playwright uses production-preview port `4322`, separate from Astro development on `4321`, and never reuses an existing server.
+- The HTML reporter is generated under `playwright-report/` with `open: 'never'`. Validation must return its exit status without starting an interactive report server; use `bun run test:e2e:report` explicitly when a human wants to inspect the report.
 - `CI` controls generic CI-only safety such as `forbidOnly`.
 - `GITHUB_ACTIONS` controls the reviewed GitHub worker/retry policy.
 - `PLAYWRIGHT_WORKERS` is an explicit positive-integer override.
