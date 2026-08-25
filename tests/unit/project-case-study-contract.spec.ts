@@ -101,6 +101,9 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).toContain('portfolio-tone-success');
 		expect(mermaid).toContain('var(--color-badge-brand-bg)');
 		expect(mermaid).toContain('var(--color-status-success-bg)');
+		expect(mermaid).toContain(':global(.edgeLabel tspan)');
+		expect(mermaid).toContain('background-color: var(--channel-surface-default) !important;');
+		expect(mermaid).toContain('fill: var(--channel-content-strong) !important;');
 		expect(mermaid).toContain('diagram-scroll');
 		expect(mermaid).toContain('scrollbar-width: none');
 		expect(mermaid).toContain('touch-action: pan-x pan-y');
