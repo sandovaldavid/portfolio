@@ -3,6 +3,9 @@ services:
         build:
             context: .
             dockerfile: docker/Dockerfile.test
+            args:
+                PLAYWRIGHT_VERSION: '1.62.1'
+                BUN_VERSION: '1.3.14'
         image: portfolio-test:latest
         init: true
         ipc: host
@@ -16,5 +19,6 @@ services:
             HOME: /home/tester
             CI: '${CI:-}'
             RUN_VISUAL_TESTS: '${RUN_VISUAL_TESTS:-}'
+            E2E_USE_PRODUCTION_PREVIEW: '${E2E_USE_PRODUCTION_PREVIEW:-1}'
         ports:
-            - '4321:4321'
+            - '4322:4322'
