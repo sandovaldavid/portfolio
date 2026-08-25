@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 const projectCard = readSource('src/entities/project/ui/ProjectCard.astro');
-const cliTerminal = readSource('src/features/cli-terminal/ui/CLITerminal.astro');
+const cliTerminal = readSource('src/features/cli-terminal/ui/CLITerminalHome.astro');
 const cliIndex = readSource('src/features/cli-terminal/index.ts');
 
 describe('Route performance scope contract', () => {
@@ -17,7 +17,7 @@ describe('Route performance scope contract', () => {
 	});
 
 	it('keeps the section-oriented CLI terminal on localized home routes only', () => {
-		expect(cliIndex).toContain("from './ui/CLITerminal.astro'");
+		expect(cliIndex).toContain("from './ui/CLITerminalHome.astro'");
 		expect(cliTerminal).toContain("import { getPathByLocale } from 'astro:i18n'");
 		expect(cliTerminal).toContain("Astro.url.pathname.split('/').filter(Boolean)");
 		expect(cliTerminal).toContain('pathnameSegments.length === 0');
