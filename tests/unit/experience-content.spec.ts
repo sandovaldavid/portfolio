@@ -92,6 +92,31 @@ describe('localized professional experience content', () => {
 		}
 	});
 
+	it('uses evidence-aligned role identity, dates and narrative layouts', () => {
+		const atena = entries.en.find(entry => entry.experienceId === 'atena-software-engineer');
+		const chirasoft = entries.en.find(
+			entry => entry.experienceId === 'chirasoft-fullstack-developer'
+		);
+		const municipality = entries.en.find(
+			entry => entry.experienceId === 'municipality-piura-software-developer'
+		);
+
+		expect(atena?.dateLabel).toBe('Jan 2026 – Present');
+		expect(atena?.achievements).toHaveLength(4);
+		expect(atena?.source).toContain('layout="split"');
+		expect(atena?.source).toContain('DELIVERY DISCIPLINE');
+
+		expect(chirasoft?.title).toBe('Junior Software Developer');
+		expect(chirasoft?.dateLabel).toBe('Mar 2025 – Jun 2025');
+		expect(chirasoft?.source).toContain('layout="lead"');
+		expect(chirasoft?.source).toContain('ExperiencePanel');
+
+		expect(municipality?.title).toBe('IT Support & Developer Intern');
+		expect(municipality?.dateLabel).toBe('Jun 2024 – Dec 2024');
+		expect(municipality?.source).toContain('layout="triad"');
+		expect(municipality?.source).toContain('proposed migration');
+	});
+
 	it('contains meaningful localized values and narrative MDX', () => {
 		for (const entry of [...entries.en, ...entries.es]) {
 			expect(entry.company.length).toBeGreaterThan(0);
@@ -100,15 +125,11 @@ describe('localized professional experience content', () => {
 			expect(entry.summary.length).toBeGreaterThan(0);
 			expect(entry.achievements.length).toBeGreaterThan(0);
 			expect(entry.source).toContain('<ExperienceSection');
-		}
-
-		for (const locale of locales) {
-			const atena = entries[locale].find(entry => entry.experienceId === 'atena-software-engineer');
-			expect(atena?.source).toContain('<ExperienceBoundary');
+			expect(entry.source).toContain('<ExperiencePanel');
 		}
 	});
 
-	it('keeps ordering and semantic technology metadata language-neutral', () => {
+	it('keeps ordering, presentation and semantic technology metadata language-neutral', () => {
 		const orderedIds = Object.entries(EXPERIENCE_METADATA)
 			.sort(([, left], [, right]) => right.order - left.order)
 			.map(([experienceId]) => experienceId);
@@ -118,6 +139,11 @@ describe('localized professional experience content', () => {
 			'chirasoft-fullstack-developer',
 			'municipality-piura-software-developer',
 		]);
+		expect(EXPERIENCE_METADATA['atena-software-engineer'].presentation).toBe('systems');
+		expect(EXPERIENCE_METADATA['chirasoft-fullstack-developer'].presentation).toBe('product');
+		expect(EXPERIENCE_METADATA['municipality-piura-software-developer'].presentation).toBe(
+			'operations'
+		);
 
 		for (const metadata of Object.values(EXPERIENCE_METADATA)) {
 			expect(metadata.technologyIds.length).toBeGreaterThan(0);
@@ -130,7 +156,7 @@ describe('localized professional experience content', () => {
 			}
 		}
 
-		expect(EXPERIENCE_TECHNOLOGIES['dotnet-8']).toMatchObject({
+		expect(EXPERIENCE_TECHNOLOGIES['entity-framework-core']).toMatchObject({
 			kind: 'technology',
 			iconKey: 'dotnet',
 		});
@@ -138,11 +164,10 @@ describe('localized professional experience content', () => {
 			kind: 'technology',
 			iconKey: 'angular',
 		});
-		expect(EXPERIENCE_TECHNOLOGIES['clean-architecture']).toEqual({
-			label: 'Clean Architecture',
-			kind: 'architecture',
+		expect(EXPERIENCE_TECHNOLOGIES.mysql).toMatchObject({
+			kind: 'technology',
+			iconKey: 'mysql',
 		});
-		expect(EXPERIENCE_TECHNOLOGIES.cqrs).toEqual({ label: 'CQRS', kind: 'architecture' });
 	});
 
 	it('resolves both Home data and MDX detail entries through the canonical entity', () => {
@@ -154,6 +179,7 @@ describe('localized professional experience content', () => {
 		expect(query).toContain("getCollection('experience'");
 		expect(query).toContain('getExperienceDetailBySlug');
 		expect(query).toContain('EXPERIENCE_METADATA');
+		expect(query).toContain('presentation: metadata.presentation');
 		expect(query).toContain('Missing experience content for locale');
 		expect(widget).toContain('await getExperienceData(lang)');
 		expect(englishRoute).toContain('await render(entry)');
@@ -162,16 +188,22 @@ describe('localized professional experience content', () => {
 		expect(spanishRoute).toContain('experienceCaseStudyComponents');
 	});
 
-	it('uses a reusable career shell instead of an Atena-specific page implementation', () => {
+	it('uses a reusable career shell with semantic presentation variants', () => {
 		const shell = readSource('src/widgets/experience-case-study/ui/ExperienceCaseStudy.astro');
+		const section = readSource('src/widgets/experience-case-study/ui/ExperienceSection.astro');
+		const components = readSource('src/widgets/experience-case-study/ui/mdx-components.ts');
 		const detail = readSource('src/widgets/experience/ui/ExperienceDetail.astro');
 		const about = readSource('src/widgets/about-me/ui/AboutMe.astro');
 
 		expect(shell).toContain('data-experience-case-study');
+		expect(shell).toContain('data-experience-presentation');
 		expect(shell).toContain('data-experience-contributions');
 		expect(shell).toContain('data-experience-focus');
 		expect(shell).toContain('data-experience-career-navigation');
+		expect(shell).toContain("experience.presentation === 'product'");
 		expect(shell).toContain("technology.kind === group.kind");
+		expect(section).toContain("layout?: 'prose' | 'split' | 'lead' | 'triad'");
+		expect(components).toContain('ExperiencePanel');
 		expect(detail).toContain('`experience/${experienceId}`');
 		expect(about).toContain("'experience/atena-software-engineer'");
 		expect(existsSync('src/widgets/atena-details/ui/AtenaDetails.astro')).toBe(false);

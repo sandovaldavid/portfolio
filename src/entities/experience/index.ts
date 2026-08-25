@@ -11,6 +11,7 @@ export type {
 	ExperienceId,
 	ExperienceItem,
 	ExperienceList,
+	ExperiencePresentation,
 	ExperienceTechnology,
 	ExperienceTechnologyIconKey,
 	ExperienceTechnologyId,

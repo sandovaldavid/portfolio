@@ -1,6 +1,7 @@
 export { EXPERIENCE_METADATA, EXPERIENCE_TECHNOLOGIES, isExperienceId } from './metadata';
 export type {
 	ExperienceId,
+	ExperiencePresentation,
 	ExperienceTechnology,
 	ExperienceTechnologyIconKey,
 	ExperienceTechnologyId,
