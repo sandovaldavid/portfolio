@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures';
 
 test.describe('Homepage', () => {
-	test('shows professional positioning and primary actions immediately', async ({ page }) => {
+	test('shows professional positioning and primary actions immediately', async ({ page, isMobile }) => {
 		await page.goto('/');
 
 		await expect(page).toHaveTitle(/David Sandoval.*Software Engineer/i);
@@ -9,7 +9,15 @@ test.describe('Homepage', () => {
 		await expect(page.getByText(/Angular · \.NET · TypeScript/i).first()).toBeVisible();
 		await expect(page.getByRole('link', { name: /view work/i })).toBeVisible();
 		await expect(page.getByRole('link', { name: /get in touch/i })).toBeVisible();
-		await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
+
+		if (isMobile) {
+			const mobileToggle = page.locator('#mobile-menu-btn');
+			await expect(mobileToggle).toBeVisible();
+			await mobileToggle.click();
+			await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
+		} else {
+			await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
+		}
 
 		// Social evidence belongs to secondary surfaces (Recruiter HUD/footer), so
 		// it must remain available in the document without competing with the
@@ -77,7 +85,8 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
-	test('navigates section by section on wheel scroll', async ({ page }) => {
+	test('navigates section by section on wheel scroll', async ({ page, isMobile }) => {
+		test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.goto('/');
 
