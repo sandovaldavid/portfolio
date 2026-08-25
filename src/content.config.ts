@@ -68,36 +68,16 @@ const experience = defineCollection({
 });
 
 const research = defineCollection({
-	loader: glob({ pattern: '**/*.json', base: './src/content/research' }),
+	loader: glob({ pattern: '**/*.mdx', base: './src/content/research' }),
 	schema: z.object({
 		researchId: stableContentId,
 		locale,
 		label: nonEmptyString,
 		title: nonEmptyString,
-		problem: nonEmptyString,
-		hypothesis: nonEmptyString,
-		approach: nonEmptyString,
-		dataset: nonEmptyString,
-		status: nonEmptyString,
+		status: z.enum(['in-progress']),
 		institution: nonEmptyString,
+		featuredSignals: z.array(nonEmptyString).min(1),
 		keywords: z.array(nonEmptyString).min(1),
-		metrics: z.object({
-			accuracy: nonEmptyString,
-			f1: nonEmptyString,
-			auc: nonEmptyString,
-			loss: nonEmptyString,
-		}),
-		pipelineSteps: z.array(nonEmptyString).min(1),
-		architecture: z
-			.array(
-				z.object({
-					label: nonEmptyString,
-					value: nonEmptyString,
-				})
-			)
-			.min(1),
-		engineeredFeatures: z.array(nonEmptyString).min(1),
-		currentStatus: nonEmptyString,
 	}),
 });
 
