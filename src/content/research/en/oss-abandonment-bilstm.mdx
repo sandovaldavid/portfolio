@@ -1,0 +1,98 @@
+---
+researchId: oss-abandonment-bilstm
+locale: en
+label: Bachelor Thesis
+title: Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks
+status: in-progress
+institution: National University of Piura
+featuredSignals:
+  - Commit frequency (weekly rolling avg)
+  - Unique contributors per time window
+  - Open issue aging (days unresolved)
+  - PR merge rate & close rate
+keywords:
+  - BiLSTM
+  - OSS Abandonment
+  - MSR
+  - Deep Learning
+  - GitHub Mining
+  - Repository Health
+  - Time Series Classification
+---
+
+<ResearchSection eyebrow="Problem statement" title="OSS ABANDONMENT RISK">
+
+A significant number of Open Source Software (OSS) repositories become abandoned over time, leaving dependent projects exposed to security vulnerabilities, missing updates, and technical debt. Early detection of abandonment risk is a critical yet underexplored challenge in software ecosystem health.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Research hypothesis" title="BILSTM VS. ML BASELINES">
+
+> Can Bidirectional LSTM (BiLSTM) networks, trained on historical activity metrics from GitHub repositories (commits, issues, pull requests, contributor patterns), predict the abandonment state of an OSS repository with higher accuracy than traditional ML baselines?
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Methodology (MSR)" title="MINING SOFTWARE REPOSITORIES">
+
+Mining Software Repositories (MSR) — extracting temporal sequences of activity signals from the GitHub API (GH Archive), engineering features that capture contribution decay, issue resolution rates, and bus factor trends, then training BiLSTM models to classify future abandonment probability.
+
+</ResearchSection>
+
+<MermaidDiagram
+  title="Data pipeline"
+  description="Research pipeline from GitHub activity data to the abandonment classifier."
+  tones={{ Source: 'info', Train: 'brand', Classifier: 'success' }}
+  chart={`flowchart LR
+    Source["GitHub API / GH Archive"] --> Raw["Raw Repo Activity Data"]
+    Raw --> Features["Feature Engineering"]
+    Features --> Sequences["Temporal Sequences"]
+    Sequences --> Train["BiLSTM Training"]
+    Train --> Classifier["Abandonment Classifier"]`}
+/>
+
+<ResearchSection eyebrow="Engineered features">
+
+- Commit frequency (weekly rolling avg)
+- Unique contributors per time window
+- Open issue aging (days unresolved)
+- PR merge rate & close rate
+- Days since last commit
+- Bus factor estimate
+- Issue response time
+- Release cadence
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Dataset">
+
+Curated dataset of GitHub OSS repositories spanning multiple domains, labeled by abandonment state using historical activity thresholds (commit frequency, last contribution date, open issue aging).
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Model architecture">
+
+- **Input:** Time-series of repo activity signals (T steps)
+- **Layer 1:** BiLSTM — 128 units forward + backward
+- **Layer 2:** BiLSTM — 64 units with dropout (0.3)
+- **Layer 3:** Dense — 32 units, ReLU activation
+- **Output:** Sigmoid — P(abandoned) ∈ [0,1]
+- **Loss:** Binary Cross-Entropy + class weights
+- **Optimizer:** Adam (lr=1e-3)
+
+</ResearchSection>
+
+<EvaluationCriteria
+  title="Evaluation metrics"
+  items={[
+    { label: 'ACC', detail: 'Classification accuracy vs. Logistic Regression & Random Forest baselines' },
+    { label: 'F1', detail: 'F1-Score on imbalanced abandonment classes' },
+    { label: 'AUC', detail: 'AUC-ROC for abandonment probability ranking' },
+    { label: 'LOSS', detail: 'Binary Cross-Entropy loss curves for BiLSTM training convergence' },
+  ]}
+/>
+
+<ResearchSection eyebrow="Current status">
+
+Actively training BiLSTM models and comparing against ML baselines. Results will be published upon thesis completion.
+
+</ResearchSection>
