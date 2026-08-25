@@ -30,6 +30,13 @@ export const SPANISH_FORBIDDEN_PHRASES = Object.freeze([
 	'Go back',
 ]);
 
+export const LEGACY_REDIRECT_ROUTES = Object.freeze(
+	new Map([
+		['/atena', '/experience/atena-software-engineer'],
+		['/es/atena', '/es/experience/atena-software-engineer'],
+	])
+);
+
 export const REPRESENTATIVE_ROUTE_PAIRS = Object.freeze([
 	Object.freeze({ english: '/', spanish: '/es/' }),
 	Object.freeze({ english: '/about', spanish: '/es/about' }),
