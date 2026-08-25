@@ -1,5 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { BackToTop } from '@features/back-to-top';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 import MailIcon from '@assets/icons/Mail.astro';
@@ -44,6 +45,8 @@ const socialLinks = [
 	},
 ];
 ---
+
+<BackToTop />
 
 <!--
 	Portfolio / Footer CTA (Figma v2): full-width compact contact footer.
