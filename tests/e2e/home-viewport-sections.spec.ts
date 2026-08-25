@@ -1,10 +1,11 @@
+import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
 const HEADER_HEIGHT = 72;
 const DESKTOP = { width: 1440, height: 900 };
 const TABLET = { width: 834, height: 1100 };
 
-async function getSectionTargetY(page: import('@playwright/test').Page, id: string) {
+async function getSectionTargetY(page: Page, id: string) {
 	return page.locator(`#${id}`).evaluate((element, headerHeight) => {
 		const section = element as HTMLElement;
 		const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
@@ -12,7 +13,20 @@ async function getSectionTargetY(page: import('@playwright/test').Page, id: stri
 	}, HEADER_HEIGHT);
 }
 
-async function expectScrollNear(page: import('@playwright/test').Page, targetY: number) {
+async function scrollInstantlyTo(page: Page, targetY: number) {
+	const actualY = await page.evaluate(y => {
+		const root = document.documentElement;
+		const previousBehavior = root.style.scrollBehavior;
+		root.style.scrollBehavior = 'auto';
+		window.scrollTo(0, y);
+		const result = window.scrollY;
+		root.style.scrollBehavior = previousBehavior;
+		return result;
+	}, targetY);
+	expect(Math.abs(actualY - targetY)).toBeLessThanOrEqual(3);
+}
+
+async function expectScrollNear(page: Page, targetY: number) {
 	await expect
 		.poll(async () => Math.abs((await page.evaluate(() => window.scrollY)) - targetY), {
 			timeout: 3000,
@@ -100,10 +114,7 @@ test('desktop vertical wheel over the horizontal Experience tab rail still advan
 
 	const experienceTarget = await getSectionTargetY(page, 'experience');
 	const projectsTarget = await getSectionTargetY(page, 'projects');
-	await page.evaluate(
-		targetY => window.scrollTo({ top: targetY, behavior: 'auto' }),
-		experienceTarget
-	);
+	await scrollInstantlyTo(page, experienceTarget);
 
 	const tablist = page.locator('#experience-tablist');
 	await expect(tablist).toBeVisible();
@@ -128,10 +139,7 @@ test('desktop closing flow moves Research to About Me to Footer and reverses in 
 	const researchTarget = await getSectionTargetY(page, 'research');
 	const aboutTarget = await getSectionTargetY(page, 'about-me');
 	const contactTarget = await getSectionTargetY(page, 'contact');
-	await page.evaluate(
-		targetY => window.scrollTo({ top: targetY, behavior: 'auto' }),
-		researchTarget
-	);
+	await scrollInstantlyTo(page, researchTarget);
 
 	await page.mouse.move(DESKTOP.width / 2, DESKTOP.height / 2);
 	await page.mouse.wheel(0, 700);
