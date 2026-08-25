@@ -8,6 +8,7 @@ describe('Research evidence composition contract', () => {
 		const components = readSource('src/widgets/research-page/ui/mdx-components.ts');
 		const layout = readSource('src/widgets/research-page/ui/ResearchEvidenceLayout.astro');
 		const column = readSource('src/widgets/research-page/ui/ResearchEvidenceColumn.astro');
+		const section = readSource('src/widgets/research-page/ui/ResearchSection.astro');
 
 		expect(components).toContain('ResearchEvidenceLayout');
 		expect(components).toContain('ResearchEvidenceColumn');
@@ -15,6 +16,14 @@ describe('Research evidence composition contract', () => {
 		expect(layout).toContain('md:grid-cols-2');
 		expect(column).toContain('data-research-evidence-column');
 		expect(column).toContain('flex min-w-0 flex-col');
+		expect(section).toContain(
+			'const sectionClasses = `research-section w-full ${variantClasses[variant]}`;'
+		);
+		expect(section).toContain('<header class="mb-4 flex max-w-210 flex-col gap-2">');
+		expect(section).toContain(
+			'class="research-prose max-w-210 text-body leading-relaxed text-content-default"'
+		);
+		expect(section).not.toContain('research-section w-full max-w-210');
 	});
 
 	it('composes both localized research entries into evidence columns without changing their claims', () => {
