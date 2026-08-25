@@ -151,9 +151,16 @@ test.describe('Recruiter evidence, access and status contract', () => {
 				name: 'The maintained codebase grew beyond the original course workflow',
 			})
 		).toBeVisible();
-		await expect(
-			page.locator('[data-diagram-node][data-node-id="Analytics"] text')
-		).toContainText('AuctionAnalytics');
+
+		const analyticsDiagram = page
+			.locator('[data-mermaid-figure]')
+			.filter({ hasText: 'Administrative analytics path' });
+		await expect(analyticsDiagram.locator('[data-mermaid-host]')).toHaveAttribute(
+			'data-mermaid-state',
+			'rendered'
+		);
+		await expect(analyticsDiagram.locator('[data-diagram-svg]')).toContainText('AuctionAnalytics');
+
 		await expect(
 			page.getByRole('heading', { name: 'NO LIVE DEMO OR CONCURRENCY GUARANTEE' })
 		).toBeVisible();
