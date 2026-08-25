@@ -10,13 +10,19 @@ import { LinkButton } from '@shared/ui';
 
 type Props = Pick<
 	ExperienceItemData,
-	'title' | 'date' | 'description' | 'technologies' | 'company' | 'isCurrent'
+	| 'experienceId'
+	| 'title'
+	| 'date'
+	| 'description'
+	| 'technologies'
+	| 'company'
+	| 'isCurrent'
 >;
 
-const { title, date, description, technologies, company, isCurrent } = Astro.props;
+const { experienceId, title, date, description, technologies, company, isCurrent } = Astro.props;
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tExperience = createScopedUiTranslator(lang, 'sections.experience');
-const currentRoleUrl = getRelativeLocaleUrl(lang, 'atena');
+const roleUrl = getRelativeLocaleUrl(lang, `experience/${experienceId}`);
 const visibleTechnologies = technologies.slice(0, 4);
 const visibleAchievements = description.slice(0, 4);
 const companyContext = isCurrent
@@ -112,18 +118,14 @@ const companyContext = isCurrent
 			)
 		}
 
-		{
-			isCurrent && (
-				<LinkButton
-					href={currentRoleUrl}
-					target="_self"
-					variant="primary"
-					class="w-fit shrink-0"
-				>
-					{tExperience('viewCurrentRole')}
-					<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
-				</LinkButton>
-			)
-		}
+		<LinkButton
+			href={roleUrl}
+			target="_self"
+			variant={isCurrent ? 'primary' : 'secondary'}
+			class="w-fit shrink-0"
+		>
+			{isCurrent ? tExperience('viewCurrentRole') : tExperience('viewRole')}
+			<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
+		</LinkButton>
 	</footer>
 </div>
