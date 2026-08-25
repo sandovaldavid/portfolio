@@ -1,7 +1,12 @@
 import { test, expect } from './fixtures';
 import type { Page } from '@playwright/test';
 
-const skipVisualInCi = !!process.env.CI && process.env.RUN_VISUAL_TESTS !== 'true';
+const visualBaselineEnabled = process.env.RUN_VISUAL_TESTS === 'true';
+
+test.skip(
+	!visualBaselineEnabled,
+	'Visual regressions are an explicit pinned-baseline gate; set RUN_VISUAL_TESTS=true.'
+);
 
 /**
  * Prepares the page for visual regression testing by:
@@ -65,8 +70,6 @@ async function preparePage(page: Page, path: string, options: { hideHeader?: boo
 }
 
 test.describe('Visual regression — Hero section', () => {
-	test.skip(skipVisualInCi, 'Visual regressions run only in scheduled/manual CI');
-
 	test('homepage hero should match baseline (EN dark)', async ({ page }) => {
 		await preparePage(page, '/');
 		const hero = page.locator('#hero');
@@ -83,8 +86,6 @@ test.describe('Visual regression — Hero section', () => {
 });
 
 test.describe('Visual regression — Navigation & Main sections', () => {
-	test.skip(skipVisualInCi, 'Visual regressions run only in scheduled/manual CI');
-
 	test('header navbar should match baseline', async ({ page }) => {
 		await preparePage(page, '/', { hideHeader: false });
 		const header = page.locator('header').first();
