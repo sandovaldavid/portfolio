@@ -81,6 +81,8 @@ describe('localized research MDX content', () => {
 		expect(spanish).toContain(
 			'Accuracy de clasificación vs. baselines Logistic Regression y Random Forest'
 		);
+		expect(english).toContain('title="Evaluation criteria"');
+		expect(spanish).toContain('title="Criterios de evaluación"');
 	});
 
 	it('loads validated entries for MDX routes while Home can keep reading frontmatter data', () => {
@@ -106,6 +108,28 @@ describe('localized research MDX content', () => {
 		expect(shell).toContain('data-research-page="mdx"');
 		expect(shell).toContain('<slot />');
 		expect(existsSync('src/widgets/research-content/ui/ResearchContent.astro')).toBe(false);
+	});
+
+	it('keeps Research editorial instead of promoting narrative blocks into cards', () => {
+		const shell = readSource('src/widgets/research-page/ui/ResearchPage.astro');
+		const section = readSource('src/widgets/research-page/ui/ResearchSection.astro');
+		const criteria = readSource('src/widgets/research-page/ui/EvaluationCriteria.astro');
+
+		expect(shell).toContain(
+			'class="max-w-280 text-page-title-mobile text-content-strong md:text-page-title"'
+		);
+		expect(shell).not.toContain('lg:text-hero-display');
+
+		expect(section).toContain('border-b border-edge-subtle');
+		expect(section).not.toContain('border-2 border-edge-strong');
+		expect(section).not.toContain('bg-channel-surface-default');
+		expect(section).not.toContain('shadow-retro');
+		expect(section).not.toContain('background: var(--color-badge-brand-bg)');
+
+		expect(criteria).toContain('divide-y divide-edge-subtle border-y border-edge-subtle');
+		expect(criteria).not.toContain('sm:grid-cols-2');
+		expect(criteria).not.toContain('bg-channel-surface-default');
+		expect(criteria).not.toContain('shadow-retro-sm');
 	});
 
 	it('uses frontmatter preview signals without changing the established Home composition', () => {
