@@ -72,14 +72,17 @@ describe('Experience motion contract', () => {
 			"import ReactIcon from '@assets/technologies/React.astro'"
 		);
 		expect(technologyPill).toContain(
+			"import MySQLIcon from '@assets/technologies/MySQL.astro'"
+		);
+		expect(technologyPill).toContain(
 			'const Icon = technology.iconKey ? technologyIcons[technology.iconKey] : undefined'
 		);
 		expect(technologyPill).toContain('label={technology.label}');
 		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
 		expect(detail).toContain('<ExperienceTechnologyPill technology={technology} size="sm" />');
-		expect(careerShell).toContain(
-			'<ExperienceTechnologyPill technology={technology} size="md" />'
-		);
+		expect(careerShell).toContain('<ExperienceTechnologyPill');
+		expect(careerShell).toContain('technology={technology}');
+		expect(careerShell).toContain('size="md"');
 		expect(careerShell).toContain('technology.kind === group.kind');
 	});
 
