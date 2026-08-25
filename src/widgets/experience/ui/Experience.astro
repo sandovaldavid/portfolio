@@ -19,9 +19,9 @@ const EXPERIENCE = await getExperienceData(lang);
 >
 	<div
 		data-experience-shell
-		class="mx-auto flex w-full max-w-320 flex-col justify-center gap-10 px-5 py-10 md:min-h-[calc(100svh-4.5rem)] md:gap-12 md:px-8 md:py-12 lg:gap-14 lg:px-0 lg:py-14"
+		class="mx-auto flex w-full max-w-320 flex-col justify-center gap-10 px-[15px] py-10 md:min-h-[calc(100svh-4.5rem)] md:gap-12 md:px-8 md:py-12 lg:gap-14 lg:px-0 lg:py-14"
 	>
-		<TitleSection align="center" className="w-full">
+		<TitleSection align="center" className="w-full px-2.5 md:px-0">
 			<ChevronRightIcon
 				class="text-channel-accent-primary"
 				aria-hidden="true"
@@ -32,7 +32,7 @@ const EXPERIENCE = await getExperienceData(lang);
 
 		<div
 			data-experience-stage
-			class="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:grid-cols-[280px_minmax(0,1fr)] md:gap-8 lg:grid-cols-[360px_minmax(0,1fr)] lg:gap-12"
+			class="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:grid-cols-[300px_446px] md:justify-center md:gap-6 lg:grid-cols-[400px_840px] lg:gap-10"
 		>
 			<div
 				id="experience-tablist"
@@ -45,14 +45,11 @@ const EXPERIENCE = await getExperienceData(lang);
 						<ExperienceTab
 							company={exp.company}
 							role={exp.title}
-							date={exp.date}
-							isCurrent={exp.isCurrent}
 							selected={idx === 0}
 							focusable={idx === 0}
 							tabId={`exp-tab-${exp.experienceId}`}
 							panelId={`exp-panel-${exp.experienceId}`}
 							experienceId={exp.experienceId}
-							index={idx}
 						/>
 					))
 				}
@@ -161,13 +158,6 @@ const EXPERIENCE = await getExperienceData(lang);
 			to {
 				opacity: 1;
 				transform: translateY(0);
-			}
-		}
-
-		@media (min-width: 48rem) {
-			.experience-tablist > [role='tab'] {
-				flex: 1 1 0%;
-				min-height: 0;
 			}
 		}
 
