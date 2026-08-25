@@ -27,6 +27,7 @@ function run(command, args, env = process.env) {
 	if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
+run('bun', ['install', '--frozen-lockfile']);
 run('bun', ['run', 'check']);
 run('bun', ['run', 'test:unit:ci']);
 run('bun', ['run', 'build']);
