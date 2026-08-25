@@ -92,7 +92,9 @@ test('Experience keeps the next section anchored when a longer role is selected'
 
 test('desktop vertical wheel over the horizontal Experience tab rail still advances to Projects', async ({
 	page,
+	isMobile,
 }) => {
+	test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 	await page.setViewportSize(DESKTOP);
 	await page.goto('/');
 
@@ -117,7 +119,9 @@ test('desktop vertical wheel over the horizontal Experience tab rail still advan
 
 test('desktop closing flow moves Research to About Me to Footer and reverses in order', async ({
 	page,
+	isMobile,
 }) => {
+	test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 	await page.setViewportSize(DESKTOP);
 	await page.goto('/');
 
