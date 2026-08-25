@@ -86,9 +86,13 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).toContain("import('mermaid')");
 		expect(mermaid).toContain("securityLevel: 'strict'");
 		expect(mermaid).toContain("theme: 'base'");
+		expect(mermaid).toContain('htmlLabels: false');
+		expect(mermaid.indexOf('htmlLabels: false')).toBeLessThan(mermaid.indexOf('flowchart: {'));
 		expect(mermaid).toContain('document.fonts.ready');
 		expect(mermaid).toContain('IntersectionObserver');
 		expect(mermaid).toContain("rootMargin: '600px 0px'");
+		expect(mermaid).toContain('initializeMermaidHosts');
+		expect(mermaid).toContain("'astro:page-load'");
 		expect(mermaid).toContain('data-mermaid-state="pending"');
 		expect(mermaid).toContain('data-mermaid-fallback');
 		expect(mermaid).toContain('data-diagram-density="balanced"');
