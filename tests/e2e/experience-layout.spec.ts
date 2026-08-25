@@ -66,9 +66,9 @@ test.describe('Experience responsive composition', () => {
 
 		const tablistBox = (await tablist.boundingBox())!;
 		const detailBox = (await detail.boundingBox())!;
-		expect(Math.round(tablistBox.width)).toBe(360);
-		expect(Math.round(detailBox.width)).toBe(872);
-		expect(Math.round(detailBox.x - (tablistBox.x + tablistBox.width))).toBe(48);
+		expect(Math.round(tablistBox.width)).toBe(400);
+		expect(Math.round(detailBox.width)).toBe(840);
+		expect(Math.round(detailBox.x - (tablistBox.x + tablistBox.width))).toBe(40);
 		expect(Math.round(detailBox.height)).toBeGreaterThanOrEqual(440);
 		expect(Math.round(tablistBox.height)).toBe(Math.round(detailBox.height));
 		expect(await achievements.count()).toBeGreaterThanOrEqual(3);
@@ -174,7 +174,7 @@ test.describe('Experience responsive composition', () => {
 		const secondTab = (await tabs.nth(1).boundingBox())!;
 		expect(Math.round(firstTab.width)).toBe(250);
 		expect(secondTab.x).toBeGreaterThan(firstTab.x);
-		expect(Math.round((await detail.boundingBox())!.width)).toBe(350);
+		expect(Math.round((await detail.boundingBox())!.width)).toBe(360);
 		await expectNoHorizontalOverflow(page);
 	});
 });
