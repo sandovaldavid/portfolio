@@ -193,6 +193,18 @@ const diagramHash = [...`${title}\u0000${chart}`]
 		stroke: var(--channel-accent-primary) !important;
 	}
 
+	.diagram-scroll :global(.edgeLabel) {
+		background-color: var(--channel-surface-default) !important;
+		color: var(--channel-content-strong) !important;
+	}
+
+	.diagram-scroll :global(.edgeLabel text),
+	.diagram-scroll :global(.edgeLabel tspan),
+	.diagram-scroll :global(.edgeLabel .label) {
+		fill: var(--channel-content-strong) !important;
+		color: var(--channel-content-strong) !important;
+	}
+
 	.diagram-scroll :global(.edgeLabel rect),
 	.diagram-scroll :global(.labelBkg) {
 		fill: var(--channel-surface-default) !important;
