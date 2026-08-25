@@ -41,6 +41,7 @@ interface ExperienceMetadata {
 	order: number;
 	featured: boolean;
 	technologyIds: readonly ExperienceTechnologyId[];
+	domain?: string;
 	evidenceUrl?: string;
 }
 
@@ -51,6 +52,7 @@ const experienceMetadata = {
 		isCurrent: true,
 		order: 30,
 		featured: true,
+		domain: 'FINTECH',
 		technologyIds: [
 			'dotnet-8',
 			'clean-architecture',
