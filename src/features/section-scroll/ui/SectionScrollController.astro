@@ -24,7 +24,7 @@ const { enabled = true } = Astro.props;
 		if (!isHome) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-		const sections = ['hero', 'experience', 'projects', 'research', 'about-me']
+		const sections = ['hero', 'experience', 'projects', 'research', 'about-me', 'contact']
 			.map(id => document.getElementById(id))
 			.filter((section): section is HTMLElement => section instanceof HTMLElement);
 		if (sections.length < 2) return;
@@ -137,9 +137,10 @@ const { enabled = true } = Astro.props;
 			const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1;
 			const targetSection = findDirectionalTarget(direction);
 
-			// After About Me, Technologies and the Footer are intentionally content-driven.
-			// Native scrolling owns that tail. Scrolling back up from it resolves to About Me
-			// because About Me is the last viewport target above the current document position.
+			// Core Stack stays content-driven rather than becoming a viewport snap target.
+			// The directional Home journey closes explicitly from About Me to Contact,
+			// while any position inside the compact tail resolves upward to About Me
+			// and downward to the Footer.
 			if (!targetSection) return;
 
 			event.preventDefault();
