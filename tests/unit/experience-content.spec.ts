@@ -43,8 +43,8 @@ function loadExperience(locale: (typeof locales)[number]): ExperienceDocument[] 
 				summary: readFrontmatterField(frontmatter, 'summary'),
 				achievements: frontmatter
 					.split('\n')
-					.filter(line => /^\s{2}-\s+/.test(line))
-					.map(line => line.replace(/^\s{2}-\s+/, '').trim()),
+					.filter(line => /^\s+-\s+/.test(line))
+					.map(line => line.replace(/^\s+-\s+/, '').trim()),
 			};
 		});
 }
