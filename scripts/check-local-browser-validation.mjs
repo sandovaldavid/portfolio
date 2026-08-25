@@ -65,6 +65,10 @@ expect(
 	'DevContainer must identify itself and use the browsers bundled with the Playwright image.'
 );
 expect(
+	!Object.hasOwn(devcontainer.containerEnv ?? {}, 'NODE_ENV'),
+	'DevContainer must not force NODE_ENV globally; dev and production commands own their execution mode.'
+);
+expect(
 	Array.isArray(devcontainer.runArgs) && devcontainer.runArgs.includes('--ipc=host'),
 	'DevContainer must keep --ipc=host for Chromium stability.'
 );
@@ -102,13 +106,16 @@ expect(
 	localValidationInside.includes("process.env.DEVCONTAINER !== 'true'") &&
 		dependencyInstallIndex >= 0 &&
 		qualityCheckIndex > dependencyInstallIndex &&
+		localValidationInside.includes("NODE_ENV: 'production'") &&
 		localValidationInside.includes("run('bun', ['run', 'test:unit:ci'])") &&
-		localValidationInside.includes("run('bun', ['run', 'build'])") &&
-		localValidationInside.includes("run('bun', ['run', 'check:links'])") &&
-		localValidationInside.includes("run('bun', ['run', 'performance:check'])") &&
+		localValidationInside.includes("run('bun', ['run', 'build'], productionEnvironment)") &&
+		localValidationInside.includes("run('bun', ['run', 'check:links'], productionEnvironment)") &&
+		localValidationInside.includes(
+			"run('bun', ['run', 'performance:check'], productionEnvironment)"
+		) &&
 		localValidationInside.includes("run('bun', ['run', 'test:e2e:extended']") &&
 		localValidationInside.includes("E2E_USE_PRODUCTION_PREVIEW: '1'"),
-	'In-container validation must sync frozen dependencies before running the maintained quality, build, link, performance and full Playwright gates against the existing production build.'
+	'In-container validation must sync frozen dependencies and force production mode before running the maintained quality, build, link, performance and full Playwright gates against the existing production build.'
 );
 
 expect(
@@ -157,5 +164,5 @@ if (failures.length) {
 }
 
 console.log(
-	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, isolated preview and visual image alignment.`
+	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, production-mode isolation, isolated preview and visual image alignment.`
 );
