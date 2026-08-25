@@ -27,13 +27,18 @@ function run(command, args, env = process.env) {
 	if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
+const productionEnvironment = {
+	...process.env,
+	NODE_ENV: 'production',
+};
+
 run('bun', ['install', '--frozen-lockfile']);
 run('bun', ['run', 'check']);
 run('bun', ['run', 'test:unit:ci']);
-run('bun', ['run', 'build']);
-run('bun', ['run', 'check:links']);
-run('bun', ['run', 'performance:check']);
+run('bun', ['run', 'build'], productionEnvironment);
+run('bun', ['run', 'check:links'], productionEnvironment);
+run('bun', ['run', 'performance:check'], productionEnvironment);
 run('bun', ['run', 'test:e2e:extended'], {
-	...process.env,
+	...productionEnvironment,
 	E2E_USE_PRODUCTION_PREVIEW: '1',
 });
