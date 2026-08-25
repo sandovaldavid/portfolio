@@ -133,23 +133,26 @@ test.describe('Interaction semantics', () => {
 		}
 	});
 
-	test('project resources keep control feedback without lift or brightness filters', async ({ page }) => {
-		await page.setViewportSize(DESKTOP);
-		await page.goto('/projects/kioku');
+	test(
+		'project resources keep control feedback without lift or brightness filters',
+		async ({ page }) => {
+			await page.setViewportSize(DESKTOP);
+			await page.goto('/projects/kioku');
 
-		const resource = page.locator('[data-project-resource]').first();
-		await resource.evaluate(element => {
-			(element as HTMLElement).style.setProperty('transition', 'none', 'important');
-		});
-		const beforeShadow = await resource.evaluate(element => getComputedStyle(element).boxShadow);
-		await resource.hover();
+			const resource = page.locator('[data-project-resource]').first();
+			await resource.evaluate(element => {
+				(element as HTMLElement).style.setProperty('transition', 'none', 'important');
+			});
+			const beforeShadow = await resource.evaluate(element => getComputedStyle(element).boxShadow);
+			await resource.hover();
 
-		expect(await resource.evaluate(element => getComputedStyle(element).transform)).toBe('none');
-		expect(await resource.evaluate(element => getComputedStyle(element).filter)).toBe('none');
-		expect(await resource.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe(
-			beforeShadow
-		);
-	});
+			expect(await resource.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+			expect(await resource.evaluate(element => getComputedStyle(element).filter)).toBe('none');
+			expect(await resource.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe(
+				beforeShadow
+			);
+		}
+	);
 
 	test('Home keeps work evidence above biography in CTA hierarchy', async ({ page }) => {
 		await page.goto('/');
@@ -173,7 +176,9 @@ test.describe('Project case study reading ergonomics', () => {
 			.locator('[data-case-study-section-content][data-case-study-width="auto"]')
 			.first();
 		const wideDiagramSection = page
-			.locator('[data-case-study-section]:has([data-mermaid-figure]) [data-case-study-section-content]')
+			.locator(
+				'[data-case-study-section]:has([data-mermaid-figure]) [data-case-study-section-content]'
+			)
 			.first();
 
 		expect(Math.round((await firstProseSection.boundingBox())!.width)).toBe(840);
