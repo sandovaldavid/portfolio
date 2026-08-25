@@ -1,0 +1,27 @@
+---
+interface Props {
+	eyebrow: string;
+	title: string;
+	surface?: 'canvas' | 'highlight';
+}
+
+const { eyebrow, title, surface = 'canvas' } = Astro.props;
+---
+
+<section
+	class:list={[
+		'w-full px-5 py-10 md:px-8 md:py-12 lg:px-20 lg:py-14',
+		surface === 'highlight' && 'bg-channel-surface-highlight',
+	]}
+	data-experience-section
+>
+	<div class="mx-auto flex w-full max-w-320 flex-col gap-4">
+		<div class="flex max-w-220 flex-col gap-2">
+			<p class="text-editorial-label uppercase text-channel-accent-primary">{eyebrow}</p>
+			<h2 class="text-section-title-mobile text-content-strong md:text-section-title">{title}</h2>
+		</div>
+		<div class="max-w-220 text-body text-content-default [&>p+p]:mt-4">
+			<slot />
+		</div>
+	</div>
+</section>
