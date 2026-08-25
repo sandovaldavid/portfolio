@@ -8,7 +8,9 @@ const cliIndex = readSource('src/features/cli-terminal/index.ts');
 
 describe('Route performance scope contract', () => {
 	it('keeps catalog images below the primary-card raster target', () => {
-		expect(projectCard).toContain('const mediaWidth = isPrimary ? 800 : isCatalog ? 640 : 600;');
+		expect(projectCard).toContain(
+			'const mediaWidth = isPrimary ? 800 : isCatalog ? 640 : 600;'
+		);
 		expect(projectCard).toContain(
 			'const mediaSourceHeight = isPrimary ? 500 : isCatalog ? 400 : 380;'
 		);
