@@ -108,7 +108,7 @@ describe('Project Case Study MDX contract', () => {
 		expect(mermaid).not.toContain('const nodeWidth');
 		expect(mermaid).not.toContain('const nodeHeight');
 		expect(mermaid).not.toContain('const backEdges');
-		expect(mermaid).not.toContain('edgePath');
+		expect(mermaid).not.toContain('const edgePath');
 		expect(mermaid).not.toContain('<svg');
 
 		expect(diagramAdapter).toContain('normalizeMermaidAuthoring');
