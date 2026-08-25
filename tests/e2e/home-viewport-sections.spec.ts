@@ -98,12 +98,18 @@ test('desktop vertical wheel over the horizontal Experience tab rail still advan
 
 	const experienceTarget = await getSectionTargetY(page, 'experience');
 	const projectsTarget = await getSectionTargetY(page, 'projects');
-	await page.evaluate(targetY => window.scrollTo({ top: targetY, behavior: 'auto' }), experienceTarget);
+	await page.evaluate(
+		targetY => window.scrollTo({ top: targetY, behavior: 'auto' }),
+		experienceTarget
+	);
 
 	const tablist = page.locator('#experience-tablist');
 	await expect(tablist).toBeVisible();
 	const tablistBox = (await tablist.boundingBox())!;
-	await page.mouse.move(tablistBox.x + tablistBox.width / 2, tablistBox.y + tablistBox.height / 2);
+	await page.mouse.move(
+		tablistBox.x + tablistBox.width / 2,
+		tablistBox.y + tablistBox.height / 2
+	);
 	await page.mouse.wheel(0, 700);
 
 	await expectScrollNear(page, projectsTarget);
@@ -118,7 +124,10 @@ test('desktop closing flow moves Research to About Me to Footer and reverses in 
 	const researchTarget = await getSectionTargetY(page, 'research');
 	const aboutTarget = await getSectionTargetY(page, 'about-me');
 	const contactTarget = await getSectionTargetY(page, 'contact');
-	await page.evaluate(targetY => window.scrollTo({ top: targetY, behavior: 'auto' }), researchTarget);
+	await page.evaluate(
+		targetY => window.scrollTo({ top: targetY, behavior: 'auto' }),
+		researchTarget
+	);
 
 	await page.mouse.move(DESKTOP.width / 2, DESKTOP.height / 2);
 	await page.mouse.wheel(0, 700);

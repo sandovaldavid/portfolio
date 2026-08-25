@@ -75,10 +75,14 @@ const { enabled = true } = Astro.props;
 
 		const findDirectionalTarget = (direction: 1 | -1) => {
 			const currentY = window.scrollY;
-			const positionedSections = sections.map(section => ({ section, y: getTargetY(section) }));
+			const positionedSections = sections.map(section => ({
+				section,
+				y: getTargetY(section),
+			}));
 
 			if (direction > 0) {
-				return positionedSections.find(({ y }) => y > currentY + POSITION_TOLERANCE)?.section;
+				return positionedSections.find(({ y }) => y > currentY + POSITION_TOLERANCE)
+					?.section;
 			}
 
 			return [...positionedSections]
