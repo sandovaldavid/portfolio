@@ -112,7 +112,9 @@ test('career shell exposes verified optional organization links', async ({ page 
 	}
 });
 
-test('career navigation aligns available history controls without empty placeholders', async ({ page }) => {
+test('career navigation aligns available history controls without empty placeholders', async ({
+	page,
+}) => {
 	await page.setViewportSize(DESKTOP);
 
 	for (const scenario of [
@@ -137,9 +139,9 @@ test('career navigation aligns available history controls without empty placehol
 		const linksCenter = linksBox.y + linksBox.height / 2;
 
 		expect(Math.abs(labelCenter - linksCenter)).toBeLessThanOrEqual(2);
-		expect(Math.abs(linksBox.x + linksBox.width - (shellBox.x + shellBox.width))).toBeLessThanOrEqual(
-			2
-		);
+		expect(
+			Math.abs(linksBox.x + linksBox.width - (shellBox.x + shellBox.width))
+		).toBeLessThanOrEqual(2);
 	}
 
 	await page.setViewportSize(MOBILE);

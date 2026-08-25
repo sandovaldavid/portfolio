@@ -114,7 +114,9 @@ test.describe('deduplicated legacy page pairs', () => {
 			locale: 'es',
 		},
 	] as const) {
-		test(`${scenario.route} redirects to its canonical localized career route`, async ({ page }) => {
+		test(`${scenario.route} redirects to its canonical localized career route`, async ({
+			page,
+		}) => {
 			const response = await page.goto(scenario.route);
 			expect(response?.ok()).toBe(true);
 			await expect(page).toHaveURL(new RegExp(`${scenario.canonicalRoute}/?$`));
