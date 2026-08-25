@@ -80,6 +80,8 @@ test.describe('Kioku public backend case study', () => {
 			await expect(diagrams).toHaveCount(2);
 			for (let index = 0; index < 2; index += 1) {
 				const diagram = diagrams.nth(index);
+				await diagram.scrollIntoViewIfNeeded();
+
 				const host = diagram.locator('[data-mermaid-host]');
 				await expect(host).toHaveAttribute('data-mermaid-state', 'rendered');
 				await expect(host).toHaveAttribute('role', 'region');
