@@ -1,40 +1,40 @@
 ---
 researchId: oss-abandonment-bilstm
 locale: es
-label: Tesis de Pregrado
+label: Tesis de pregrado
 title: Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuronales BiLSTM
 status: in-progress
 institution: Universidad Nacional de Piura
 featuredSignals:
-    - Frecuencia de commits (promedio semanal)
-    - Contribuidores únicos por ventana temporal
-    - Antigüedad de issues abiertos (días sin resolver)
-    - Tasa de merge/cierre de PRs
+  - Frecuencia de commits (promedio móvil semanal)
+  - Contribuidores únicos por ventana temporal
+  - Antigüedad de issues abiertos (días sin resolver)
+  - Tasa de merge y cierre de PRs
 keywords:
-    - BiLSTM
-    - Abandono OSS
-    - MSR
-    - Deep Learning
-    - Minería de GitHub
-    - Salud de Repositorios
-    - Clasificación de Series Temporales
+  - BiLSTM
+  - Abandono OSS
+  - MSR
+  - Deep Learning
+  - Minería de GitHub
+  - Salud de Repositorios
+  - Clasificación de Series Temporales
 ---
 
-<ResearchSection eyebrow="Planteamiento del problema" title="RIESGO DE ABANDONO OSS">
+<ResearchSection eyebrow="Problema de investigación" title="RIESGO DE ABANDONO OSS">
 
-Un número significativo de repositorios de Software de Código Abierto (OSS) son abandonados con el tiempo, dejando expuestos a proyectos dependientes ante vulnerabilidades de seguridad, falta de actualizaciones y deuda técnica. La detección temprana del riesgo de abandono es un desafío crítico y poco explorado en la salud de los ecosistemas de software.
+Un número significativo de repositorios de Software de Código Abierto (OSS) son abandonados con el tiempo, dejando a proyectos dependientes expuestos a vulnerabilidades de seguridad, falta de actualizaciones y deuda técnica. La detección temprana del riesgo de abandono es un desafío crítico aún poco explorado para la salud de los ecosistemas de software.
 
 </ResearchSection>
 
 <ResearchSection eyebrow="Hipótesis de investigación" title="BILSTM VS. BASELINES DE ML">
 
-> ¿Pueden las redes BiLSTM (Bidirectional Long Short-Term Memory), entrenadas con métricas históricas de actividad de repositorios GitHub (commits, issues, pull requests, patrones de contribuidores), predecir el estado de abandono de un repositorio OSS con mayor precisión que los baselines de ML tradicionales?
+> ¿Pueden las redes LSTM Bidireccionales (BiLSTM), entrenadas con métricas históricas de actividad de repositorios GitHub (commits, issues, pull requests y patrones de contribuidores), predecir el estado de abandono de un repositorio OSS con mayor precisión que los baselines tradicionales de ML?
 
 </ResearchSection>
 
 <ResearchSection eyebrow="Metodología (MSR)" title="MINING SOFTWARE REPOSITORIES">
 
-Mining Software Repositories (MSR) — extracción de secuencias temporales de señales de actividad desde la API de GitHub (GH Archive), ingeniería de características que capturan decaimiento de contribuciones, tasas de resolución de issues y tendencias del bus factor, para luego entrenar modelos BiLSTM que clasifiquen la probabilidad futura de abandono.
+Mining Software Repositories (MSR) — extracción de secuencias temporales de señales de actividad desde la API de GitHub (GH Archive), ingeniería de características que capturan el decaimiento de contribuciones, tasas de resolución de issues y tendencias de bus factor, y entrenamiento de modelos BiLSTM para clasificar la probabilidad futura de abandono.
 
 </ResearchSection>
 
@@ -43,29 +43,29 @@ Mining Software Repositories (MSR) — extracción de secuencias temporales de s
 	description="Pipeline de investigación desde los datos de actividad de GitHub hasta el clasificador de abandono."
 	tones={{ Source: 'info', Train: 'brand', Classifier: 'success' }}
 	chart={`flowchart LR
-    Source["GitHub API / GH Archive"] --> Raw["Datos Crudos de Actividad"]
-    Raw --> Features["Ingeniería de Características"]
-    Features --> Sequences["Secuencias Temporales"]
+    Source["GitHub API / GH Archive"] --> Raw["Datos crudos de actividad"]
+    Raw --> Features["Ingeniería de características"]
+    Features --> Sequences["Secuencias temporales"]
     Sequences --> Train["Entrenamiento BiLSTM"]
-    Train --> Classifier["Clasificador de Abandono"]`}
+    Train --> Classifier["Clasificador de abandono"]`}
 />
 
-<ResearchSection eyebrow="Características de ingeniería">
+<ResearchSection eyebrow="Características diseñadas">
 
-- Frecuencia de commits (promedio semanal)
+- Frecuencia de commits (promedio móvil semanal)
 - Contribuidores únicos por ventana temporal
 - Antigüedad de issues abiertos (días sin resolver)
-- Tasa de merge/cierre de PRs
+- Tasa de merge y cierre de PRs
 - Días desde el último commit
 - Estimación del bus factor
-- Tiempo de respuesta a issues
+- Tiempo de respuesta de issues
 - Cadencia de releases
 
 </ResearchSection>
 
-<ResearchSection eyebrow="Conjunto de datos">
+<ResearchSection eyebrow="Dataset">
 
-Dataset curado de repositorios OSS en GitHub de múltiples dominios, etiquetados por estado de abandono usando umbrales de actividad histórica (frecuencia de commits, fecha del último aporte, antigüedad de issues abiertos).
+Dataset curado de repositorios OSS de GitHub de múltiples dominios, etiquetados por estado de abandono mediante umbrales históricos de actividad (frecuencia de commits, fecha de última contribución y antigüedad de issues abiertos).
 
 </ResearchSection>
 
@@ -82,7 +82,7 @@ Dataset curado de repositorios OSS en GitHub de múltiples dominios, etiquetados
 </ResearchSection>
 
 <EvaluationCriteria
-	title="Métricas de evaluación"
+	title="Criterios de evaluación"
 	items={[
 		{
 			label: 'ACC',
