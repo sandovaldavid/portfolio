@@ -54,7 +54,8 @@ describe('i18n repository enforcement', () => {
 				'{"profileId":"profile","locale":"en"}',
 			'src/content/portfolio-profile/es/profile.json':
 				'{"profileId":"profile","locale":"es"}',
-			'src/content/experience/en/role.json': '{"experienceId":"role","locale":"en"}',
+			'src/content/experience/en/role.mdx':
+				'---\nexperienceId: role\nlocale: en\n---\n',
 			'src/content/experience/es/.gitkeep': '',
 			'src/content/research/en/study.json': '{"researchId":"study","locale":"en"}',
 			'src/content/research/es/study.json': '{"researchId":"study","locale":"es"}',
@@ -77,8 +78,10 @@ describe('i18n repository enforcement', () => {
 				'{"profileId":"profile","locale":"en"}',
 			'src/content/portfolio-profile/es/profile.json':
 				'{"profileId":"profile","locale":"es"}',
-			'src/content/experience/en/role.json': '{"experienceId":"role","locale":"en"}',
-			'src/content/experience/es/role.json': '{"experienceId":"role","locale":"es"}',
+			'src/content/experience/en/role.mdx':
+				'---\nexperienceId: role\nlocale: en\n---\n',
+			'src/content/experience/es/role.mdx':
+				'---\nexperienceId: role\nlocale: es\n---\n',
 			'src/content/research/en/study.json': '{"researchId":"study","locale":"en"}',
 			'src/content/research/es/study.json': '{"researchId":"study","locale":"es"}',
 			'src/content/projects/en/project.mdx': '---\nprojectId: project\nlocale: en\n---\n',
