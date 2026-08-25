@@ -100,7 +100,9 @@ function collectMetrics(): PageMetrics {
 		});
 	}
 
-	const paragraphs: ParagraphMetric[] = Array.from(document.querySelectorAll('main p'))
+	const paragraphs: ParagraphMetric[] = Array.from(
+		document.querySelectorAll<HTMLParagraphElement>('main p')
+	)
 		.filter(isVisible)
 		.map(p => ({
 			size: parseFloat(window.getComputedStyle(p).fontSize),
@@ -149,7 +151,7 @@ for (const { path, name } of KEY_PAGES) {
 				expect(
 					belowFloor,
 					`Visible text below ${MIN_ANY_TEXT}px: ${belowFloor
-						.map(t => `<${t.tag}> ${t.size}px "${t.text}"`)
+						.map(t => `<${t.tag}> ${t.size}px \"${t.text}\"`)
 						.join(' | ')}`
 				).toEqual([]);
 
@@ -159,7 +161,7 @@ for (const { path, name } of KEY_PAGES) {
 				expect(
 					smallParagraphs,
 					`Reading main <p> below ${MIN_PARAGRAPH}px: ${smallParagraphs
-						.map(p => `${p.size}px "${p.text}"`)
+						.map(p => `${p.size}px \"${p.text}\"`)
 						.join(' | ')}`
 				).toEqual([]);
 
@@ -169,7 +171,7 @@ for (const { path, name } of KEY_PAGES) {
 				expect(
 					smallReadingCopy,
 					`Reading copy (>= ${READING_COPY_CHARS} chars) below ${MIN_READING_COPY}px: ${smallReadingCopy
-						.map(p => `${p.size}px "${p.text}"`)
+						.map(p => `${p.size}px \"${p.text}\"`)
 						.join(' | ')}`
 				).toEqual([]);
 			});
@@ -181,7 +183,7 @@ for (const { path, name } of KEY_PAGES) {
 				expect(
 					h1s,
 					`Expected exactly one visible <h1>, got ${h1s.length}: ${h1s
-						.map(h => `"${h.text}"`)
+						.map(h => `\"${h.text}\"`)
 						.join(' | ')}`
 				).toHaveLength(1);
 
@@ -189,7 +191,7 @@ for (const { path, name } of KEY_PAGES) {
 				for (const heading of metrics.headings) {
 					expect(
 						heading.level,
-						`Heading level skip: <h${heading.level}> "${heading.text}" follows max level h${maxSeen}`
+						`Heading level skip: <h${heading.level}> \"${heading.text}\" follows max level h${maxSeen}`
 					).toBeLessThanOrEqual(maxSeen + 1);
 					maxSeen = Math.max(maxSeen, heading.level);
 				}
@@ -201,7 +203,7 @@ for (const { path, name } of KEY_PAGES) {
 					const smallest = primaryHeadings.reduce((a, b) => (a.size <= b.size ? a : b));
 					expect(
 						smallest.size,
-						`<h${smallest.level}> "${smallest.text}" (${smallest.size}px) is not larger than body text (median ${bodySize}px)`
+						`<h${smallest.level}> \"${smallest.text}\" (${smallest.size}px) is not larger than body text (median ${bodySize}px)`
 					).toBeGreaterThan(bodySize);
 				}
 			});
