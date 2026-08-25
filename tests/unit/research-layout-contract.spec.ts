@@ -42,9 +42,9 @@ describe('Research evidence composition contract', () => {
 		const section = readSource('src/widgets/research-page/ui/ResearchSection.astro');
 		const shell = readSource('src/widgets/research-page/ui/ResearchPage.astro');
 
-		expect(section).toContain("data-research-variant={variant}");
-		expect(section).toContain("data-research-variant='feature-grid'");
-		expect(section).toContain("data-research-variant='technical-list'");
+		expect(section).toContain('data-research-variant={variant}');
+		expect(section).toContain('research-feature-grid');
+		expect(section).toContain('research-technical-list');
 		expect(section).toContain('border-l-4 border-channel-accent-primary');
 		expect(section).not.toContain('bg-channel-surface-default');
 		expect(section).not.toContain('shadow-retro');
