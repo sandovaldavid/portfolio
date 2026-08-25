@@ -91,8 +91,12 @@ expect(
 	'check:devcontainer must include the local browser validation contract.'
 );
 expect(
-	packageJson.scripts?.['check:production-output'] === 'node scripts/check-production-output.mjs' &&
-		packageJson.scripts?.['check:links']?.includes('bun run check:production-output'),
+	packageJson.scripts?.['check:production-output'] ===
+		'node scripts/check-production-output.mjs',
+	'check:production-output must use the maintained production-output validator.'
+);
+expect(
+	packageJson.scripts?.['check:links']?.includes('bun run check:production-output'),
 	'Generated-output validation must reject development-only routes before locale route checks.'
 );
 
