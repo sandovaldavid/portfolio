@@ -50,7 +50,11 @@ Mining Software Repositories (MSR) — extracting temporal sequences of activity
     Train --> Classifier["Abandonment Classifier"]`}
 />
 
-<ResearchSection eyebrow="Engineered features">
+<ResearchEvidenceLayout>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Engineered features" variant="feature-grid">
 
 - Commit frequency (weekly rolling avg)
 - Unique contributors per time window
@@ -69,7 +73,17 @@ Curated dataset of GitHub OSS repositories spanning multiple domains, labeled by
 
 </ResearchSection>
 
-<ResearchSection eyebrow="Model architecture">
+<ResearchSection eyebrow="Current status" variant="status">
+
+Actively training BiLSTM models and comparing against ML baselines. Results will be published upon thesis completion.
+
+</ResearchSection>
+
+</ResearchEvidenceColumn>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Model architecture" variant="technical-list">
 
 - **Input:** Time-series of repo activity signals (T steps)
 - **Layer 1:** BiLSTM — 128 units forward + backward
@@ -97,8 +111,6 @@ Curated dataset of GitHub OSS repositories spanning multiple domains, labeled by
 	]}
 />
 
-<ResearchSection eyebrow="Current status">
+</ResearchEvidenceColumn>
 
-Actively training BiLSTM models and comparing against ML baselines. Results will be published upon thesis completion.
-
-</ResearchSection>
+</ResearchEvidenceLayout>
