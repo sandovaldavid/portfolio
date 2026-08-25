@@ -1,5 +1,9 @@
 import { defineConfig, devices } from '@playwright/test';
 
+const playwrightHost = '127.0.0.1';
+const playwrightPort = 4322;
+const playwrightBaseUrl = `http://${playwrightHost}:${playwrightPort}`;
+
 export default defineConfig({
 	testDir: './tests/e2e',
 	testMatch: '**/*.spec.ts',
@@ -13,15 +17,17 @@ export default defineConfig({
 		['junit', { outputFile: 'junit-results.xml' }],
 	],
 	use: {
-		baseURL: 'http://localhost:4321',
+		baseURL: playwrightBaseUrl,
 		trace: 'on-first-retry',
 		screenshot: 'only-on-failure',
 		video: 'retain-on-failure',
 	},
 	webServer: {
-		command: process.env.CI ? 'bun run preview' : 'bun run astro build && bun run preview',
-		url: 'http://localhost:4321',
-		reuseExistingServer: !process.env.CI,
+		command: process.env.CI
+			? `bun run astro preview --host ${playwrightHost} --port ${playwrightPort}`
+			: `bun run astro build && bun run astro preview --host ${playwrightHost} --port ${playwrightPort}`,
+		url: playwrightBaseUrl,
+		reuseExistingServer: false,
 	},
 	projects: [
 		{
