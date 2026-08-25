@@ -1,0 +1,179 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import {
+	ExperienceTechnologyPill,
+	type ExperienceItem,
+	type ExperienceTechnologyKind,
+} from '@entities/experience';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { Badge, LinkButton, TitleSection } from '@shared/ui';
+
+interface Props {
+	experience: ExperienceItem;
+	previous?: ExperienceItem;
+	next?: ExperienceItem;
+}
+
+const { experience, previous, next } = Astro.props;
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.experience');
+
+const technologyGroups: Array<{
+	kind: ExperienceTechnologyKind;
+	label: string;
+}> = [
+	{ kind: 'technology', label: tPage('technologyGroup') },
+	{ kind: 'architecture', label: tPage('architectureGroup') },
+	{ kind: 'practice', label: tPage('practiceGroup') },
+	{ kind: 'capability', label: tPage('capabilityGroup') },
+];
+
+const groups = technologyGroups
+	.map(group => ({
+		...group,
+		items: experience.technologies.filter(technology => technology.kind === group.kind),
+	}))
+	.filter(group => group.items.length > 0);
+
+const detailUrl = (item: ExperienceItem) =>
+	getRelativeLocaleUrl(lang, `experience/${item.experienceId}`);
+---
+
+<article class="w-full pt-18" data-experience-case-study={experience.experienceId}>
+	<header
+		class="w-full bg-channel-background-canvas px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12"
+		data-experience-hero
+	>
+		<div
+			class="mx-auto grid w-full max-w-320 gap-6 lg:grid-cols-[minmax(0,640px)_minmax(0,560px)] lg:items-center lg:gap-20"
+		>
+			<div class="flex min-w-0 flex-col gap-3">
+				<p class="text-editorial-label uppercase text-channel-accent-primary">
+					{experience.isCurrent ? tPage('currentKicker') : tPage('archiveKicker')}
+				</p>
+				<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
+					{experience.company}
+				</h1>
+				<p class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title">
+					{experience.title}
+				</p>
+			</div>
+
+			<div class="flex min-w-0 flex-col gap-4">
+				<p class="text-secondary text-content-default md:text-body">{experience.summary}</p>
+				<div class="flex flex-wrap items-center gap-3" data-experience-status>
+					<Badge variant={experience.isCurrent ? 'success' : 'default'} size="sm">
+						{experience.isCurrent ? tPage('currentStatus') : tPage('pastStatus')}
+					</Badge>
+					<Badge variant="secondary" size="sm">{experience.date}</Badge>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<section
+		class="w-full bg-channel-surface-highlight px-5 py-10 md:px-8 md:py-12 lg:px-20 lg:py-14"
+		aria-labelledby="experience-contributions-title"
+		data-experience-contributions
+	>
+		<div class="mx-auto flex w-full max-w-320 flex-col gap-6">
+			<TitleSection className="w-full" align="start">
+				<span id="experience-contributions-title">{tPage('selectedContributions')}</span>
+			</TitleSection>
+			<ol class="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+				{
+					experience.description.map((achievement, index) => (
+						<li class="group flex min-w-0 items-start gap-3 border border-edge-subtle bg-channel-surface-default p-4 transition-[transform,box-shadow,border-color] duration-150 hover:-translate-y-0.5 hover:border-edge-strong hover:shadow-retro-md motion-reduce:transform-none motion-reduce:transition-none">
+							<span class="shrink-0 font-mono text-caption text-channel-accent-primary">
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<span class="text-secondary text-content-default md:text-body">{achievement}</span>
+						</li>
+					))
+				}
+			</ol>
+		</div>
+	</section>
+
+	<div class="w-full" data-experience-narrative>
+		<slot />
+	</div>
+
+	<section
+		class="w-full px-5 py-10 md:px-8 md:py-12 lg:px-20 lg:py-14"
+		aria-labelledby="experience-focus-title"
+		data-experience-focus
+	>
+		<div class="mx-auto flex w-full max-w-320 flex-col gap-6">
+			<TitleSection className="w-full" align="start">
+				<span id="experience-focus-title">{tPage('engineeringFocus')}</span>
+			</TitleSection>
+			<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+				{
+					groups.map(group => (
+						<div class="flex min-w-0 flex-col gap-3 border-t border-edge-subtle pt-4">
+							<p class="text-editorial-label uppercase text-channel-accent-primary">{group.label}</p>
+							<ul class="flex flex-wrap gap-2">
+								{group.items.map(technology => (
+									<li>
+										<ExperienceTechnologyPill technology={technology} size="md" />
+									</li>
+								))}
+							</ul>
+						</div>
+					))
+				}
+			</div>
+		</div>
+	</section>
+
+	{
+		(previous || next) && (
+			<nav
+				class="w-full border-t border-edge-subtle px-5 py-10 md:px-8 lg:px-20"
+				aria-label={tPage('careerHistory')}
+				data-experience-career-navigation
+			>
+				<div class="mx-auto flex w-full max-w-320 flex-col gap-5">
+					<p class="text-editorial-label uppercase text-channel-accent-primary">
+						{tPage('careerHistory')}
+					</p>
+					<div class="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-between">
+						{previous ? (
+							<LinkButton
+								href={detailUrl(previous)}
+								target="_self"
+								variant="secondary"
+								class="min-h-11 w-full justify-start sm:w-auto"
+							>
+								<ArrowLeftIcon class="size-4" aria-hidden="true" />
+								<span class="flex flex-col items-start">
+									<span>{tPage('previousRole')}</span>
+									<span class="text-caption">{previous.company}</span>
+								</span>
+							</LinkButton>
+						) : (
+							<span />
+						)}
+						{next && (
+							<LinkButton
+								href={detailUrl(next)}
+								target="_self"
+								variant="secondary"
+								class="min-h-11 w-full justify-end sm:w-auto"
+							>
+								<span class="flex flex-col items-end">
+									<span>{tPage('nextRole')}</span>
+									<span class="text-caption">{next.company}</span>
+								</span>
+								<ArrowRightIcon class="size-4" aria-hidden="true" />
+							</LinkButton>
+						)}
+					</div>
+				</div>
+			</nav>
+		)
+	}
+</article>
