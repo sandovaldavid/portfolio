@@ -1,12 +1,14 @@
 import { readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+const gitignore = readFileSync('.gitignore', 'utf8');
 const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
 const devcontainerDockerfile = readFileSync('.devcontainer/Dockerfile', 'utf8');
 const visualDockerfile = readFileSync('docker/Dockerfile.test', 'utf8');
 const dockerCompose = readFileSync('docker-compose.yml', 'utf8');
 const dockerTest = readFileSync('docker/docker-test.sh', 'utf8');
 const playwrightConfig = readFileSync('playwright.config.ts', 'utf8');
+const visualSpec = readFileSync('tests/e2e/visual.spec.ts', 'utf8');
 const playwrightRunner = readFileSync('scripts/run-playwright.mjs', 'utf8');
 const localValidation = readFileSync('scripts/run-local-validation.mjs', 'utf8');
 const localValidationInside = readFileSync('scripts/run-local-validation-inside.mjs', 'utf8');
@@ -100,13 +102,22 @@ expect(
 expect(
 	localValidation.includes("process.env.DEVCONTAINER === 'true'") &&
 		localValidation.includes("devcontainer, ['up', '--workspace-folder', repositoryRoot]") &&
-		localValidation.includes("devcontainer, ['exec', '--workspace-folder', repositoryRoot") &&
+		localValidation.includes("'exec'") &&
+		localValidation.includes("'--workspace-folder'") &&
 		localValidation.includes('PLAYWRIGHT_WORKERS='),
 	'Host validation must detect nested execution, up/exec the DevContainer and propagate worker overrides.'
 );
 expect(
 	localValidation.includes('Complete local browser validation requires the Dev Containers CLI'),
 	'Host validation must fail closed when the Dev Containers CLI is unavailable.'
+);
+expect(
+	gitignore.includes('validation-logs/') &&
+		localValidation.includes('validation-logs/validate-local-') &&
+		localValidation.includes('VALIDATION_LOG_FILE') &&
+		localValidation.includes('set -o pipefail') &&
+		localValidation.includes('tee "$VALIDATION_LOG_FILE"'),
+	'Canonical local validation must persist the complete in-container gate log without masking failures.'
 );
 expect(
 	localValidationInside.includes("process.env.DEVCONTAINER !== 'true'") &&
@@ -145,11 +156,27 @@ expect(
 	'Playwright must keep CI, GitHub Actions, worker overrides and production preview as separate policy signals.'
 );
 expect(
+	playwrightConfig.includes('const canonicalChromiumOnlySpecs = [') &&
+		playwrightConfig.includes("'**/typography.spec.ts'") &&
+		playwrightConfig.includes("'**/content-components-geometry.spec.ts'") &&
+		playwrightConfig.includes('testIgnore: canonicalChromiumOnlySpecs'),
+	'Browser projects must not duplicate specs that already drive canonical responsive geometry and typography viewports themselves.'
+);
+expect(
 	playwrightConfig.includes('const playwrightPort = 4322;') &&
 		playwrightConfig.includes('reuseExistingServer: false'),
 	'Playwright production preview must stay isolated from the development server.'
 );
 
+expect(
+	packageJson.scripts?.['test:e2e:visual']?.startsWith('RUN_VISUAL_TESTS=true ') &&
+		packageJson.scripts?.['test:e2e:visual']?.includes('--project=chromium') &&
+		!packageJson.scripts?.['test:e2e:visual']?.includes('--project=firefox') &&
+		packageJson.scripts?.['test:e2e:visual:docker']?.includes('--project=chromium') &&
+		packageJson.scripts?.['test:snapshots']?.includes('--project=chromium') &&
+		visualSpec.includes("process.env.RUN_VISUAL_TESTS === 'true'"),
+	'Visual regression must remain an explicit canonical-Chromium baseline gate instead of running implicitly across the compatibility matrix.'
+);
 expect(
 	dockerCompose.includes(`PLAYWRIGHT_VERSION: '${playwrightVersion}'`) &&
 		dockerCompose.includes(`BUN_VERSION: '${bunVersion}'`) &&
@@ -172,5 +199,5 @@ if (failures.length) {
 }
 
 console.log(
-	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, production-mode isolation, production-output guard, isolated preview and visual image alignment.`
+	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, persistent logs, production-mode isolation, production-output guard, capability-scoped matrix, isolated preview and visual image alignment.`
 );
