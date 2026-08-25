@@ -35,6 +35,24 @@ The in-container gate covers:
 
 The Dev Container does not force `NODE_ENV` globally. Development commands and production validation choose their execution mode independently, so a reused development container cannot cause draft or `developmentOnly` fixtures to appear in the production-style validation build.
 
+### Persistent local validation logs
+
+`validate:local` streams the in-container gate to the terminal and also saves the complete output below the ignored `validation-logs/` directory:
+
+```text
+validation-logs/validate-local-<ISO timestamp>.log
+```
+
+The wrapper prints the exact path before the gate starts. This log contains the high-volume quality, unit, build, performance and Playwright output that may be truncated by a terminal scrollback buffer. Because the workspace is bind-mounted into the Dev Container, the file is available directly from the host after either a pass or a failure.
+
+An explicit workspace-relative name can be supplied when useful:
+
+```bash
+VALIDATION_LOG_FILE=validation-logs/repro.log bun run validate:local
+```
+
+The wrapper uses `pipefail` with `tee`; writing the log must never convert a failing validation command into a pass. Generated validation logs are evidence artifacts and must not be committed.
+
 Use `PLAYWRIGHT_WORKERS=<positive integer>` only when an explicit override is useful. Local DevContainer runs otherwise let Playwright choose its default concurrency. GitHub Actions retains its reviewed fixed worker policy independently.
 
 Lighthouse is intentionally not part of `validate:local`: the maintained Lighthouse configuration uses temporary public report storage. Run Lighthouse explicitly when it is required.
@@ -74,6 +92,8 @@ From the host, prefer `bun run validate:local`. Direct local Playwright executio
 - Smoke is the fastest Chromium route, interaction and Axe gate.
 - Desktop adds Chromium, Firefox and WebKit.
 - Extended adds the maintained mobile projects.
+- The compatibility matrix is capability-scoped rather than a blind Cartesian product. Specs that already set their own canonical 390/834/1440-style responsive viewports and verify exact computed geometry/typography/tokens run once on canonical Chromium; Firefox/WebKit/mobile projects retain cross-browser behavior, accessibility, routing, overflow and interaction coverage.
+- Responsive shell tests must follow the product ownership model: Recruiter HUD on desktop and Mobile Menu on tablet/mobile. A mobile project must not make a hidden desktop HUD visible merely to satisfy a desktop-oriented assertion.
 - Playwright uses production-preview port `4322`, separate from Astro development on `4321`, and never reuses an existing server.
 - `CI` controls generic CI-only safety such as `forbidOnly`.
 - `GITHUB_ACTIONS` controls the reviewed GitHub worker/retry policy.
@@ -86,9 +106,11 @@ From the host, prefer `bun run validate:local`. Direct local Playwright executio
 bun run test:e2e:visual:docker
 ```
 
-The Docker visual command is authoritative for maintained snapshot comparison. Its Playwright image is version-aligned with the project and Dev Container, but remains a separate appliance only because visual regression requires a pinned rendering baseline. It is not the canonical general-purpose local test runtime.
+Visual snapshots are an explicit gate: `visual.spec.ts` does not participate in normal smoke/desktop/extended runs unless `RUN_VISUAL_TESTS=true` is set by the dedicated visual command.
 
-Native visual runs are diagnostic when the host differs from the pinned baseline. Do not update snapshots only to silence a host-specific rendering difference.
+The maintained baseline is canonical Chromium in the pinned Docker visual appliance. Firefox, WebKit and mobile projects validate behavior and compatibility rather than multiplying pixel snapshots whose rendering and viewport capabilities differ by engine/device. Do not update snapshots only to silence differences, and do not regenerate the baseline until the current redesigned UI has been reviewed and approved as the intended reference.
+
+The Docker visual command is authoritative for maintained snapshot comparison. Its Playwright image is version-aligned with the project and Dev Container, but remains a separate appliance only because visual regression requires a pinned rendering baseline. It is not the canonical general-purpose local test runtime.
 
 ## Build and generated links
 
@@ -99,7 +121,9 @@ bun run check:links
 
 Generated-output validation requires a fresh `dist`. It rejects draft and development-only fixture routes before validating generated links and localized route metadata.
 
-The historical `/atena` and `/es/atena` routes remain redirect artifacts to their canonical localized Experience pages. The route checker validates their canonical and refresh destinations instead of applying canonical-page requirements such as `<html lang>` and a self-referential canonical URL. Normal pages continue to require locale, canonical, alternate and language-picker correctness.
+The historical `/atena` and `/es/atena` routes remain redirect artifacts to their canonical localized Experience pages. The route checker validates their canonical and refresh destinations instead of applying canonical-page requirements such as `<html lang>` and a self-referential canonical URL. Content, typography and layout tests use `/experience/atena-software-engineer` and `/es/experience/atena-software-engineer`; only the redirect contract tests the historical URLs as redirects.
+
+Normal pages continue to require locale, canonical, alternate and language-picker correctness.
 
 ## Performance and Lighthouse
 
