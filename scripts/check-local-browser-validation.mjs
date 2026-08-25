@@ -92,11 +92,8 @@ expect(
 );
 expect(
 	packageJson.scripts?.['check:production-output'] ===
-		'node scripts/check-production-output.mjs',
-	'check:production-output must use the maintained production-output validator.'
-);
-expect(
-	packageJson.scripts?.['check:links']?.includes('bun run check:production-output'),
+		'node scripts/check-production-output.mjs' &&
+		packageJson.scripts?.['check:links']?.includes('bun run check:production-output'),
 	'Generated-output validation must reject development-only routes before locale route checks.'
 );
 
@@ -118,7 +115,9 @@ expect(
 		localValidationInside.includes("NODE_ENV: 'production'") &&
 		localValidationInside.includes("run('bun', ['run', 'test:unit:ci'])") &&
 		localValidationInside.includes("run('bun', ['run', 'build'], productionEnvironment)") &&
-		localValidationInside.includes("run('bun', ['run', 'check:links'], productionEnvironment)") &&
+		localValidationInside.includes(
+			"run('bun', ['run', 'check:links'], productionEnvironment)"
+		) &&
 		localValidationInside.includes(
 			"run('bun', ['run', 'performance:check'], productionEnvironment)"
 		) &&
