@@ -1,22 +1,15 @@
 ---
-import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
-
 interface Props {
 	company: string;
 	role: string;
-	date: string;
-	isCurrent: boolean;
 	tabId: string;
 	panelId: string;
 	experienceId: string;
-	index: number;
 	selected: boolean;
 	focusable: boolean;
 }
 
-const { company, role, date, isCurrent, tabId, panelId, experienceId, index, selected, focusable } =
-	Astro.props;
-const itemNumber = String(index + 1).padStart(2, '0');
+const { company, role, tabId, panelId, experienceId, selected, focusable } = Astro.props;
 ---
 
 <button
@@ -25,10 +18,9 @@ const itemNumber = String(index + 1).padStart(2, '0');
 	aria-controls={panelId}
 	aria-selected={selected ? 'true' : 'false'}
 	tabindex={focusable ? 0 : -1}
-	data-index={index}
 	data-experience-id={experienceId}
 	data-active={selected ? 'true' : 'false'}
-	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col justify-between gap-2 overflow-hidden border-2 border-transparent bg-channel-surface-default px-4 py-3 text-left transition-[background-color,border-color,box-shadow] duration-200 hover:bg-badge-brand-bg hover:shadow-retro-md focus-visible:border-channel-accent-primary focus-visible:bg-channel-surface-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg data-[active=true]:shadow-retro-md md:min-h-24 md:w-full md:px-5 lg:min-h-25 lg:px-6"
+	class="group relative flex h-[76px] min-h-[76px] w-62.5 shrink-0 cursor-pointer flex-col justify-center gap-1 overflow-hidden border-2 border-transparent bg-channel-surface-default px-4 py-3 text-left transition-[background-color,border-color,box-shadow] duration-200 hover:bg-badge-brand-bg hover:shadow-retro-md focus-visible:border-channel-accent-primary focus-visible:bg-channel-surface-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg data-[active=true]:shadow-retro-md md:w-full md:px-5 lg:px-6"
 >
 	<span
 		data-experience-indicator="vertical"
@@ -39,33 +31,10 @@ const itemNumber = String(index + 1).padStart(2, '0');
 		class="absolute bottom-0.5 -left-0.5 right-7 h-1 origin-left scale-x-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-x-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:hidden"
 		aria-hidden="true"></span>
 
-	<span class="flex w-full min-w-0 items-center justify-between gap-3">
-		<span class="flex min-w-0 items-center gap-2">
-			<ArrowRightIcon
-				class="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1 group-data-[active=true]:translate-x-1 motion-reduce:transition-none"
-				aria-hidden="true"
-				focusable="false"
-			/>
-			<span
-				class="min-w-0 uppercase text-navigation text-content-strong transition-colors duration-200 group-data-[active=true]:text-badge-brand-text"
-			>
-				{company}
-			</span>
-		</span>
-		<span class="shrink-0 font-mono text-caption text-content-muted">{itemNumber}</span>
+	<span
+		class="w-full min-w-0 truncate uppercase text-navigation text-content-strong transition-colors duration-200 group-data-[active=true]:text-badge-brand-text"
+	>
+		{company}
 	</span>
-
-	<span class="line-clamp-2 w-full uppercase text-caption text-content-muted">{role}</span>
-
-	<span class="flex w-full items-center justify-between gap-3">
-		<span class="truncate font-mono text-caption uppercase text-content-muted">{date}</span>
-		{
-			isCurrent && (
-				<span class="flex shrink-0 items-center gap-1.5" aria-hidden="true">
-					<span class="size-1.5 bg-channel-status-online" />
-					<span class="h-px w-4 bg-channel-status-online opacity-70" />
-				</span>
-			)
-		}
-	</span>
+	<span class="line-clamp-1 w-full uppercase text-caption text-content-muted">{role}</span>
 </button>
