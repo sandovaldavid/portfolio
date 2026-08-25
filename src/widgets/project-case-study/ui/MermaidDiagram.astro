@@ -57,8 +57,8 @@ const diagramHash = [...`${title}\u0000${chart}`]
 				startOnLoad: false,
 				securityLevel: 'strict',
 				theme: 'base',
+				htmlLabels: false,
 				flowchart: {
-					htmlLabels: false,
 					useMaxWidth: false,
 					curve: 'basis',
 					nodeSpacing: 40,
@@ -111,25 +111,33 @@ const diagramHash = [...`${title}\u0000${chart}`]
 		}
 	};
 
-	const hosts = Array.from(
-		document.querySelectorAll<HTMLElement>('[data-mermaid-host][data-mermaid-state="pending"]')
-	);
-
-	if ('IntersectionObserver' in window) {
-		const observer = new IntersectionObserver(
-			entries => {
-				for (const entry of entries) {
-					if (!entry.isIntersecting) continue;
-					observer.unobserve(entry.target);
-					void renderHost(entry.target as HTMLElement);
-				}
-			},
-			{ rootMargin: '600px 0px' }
+	const initializeMermaidHosts = () => {
+		const hosts = Array.from(
+			document.querySelectorAll<HTMLElement>(
+				'[data-mermaid-host][data-mermaid-state="pending"]'
+			)
 		);
-		hosts.forEach(host => observer.observe(host));
-	} else {
-		hosts.forEach(host => void renderHost(host));
-	}
+		if (hosts.length === 0) return;
+
+		if ('IntersectionObserver' in window) {
+			const observer = new IntersectionObserver(
+				entries => {
+					for (const entry of entries) {
+						if (!entry.isIntersecting) continue;
+						observer.unobserve(entry.target);
+						void renderHost(entry.target as HTMLElement);
+					}
+				},
+				{ rootMargin: '600px 0px' }
+			);
+			hosts.forEach(host => observer.observe(host));
+		} else {
+			hosts.forEach(host => void renderHost(host));
+		}
+	};
+
+	initializeMermaidHosts();
+	document.addEventListener('astro:page-load', initializeMermaidHosts);
 
 	window.addEventListener('beforeprint', () => {
 		document
