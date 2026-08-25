@@ -1,6 +1,10 @@
 import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { REPRESENTATIVE_ROUTE_PAIRS, SPANISH_FORBIDDEN_PHRASES } from './config.mjs';
+import {
+	LEGACY_REDIRECT_ROUTES,
+	REPRESENTATIVE_ROUTE_PAIRS,
+	SPANISH_FORBIDDEN_PHRASES,
+} from './config.mjs';
 import {
 	assertNoIssues,
 	isDirectExecution,
@@ -78,12 +82,28 @@ function hrefPathname(href) {
 	}
 }
 
+/** @param {string} source */
+function metaRefreshTarget(source) {
+	const refresh = tags(source, 'meta').find(
+		meta => meta.attributes['http-equiv']?.toLowerCase() === 'refresh'
+	);
+	const content = refresh?.attributes.content;
+	if (!content) return undefined;
+	const match = content.match(/(?:^|;)\s*url\s*=\s*(.+?)\s*$/i);
+	return match?.[1];
+}
+
 /**
- * @param {{ rootDir?: string; distDir?: string }} [options]
+ * @param {{
+ *   rootDir?: string;
+ *   distDir?: string;
+ *   representativeRoutePairs?: readonly { english: string; spanish: string }[];
+ * }} [options]
  */
 export function validateGeneratedLocaleRoutes({
 	rootDir = REPOSITORY_ROOT,
 	distDir = path.join(rootDir, 'dist'),
+	representativeRoutePairs = REPRESENTATIVE_ROUTE_PAIRS,
 } = {}) {
 	/** @type {{ file: string; message: string }[]} */
 	const issues = [];
@@ -99,7 +119,7 @@ export function validateGeneratedLocaleRoutes({
 	const routes = new Set(
 		htmlFiles.map(filePath => normalizeRoute(routeFromHtml(filePath, distDir)))
 	);
-	for (const pair of REPRESENTATIVE_ROUTE_PAIRS) {
+	for (const pair of representativeRoutePairs) {
 		for (const route of [pair.english, pair.spanish]) {
 			if (!routeExists(route, distDir)) {
 				issues.push({
@@ -122,6 +142,41 @@ export function validateGeneratedLocaleRoutes({
 		const file = repositoryRelative(filePath, rootDir);
 		const route = normalizeRoute(routeFromHtml(filePath, distDir));
 		const source = readText(filePath);
+		const redirectTarget = LEGACY_REDIRECT_ROUTES[route];
+
+		if (redirectTarget) {
+			const expectedTarget = normalizeRoute(redirectTarget);
+			const linkTags = tags(source, 'link');
+			const canonical = linkTags.find(link => link.attributes.rel === 'canonical');
+			const canonicalTarget = canonical?.attributes.href
+				? normalizeRoute(hrefPathname(canonical.attributes.href))
+				: undefined;
+			const refreshTarget = metaRefreshTarget(source);
+			const refreshPath = refreshTarget
+				? normalizeRoute(hrefPathname(refreshTarget))
+				: undefined;
+
+			if (canonicalTarget !== expectedTarget) {
+				issues.push({
+					file,
+					message: `legacy redirect canonical for "${route}" must point to "${expectedTarget}", received ${JSON.stringify(canonicalTarget)}`,
+				});
+			}
+			if (refreshPath !== expectedTarget) {
+				issues.push({
+					file,
+					message: `legacy redirect refresh target for "${route}" must point to "${expectedTarget}", received ${JSON.stringify(refreshPath)}`,
+				});
+			}
+			if (!routeExists(expectedTarget, distDir)) {
+				issues.push({
+					file,
+					message: `legacy redirect target does not exist in dist: "${expectedTarget}"`,
+				});
+			}
+			continue;
+		}
+
 		const htmlTag = tags(source, 'html')[0];
 		const expectedLanguage = route === '/es' || route.startsWith('/es/') ? 'es' : 'en';
 		if (htmlTag?.attributes.lang !== expectedLanguage) {
