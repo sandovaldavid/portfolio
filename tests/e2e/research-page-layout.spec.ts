@@ -53,7 +53,9 @@ const ROUTES = [
 
 for (const scenario of ROUTES) {
 	for (const viewport of VIEWPORTS) {
-		test(`${scenario.route} preserves the ${viewport.name} research layout`, async ({ page }) => {
+		test(`${scenario.route} preserves the ${viewport.name} research layout`, async ({
+			page,
+		}) => {
 			await page.setViewportSize({ width: viewport.width, height: viewport.height });
 			await page.goto(scenario.route);
 			await page.evaluate(() => document.fonts.ready);
@@ -105,9 +107,9 @@ for (const scenario of ROUTES) {
 				timeout: 15_000,
 			});
 			await expect(mermaidHost.locator('svg[data-diagram-svg]')).toBeVisible();
-			expect(
-				await mermaidHost.evaluate(element => getComputedStyle(element).overflowX)
-			).toBe('auto');
+			expect(await mermaidHost.evaluate(element => getComputedStyle(element).overflowX)).toBe(
+				'auto'
+			);
 
 			const keywordOverflow = await keywordList.evaluate(element => ({
 				clientWidth: element.clientWidth,

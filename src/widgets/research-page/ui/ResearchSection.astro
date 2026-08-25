@@ -30,7 +30,10 @@ const contentMeasure = variant === 'narrative' ? 'max-w-280' : 'max-w-210';
 		{title && <h2 class="text-component-title text-content-strong">{title}</h2>}
 	</header>
 	<div
-		class:list={['research-prose text-body leading-relaxed text-content-default', contentMeasure]}
+		class:list={[
+			'research-prose text-body leading-relaxed text-content-default',
+			contentMeasure,
+		]}
 	>
 		<slot />
 	</div>
