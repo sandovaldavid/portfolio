@@ -28,7 +28,7 @@ const itemNumber = String(index + 1).padStart(2, '0');
 	data-index={index}
 	data-experience-id={experienceId}
 	data-active={selected ? 'true' : 'false'}
-	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col justify-between gap-2 overflow-hidden border-2 border-transparent bg-channel-surface-default px-4 py-3 text-left transition-[background-color,border-color,box-shadow,transform] duration-200 hover:-translate-y-0.5 hover:bg-badge-brand-bg hover:shadow-retro-md focus-visible:border-channel-accent-primary focus-visible:bg-channel-surface-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg data-[active=true]:shadow-retro-md md:min-h-24 md:w-full md:px-5 lg:min-h-25 lg:px-6"
+	class="group relative flex min-h-22 w-62.5 shrink-0 cursor-pointer flex-col justify-between gap-2 overflow-hidden border-2 border-transparent bg-channel-surface-default px-4 py-3 text-left transition-[background-color,border-color,box-shadow] duration-200 hover:bg-badge-brand-bg hover:shadow-retro-md focus-visible:border-channel-accent-primary focus-visible:bg-channel-surface-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg data-[active=true]:shadow-retro-md md:min-h-24 md:w-full md:px-5 lg:min-h-25 lg:px-6"
 >
 	<span
 		data-experience-indicator="vertical"
@@ -42,7 +42,7 @@ const itemNumber = String(index + 1).padStart(2, '0');
 	<span class="flex w-full min-w-0 items-center justify-between gap-3">
 		<span class="flex min-w-0 items-center gap-2">
 			<ArrowRightIcon
-				class="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1 group-data-[active=true]:translate-x-1"
+				class="size-4 shrink-0 transition-transform duration-200 group-hover:translate-x-1 group-data-[active=true]:translate-x-1 motion-reduce:transition-none"
 				aria-hidden="true"
 				focusable="false"
 			/>

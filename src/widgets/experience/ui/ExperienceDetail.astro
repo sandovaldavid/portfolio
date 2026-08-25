@@ -71,7 +71,7 @@ const companyContext = domain ? `${company.toUpperCase()} · ${domain}` : compan
 				return (
 					<li
 						data-experience-achievement
-						class:list={['group min-w-0 py-1', isLastOdd && 'lg:col-span-2']}
+						class:list={['min-w-0 py-1', isLastOdd && 'lg:col-span-2']}
 					>
 						<div
 							class:list={[
@@ -84,7 +84,7 @@ const companyContext = domain ? `${company.toUpperCase()} · ${domain}` : compan
 									{itemNumber}
 								</span>
 								<ArrowRightIcon
-									class="size-4 text-channel-accent-primary transition-transform duration-200 group-hover:translate-x-1 motion-reduce:transition-none"
+									class="size-4 text-channel-accent-primary"
 									aria-hidden="true"
 									focusable="false"
 								/>
