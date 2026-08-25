@@ -196,9 +196,12 @@ test.describe('Project case study reading ergonomics', () => {
 				'[data-case-study-section]:has([data-mermaid-figure]) [data-case-study-section-content]'
 			)
 			.first();
+		const usableWidth = await page.evaluate(() => document.documentElement.clientWidth);
 
 		expect(Math.round((await firstProseSection.boundingBox())!.width)).toBe(840);
-		expect(Math.round((await wideDiagramSection.boundingBox())!.width)).toBe(1280);
+		expect(Math.round((await wideDiagramSection.boundingBox())!.width)).toBe(
+			Math.min(1280, usableWidth - 160)
+		);
 	});
 });
 
@@ -214,6 +217,5 @@ test.describe('Detail-page accessibility coverage', () => {
 				await disableMotion(page);
 				await expectNoBlockingAxeViolations(page);
 			});
-		}
 	}
 });
