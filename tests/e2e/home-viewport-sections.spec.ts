@@ -109,15 +109,26 @@ test('desktop vertical wheel over the horizontal Experience tab rail still advan
 	await expectScrollNear(page, projectsTarget);
 });
 
-test('desktop tail scroll returns to About Me before Research', async ({ page }) => {
+test('desktop closing flow moves Research to About Me to Footer and reverses in order', async ({
+	page,
+}) => {
 	await page.setViewportSize(DESKTOP);
 	await page.goto('/');
 
-	const aboutTarget = await getSectionTargetY(page, 'about-me');
 	const researchTarget = await getSectionTargetY(page, 'research');
-	await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'auto' }));
+	const aboutTarget = await getSectionTargetY(page, 'about-me');
+	const contactTarget = await getSectionTargetY(page, 'contact');
+	await page.evaluate(targetY => window.scrollTo({ top: targetY, behavior: 'auto' }), researchTarget);
 
 	await page.mouse.move(DESKTOP.width / 2, DESKTOP.height / 2);
+	await page.mouse.wheel(0, 700);
+	await expectScrollNear(page, aboutTarget);
+
+	await page.waitForTimeout(160);
+	await page.mouse.wheel(0, 700);
+	await expectScrollNear(page, contactTarget);
+
+	await page.waitForTimeout(160);
 	await page.mouse.wheel(0, -700);
 	await expectScrollNear(page, aboutTarget);
 
