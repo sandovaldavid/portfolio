@@ -1,16 +1,20 @@
 ---
+type ResearchSectionVariant = 'narrative' | 'feature-grid' | 'technical-list' | 'status';
+
 interface Props {
 	eyebrow: string;
 	title?: string;
+	variant?: ResearchSectionVariant;
 }
 
-const { eyebrow, title } = Astro.props;
+const { eyebrow, title, variant = 'narrative' } = Astro.props;
+const sectionClasses =
+	variant === 'status'
+		? 'research-section w-full max-w-210 border-l-4 border-channel-accent-primary py-1 pl-4'
+		: 'research-section w-full max-w-210 border-b border-edge-subtle pb-6 last:border-b-0 last:pb-0 md:pb-8';
 ---
 
-<section
-	class="w-full max-w-210 border-b border-edge-subtle pb-6 last:border-b-0 last:pb-0 md:pb-8"
-	data-research-section
->
+<section class={sectionClasses} data-research-section data-research-variant={variant}>
 	<header class="mb-4 flex flex-col gap-2">
 		<p
 			class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
@@ -44,5 +48,75 @@ const { eyebrow, title } = Astro.props;
 		padding-left: 1rem;
 		font-style: italic;
 		color: var(--channel-content-strong);
+	}
+
+	.research-section[data-research-variant='feature-grid'] .research-prose :global(ul) {
+		counter-reset: research-feature;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.75rem 2rem;
+		padding-left: 0;
+		list-style: none;
+	}
+
+	.research-section[data-research-variant='feature-grid'] .research-prose :global(li) {
+		counter-increment: research-feature;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 0.75rem;
+		align-items: start;
+	}
+
+	.research-section[data-research-variant='feature-grid'] .research-prose :global(li::before) {
+		content: counter(research-feature, decimal-leading-zero);
+		padding-top: 0.125rem;
+		font-family: var(--font-retro-tag);
+		font-size: 0.75rem;
+		line-height: 1.125rem;
+		font-weight: 700;
+		letter-spacing: 0.4px;
+		color: var(--channel-accent-primary);
+	}
+
+	.research-section[data-research-variant='technical-list'] .research-prose :global(ul) {
+		gap: 0;
+		padding-left: 0;
+		border-block: 1px solid var(--channel-edge-subtle);
+		list-style: none;
+	}
+
+	.research-section[data-research-variant='technical-list'] .research-prose :global(li) {
+		padding-block: 0.75rem;
+		border-bottom: 1px solid var(--channel-edge-subtle);
+	}
+
+	.research-section[data-research-variant='technical-list'] .research-prose :global(li:last-child) {
+		border-bottom: 0;
+	}
+
+	.research-section[data-research-variant='technical-list'] .research-prose :global(strong) {
+		display: block;
+		margin-bottom: 0.25rem;
+		font-family: var(--font-retro-tag);
+		font-size: 0.75rem;
+		line-height: 1.125rem;
+		font-weight: 700;
+		letter-spacing: 0.4px;
+		text-transform: uppercase;
+		color: var(--channel-accent-primary);
+	}
+
+	@media (min-width: 48rem) {
+		.research-section[data-research-variant='technical-list'] .research-prose :global(strong) {
+			display: inline-block;
+			min-width: 7rem;
+			margin-right: 1rem;
+			margin-bottom: 0;
+		}
+	}
+
+	@media (min-width: 64rem) {
+		.research-section[data-research-variant='feature-grid'] .research-prose :global(ul) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
 	}
 </style>
