@@ -18,6 +18,7 @@ export interface ExperienceItem {
 	endDate: string | null;
 	isCurrent: boolean;
 	featured: boolean;
+	domain?: string;
 	link?: string;
 }
 
