@@ -94,8 +94,10 @@ describe('Home viewport section contract', () => {
 		expect(aboutMe).toContain('lg:grid-cols-[200px_minmax(0,1fr)_auto]');
 	});
 
-	it('navigates only viewport targets and yields to real vertical scrollers and the content-driven tail', () => {
-		expect(sectionScroll).toContain("['hero', 'experience', 'projects', 'research', 'about-me']");
+	it('snaps viewport sections through About Me into Contact while yielding to real vertical scrollers', () => {
+		expect(sectionScroll).toContain(
+			"['hero', 'experience', 'projects', 'research', 'about-me', 'contact']"
+		);
 		expect(sectionScroll).not.toContain("querySelectorAll<HTMLElement>('main > div > section[id], footer[id]')");
 		expect(sectionScroll).toContain('elementCanScrollVertically');
 		expect(sectionScroll).toContain('const { overflowY } = window.getComputedStyle(element)');
@@ -104,7 +106,8 @@ describe('Home viewport section contract', () => {
 		expect(sectionScroll).toContain('findDirectionalTarget');
 		expect(sectionScroll).toContain('WHEEL_QUIET_PERIOD');
 		expect(sectionScroll).not.toContain('}, 500);');
-		expect(sectionScroll).toContain('After About Me, Technologies and the Footer are intentionally content-driven.');
+		expect(sectionScroll).toContain('The directional Home journey closes explicitly from About Me to Contact');
+		expect(sectionScroll).toContain('Core Stack stays content-driven rather than becoming a viewport snap target.');
 		expect(sectionScroll).toContain('sectionScrollCleanup?.()');
 		expect(sectionScroll).toContain("window.removeEventListener('wheel', onWheel)");
 	});
