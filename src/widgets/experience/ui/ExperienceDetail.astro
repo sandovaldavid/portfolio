@@ -107,7 +107,7 @@ const companyContext = domain ? `${company.toUpperCase()} · ${domain}` : compan
 			visibleTechnologies.length > 0 && (
 				<ul
 					data-experience-technologies
-					class="flex w-full flex-wrap justify-start gap-2 md:w-auto"
+					class="flex w-full flex-wrap justify-center gap-2 md:w-auto md:justify-start"
 				>
 					{visibleTechnologies.map(technology => (
 						<li data-experience-technology-kind={technology.kind}>
