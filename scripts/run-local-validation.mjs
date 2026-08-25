@@ -5,6 +5,13 @@ import { fileURLToPath } from 'node:url';
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const isDevContainer = process.env.DEVCONTAINER === 'true';
 const devcontainer = process.platform === 'win32' ? 'devcontainer.cmd' : 'devcontainer';
+const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+const validationLogFile =
+	process.env.VALIDATION_LOG_FILE?.trim() || `validation-logs/validate-local-${timestamp}.log`;
+const loggedValidationCommand =
+	'set -o pipefail; mkdir -p "$(dirname "$VALIDATION_LOG_FILE")"; ' +
+	'echo "[validation] Full log: $VALIDATION_LOG_FILE"; ' +
+	'bun run validate:local:inside 2>&1 | tee "$VALIDATION_LOG_FILE"';
 
 /**
  * @param {string} command
@@ -27,8 +34,12 @@ function run(command, args, options = {}) {
 	if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
+console.log(`[validation] Full in-container log will be written to ${validationLogFile}`);
+
 if (isDevContainer) {
-	run('bun', ['run', 'validate:local:inside']);
+	run('bash', ['-lc', loggedValidationCommand], {
+		env: { ...process.env, VALIDATION_LOG_FILE: validationLogFile },
+	});
 	process.exit(0);
 }
 
@@ -48,13 +59,18 @@ if (probe.error || probe.status !== 0) {
 run(devcontainer, ['up', '--workspace-folder', repositoryRoot]);
 
 /** @type {string[]} */
-const remoteEnvironment = [];
+const remoteEnvironment = [`VALIDATION_LOG_FILE=${validationLogFile}`];
 if (process.env.PLAYWRIGHT_WORKERS) {
 	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${process.env.PLAYWRIGHT_WORKERS}`);
 }
 
-const remoteCommand = remoteEnvironment.length
-	? ['env', ...remoteEnvironment, 'bun', 'run', 'validate:local:inside']
-	: ['bun', 'run', 'validate:local:inside'];
-
-run(devcontainer, ['exec', '--workspace-folder', repositoryRoot, ...remoteCommand]);
+run(devcontainer, [
+	'exec',
+	'--workspace-folder',
+	repositoryRoot,
+	'env',
+	...remoteEnvironment,
+	'bash',
+	'-lc',
+	loggedValidationCommand,
+]);
