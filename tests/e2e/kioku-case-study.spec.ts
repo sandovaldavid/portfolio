@@ -80,16 +80,15 @@ test.describe('Kioku public backend case study', () => {
 			await expect(diagrams).toHaveCount(2);
 			for (let index = 0; index < 2; index += 1) {
 				const diagram = diagrams.nth(index);
-				await expect(diagram.locator('[data-diagram-svg]')).toBeVisible();
-				await expect(diagram.locator('[data-diagram-node]').first()).toBeVisible();
-				await expect(diagram.locator('[data-diagram-edge]').first()).toBeAttached();
-				const tones = await diagram
-					.locator('[data-diagram-node]')
-					.evaluateAll(
-						nodes =>
-							new Set(nodes.map(node => node.getAttribute('data-node-tone'))).size
-					);
-				expect(tones).toBeGreaterThanOrEqual(3);
+				const host = diagram.locator('[data-mermaid-host]');
+				await expect(host).toHaveAttribute('data-mermaid-state', 'rendered');
+				await expect(host).toHaveAttribute('role', 'region');
+				await expect(host).toHaveAttribute('tabindex', '0');
+				await expect(host).toHaveAttribute('aria-label', /.+/);
+
+				const svg = diagram.locator('[data-diagram-svg]');
+				await expect(svg).toBeVisible();
+				await expect(svg).toHaveAttribute('role', 'img');
 			}
 		});
 	}
