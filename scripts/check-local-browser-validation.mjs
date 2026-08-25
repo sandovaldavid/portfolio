@@ -90,6 +90,11 @@ expect(
 	packageJson.scripts?.['check:devcontainer']?.includes('check-local-browser-validation.mjs'),
 	'check:devcontainer must include the local browser validation contract.'
 );
+expect(
+	packageJson.scripts?.['check:production-output'] === 'node scripts/check-production-output.mjs' &&
+		packageJson.scripts?.['check:links']?.includes('bun run check:production-output'),
+	'Generated-output validation must reject development-only routes before locale route checks.'
+);
 
 expect(
 	localValidation.includes("process.env.DEVCONTAINER === 'true'") &&
@@ -164,5 +169,5 @@ if (failures.length) {
 }
 
 console.log(
-	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, production-mode isolation, isolated preview and visual image alignment.`
+	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, production-mode isolation, production-output guard, isolated preview and visual image alignment.`
 );
