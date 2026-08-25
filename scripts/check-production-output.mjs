@@ -39,8 +39,9 @@ export function validateProductionOutput({
 	);
 
 	if (leakedRoutes.length > 0) {
+		const details = leakedRoutes.map(route => `- ${route}`).join('\n');
 		throw new Error(
-			`[production-output] ${leakedRoutes.length} development-only route(s) leaked into dist:\n${leakedRoutes.map(route => `- ${route}`).join('\n')}`
+			`[production-output] ${leakedRoutes.length} development-only route(s) leaked into dist:\n${details}`
 		);
 	}
 
