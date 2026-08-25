@@ -16,8 +16,12 @@ const tPage = createScopedUiTranslator(lang, 'pages.experience');
 
 <article class="flex w-full max-w-320 flex-col gap-10 px-5 md:px-8 lg:px-0" data-experience-archive>
 	<header class="flex max-w-220 flex-col gap-4">
-		<p class="text-editorial-label uppercase text-channel-accent-primary">{tPage('careerHistory')}</p>
-		<h1 class="text-page-title-mobile text-content-strong md:text-page-title">{tPage('archiveTitle')}</h1>
+		<p class="text-editorial-label uppercase text-channel-accent-primary">
+			{tPage('careerHistory')}
+		</p>
+		<h1 class="text-page-title-mobile text-content-strong md:text-page-title">
+			{tPage('archiveTitle')}
+		</h1>
 		<p class="text-body text-content-default">{tPage('archiveSummary')}</p>
 	</header>
 
@@ -38,14 +42,23 @@ const tPage = createScopedUiTranslator(lang, 'pages.experience');
 
 						<div class="flex min-w-0 flex-col gap-3">
 							<div class="flex min-w-0 flex-col gap-1">
-								<h2 class="text-component-title text-content-strong md:text-feature-title">{item.company}</h2>
-								<p class="text-editorial-label uppercase text-channel-accent-primary">{item.title}</p>
+								<h2 class="text-component-title text-content-strong md:text-feature-title">
+									{item.company}
+								</h2>
+								<p class="text-editorial-label uppercase text-channel-accent-primary">
+									{item.title}
+								</p>
 							</div>
-							<p class="max-w-180 text-secondary text-content-default md:text-body">{item.summary}</p>
+							<p class="max-w-180 text-secondary text-content-default md:text-body">
+								{item.summary}
+							</p>
 							<ul class="flex flex-wrap gap-2">
 								{item.technologies.slice(0, 4).map(technology => (
 									<li>
-										<ExperienceTechnologyPill technology={technology} size="sm" />
+										<ExperienceTechnologyPill
+											technology={technology}
+											size="sm"
+										/>
 									</li>
 								))}
 							</ul>

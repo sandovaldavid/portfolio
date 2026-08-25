@@ -1,9 +1,5 @@
 import type { CollectionEntry } from 'astro:content';
-import type {
-	ExperienceId,
-	ExperiencePresentation,
-	ExperienceTechnology,
-} from './metadata';
+import type { ExperienceId, ExperiencePresentation, ExperienceTechnology } from './metadata';
 
 export type ExperienceContentEntry = CollectionEntry<'experience'>;
 

@@ -82,10 +82,14 @@ const detailUrl = (item: ExperienceItem) =>
 				<p class="text-editorial-label uppercase text-channel-accent-primary">
 					{experience.isCurrent ? tPage('currentKicker') : tPage('archiveKicker')}
 				</p>
-				<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
+				<h1
+					class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display"
+				>
 					{experience.company}
 				</h1>
-				<p class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title">
+				<p
+					class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title"
+				>
 					{experience.title}
 				</p>
 			</div>
@@ -96,7 +100,13 @@ const detailUrl = (item: ExperienceItem) =>
 					<Badge variant={experience.isCurrent ? 'success' : 'default'} size="sm">
 						{experience.isCurrent ? tPage('currentStatus') : tPage('pastStatus')}
 					</Badge>
-					{experience.domain && <Badge variant="info" size="sm">{experience.domain}</Badge>}
+					{
+						experience.domain && (
+							<Badge variant="info" size="sm">
+								{experience.domain}
+							</Badge>
+						)
+					}
 					<Badge variant="secondary" size="sm">{experience.date}</Badge>
 				</div>
 			</div>
@@ -124,7 +134,9 @@ const detailUrl = (item: ExperienceItem) =>
 							<span class="shrink-0 font-mono text-caption text-channel-accent-primary">
 								{String(index + 1).padStart(2, '0')}
 							</span>
-							<span class="text-secondary text-content-default md:text-body">{achievement}</span>
+							<span class="text-secondary text-content-default md:text-body">
+								{achievement}
+							</span>
 						</li>
 					))
 				}
@@ -154,11 +166,16 @@ const detailUrl = (item: ExperienceItem) =>
 								focusItemClass(group.kind),
 							]}
 						>
-							<p class="text-editorial-label uppercase text-channel-accent-primary">{group.label}</p>
+							<p class="text-editorial-label uppercase text-channel-accent-primary">
+								{group.label}
+							</p>
 							<ul class="flex flex-wrap gap-2">
 								{group.items.map(technology => (
 									<li>
-										<ExperienceTechnologyPill technology={technology} size="md" />
+										<ExperienceTechnologyPill
+											technology={technology}
+											size="md"
+										/>
 									</li>
 								))}
 							</ul>

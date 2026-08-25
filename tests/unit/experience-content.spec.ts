@@ -201,7 +201,7 @@ describe('localized professional experience content', () => {
 		expect(shell).toContain('data-experience-focus');
 		expect(shell).toContain('data-experience-career-navigation');
 		expect(shell).toContain("experience.presentation === 'product'");
-		expect(shell).toContain("technology.kind === group.kind");
+		expect(shell).toContain('technology.kind === group.kind');
 		expect(section).toContain("layout?: 'prose' | 'split' | 'lead' | 'triad'");
 		expect(components).toContain('ExperiencePanel');
 		expect(detail).toContain('`experience/${experienceId}`');

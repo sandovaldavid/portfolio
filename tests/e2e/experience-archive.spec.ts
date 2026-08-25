@@ -13,7 +13,9 @@ test('English current role renders as a systems-oriented career case study', asy
 		'DELIVERY DISCIPLINE'
 	);
 	await expect(caseStudy.locator('[data-experience-section-layout="split"]')).toBeVisible();
-	await expect(caseStudy.locator('[data-experience-focus]')).toContainText('Entity Framework Core');
+	await expect(caseStudy.locator('[data-experience-focus]')).toContainText(
+		'Entity Framework Core'
+	);
 	await expect(caseStudy.locator('[data-experience-focus]')).toContainText('SQL Server');
 	await expect(caseStudy.locator('[data-experience-focus]')).toContainText('Unit Testing');
 });
@@ -23,7 +25,9 @@ test('Spanish current role renders the localized systems narrative', async ({ pa
 
 	const caseStudy = page.locator('[data-experience-case-study="atena-software-engineer"]');
 	await expect(caseStudy).toBeVisible();
-	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText('CONTEXTO DEL ROL');
+	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
+		'CONTEXTO DEL ROL'
+	);
 	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
 		'DISCIPLINA DE ENTREGA'
 	);
@@ -37,7 +41,9 @@ test('Chirasoft uses a product-oriented hierarchy with a lead contribution', asy
 	await expect(caseStudy).toHaveAttribute('data-experience-presentation', 'product');
 	await expect(caseStudy.locator('[data-experience-section-layout="lead"]')).toBeVisible();
 	await expect(caseStudy.locator('[data-experience-panel]')).toHaveCount(2);
-	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText('WordPress to Angular 19');
+	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
+		'WordPress to Angular 19'
+	);
 	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
 		'Frontend and backend product flow'
 	);
@@ -88,5 +94,7 @@ test('middle career role links backward and forward through history', async ({ p
 test('legacy Atena route resolves to the canonical current-role URL', async ({ page }) => {
 	await page.goto('/atena');
 	await expect(page).toHaveURL(/\/experience\/atena-software-engineer\/?$/);
-	await expect(page.locator('[data-experience-case-study="atena-software-engineer"]')).toBeVisible();
+	await expect(
+		page.locator('[data-experience-case-study="atena-software-engineer"]')
+	).toBeVisible();
 });

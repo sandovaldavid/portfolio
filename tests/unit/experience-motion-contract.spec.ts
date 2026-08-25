@@ -77,8 +77,10 @@ describe('Experience motion contract', () => {
 		expect(technologyPill).toContain('label={technology.label}');
 		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
 		expect(detail).toContain('<ExperienceTechnologyPill technology={technology} size="sm" />');
-		expect(careerShell).toContain('<ExperienceTechnologyPill technology={technology} size="md" />');
-		expect(careerShell).toContain("technology.kind === group.kind");
+		expect(careerShell).toContain(
+			'<ExperienceTechnologyPill technology={technology} size="md" />'
+		);
+		expect(careerShell).toContain('technology.kind === group.kind');
 	});
 
 	it('keeps the Home detail compact while every role links to its archive page', () => {

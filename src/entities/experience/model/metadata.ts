@@ -1,11 +1,6 @@
 export type ExperienceTechnologyKind = 'technology' | 'architecture' | 'practice' | 'capability';
 export type ExperienceTechnologyIconKey =
-	| 'dotnet'
-	| 'angular'
-	| 'typescript'
-	| 'java'
-	| 'react'
-	| 'mysql';
+	'dotnet' | 'angular' | 'typescript' | 'java' | 'react' | 'mysql';
 export type ExperiencePresentation = 'systems' | 'product' | 'operations';
 
 export interface ExperienceTechnology {

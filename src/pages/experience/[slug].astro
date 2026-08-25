@@ -3,10 +3,7 @@ import { render } from 'astro:content';
 import Layout from '@app/layouts/Layout.astro';
 import { getExperienceData, getExperienceDetailBySlug } from '@entities/experience';
 import { Language } from '@shared/config/i18n';
-import {
-	ExperienceCaseStudy,
-	experienceCaseStudyComponents,
-} from '@widgets/experience-case-study';
+import { ExperienceCaseStudy, experienceCaseStudyComponents } from '@widgets/experience-case-study';
 
 export async function getStaticPaths() {
 	const experience = await getExperienceData(Language.ENGLISH);
