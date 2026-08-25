@@ -9,6 +9,8 @@ const CRITICAL_ROUTES = [
 	'/es/about',
 	'/projects',
 	'/es/projects',
+	'/research',
+	'/es/research',
 	'/projects/yukidoke',
 	'/es/projects/yukidoke',
 	'/projects/kioku',
@@ -77,6 +79,31 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		).toBeVisible();
 		await expect(page.getByText('Angular y arquitectura frontend reactiva')).toBeVisible();
 	});
+
+	for (const scenario of [
+		{
+			route: '/research',
+			title:
+				'Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks',
+			statusCopy: 'Results will be published upon thesis completion.',
+		},
+		{
+			route: '/es/research',
+			title:
+				'Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuronales BiLSTM',
+			statusCopy: 'Los resultados se publicarán al completar la tesis.',
+		},
+	] as const) {
+		test(`${scenario.route} renders localized research MDX composition`, async ({ page }) => {
+			await page.goto(scenario.route);
+			await expect(page.locator('[data-research-page="mdx"]')).toBeVisible();
+			await expect(page.getByRole('heading', { level: 1, name: scenario.title })).toBeVisible();
+			await expect(page.locator('[data-research-section]')).toHaveCount(7);
+			await expect(page.locator('[data-evaluation-criteria]')).toHaveCount(1);
+			await expect(page.locator('[data-mermaid-figure]')).toHaveCount(1);
+			await expect(page.getByText(scenario.statusCopy, { exact: false })).toBeVisible();
+		});
+	}
 
 	for (const scenario of [
 		{
