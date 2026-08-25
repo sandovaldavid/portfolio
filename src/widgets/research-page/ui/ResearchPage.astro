@@ -12,8 +12,7 @@ const { research } = Astro.props;
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tCommon = createScopedUiTranslator(lang, 'common');
 const tPage = createScopedUiTranslator(lang, 'pages.research');
-const statusLabel =
-	research.status === 'in-progress' ? tCommon('status.inProgress') : research.status;
+const statusLabel = tCommon('status.inProgress');
 ---
 
 <article class="flex w-full max-w-320 flex-col" data-research-page="mdx">
