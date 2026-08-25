@@ -37,8 +37,18 @@ describe('production output contract', () => {
 			'es/projects/ml-ai-project-fixture/index.html': '<html></html>',
 		});
 
-		expect(() => validateProductionOutput({ rootDir: root })).toThrowError(
-			/development-only route\(s\) leaked into dist/[\s\S]*\/blog\/_draft-rss-test[\s\S]*\/projects\/project-detail-fixture[\s\S]*\/es\/projects\/ml-ai-project-fixture/
-		);
+		let error: unknown;
+		try {
+			validateProductionOutput({ rootDir: root });
+		} catch (caught) {
+			error = caught;
+		}
+
+		expect(error).toBeInstanceOf(Error);
+		const message = error instanceof Error ? error.message : '';
+		expect(message).toContain('development-only route(s) leaked into dist:');
+		expect(message).toContain('/blog/_draft-rss-test');
+		expect(message).toContain('/projects/project-detail-fixture');
+		expect(message).toContain('/es/projects/ml-ai-project-fixture');
 	});
 });
