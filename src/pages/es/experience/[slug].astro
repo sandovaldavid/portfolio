@@ -20,7 +20,7 @@ const slug = Astro.params.slug ?? '';
 const detail = await getExperienceDetailBySlug(Language.SPANISH, slug);
 
 if (!detail) {
-	return Astro.redirect('/es/404');
+	return Astro.redirect('/404');
 }
 
 const { experience, entry, previous, next } = detail;
