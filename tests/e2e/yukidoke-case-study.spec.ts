@@ -13,7 +13,8 @@ test.describe('Yukidoke flagship case study', () => {
 	for (const locale of [
 		{
 			path: '/projects/yukidoke',
-			status: 'ACTIVE · V1 BETA / CROSS-REPO HARDENING',
+			lifecycle: 'Active',
+			source: 'Private source',
 			problem: 'Shared household money still contains private information',
 			system: 'Presentation is separated from financial authority',
 			implementation: 'What the V1 beta demonstrates today',
@@ -23,7 +24,8 @@ test.describe('Yukidoke flagship case study', () => {
 		},
 		{
 			path: '/es/projects/yukidoke',
-			status: 'ACTIVO · BETA V1 / HARDENING CROSS-REPO',
+			lifecycle: 'Activo',
+			source: 'Código privado',
 			problem: 'El dinero compartido del hogar todavía contiene información privada',
 			system: 'La presentación está separada de la autoridad financiera',
 			implementation: 'Qué demuestra hoy la beta V1',
@@ -37,7 +39,11 @@ test.describe('Yukidoke flagship case study', () => {
 
 			await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();
 			await expect(page.getByRole('heading', { level: 1, name: 'Yukidoke' })).toBeVisible();
-			await expect(page.getByText(locale.status, { exact: true })).toBeVisible();
+
+			const status = page.locator('[data-project-status]');
+			await expect(status).toContainText(locale.lifecycle);
+			await expect(status).toContainText(locale.source);
+
 			for (const heading of [
 				locale.problem,
 				locale.system,
