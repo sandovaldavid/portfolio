@@ -5,8 +5,7 @@ const playwrightPort = 4322;
 const playwrightBaseUrl = `http://${playwrightHost}:${playwrightPort}`;
 const isCi = Boolean(process.env.CI);
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
-const useProductionPreview =
-	process.env.E2E_USE_PRODUCTION_PREVIEW === '1' || isGitHubActions;
+const useProductionPreview = process.env.E2E_USE_PRODUCTION_PREVIEW === '1' || isGitHubActions;
 
 function getWorkerOverride(value: string | undefined): number | undefined {
 	if (!value) return undefined;
