@@ -60,9 +60,13 @@ test.describe('Interaction semantics', () => {
 		const pipelineStep = page.locator('[data-research-pipeline-step]').first();
 		const inactiveExperienceTab = page.locator('#experience-tablist [role="tab"]').nth(1);
 
-		const projectShadow = await projectCard.evaluate(element => getComputedStyle(element).boxShadow);
+		const projectShadow = await projectCard.evaluate(
+			element => getComputedStyle(element).boxShadow
+		);
 		await projectCard.hover();
-		expect(await projectCard.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+		expect(await projectCard.evaluate(element => getComputedStyle(element).transform)).toBe(
+			'none'
+		);
 		expect(await projectCard.evaluate(element => getComputedStyle(element).boxShadow)).toBe(
 			projectShadow
 		);
@@ -71,7 +75,9 @@ test.describe('Interaction semantics', () => {
 			element => getComputedStyle(element).boxShadow
 		);
 		await researchPanel.hover();
-		expect(await researchPanel.evaluate(element => getComputedStyle(element).transform)).toBe('none');
+		expect(await researchPanel.evaluate(element => getComputedStyle(element).transform)).toBe(
+			'none'
+		);
 		expect(await researchPanel.evaluate(element => getComputedStyle(element).boxShadow)).toBe(
 			researchShadow
 		);
@@ -95,11 +101,13 @@ test.describe('Interaction semantics', () => {
 			element => getComputedStyle(element).backgroundColor
 		);
 		await inactiveExperienceTab.hover();
-		expect(await inactiveExperienceTab.evaluate(element => getComputedStyle(element).transform)).toBe(
-			'none'
-		);
 		expect(
-			await inactiveExperienceTab.evaluate(element => getComputedStyle(element).backgroundColor)
+			await inactiveExperienceTab.evaluate(element => getComputedStyle(element).transform)
+		).toBe('none');
+		expect(
+			await inactiveExperienceTab.evaluate(
+				element => getComputedStyle(element).backgroundColor
+			)
 		).not.toBe(tabBackground);
 	});
 
@@ -133,26 +141,29 @@ test.describe('Interaction semantics', () => {
 		}
 	});
 
-	test(
-		'project resources keep control feedback without lift or brightness filters',
-		async ({ page }) => {
-			await page.setViewportSize(DESKTOP);
-			await page.goto('/projects/kioku');
+	test('project resources keep control feedback without lift or brightness filters', async ({
+		page,
+	}) => {
+		await page.setViewportSize(DESKTOP);
+		await page.goto('/projects/kioku');
 
-			const resource = page.locator('[data-project-resource]').first();
-			await resource.evaluate(element => {
-				(element as HTMLElement).style.setProperty('transition', 'none', 'important');
-			});
-			const beforeShadow = await resource.evaluate(element => getComputedStyle(element).boxShadow);
-			await resource.hover();
+		const resource = page.locator('[data-project-resource]').first();
+		await resource.evaluate(element => {
+			(element as HTMLElement).style.setProperty('transition', 'none', 'important');
+		});
+		const beforeShadow = await resource.evaluate(
+			element => getComputedStyle(element).boxShadow
+		);
+		await resource.hover();
 
-			expect(await resource.evaluate(element => getComputedStyle(element).transform)).toBe('none');
-			expect(await resource.evaluate(element => getComputedStyle(element).filter)).toBe('none');
-			expect(await resource.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe(
-				beforeShadow
-			);
-		}
-	);
+		expect(await resource.evaluate(element => getComputedStyle(element).transform)).toBe(
+			'none'
+		);
+		expect(await resource.evaluate(element => getComputedStyle(element).filter)).toBe('none');
+		expect(await resource.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe(
+			beforeShadow
+		);
+	});
 
 	test('Home keeps work evidence above biography in CTA hierarchy', async ({ page }) => {
 		await page.goto('/');
@@ -189,7 +200,9 @@ test.describe('Project case study reading ergonomics', () => {
 test.describe('Detail-page accessibility coverage', () => {
 	for (const theme of ['light', 'dark'] as const) {
 		for (const { path, name } of DETAIL_A11Y_ROUTES) {
-			test(`${name} has no serious accessibility violations in ${theme} theme`, async ({ page }) => {
+			test(`${name} has no serious accessibility violations in ${theme} theme`, async ({
+				page,
+			}) => {
 				await useTheme(page, theme);
 				await page.goto(path);
 				await page.waitForLoadState('networkidle');
