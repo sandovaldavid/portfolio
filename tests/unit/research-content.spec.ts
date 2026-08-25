@@ -1,98 +1,110 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (filePath: string): string => readFileSync(filePath, 'utf8');
 const readJson = <T>(filePath: string): T => JSON.parse(readSource(filePath)) as T;
+const locales = ['en', 'es'] as const;
+const researchId = 'oss-abandonment-bilstm';
 
-interface ResearchDocument {
-	researchId: string;
-	locale: 'en' | 'es';
-	label: string;
-	title: string;
-	problem: string;
-	hypothesis: string;
-	approach: string;
-	dataset: string;
-	status: string;
-	institution: string;
-	keywords: string[];
-	metrics: Record<'accuracy' | 'f1' | 'auc' | 'loss', string>;
-	pipelineSteps: string[];
-	architecture: Array<{ label: string; value: string }>;
-	engineeredFeatures: string[];
-	currentStatus: string;
+function researchSource(locale: (typeof locales)[number]): string {
+	return readSource(`src/content/research/${locale}/${researchId}.mdx`);
 }
 
-const research = {
-	en: readJson<ResearchDocument>('src/content/research/en/oss-abandonment-bilstm.json'),
-	es: readJson<ResearchDocument>('src/content/research/es/oss-abandonment-bilstm.json'),
-};
+function frontmatterScalar(source: string, key: string): string | undefined {
+	const block = source.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? '';
+	const match = block.match(new RegExp(`^${key}:\\s*["']?([^"'\\n]+)["']?\\s*$`, 'm'));
+	return match?.[1]?.trim();
+}
 
-describe('localized research content', () => {
-	it('registers research as a schema-validated collection', () => {
+describe('localized research MDX content', () => {
+	it('registers research as an MDX-only collection with stable identity and preview metadata', () => {
 		const config = readSource('src/content.config.ts');
-		expect(config).toContain('const research = defineCollection');
-		expect(config).toContain("base: './src/content/research'");
-		expect(config).toContain('researchId: stableContentId');
-		expect(config).toContain('portfolioProfile, experience, research, projects');
-	});
+		const schema =
+			config.match(/const research = defineCollection\(\{([\s\S]*?)\n\}\);/)?.[1] ?? '';
 
-	it('keeps stable identity and structure in locale parity', () => {
-		expect(research.en.researchId).toBe(research.es.researchId);
-		expect(research.en.locale).toBe('en');
-		expect(research.es.locale).toBe('es');
-		expect(Object.keys(research.en).sort()).toEqual(Object.keys(research.es).sort());
-		expect(Object.keys(research.en.metrics).sort()).toEqual(
-			Object.keys(research.es.metrics).sort()
-		);
-		expect(research.en.pipelineSteps).toHaveLength(research.es.pipelineSteps.length);
-		expect(research.en.architecture).toHaveLength(research.es.architecture.length);
-		expect(research.en.engineeredFeatures).toHaveLength(research.es.engineeredFeatures.length);
-	});
-
-	it('contains meaningful localized records', () => {
-		for (const entry of Object.values(research)) {
-			for (const field of [
-				'label',
-				'title',
-				'problem',
-				'hypothesis',
-				'approach',
-				'dataset',
-				'status',
-				'institution',
-				'currentStatus',
-			] as const) {
-				expect(entry[field].trim().length, field).toBeGreaterThan(0);
-			}
-			expect(entry.keywords.every(value => value.trim().length > 0)).toBe(true);
-			expect(entry.pipelineSteps.every(value => value.trim().length > 0)).toBe(true);
-			expect(entry.engineeredFeatures.every(value => value.trim().length > 0)).toBe(true);
-			expect(
-				entry.architecture.every(
-					item => item.label.trim().length > 0 && item.value.trim().length > 0
-				)
-			).toBe(true);
+		expect(schema).toContain("pattern: '**/*.mdx'");
+		expect(schema).toContain('researchId: stableContentId');
+		expect(schema).toContain("status: z.enum(['in-progress'])");
+		expect(schema).toContain('institution: nonEmptyString');
+		expect(schema).toContain('featuredSignals: z.array(nonEmptyString).min(1)');
+		expect(schema).toContain('keywords: z.array(nonEmptyString).min(1)');
+		for (const rigidNarrativeField of [
+			'problem:',
+			'hypothesis:',
+			'approach:',
+			'dataset:',
+			'metrics:',
+			'pipelineSteps:',
+			'architecture:',
+			'engineeredFeatures:',
+			'currentStatus:',
+		]) {
+			expect(schema).not.toContain(rigidNarrativeField);
 		}
 	});
 
-	it('loads research through the entity and granular page catalog', () => {
-		const query = readSource('src/entities/research/model/queries.ts');
-		const widget = readSource('src/widgets/research-content/ui/ResearchContent.astro');
-		const englishRoute = readSource('src/pages/research.astro');
-		const spanishRoute = readSource('src/pages/es/research.astro');
+	it('keeps exactly one localized MDX source and no legacy research JSON', () => {
+		for (const locale of locales) {
+			const files = readdirSync(`src/content/research/${locale}`).sort();
+			expect(files.filter(file => file.endsWith('.mdx'))).toEqual([`${researchId}.mdx`]);
+			expect(files.filter(file => file.endsWith('.json'))).toEqual([]);
 
-		expect(query).toContain("getEntry('research'");
-		expect(query).toContain('RESEARCH_ENTRY_ID');
-		expect(query).toContain('research.data.locale !== lang');
-		expect(widget).toContain('getResearchContent');
-		expect(widget).toContain("createScopedUiTranslator(lang, 'pages.research')");
-		expect(widget).not.toContain('useTranslations');
-		expect(englishRoute).toContain("'pages.research'");
-		expect(spanishRoute).toContain("'pages.research'");
+			const source = researchSource(locale);
+			expect(frontmatterScalar(source, 'researchId')).toBe(researchId);
+			expect(frontmatterScalar(source, 'locale')).toBe(locale);
+			expect(frontmatterScalar(source, 'title')).toBeTruthy();
+			expect(frontmatterScalar(source, 'label')).toBeTruthy();
+			expect(frontmatterScalar(source, 'institution')).toBeTruthy();
+			expect(frontmatterScalar(source, 'status')).toBe('in-progress');
+			expect(source).toContain('featuredSignals:');
+			expect(source).toContain('keywords:');
+		}
 	});
 
-	it('uses a balanced, data-backed Home research composition with a shared technology footer', () => {
+	it('keeps scientific narrative flexible while preserving current published claims in both locales', () => {
+		const english = researchSource('en');
+		const spanish = researchSource('es');
+
+		for (const source of [english, spanish]) {
+			expect(source).toContain('<ResearchSection');
+			expect(source).toContain('<MermaidDiagram');
+			expect(source).toContain('<EvaluationCriteria');
+			expect(source).not.toContain('<ResearchMetrics');
+			expect(source).not.toContain('<ExperimentBlock');
+			expect(source).not.toContain('<ResultTable');
+		}
+		expect(english).toContain('Results will be published upon thesis completion.');
+		expect(spanish).toContain('Los resultados se publicarán al completar la tesis.');
+		expect(english).toContain('Classification accuracy vs. Logistic Regression & Random Forest baselines');
+		expect(spanish).toContain('Accuracy de clasificación vs. baselines Logistic Regression y Random Forest');
+	});
+
+	it('loads validated entries for MDX routes while Home can keep reading frontmatter data', () => {
+		const query = readSource('src/entities/research/model/queries.ts');
+		const englishRoute = readSource('src/pages/research.astro');
+		const spanishRoute = readSource('src/pages/es/research.astro');
+		const components = readSource('src/widgets/research-page/ui/mdx-components.ts');
+		const shell = readSource('src/widgets/research-page/ui/ResearchPage.astro');
+
+		expect(query).toContain('export async function getResearchEntry');
+		expect(query).toContain("getEntry('research'");
+		expect(query).toContain('return (await getResearchEntry(lang)).data');
+		for (const route of [englishRoute, spanishRoute]) {
+			expect(route).toContain("import { render } from 'astro:content'");
+			expect(route).toContain('getResearchEntry');
+			expect(route).toContain('const { Content } = await render(entry)');
+			expect(route).toContain('<ResearchPage {research}>');
+			expect(route).toContain('<Content components={researchMdxComponents} />');
+		}
+		expect(components).toContain("from '@shared/ui/rich-content'");
+		expect(components).toContain('EvaluationCriteria');
+		expect(components).toContain('ResearchSection');
+		expect(shell).toContain('data-research-page="mdx"');
+		expect(shell).toContain('<slot />');
+		expect(existsSync('src/widgets/research-content/ui/ResearchContent.astro')).toBe(false);
+	});
+
+	it('uses frontmatter preview signals without changing the established Home composition', () => {
 		const homeResearch = readSource('src/widgets/research/ui/Research.astro');
 		const englishSection = readJson<Record<string, unknown>>(
 			'src/shared/config/i18n/locales/en/sections/research.json'
@@ -102,7 +114,8 @@ describe('localized research content', () => {
 		);
 
 		expect(homeResearch).toContain('getResearchContent');
-		expect(homeResearch).toContain('research.engineeredFeatures.slice(0, 4)');
+		expect(homeResearch).toContain('const modeledSignals = research.featuredSignals;');
+		expect(homeResearch).not.toContain('research.engineeredFeatures');
 		expect(homeResearch).toContain('lg:grid-cols-[minmax(0,672px)_minmax(0,544px)]');
 		expect(homeResearch).toContain('data-research-home-main');
 		expect(homeResearch).toContain('data-research-home-panel');
