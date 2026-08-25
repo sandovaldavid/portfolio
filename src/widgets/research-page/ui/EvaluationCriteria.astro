@@ -1,0 +1,34 @@
+---
+interface EvaluationCriterion {
+	label: string;
+	detail: string;
+}
+
+interface Props {
+	title: string;
+	items: EvaluationCriterion[];
+}
+
+const { title, items } = Astro.props;
+---
+
+<section class="w-full max-w-210" aria-labelledby="research-evaluation-title" data-evaluation-criteria>
+	<h2
+		id="research-evaluation-title"
+		class="mb-4 text-editorial-label uppercase text-channel-accent-primary"
+	>
+		{title}
+	</h2>
+	<ul class="grid gap-3 sm:grid-cols-2">
+		{
+			items.map(item => (
+				<li class="flex min-w-0 flex-col gap-2 border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-sm">
+					<span class="w-fit bg-channel-accent-primary px-2 py-1 text-editorial-label-compact uppercase text-button-primary-content">
+						{item.label}
+					</span>
+					<span class="text-secondary leading-relaxed text-content-default">{item.detail}</span>
+				</li>
+			))
+		}
+	</ul>
+</section>
