@@ -66,6 +66,7 @@ interface ExperienceMetadata {
 	presentation: ExperiencePresentation;
 	technologyIds: readonly ExperienceTechnologyId[];
 	domain?: string;
+	organizationUrl?: string;
 	evidenceUrl?: string;
 }
 
@@ -78,6 +79,7 @@ const experienceMetadata = {
 		featured: true,
 		presentation: 'systems',
 		domain: 'FINTECH',
+		organizationUrl: 'https://atena.la',
 		technologyIds: [
 			'dotnet-8',
 			'entity-framework-core',
@@ -97,6 +99,7 @@ const experienceMetadata = {
 		order: 20,
 		featured: false,
 		presentation: 'product',
+		organizationUrl: 'https://chirasoft.pe',
 		technologyIds: [
 			'angular-19',
 			'typescript',
@@ -116,6 +119,7 @@ const experienceMetadata = {
 		order: 10,
 		featured: false,
 		presentation: 'operations',
+		organizationUrl: 'https://www.gob.pe/munipiura',
 		technologyIds: [
 			'infrastructure',
 			'networking',
