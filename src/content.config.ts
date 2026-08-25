@@ -120,6 +120,7 @@ const projects = defineCollection({
 			kicker: nonEmptyString,
 			status: projectStatus,
 		}),
+	}),
 });
 
 export const collections = { blog, devlog, portfolioProfile, experience, research, projects };
