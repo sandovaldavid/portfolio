@@ -117,7 +117,7 @@ test.describe('deduplicated legacy page pairs', () => {
 		test(`${scenario.route} redirects to its canonical localized career route`, async ({ page }) => {
 			const response = await page.goto(scenario.route);
 			expect(response?.ok()).toBe(true);
-			expect(normalizeRoute(page.url())).toBe(scenario.canonicalRoute);
+			await expect(page).toHaveURL(new RegExp(`${scenario.canonicalRoute}/?$`));
 			await expect(page.locator('html')).toHaveAttribute('lang', scenario.locale);
 			await expect(page.locator('main')).toHaveCount(1);
 			await expect(page.getByRole('heading', { level: 1, name: 'Atena' })).toBeVisible();
