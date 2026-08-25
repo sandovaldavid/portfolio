@@ -88,6 +88,9 @@ test.describe('Interaction semantics', () => {
 			})
 		).toEqual(pipelineStyle);
 
+		await inactiveExperienceTab.evaluate(element => {
+			(element as HTMLElement).style.setProperty('transition', 'none', 'important');
+		});
 		const tabBackground = await inactiveExperienceTab.evaluate(
 			element => getComputedStyle(element).backgroundColor
 		);
@@ -135,6 +138,9 @@ test.describe('Interaction semantics', () => {
 		await page.goto('/projects/kioku');
 
 		const resource = page.locator('[data-project-resource]').first();
+		await resource.evaluate(element => {
+			(element as HTMLElement).style.setProperty('transition', 'none', 'important');
+		});
 		const beforeShadow = await resource.evaluate(element => getComputedStyle(element).boxShadow);
 		await resource.hover();
 
