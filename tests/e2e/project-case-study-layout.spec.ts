@@ -97,6 +97,24 @@ for (const viewport of VIEWPORTS) {
 	});
 }
 
+test('Kioku lazy-renders an accessible Mermaid SVG with semantic actor tones', async ({ page }) => {
+	await page.setViewportSize({ width: 1440, height: 1000 });
+	await page.goto('/projects/kioku');
+
+	const figure = page.locator('[data-mermaid-figure]').first();
+	const host = figure.locator('[data-mermaid-host]');
+	await figure.scrollIntoViewIfNeeded();
+	await expect(host).toHaveAttribute('data-mermaid-state', 'rendered', { timeout: 15_000 });
+
+	const svg = host.locator('svg[data-diagram-svg]');
+	await expect(svg).toBeVisible();
+	await expect(svg.locator('title')).toHaveText('Kioku runtime boundary');
+	await expect(svg.locator('desc')).toContainText('MCP clients reach a .NET 10 Kioku server');
+	await expect(host.locator('[data-mermaid-fallback]')).toHaveCount(0);
+	expect(await host.locator('g.portfolio-tone-brand').count()).toBeGreaterThanOrEqual(1);
+	expect(await host.locator('g.portfolio-tone-success').count()).toBeGreaterThanOrEqual(1);
+});
+
 const PROJECT_ROUTES = [
 	['/projects/yukidoke', 'Yukidoke'],
 	['/projects/kioku', 'Kioku'],
@@ -122,7 +140,17 @@ for (const [route, title] of PROJECT_ROUTES) {
 		await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();
 		await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
 		expect(await page.locator('[data-case-study-section]').count()).toBeGreaterThanOrEqual(5);
-		expect(await page.locator('[data-mermaid-figure]').count()).toBeGreaterThanOrEqual(1);
+
+		const diagrams = page.locator('[data-mermaid-host]');
+		expect(await diagrams.count()).toBeGreaterThanOrEqual(1);
+		for (let index = 0; index < (await diagrams.count()); index += 1) {
+			const diagram = diagrams.nth(index);
+			await diagram.scrollIntoViewIfNeeded();
+			await expect(diagram).toHaveAttribute('data-mermaid-state', 'rendered', {
+				timeout: 15_000,
+			});
+			await expect(diagram.locator('svg[data-diagram-svg]')).toBeVisible();
+		}
 
 		const overflow = await page.evaluate(() => ({
 			clientWidth: document.documentElement.clientWidth,
