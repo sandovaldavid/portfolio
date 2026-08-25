@@ -123,8 +123,8 @@ expect(
 );
 
 expect(
-	dockerCompose.includes("PLAYWRIGHT_VERSION: '1.62.1'") &&
-		dockerCompose.includes("BUN_VERSION: '1.3.14'") &&
+	dockerCompose.includes(`PLAYWRIGHT_VERSION: '${playwrightVersion}'`) &&
+		dockerCompose.includes(`BUN_VERSION: '${bunVersion}'`) &&
 		dockerCompose.includes("E2E_USE_PRODUCTION_PREVIEW: '${E2E_USE_PRODUCTION_PREVIEW:-1}'") &&
 		dockerCompose.includes("'4322:4322'"),
 	'Visual Docker Compose must pin the aligned toolchain and expose the dedicated E2E preview port.'
