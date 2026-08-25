@@ -115,6 +115,27 @@ test('Kioku lazy-renders an accessible Mermaid SVG with semantic actor tones', a
 	expect(await host.locator('g.portfolio-tone-success').count()).toBeGreaterThanOrEqual(1);
 });
 
+test('Mermaid initializes again after ClientRouter locale navigation', async ({ page }) => {
+	await page.setViewportSize({ width: 1440, height: 1000 });
+	await page.goto('/projects/kioku');
+
+	const englishHost = page.locator('[data-mermaid-host]').first();
+	await englishHost.scrollIntoViewIfNeeded();
+	await expect(englishHost).toHaveAttribute('data-mermaid-state', 'rendered', {
+		timeout: 15_000,
+	});
+
+	await page.getByRole('link', { name: 'Spanish', exact: true }).first().click();
+	await expect(page).toHaveURL(/\/es\/projects\/kioku\/?$/);
+
+	const spanishHost = page.locator('[data-mermaid-host]').first();
+	await spanishHost.scrollIntoViewIfNeeded();
+	await expect(spanishHost).toHaveAttribute('data-mermaid-state', 'rendered', {
+		timeout: 15_000,
+	});
+	await expect(spanishHost.locator('svg[data-diagram-svg]')).toBeVisible();
+});
+
 const PROJECT_ROUTES = [
 	['/projects/yukidoke', 'Yukidoke'],
 	['/projects/kioku', 'Kioku'],
