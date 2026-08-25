@@ -19,9 +19,7 @@ describe('Research evidence composition contract', () => {
 
 	it('composes both localized research entries into evidence columns without changing their claims', () => {
 		for (const locale of ['en', 'es'] as const) {
-			const source = readSource(
-				`src/content/research/${locale}/oss-abandonment-bilstm.mdx`
-			);
+			const source = readSource(`src/content/research/${locale}/oss-abandonment-bilstm.mdx`);
 
 			expect(source).toContain('<ResearchEvidenceLayout>');
 			expect(source.match(/<ResearchEvidenceColumn>/g) ?? []).toHaveLength(2);
