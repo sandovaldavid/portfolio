@@ -7,6 +7,16 @@ const isCi = Boolean(process.env.CI);
 const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
 const useProductionPreview = process.env.E2E_USE_PRODUCTION_PREVIEW === '1' || isGitHubActions;
 
+const canonicalChromiumOnlySpecs = [
+	'**/content-components-geometry.spec.ts',
+	'**/design-system-colors.spec.ts',
+	'**/experience-layout.spec.ts',
+	'**/experience-section.spec.ts',
+	'**/identity-system-typography.spec.ts',
+	'**/typography.spec.ts',
+	'**/visual.spec.ts',
+];
+
 function getWorkerOverride(value: string | undefined): number | undefined {
 	if (!value) return undefined;
 
@@ -53,18 +63,22 @@ export default defineConfig({
 		},
 		{
 			name: 'firefox',
+			testIgnore: canonicalChromiumOnlySpecs,
 			use: { ...devices['Desktop Firefox'] },
 		},
 		{
 			name: 'webkit',
+			testIgnore: canonicalChromiumOnlySpecs,
 			use: { ...devices['Desktop Safari'] },
 		},
 		{
 			name: 'Mobile Chrome',
+			testIgnore: canonicalChromiumOnlySpecs,
 			use: { ...devices['Pixel 5'] },
 		},
 		{
 			name: 'Mobile Safari',
+			testIgnore: canonicalChromiumOnlySpecs,
 			use: { ...devices['iPhone 12'] },
 		},
 	],
