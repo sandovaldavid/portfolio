@@ -85,13 +85,27 @@ describe('Home viewport section contract', () => {
 		expect(projects).toContain("caseStudyText={tProjects('caseStudy')}");
 	});
 
-	it('sizes Home biography and work actions from their localized copy', () => {
-		expect(aboutMe.match(/class="w-fit"/g)).toHaveLength(2);
+	it('balances Home biography and current role without inventing additional content', () => {
+		expect(aboutMe.match(/class="w-fit/g)).toHaveLength(2);
+		expect(aboutMe).toContain('max-w-288');
+		expect(aboutMe).toContain('data-about-profile');
+		expect(aboutMe).toContain('data-about-current-role');
+		expect(aboutMe).toContain('border-t border-edge-subtle');
+		expect(aboutMe).toContain('lg:grid-cols-[200px_minmax(0,1fr)_auto]');
 	});
 
-	it('cleans up wheel listeners and does not intercept horizontal rails', () => {
+	it('navigates only viewport targets and yields to real vertical scrollers and the content-driven tail', () => {
+		expect(sectionScroll).toContain("['hero', 'experience', 'projects', 'research', 'about-me']");
+		expect(sectionScroll).not.toContain("querySelectorAll<HTMLElement>('main > div > section[id], footer[id]')");
+		expect(sectionScroll).toContain('elementCanScrollVertically');
+		expect(sectionScroll).toContain('const { overflowY } = window.getComputedStyle(element)');
+		expect(sectionScroll).not.toContain("closest(\n\t\t\t\t\t'.overflow-y-auto");
+		expect(sectionScroll).not.toContain('.overflow-x-auto, .overflow-auto');
+		expect(sectionScroll).toContain('findDirectionalTarget');
+		expect(sectionScroll).toContain('WHEEL_QUIET_PERIOD');
+		expect(sectionScroll).not.toContain('}, 500);');
+		expect(sectionScroll).toContain('After About Me, Technologies and the Footer are intentionally content-driven.');
 		expect(sectionScroll).toContain('sectionScrollCleanup?.()');
-		expect(sectionScroll).toContain('.overflow-x-auto');
 		expect(sectionScroll).toContain("window.removeEventListener('wheel', onWheel)");
 	});
 });
