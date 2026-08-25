@@ -156,6 +156,10 @@ expect(
 	'Playwright must keep CI, GitHub Actions, worker overrides and production preview as separate policy signals.'
 );
 expect(
+	playwrightConfig.includes("open: 'never'"),
+	'Playwright HTML reporter must remain non-interactive so validation can return its exit status.'
+);
+expect(
 	playwrightConfig.includes('const canonicalChromiumOnlySpecs = [') &&
 		playwrightConfig.includes("'**/typography.spec.ts'") &&
 		playwrightConfig.includes("'**/content-components-geometry.spec.ts'") &&
@@ -199,5 +203,5 @@ if (failures.length) {
 }
 
 console.log(
-	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, persistent logs, production-mode isolation, production-output guard, capability-scoped matrix, isolated preview and visual image alignment.`
+	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, persistent logs, production-mode isolation, production-output guard, capability-scoped matrix, non-interactive HTML reporting, isolated preview and visual image alignment.`
 );
