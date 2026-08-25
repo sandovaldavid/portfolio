@@ -8,6 +8,11 @@ if (process.env.DEVCONTAINER !== 'true') {
 	process.exit(1);
 }
 
+/**
+ * @param {string} command
+ * @param {string[]} args
+ * @param {NodeJS.ProcessEnv} [env]
+ */
 function run(command, args, env = process.env) {
 	const result = spawnSync(command, args, {
 		stdio: 'inherit',
