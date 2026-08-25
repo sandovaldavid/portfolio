@@ -13,7 +13,8 @@ describe('Research evidence composition contract', () => {
 		expect(components).toContain('ResearchEvidenceLayout');
 		expect(components).toContain('ResearchEvidenceColumn');
 		expect(layout).toContain('data-research-evidence-layout');
-		expect(layout).toContain('md:grid-cols-2');
+		expect(layout).toContain('lg:grid-cols-2');
+		expect(layout).not.toContain('md:grid-cols-2');
 		expect(column).toContain('data-research-evidence-column');
 		expect(column).toContain('flex min-w-0 flex-col');
 		expect(section).toContain(
@@ -26,7 +27,23 @@ describe('Research evidence composition contract', () => {
 		expect(section).toContain(
 			"class:list={['research-prose text-body leading-relaxed text-content-default', contentMeasure]}"
 		);
+		expect(section).toContain('@media (min-width: 48rem)');
+		expect(section).toContain('grid-template-columns: repeat(2, minmax(0, 1fr));');
+		expect(section).not.toContain('@media (min-width: 64rem)');
 		expect(section).not.toContain('research-section w-full max-w-210');
+	});
+
+	it('keeps Home and Research detail on the same semantic research color language', () => {
+		const home = readSource('src/widgets/research/ui/Research.astro');
+		const detail = readSource('src/widgets/research-page/ui/ResearchPage.astro');
+
+		expect(home).toContain('<Badge variant="info" size="sm">');
+		expect(detail).toContain('<Badge variant="info" size="md">');
+		expect(detail).not.toContain('<Badge variant="success"');
+		expect(home).toContain('text-editorial-label text-channel-accent-primary');
+		expect(detail).toContain(
+			'text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label'
+		);
 	});
 
 	it('composes both localized research entries into evidence columns without changing their claims', () => {
