@@ -55,7 +55,7 @@ test.describe('Yukidoke flagship case study', () => {
 				await expect(page.getByRole('heading', { name: heading })).toBeVisible();
 			}
 
-			await expect(page.getByText('0.9.0-rc.1', { exact: false })).toBeVisible();
+			await expect(page.getByText('0.9.0-rc.1', { exact: true })).toBeVisible();
 			await expect(page.getByText('PostgreSQL 16', { exact: false })).toBeVisible();
 			await expect(page.locator('[data-mermaid-figure]')).toHaveCount(1);
 			await expect(page.locator('a[href*="github.com/sandovaldavid/yukidoke"]')).toHaveCount(
