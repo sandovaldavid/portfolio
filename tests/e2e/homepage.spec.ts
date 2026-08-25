@@ -10,10 +10,12 @@ test.describe('Homepage', () => {
 		await expect(page.getByRole('link', { name: /view work/i })).toBeVisible();
 		await expect(page.getByRole('link', { name: /get in touch/i })).toBeVisible();
 		await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
-		await expect(page.getByRole('link', { name: 'GitHub', exact: true }).first()).toBeVisible();
-		await expect(
-			page.getByRole('link', { name: 'LinkedIn', exact: true }).first()
-		).toBeVisible();
+
+		// Social evidence belongs to secondary surfaces (Recruiter HUD/footer), so
+		// it must remain available in the document without competing with the
+		// immediate hero actions.
+		await expect(page.locator('a[href*="github.com"]').first()).toBeAttached();
+		await expect(page.locator('a[href*="linkedin.com"]').first()).toBeAttached();
 	});
 
 	test('does not block the default first visit', async ({ page }) => {
@@ -42,7 +44,7 @@ test.describe('Homepage', () => {
 		await page.goto('/');
 
 		const desktopNav = page.locator('header nav a').first();
-		const mobileToggle = page.locator('button[aria-label="Toggle menu"]');
+		const mobileToggle = page.locator('#mobile-menu-btn');
 
 		const hasDesktop = await desktopNav.isVisible().catch(() => false);
 		const hasMobile = await mobileToggle.isVisible().catch(() => false);
@@ -79,11 +81,9 @@ test.describe('Homepage', () => {
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.goto('/');
 
-		// Initial scroll position should be at top
 		const initialScrollY = await page.evaluate(() => window.scrollY);
 		expect(initialScrollY).toBe(0);
 
-		// Dispatch a wheel event to scroll down to next section
 		await page.mouse.wheel(0, 100);
 		await page.waitForTimeout(650);
 
