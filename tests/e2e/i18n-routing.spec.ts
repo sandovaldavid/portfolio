@@ -14,10 +14,18 @@ const routePairs = [
 ] as const;
 
 async function openLanguagePanel(page: import('@playwright/test').Page) {
-	await page.locator('#recruiter-hud-toggle').click();
-	const panel = page.locator('#recruiter-hud-panel');
-	await expect(panel).toBeVisible();
-	return panel;
+	const recruiterToggle = page.locator('#recruiter-hud-toggle');
+	if (await recruiterToggle.isVisible().catch(() => false)) {
+		await recruiterToggle.click();
+		const panel = page.locator('#recruiter-hud-panel');
+		await expect(panel).toBeVisible();
+		return panel;
+	}
+
+	await page.locator('#mobile-menu-btn').click();
+	const menu = page.locator('#mobile-menu');
+	await expect(menu).toBeVisible();
+	return menu;
 }
 
 test.describe('Astro-native locale routing', () => {
