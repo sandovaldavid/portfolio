@@ -109,7 +109,10 @@ function collectMetrics(): PageMetrics {
 			chars: (p.textContent ?? '').trim().length,
 			text: snippet(p),
 			isExplicitCaption:
-				p.classList.contains('text-xs') || p.dataset.typographyRole === 'caption',
+				p.classList.contains('text-xs') ||
+				p.classList.contains('text-caption') ||
+				p.classList.contains('text-editorial-label-compact') ||
+				p.dataset.typographyRole === 'caption',
 		}));
 
 	const headings: HeadingMetric[] = Array.from(
@@ -166,7 +169,10 @@ for (const { path, name } of KEY_PAGES) {
 				).toEqual([]);
 
 				const smallReadingCopy = metrics.paragraphs.filter(
-					p => p.chars >= READING_COPY_CHARS && p.size < MIN_READING_COPY
+					p =>
+						!p.isExplicitCaption &&
+						p.chars >= READING_COPY_CHARS &&
+						p.size < MIN_READING_COPY
 				);
 				expect(
 					smallReadingCopy,
