@@ -23,6 +23,10 @@ const expect = (condition, message) => {
 
 const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
 const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
+const dependencyInstallCall = "run('bun', ['install', '--frozen-lockfile'])";
+const qualityCheckCall = "run('bun', ['run', 'check'])";
+const dependencyInstallIndex = localValidationInside.indexOf(dependencyInstallCall);
+const qualityCheckIndex = localValidationInside.indexOf(qualityCheckCall);
 
 expect(Boolean(bunVersion), 'packageManager must pin Bun as bun@<version>.');
 expect(
@@ -96,14 +100,15 @@ expect(
 );
 expect(
 	localValidationInside.includes("process.env.DEVCONTAINER !== 'true'") &&
-		localValidationInside.includes("run('bun', ['run', 'check'])") &&
+		dependencyInstallIndex >= 0 &&
+		qualityCheckIndex > dependencyInstallIndex &&
 		localValidationInside.includes("run('bun', ['run', 'test:unit:ci'])") &&
 		localValidationInside.includes("run('bun', ['run', 'build'])") &&
 		localValidationInside.includes("run('bun', ['run', 'check:links'])") &&
 		localValidationInside.includes("run('bun', ['run', 'performance:check'])") &&
 		localValidationInside.includes("run('bun', ['run', 'test:e2e:extended']") &&
 		localValidationInside.includes("E2E_USE_PRODUCTION_PREVIEW: '1'"),
-	'In-container validation must run the maintained quality, build, link, performance and full Playwright gates against the existing production build.'
+	'In-container validation must sync frozen dependencies before running the maintained quality, build, link, performance and full Playwright gates against the existing production build.'
 );
 
 expect(
