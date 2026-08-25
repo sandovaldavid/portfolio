@@ -19,9 +19,12 @@ describe('Research evidence composition contract', () => {
 		expect(section).toContain(
 			'const sectionClasses = `research-section w-full ${variantClasses[variant]}`;'
 		);
-		expect(section).toContain('<header class="mb-4 flex max-w-210 flex-col gap-2">');
 		expect(section).toContain(
-			'class="research-prose max-w-210 text-body leading-relaxed text-content-default"'
+			"const contentMeasure = variant === 'narrative' ? 'max-w-280' : 'max-w-210';"
+		);
+		expect(section).toContain("class:list={['mb-4 flex flex-col gap-2', contentMeasure]}");
+		expect(section).toContain(
+			"class:list={['research-prose text-body leading-relaxed text-content-default', contentMeasure]}"
 		);
 		expect(section).not.toContain('research-section w-full max-w-210');
 	});
