@@ -5,8 +5,8 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 const shell = readSource('src/widgets/project-case-study/ui/ProjectCaseStudy.astro');
 const section = readSource('src/widgets/project-case-study/ui/CaseStudySection.astro');
 const components = readSource('src/widgets/project-case-study/ui/mdx-components.ts');
-const mermaid = readSource('src/widgets/project-case-study/ui/MermaidDiagram.astro');
-const diagramAdapter = readSource('src/widgets/project-case-study/model/diagram.ts');
+const mermaid = readSource('src/shared/ui/rich-content/ui/MermaidDiagram.astro');
+const diagramAdapter = readSource('src/shared/ui/rich-content/model/diagram.ts');
 const resources = readSource('src/widgets/project-case-study/ui/ProjectResources.astro');
 const video = readSource('src/widgets/project-case-study/ui/ProjectVideo.astro');
 const gallery = readSource('src/widgets/project-case-study/ui/ProjectGallery.astro');
@@ -67,6 +67,8 @@ describe('Project Case Study MDX contract', () => {
 		]) {
 			expect(components).toContain(component);
 		}
+		expect(components).toContain("from '@shared/ui/rich-content'");
+		expect(components).not.toContain("from './MermaidDiagram.astro'");
 		expect(components).not.toContain('ProjectResources');
 		expect(kiokuEn).not.toContain('<ProjectResources');
 		expect(kiokuEs).not.toContain('<ProjectResources');
