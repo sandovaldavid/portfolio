@@ -142,4 +142,44 @@ describe('i18n repository enforcement', () => {
 			/Spanish generated page contains known English-only phrase "Skip to main content"/
 		);
 	});
+
+	it('accepts generated legacy redirects without weakening canonical-page contracts', () => {
+		const root = createFixture({
+			'dist/404.html': '<html lang="en"><head></head></html>',
+			'dist/atena/index.html':
+				'<head><link rel="canonical" href="/experience/atena-software-engineer"><meta http-equiv="refresh" content="0;url=/experience/atena-software-engineer"></head>',
+			'dist/es/atena/index.html':
+				'<head><link rel="canonical" href="/es/experience/atena-software-engineer"><meta http-equiv="refresh" content="0; url=/es/experience/atena-software-engineer"></head>',
+			'dist/experience/atena-software-engineer/index.html':
+				'<html lang="en"><head><link rel="canonical" href="/experience/atena-software-engineer"></head></html>',
+			'dist/es/experience/atena-software-engineer/index.html':
+				'<html lang="es"><head><link rel="canonical" href="/es/experience/atena-software-engineer"></head></html>',
+		});
+
+		expect(() =>
+			validateGeneratedLocaleRoutes({
+				rootDir: root,
+				distDir: path.join(root, 'dist'),
+				representativeRoutePairs: [],
+			})
+		).not.toThrow();
+	});
+
+	it('rejects a legacy redirect artifact that no longer points to its canonical destination', () => {
+		const root = createFixture({
+			'dist/404.html': '<html lang="en"><head></head></html>',
+			'dist/atena/index.html':
+				'<head><link rel="canonical" href="/atena"><meta http-equiv="refresh" content="0;url=/atena"></head>',
+			'dist/experience/atena-software-engineer/index.html':
+				'<html lang="en"><head><link rel="canonical" href="/experience/atena-software-engineer"></head></html>',
+		});
+
+		expect(() =>
+			validateGeneratedLocaleRoutes({
+				rootDir: root,
+				distDir: path.join(root, 'dist'),
+				representativeRoutePairs: [],
+			})
+		).toThrowError(/legacy redirect canonical for "\/atena"/);
+	});
 });
