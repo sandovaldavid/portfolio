@@ -30,6 +30,8 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/widgets/project-case-study/ui/ProjectVideo.astro',
 	'src/widgets/project-case-study/ui/ProjectGallery.astro',
 	'src/widgets/research-page/ui/ResearchPage.astro',
+	'src/widgets/research-page/ui/ResearchEvidenceLayout.astro',
+	'src/widgets/research-page/ui/ResearchEvidenceColumn.astro',
 	'src/widgets/research-page/ui/ResearchSection.astro',
 	'src/widgets/research-page/ui/EvaluationCriteria.astro',
 	'src/widgets/research/ui/Research.astro',
