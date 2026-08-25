@@ -12,6 +12,8 @@
 	"architectureGroup": "ARCHITECTURE",
 	"practiceGroup": "PRACTICES",
 	"capabilityGroup": "CAPABILITIES",
+	"officialWebsite": "Official website",
+	"opensInNewTab": "opens in a new tab",
 	"careerHistory": "CAREER HISTORY",
 	"previousRole": "Previous role",
 	"nextRole": "Next role"

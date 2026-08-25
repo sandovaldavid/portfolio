@@ -2,6 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import {
 	ExperienceTechnologyPill,
 	type ExperienceItem,
@@ -9,7 +10,7 @@ import {
 	type ExperienceTechnologyKind,
 } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { Badge, LinkButton, TitleSection } from '@shared/ui';
+import { Badge, LinkButton, LinkInline, TitleSection } from '@shared/ui';
 
 interface Props {
 	experience: ExperienceItem;
@@ -109,6 +110,22 @@ const detailUrl = (item: ExperienceItem) =>
 					}
 					<Badge variant="secondary" size="sm">{experience.date}</Badge>
 				</div>
+				{
+					experience.organizationUrl && (
+						<LinkInline
+							href={experience.organizationUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							icon={ArrowUpRightIcon}
+							iconPosition="trailing"
+							newTabLabel={tPage('opensInNewTab')}
+							class="w-fit"
+							data-experience-organization-link
+						>
+							{tPage('officialWebsite')}
+						</LinkInline>
+					)
+				}
 			</div>
 		</div>
 	</header>
@@ -193,12 +210,18 @@ const detailUrl = (item: ExperienceItem) =>
 				aria-label={tPage('careerHistory')}
 				data-experience-career-navigation
 			>
-				<div class="mx-auto flex w-full max-w-320 flex-col gap-5">
-					<p class="text-editorial-label uppercase text-channel-accent-primary">
+				<div class="mx-auto flex w-full max-w-320 flex-col gap-5 md:flex-row md:items-center md:justify-between">
+					<p
+						class="text-editorial-label uppercase text-channel-accent-primary"
+						data-experience-career-label
+					>
 						{tPage('careerHistory')}
 					</p>
-					<div class="flex flex-col gap-3 sm:flex-row sm:items-stretch sm:justify-between">
-						{previous ? (
+					<div
+						class="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:justify-end"
+						data-experience-career-links
+					>
+						{previous && (
 							<LinkButton
 								href={detailUrl(previous)}
 								target="_self"
@@ -211,8 +234,6 @@ const detailUrl = (item: ExperienceItem) =>
 									<span class="text-caption">{previous.company}</span>
 								</span>
 							</LinkButton>
-						) : (
-							<span />
 						)}
 						{next && (
 							<LinkButton

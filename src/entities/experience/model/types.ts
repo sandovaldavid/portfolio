@@ -20,6 +20,7 @@ export interface ExperienceItem {
 	isCurrent: boolean;
 	featured: boolean;
 	domain?: string;
+	organizationUrl?: string;
 	link?: string;
 }
 

@@ -1,5 +1,8 @@
 import { expect, test } from './fixtures';
 
+const DESKTOP = { width: 1440, height: 900 };
+const MOBILE = { width: 390, height: 844 };
+
 test('English current role renders as a systems-oriented career case study', async ({ page }) => {
 	await page.goto('/experience/atena-software-engineer');
 
@@ -74,6 +77,77 @@ test('career archive index exposes every documented role', async ({ page }) => {
 	await expect(archive).toContainText('Atena');
 	await expect(archive).toContainText('Chirasoft');
 	await expect(archive).toContainText('Provincial Municipality of Piura');
+});
+
+test('career shell exposes verified optional organization links', async ({ page }) => {
+	for (const scenario of [
+		{
+			route: '/experience/atena-software-engineer',
+			url: 'https://atena.la',
+			label: /Official website/,
+		},
+		{
+			route: '/experience/chirasoft-fullstack-developer',
+			url: 'https://chirasoft.pe',
+			label: /Official website/,
+		},
+		{
+			route: '/experience/municipality-piura-software-developer',
+			url: 'https://www.gob.pe/munipiura',
+			label: /Official website/,
+		},
+		{
+			route: '/es/experience/municipality-piura-software-developer',
+			url: 'https://www.gob.pe/munipiura',
+			label: /Sitio oficial/,
+		},
+	] as const) {
+		await page.goto(scenario.route);
+		const link = page.locator('[data-experience-organization-link]');
+		await expect(link).toBeVisible();
+		await expect(link).toHaveAttribute('href', scenario.url);
+		await expect(link).toHaveAttribute('target', '_blank');
+		await expect(link).toHaveAttribute('rel', 'noopener noreferrer');
+		await expect(link).toHaveAccessibleName(scenario.label);
+	}
+});
+
+test('career navigation aligns available history controls without empty placeholders', async ({ page }) => {
+	await page.setViewportSize(DESKTOP);
+
+	for (const scenario of [
+		{ route: '/experience/municipality-piura-software-developer', linkCount: 1 },
+		{ route: '/experience/chirasoft-fullstack-developer', linkCount: 2 },
+		{ route: '/experience/atena-software-engineer', linkCount: 1 },
+	] as const) {
+		await page.goto(scenario.route);
+		const navigation = page.locator('[data-experience-career-navigation]');
+		const label = navigation.locator('[data-experience-career-label]');
+		const links = navigation.locator('[data-experience-career-links]');
+		const shell = navigation.locator(':scope > div');
+
+		await expect(navigation).toBeVisible();
+		await expect(links.getByRole('link')).toHaveCount(scenario.linkCount);
+		await expect(links.locator(':scope > span')).toHaveCount(0);
+
+		const labelBox = (await label.boundingBox())!;
+		const linksBox = (await links.boundingBox())!;
+		const shellBox = (await shell.boundingBox())!;
+		const labelCenter = labelBox.y + labelBox.height / 2;
+		const linksCenter = linksBox.y + linksBox.height / 2;
+
+		expect(Math.abs(labelCenter - linksCenter)).toBeLessThanOrEqual(2);
+		expect(Math.abs(linksBox.x + linksBox.width - (shellBox.x + shellBox.width))).toBeLessThanOrEqual(
+			2
+		);
+	}
+
+	await page.setViewportSize(MOBILE);
+	await page.goto('/experience/municipality-piura-software-developer');
+	const navigation = page.locator('[data-experience-career-navigation]');
+	const labelBox = (await navigation.locator('[data-experience-career-label]').boundingBox())!;
+	const linksBox = (await navigation.locator('[data-experience-career-links]').boundingBox())!;
+	expect(linksBox.y).toBeGreaterThan(labelBox.y + labelBox.height);
 });
 
 test('middle career role links backward and forward through history', async ({ page }) => {
