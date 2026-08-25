@@ -18,9 +18,15 @@ const extendedLighthouseConfig = readJson('config/lighthouse/lighthouserc.extend
 
 describe('Main Quality pre-merge gate stays fast', () => {
 	it('keeps GitHub Actions workers deliberate while allowing an explicit local override', () => {
-		expect(playwrightConfig).toContain("const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';");
-		expect(playwrightConfig).toContain('const workerOverride = getWorkerOverride(process.env.PLAYWRIGHT_WORKERS);');
-		expect(playwrightConfig).toContain('const workers = workerOverride ?? (isGitHubActions ? 4 : undefined);');
+		expect(playwrightConfig).toContain(
+			"const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';"
+		);
+		expect(playwrightConfig).toContain(
+			'const workerOverride = getWorkerOverride(process.env.PLAYWRIGHT_WORKERS);'
+		);
+		expect(playwrightConfig).toContain(
+			'const workers = workerOverride ?? (isGitHubActions ? 4 : undefined);'
+		);
 		expect(playwrightConfig).toContain('retries: isGitHubActions ? 2 : 0');
 		expect(playwrightConfig).toContain('forbidOnly: isCi');
 		expect(playwrightConfig).not.toContain('workers: process.env.CI');

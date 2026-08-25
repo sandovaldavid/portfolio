@@ -102,13 +102,16 @@ expect(
 );
 
 expect(
-	playwrightRunner.includes('Local Playwright execution is restricted to the repository DevContainer') &&
-		playwrightRunner.includes("process.env.GITHUB_ACTIONS === 'true'"),
+	playwrightRunner.includes(
+		'Local Playwright execution is restricted to the repository DevContainer'
+	) && playwrightRunner.includes("process.env.GITHUB_ACTIONS === 'true'"),
 	'Direct Playwright execution must fail closed locally while remaining available in GitHub Actions.'
 );
 expect(
-	playwrightConfig.includes("const isCi = Boolean(process.env.CI);") &&
-		playwrightConfig.includes("const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';") &&
+	playwrightConfig.includes('const isCi = Boolean(process.env.CI);') &&
+		playwrightConfig.includes(
+			"const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';"
+		) &&
 		playwrightConfig.includes("process.env.E2E_USE_PRODUCTION_PREVIEW === '1'") &&
 		playwrightConfig.includes('PLAYWRIGHT_WORKERS must be a positive integer') &&
 		playwrightConfig.includes('workerOverride ?? (isGitHubActions ? 4 : undefined)') &&
