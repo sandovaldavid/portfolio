@@ -115,29 +115,30 @@ test('Kioku lazy-renders an accessible Mermaid SVG with semantic actor tones', a
 	expect(await host.locator('g.portfolio-tone-success').count()).toBeGreaterThanOrEqual(1);
 });
 
-test('Mermaid initializes again after ClientRouter locale navigation', async ({ page }) => {
+test('Mermaid initializes again after ClientRouter navigation', async ({ page }) => {
 	await page.setViewportSize({ width: 1440, height: 1000 });
 	await page.goto('/projects/kioku');
 
-	const englishHost = page.locator('[data-mermaid-host]').first();
-	await englishHost.scrollIntoViewIfNeeded();
-	await expect(englishHost).toHaveAttribute('data-mermaid-state', 'rendered', {
+	const initialHost = page.locator('[data-mermaid-host]').first();
+	await initialHost.scrollIntoViewIfNeeded();
+	await expect(initialHost).toHaveAttribute('data-mermaid-state', 'rendered', {
 		timeout: 15_000,
 	});
 
-	const spanishLink = page.locator(
-		'a[data-language-base-path="/es/projects/kioku"]'
-	).first();
-	await expect(spanishLink).toBeVisible();
-	await spanishLink.click();
-	await expect(page).toHaveURL(/\/es\/projects\/kioku\/?$/);
+	await page.getByRole('link', { name: 'David Sandoval — Home' }).click();
+	await expect(page).toHaveURL(/\/$/);
 
-	const spanishHost = page.locator('[data-mermaid-host]').first();
-	await spanishHost.scrollIntoViewIfNeeded();
-	await expect(spanishHost).toHaveAttribute('data-mermaid-state', 'rendered', {
+	const kiokuLink = page.locator('a[href="/projects/kioku"]').first();
+	await expect(kiokuLink).toBeVisible();
+	await kiokuLink.click();
+	await expect(page).toHaveURL(/\/projects\/kioku\/?$/);
+
+	const newHost = page.locator('[data-mermaid-host]').first();
+	await newHost.scrollIntoViewIfNeeded();
+	await expect(newHost).toHaveAttribute('data-mermaid-state', 'rendered', {
 		timeout: 15_000,
 	});
-	await expect(spanishHost.locator('svg[data-diagram-svg]')).toBeVisible();
+	await expect(newHost.locator('svg[data-diagram-svg]')).toBeVisible();
 });
 
 const PROJECT_ROUTES = [
