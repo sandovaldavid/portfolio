@@ -16,11 +16,11 @@ const variantClasses: Record<ResearchSectionVariant, string> = {
 		'research-technical-list border-b border-edge-subtle pb-6 last:border-b-0 last:pb-0 md:pb-8',
 	status: 'border-l-4 border-channel-accent-primary py-1 pl-4',
 };
-const sectionClasses = `research-section w-full max-w-210 ${variantClasses[variant]}`;
+const sectionClasses = `research-section w-full ${variantClasses[variant]}`;
 ---
 
 <section class={sectionClasses} data-research-section data-research-variant={variant}>
-	<header class="mb-4 flex flex-col gap-2">
+	<header class="mb-4 flex max-w-210 flex-col gap-2">
 		<p
 			class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
 		>
@@ -28,7 +28,7 @@ const sectionClasses = `research-section w-full max-w-210 ${variantClasses[varia
 		</p>
 		{title && <h2 class="text-component-title text-content-strong">{title}</h2>}
 	</header>
-	<div class="research-prose text-body leading-relaxed text-content-default">
+	<div class="research-prose max-w-210 text-body leading-relaxed text-content-default">
 		<slot />
 	</div>
 </section>
