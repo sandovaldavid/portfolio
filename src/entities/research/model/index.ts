@@ -1,2 +1,2 @@
-export { getResearchContent } from './queries';
+export { getResearchContent, getResearchEntry } from './queries';
 export type { ResearchContent, ResearchContentEntry } from './types';
