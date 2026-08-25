@@ -1,7 +1,10 @@
 import { test, expect } from './fixtures';
 
 test.describe('Homepage', () => {
-	test('shows professional positioning and primary actions immediately', async ({ page, isMobile }) => {
+	test('shows professional positioning and primary actions immediately', async ({
+		page,
+		isMobile,
+	}) => {
 		await page.goto('/');
 
 		await expect(page).toHaveTitle(/David Sandoval.*Software Engineer/i);

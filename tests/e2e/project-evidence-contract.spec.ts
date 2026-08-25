@@ -160,7 +160,9 @@ test.describe('Recruiter evidence, access and status contract', () => {
 			'data-mermaid-state',
 			'rendered'
 		);
-		await expect(analyticsDiagram.locator('[data-diagram-svg]')).toContainText('AuctionAnalytics');
+		await expect(analyticsDiagram.locator('[data-diagram-svg]')).toContainText(
+			'AuctionAnalytics'
+		);
 
 		await expect(
 			page.getByRole('heading', { name: 'NO LIVE DEMO OR CONCURRENCY GUARANTEE' })
