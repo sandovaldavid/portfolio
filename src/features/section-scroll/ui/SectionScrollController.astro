@@ -24,70 +24,132 @@ const { enabled = true } = Astro.props;
 		if (!isHome) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-		const sections = Array.from(
-			document.querySelectorAll<HTMLElement>('main > div > section[id], footer[id]')
-		);
+		const sections = ['hero', 'experience', 'projects', 'research', 'about-me']
+			.map(id => document.getElementById(id))
+			.filter((section): section is HTMLElement => section instanceof HTMLElement);
 		if (sections.length < 2) return;
 
-		let isThrottled = false;
-		let throttleTimer: number | undefined;
-		const getHeaderHeight = () => 72;
+		const HEADER_HEIGHT = 72;
+		const POSITION_TOLERANCE = 8;
+		const WHEEL_THRESHOLD = 15;
+		const WHEEL_QUIET_PERIOD = 120;
+		const MAX_NAVIGATION_TIME = 1600;
 
-		const getCurrentIndex = () => {
-			const currentTop = window.scrollY + getHeaderHeight() + 20;
-			let index = 0;
-			for (let i = 0; i < sections.length; i++) {
-				if (sections[i].offsetTop <= currentTop) index = i;
+		let isNavigating = false;
+		let navigationTargetY = 0;
+		let navigationStartedAt = 0;
+		let lastWheelAt = 0;
+		let settleFrame: number | undefined;
+
+		const getMaxScrollY = () =>
+			Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+		const getTargetY = (section: HTMLElement) =>
+			Math.min(getMaxScrollY(), Math.max(0, section.offsetTop - HEADER_HEIGHT));
+
+		const elementCanScrollVertically = (start: HTMLElement, deltaY: number) => {
+			let element: HTMLElement | null = start;
+
+			while (element && element !== document.body && element !== document.documentElement) {
+				if (element.matches('[role="dialog"], #cli-terminal')) return true;
+
+				const { overflowY } = window.getComputedStyle(element);
+				const supportsVerticalScroll =
+					/(auto|scroll|overlay)/.test(overflowY) &&
+					element.scrollHeight > element.clientHeight + 1;
+
+				if (supportsVerticalScroll) {
+					if (
+						deltaY > 0 &&
+						element.scrollTop + element.clientHeight < element.scrollHeight - 1
+					) {
+						return true;
+					}
+					if (deltaY < 0 && element.scrollTop > 1) return true;
+				}
+
+				element = element.parentElement;
 			}
-			return index;
+
+			return false;
 		};
 
-		const scrollToSection = (targetIndex: number) => {
-			if (targetIndex < 0 || targetIndex >= sections.length) return;
-			isThrottled = true;
-			const targetSection = sections[targetIndex];
-			const targetY = targetSection.offsetTop - getHeaderHeight();
+		const findDirectionalTarget = (direction: 1 | -1) => {
+			const currentY = window.scrollY;
+			const positionedSections = sections.map(section => ({ section, y: getTargetY(section) }));
 
-			window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+			if (direction > 0) {
+				return positionedSections.find(({ y }) => y > currentY + POSITION_TOLERANCE)?.section;
+			}
 
-			window.clearTimeout(throttleTimer);
-			throttleTimer = window.setTimeout(() => {
-				isThrottled = false;
-			}, 500);
+			return positionedSections
+				.toReversed()
+				.find(({ y }) => y < currentY - POSITION_TOLERANCE)?.section;
+		};
+
+		const stopNavigationTracking = () => {
+			if (settleFrame !== undefined) window.cancelAnimationFrame(settleFrame);
+			settleFrame = undefined;
+			isNavigating = false;
+		};
+
+		const trackNavigationSettlement = () => {
+			const tick = (now: number) => {
+				const reachedTarget = Math.abs(window.scrollY - navigationTargetY) <= 2;
+				const wheelIsQuiet = now - lastWheelAt >= WHEEL_QUIET_PERIOD;
+				const timedOut = now - navigationStartedAt >= MAX_NAVIGATION_TIME;
+
+				if ((reachedTarget && wheelIsQuiet) || timedOut) {
+					stopNavigationTracking();
+					return;
+				}
+
+				settleFrame = window.requestAnimationFrame(tick);
+			};
+
+			settleFrame = window.requestAnimationFrame(tick);
+		};
+
+		const scrollToSection = (section: HTMLElement) => {
+			stopNavigationTracking();
+			isNavigating = true;
+			navigationTargetY = getTargetY(section);
+			navigationStartedAt = performance.now();
+			lastWheelAt = navigationStartedAt;
+
+			window.scrollTo({ top: navigationTargetY, behavior: 'smooth' });
+			trackNavigationSettlement();
 		};
 
 		const onWheel = (event: WheelEvent) => {
 			if (window.innerWidth < 768) return;
+			if (Math.abs(event.deltaY) < WHEEL_THRESHOLD) return;
+			if (Math.abs(event.deltaX) > Math.abs(event.deltaY)) return;
 
-			const target = event.target as HTMLElement | null;
-			if (
-				target?.closest(
-					'.overflow-y-auto, .overflow-auto, .overflow-x-auto, [role="dialog"], #cli-terminal'
-				)
-			) {
-				return;
-			}
-			if (Math.abs(event.deltaY) < 15) return;
+			const target = event.target instanceof HTMLElement ? event.target : null;
+			if (target && elementCanScrollVertically(target, event.deltaY)) return;
 
-			if (isThrottled) {
+			if (isNavigating) {
+				lastWheelAt = performance.now();
 				event.preventDefault();
 				return;
 			}
 
-			const currentIndex = getCurrentIndex();
-			if (event.deltaY > 0 && currentIndex < sections.length - 1) {
-				event.preventDefault();
-				scrollToSection(currentIndex + 1);
-			} else if (event.deltaY < 0 && currentIndex > 0) {
-				event.preventDefault();
-				scrollToSection(currentIndex - 1);
-			}
+			const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1;
+			const targetSection = findDirectionalTarget(direction);
+
+			// After About Me, Technologies and the Footer are intentionally content-driven.
+			// Native scrolling owns that tail. Scrolling back up from it resolves to About Me
+			// because About Me is the last viewport target above the current document position.
+			if (!targetSection) return;
+
+			event.preventDefault();
+			scrollToSection(targetSection);
 		};
 
 		window.addEventListener('wheel', onWheel, { passive: false });
 		sectionScrollCleanup = () => {
 			window.removeEventListener('wheel', onWheel);
-			window.clearTimeout(throttleTimer);
+			stopNavigationTracking();
 		};
 	}
 
