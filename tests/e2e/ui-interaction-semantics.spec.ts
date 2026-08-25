@@ -50,7 +50,9 @@ async function expectNoBlockingAxeViolations(page: Page) {
 test.describe('Interaction semantics', () => {
 	test('static Home surfaces stay stable while Experience tabs retain hover feedback', async ({
 		page,
+		isMobile,
 	}) => {
+		test.skip(isMobile, 'Hover feedback is a fine-pointer interaction contract.');
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/');
 		await page.evaluate(() => document.fonts.ready);
@@ -111,7 +113,8 @@ test.describe('Interaction semantics', () => {
 		).not.toBe(tabBackground);
 	});
 
-	test('Experience detail evidence remains static on hover', async ({ page }) => {
+	test('Experience detail evidence remains static on hover', async ({ page, isMobile }) => {
+		test.skip(isMobile, 'Hover stability is a fine-pointer interaction contract.');
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/experience/atena-software-engineer');
 
@@ -143,7 +146,9 @@ test.describe('Interaction semantics', () => {
 
 	test('project resources keep control feedback without lift or brightness filters', async ({
 		page,
+		isMobile,
 	}) => {
+		test.skip(isMobile, 'Hover feedback is a fine-pointer interaction contract.');
 		await page.setViewportSize(DESKTOP);
 		await page.goto('/projects/kioku');
 
