@@ -4,6 +4,22 @@ const HEADER_HEIGHT = 72;
 const DESKTOP = { width: 1440, height: 900 };
 const TABLET = { width: 834, height: 1100 };
 
+async function getSectionTargetY(page: import('@playwright/test').Page, id: string) {
+	return page.locator(`#${id}`).evaluate((element, headerHeight) => {
+		const section = element as HTMLElement;
+		const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+		return Math.min(maxScrollY, Math.max(0, section.offsetTop - headerHeight));
+	}, HEADER_HEIGHT);
+}
+
+async function expectScrollNear(page: import('@playwright/test').Page, targetY: number) {
+	await expect
+		.poll(async () => Math.abs((await page.evaluate(() => window.scrollY)) - targetY), {
+			timeout: 3000,
+		})
+		.toBeLessThanOrEqual(3);
+}
+
 for (const [label, viewport] of [
 	['desktop', DESKTOP],
 	['tablet', TABLET],
@@ -72,6 +88,42 @@ test('Experience keeps the next section anchored when a longer role is selected'
 	expect(Math.abs(projectsAfter.documentY - projectsBefore.documentY)).toBeLessThanOrEqual(1);
 	expect(Math.abs(experienceAfter.documentY - experienceBefore.documentY)).toBeLessThanOrEqual(1);
 	expect(Math.abs(experienceAfter.height - experienceBefore.height)).toBeLessThanOrEqual(1);
+});
+
+test('desktop vertical wheel over the horizontal Experience tab rail still advances to Projects', async ({
+	page,
+}) => {
+	await page.setViewportSize(DESKTOP);
+	await page.goto('/');
+
+	const experienceTarget = await getSectionTargetY(page, 'experience');
+	const projectsTarget = await getSectionTargetY(page, 'projects');
+	await page.evaluate(targetY => window.scrollTo({ top: targetY, behavior: 'auto' }), experienceTarget);
+
+	const tablist = page.locator('#experience-tablist');
+	await expect(tablist).toBeVisible();
+	const tablistBox = (await tablist.boundingBox())!;
+	await page.mouse.move(tablistBox.x + tablistBox.width / 2, tablistBox.y + tablistBox.height / 2);
+	await page.mouse.wheel(0, 700);
+
+	await expectScrollNear(page, projectsTarget);
+});
+
+test('desktop tail scroll returns to About Me before Research', async ({ page }) => {
+	await page.setViewportSize(DESKTOP);
+	await page.goto('/');
+
+	const aboutTarget = await getSectionTargetY(page, 'about-me');
+	const researchTarget = await getSectionTargetY(page, 'research');
+	await page.evaluate(() => window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'auto' }));
+
+	await page.mouse.move(DESKTOP.width / 2, DESKTOP.height / 2);
+	await page.mouse.wheel(0, -700);
+	await expectScrollNear(page, aboutTarget);
+
+	await page.waitForTimeout(160);
+	await page.mouse.wheel(0, -700);
+	await expectScrollNear(page, researchTarget);
 });
 
 test('Mobile remains content-driven and horizontally contained', async ({ page }) => {
