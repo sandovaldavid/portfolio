@@ -11,7 +11,12 @@ const playwrightRunner = readFileSync('scripts/run-playwright.mjs', 'utf8');
 const localValidation = readFileSync('scripts/run-local-validation.mjs', 'utf8');
 const localValidationInside = readFileSync('scripts/run-local-validation-inside.mjs', 'utf8');
 
+/** @type {string[]} */
 const failures = [];
+/**
+ * @param {unknown} condition
+ * @param {string} message
+ */
 const expect = (condition, message) => {
 	if (!condition) failures.push(message);
 };
