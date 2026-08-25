@@ -81,8 +81,8 @@ const { enabled = true } = Astro.props;
 				return positionedSections.find(({ y }) => y > currentY + POSITION_TOLERANCE)?.section;
 			}
 
-			return positionedSections
-				.toReversed()
+			return [...positionedSections]
+				.reverse()
 				.find(({ y }) => y < currentY - POSITION_TOLERANCE)?.section;
 		};
 
