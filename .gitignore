@@ -48,6 +48,7 @@ bundle-analysis/
 !src/assets/**/*.png
 !tests/e2e/**/*.png
 !public/og-image.png
+.playwright-cli/
 
 # playwright
 .auth/
