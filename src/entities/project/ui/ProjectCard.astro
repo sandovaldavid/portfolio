@@ -59,6 +59,8 @@ const mediaHeight = isPrimary
 	: isCatalog
 		? 'h-32.5 lg:h-40'
 		: 'h-32.5 lg:h-34';
+const mediaWidth = isPrimary ? 800 : isCatalog ? 640 : 600;
+const mediaSourceHeight = isPrimary ? 500 : isCatalog ? 400 : 380;
 ---
 
 <article class="h-full w-full">
@@ -84,8 +86,8 @@ const mediaHeight = isPrimary
 			>
 				<Image
 					src={image}
-					width={isPrimary || isCatalog ? 800 : 600}
-					height={isPrimary || isCatalog ? 500 : 380}
+					width={mediaWidth}
+					height={mediaSourceHeight}
 					class="absolute inset-0 size-full object-cover"
 					decoding={priority ? 'sync' : 'async'}
 					loading={priority ? 'eager' : 'lazy'}
