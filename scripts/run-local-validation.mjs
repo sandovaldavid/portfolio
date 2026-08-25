@@ -6,6 +6,11 @@ const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const isDevContainer = process.env.DEVCONTAINER === 'true';
 const devcontainer = process.platform === 'win32' ? 'devcontainer.cmd' : 'devcontainer';
 
+/**
+ * @param {string} command
+ * @param {string[]} args
+ * @param {import('node:child_process').SpawnSyncOptions} [options]
+ */
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
 		cwd: repositoryRoot,
@@ -42,6 +47,7 @@ if (probe.error || probe.status !== 0) {
 
 run(devcontainer, ['up', '--workspace-folder', repositoryRoot]);
 
+/** @type {string[]} */
 const remoteEnvironment = [];
 if (process.env.PLAYWRIGHT_WORKERS) {
 	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${process.env.PLAYWRIGHT_WORKERS}`);
