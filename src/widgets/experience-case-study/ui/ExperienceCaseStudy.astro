@@ -67,6 +67,7 @@ const detailUrl = (item: ExperienceItem) =>
 					<Badge variant={experience.isCurrent ? 'success' : 'default'} size="sm">
 						{experience.isCurrent ? tPage('currentStatus') : tPage('pastStatus')}
 					</Badge>
+					{experience.domain && <Badge variant="info" size="sm">{experience.domain}</Badge>}
 					<Badge variant="secondary" size="sm">{experience.date}</Badge>
 				</div>
 			</div>
