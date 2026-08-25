@@ -1,0 +1,15 @@
+{
+	"currentKicker": "CAREER · CURRENT ROLE",
+	"archiveKicker": "CAREER · ROLE ARCHIVE",
+	"currentStatus": "CURRENT",
+	"pastStatus": "PAST ROLE",
+	"selectedContributions": "SELECTED CONTRIBUTIONS",
+	"engineeringFocus": "ENGINEERING FOCUS",
+	"technologyGroup": "TECHNOLOGIES",
+	"architectureGroup": "ARCHITECTURE",
+	"practiceGroup": "PRACTICES",
+	"capabilityGroup": "CAPABILITIES",
+	"careerHistory": "CAREER HISTORY",
+	"previousRole": "Previous role",
+	"nextRole": "Next role"
+}
