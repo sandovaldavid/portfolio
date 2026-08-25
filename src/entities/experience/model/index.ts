@@ -6,5 +6,10 @@ export type {
 	ExperienceTechnologyId,
 	ExperienceTechnologyKind,
 } from './metadata';
-export { getExperienceData } from './queries';
-export type { ExperienceContentEntry, ExperienceItem, ExperienceList } from './types';
+export { getExperienceData, getExperienceDetailBySlug } from './queries';
+export type {
+	ExperienceContentEntry,
+	ExperienceDetail,
+	ExperienceItem,
+	ExperienceList,
+} from './types';
