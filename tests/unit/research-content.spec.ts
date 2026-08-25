@@ -128,7 +128,8 @@ describe('localized research content', () => {
 			"import GitHubIcon from '@assets/technologies/GitHub.astro'"
 		);
 		expect(homeResearch).toContain('icon={tag.icon}');
-		expect(homeResearch).toContain('motion-reduce:transition-none');
+		expect(homeResearch).not.toContain('hover:-translate-y-0.5');
+		expect(homeResearch).not.toContain('hover:shadow-retro-3xl');
 		expect(englishSection.signalsLabel).toBe('SIGNALS MODELED');
 		expect(spanishSection.signalsLabel).toBe('SEÑALES MODELADAS');
 		expect(Object.keys(englishSection).sort()).toEqual(Object.keys(spanishSection).sort());
