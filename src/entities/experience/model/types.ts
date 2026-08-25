@@ -11,6 +11,7 @@ export interface ExperienceItem {
 	date: string;
 	title: string;
 	company: string;
+	summary: string;
 	description: string[];
 	technologies: ExperienceTechnology[];
 	startDate: string;
@@ -18,6 +19,13 @@ export interface ExperienceItem {
 	isCurrent: boolean;
 	featured: boolean;
 	link?: string;
+}
+
+export interface ExperienceDetail {
+	experience: ExperienceItem;
+	entry: ExperienceContentEntry;
+	previous?: ExperienceItem;
+	next?: ExperienceItem;
 }
 
 export type ExperienceList = ExperienceItem[];
