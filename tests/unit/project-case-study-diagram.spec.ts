@@ -3,9 +3,9 @@ import {
 	getMermaidDirection,
 	normalizeMermaidAuthoring,
 	prepareMermaidChart,
-} from '../../src/widgets/project-case-study/model/diagram';
+} from '../../src/shared/ui/rich-content/model/diagram';
 
-describe('Mermaid case-study authoring adapter', () => {
+describe('Mermaid rich-content authoring adapter', () => {
 	it('converts physical newlines inside quoted labels to Mermaid Markdown Strings', () => {
 		const chart = `flowchart LR
 Web["Angular 22
