@@ -45,7 +45,7 @@ export default defineConfig({
 	retries: isGitHubActions ? 2 : 0,
 	workers,
 	reporter: [
-		['html', { outputFolder: 'playwright-report' }],
+		['html', { outputFolder: 'playwright-report', open: 'never' }],
 		['json', { outputFile: 'test-results.json' }],
 		['junit', { outputFile: 'junit-results.xml' }],
 	],
