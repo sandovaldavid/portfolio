@@ -19,7 +19,7 @@ export default defineConfig({
 		video: 'retain-on-failure',
 	},
 	webServer: {
-		command: 'bun run preview',
+		command: process.env.CI ? 'bun run preview' : 'bun run astro build && bun run preview',
 		url: 'http://localhost:4321',
 		reuseExistingServer: !process.env.CI,
 	},
