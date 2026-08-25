@@ -12,7 +12,11 @@ async function expectLocalizedShell(
 	);
 
 	if (isMobile) {
-		await expect(page.getByRole('navigation', { name: isEnglish ? 'Main navigation' : 'Navegación principal' })).toHaveCount(0);
+		await expect(
+			page.getByRole('navigation', {
+				name: isEnglish ? 'Main navigation' : 'Navegación principal',
+			})
+		).toHaveCount(0);
 		await expect(page.locator('#recruiter-hud-toggle')).toBeHidden();
 		await page.locator('#mobile-menu-btn').click();
 		const menu = page.locator('#mobile-menu');
@@ -27,7 +31,9 @@ async function expectLocalizedShell(
 	}
 
 	await expect(
-		page.getByRole('navigation', { name: isEnglish ? 'Main navigation' : 'Navegación principal' })
+		page.getByRole('navigation', {
+			name: isEnglish ? 'Main navigation' : 'Navegación principal',
+		})
 	).toBeAttached();
 	const recruiterButton = page.getByRole('button', {
 		name: isEnglish ? 'Recruiter links' : 'Enlaces para reclutadores',
