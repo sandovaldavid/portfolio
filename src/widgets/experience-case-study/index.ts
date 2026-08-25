@@ -1,1 +1,1 @@
-export { ExperienceCaseStudy, experienceCaseStudyComponents } from './ui';
+export { ExperienceArchive, ExperienceCaseStudy, experienceCaseStudyComponents } from './ui';
