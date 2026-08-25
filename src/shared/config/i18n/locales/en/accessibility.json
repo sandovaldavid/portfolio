@@ -16,5 +16,6 @@
 	"terminalDialog": "Portfolio CLI terminal",
 	"terminalInput": "Terminal command input",
 	"closeTerminal": "Close terminal",
-	"secretMode": "Developer secret mode"
+	"secretMode": "Developer secret mode",
+	"backToTop": "Back to top"
 }
