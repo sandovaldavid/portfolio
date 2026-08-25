@@ -25,12 +25,15 @@ This command fails closed unless the Dev Containers CLI is available. It starts 
 
 The in-container gate covers:
 
+- frozen dependency synchronization for the isolated container `node_modules` volume;
 - `bun run check`;
 - `bun run test:unit:ci`;
-- `bun run build`;
-- `bun run check:links`;
+- `bun run build` in an explicit production environment;
+- `bun run check:links`, including production-output and generated-locale contracts;
 - `bun run performance:check`;
 - `bun run test:e2e:extended` against the already-built production preview.
+
+The Dev Container does not force `NODE_ENV` globally. Development commands and production validation choose their execution mode independently, so a reused development container cannot cause draft or `developmentOnly` fixtures to appear in the production-style validation build.
 
 Use `PLAYWRIGHT_WORKERS=<positive integer>` only when an explicit override is useful. Local DevContainer runs otherwise let Playwright choose its default concurrency. GitHub Actions retains its reviewed fixed worker policy independently.
 
@@ -94,7 +97,9 @@ bun run build
 bun run check:links
 ```
 
-Generated-link validation requires fresh `dist` output and includes locale, canonical, alternate and language-picker targets.
+Generated-output validation requires a fresh `dist`. It rejects draft and development-only fixture routes before validating generated links and localized route metadata.
+
+The historical `/atena` and `/es/atena` routes remain redirect artifacts to their canonical localized Experience pages. The route checker validates their canonical and refresh destinations instead of applying canonical-page requirements such as `<html lang>` and a self-referential canonical URL. Normal pages continue to require locale, canonical, alternate and language-picker correctness.
 
 ## Performance and Lighthouse
 
