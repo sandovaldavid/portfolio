@@ -6,6 +6,7 @@ REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
 export CI="${CI:-true}"
+export GITHUB_ACTIONS="${GITHUB_ACTIONS:-}"
 export RUN_VISUAL_TESTS="${RUN_VISUAL_TESTS:-}"
 export E2E_USE_PRODUCTION_PREVIEW="${E2E_USE_PRODUCTION_PREVIEW:-1}"
 export HOST_UID="$(id -u)"
@@ -53,6 +54,7 @@ fi
 echo "==> Running Playwright visual regression in the pinned container..."
 docker compose run --rm \
 	-e CI \
+	-e GITHUB_ACTIONS \
 	-e RUN_VISUAL_TESTS \
 	-e E2E_USE_PRODUCTION_PREVIEW \
 	playwright "$@"
