@@ -6,18 +6,18 @@ title: Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuro
 status: in-progress
 institution: Universidad Nacional de Piura
 featuredSignals:
-  - Frecuencia de commits (promedio semanal)
-  - Contribuidores únicos por ventana temporal
-  - Antigüedad de issues abiertos (días sin resolver)
-  - Tasa de merge/cierre de PRs
+    - Frecuencia de commits (promedio semanal)
+    - Contribuidores únicos por ventana temporal
+    - Antigüedad de issues abiertos (días sin resolver)
+    - Tasa de merge/cierre de PRs
 keywords:
-  - BiLSTM
-  - Abandono OSS
-  - MSR
-  - Deep Learning
-  - Minería de GitHub
-  - Salud de Repositorios
-  - Clasificación de Series Temporales
+    - BiLSTM
+    - Abandono OSS
+    - MSR
+    - Deep Learning
+    - Minería de GitHub
+    - Salud de Repositorios
+    - Clasificación de Series Temporales
 ---
 
 <ResearchSection eyebrow="Planteamiento del problema" title="RIESGO DE ABANDONO OSS">
@@ -39,10 +39,10 @@ Mining Software Repositories (MSR) — extracción de secuencias temporales de s
 </ResearchSection>
 
 <MermaidDiagram
-  title="Pipeline de datos"
-  description="Pipeline de investigación desde los datos de actividad de GitHub hasta el clasificador de abandono."
-  tones={{ Source: 'info', Train: 'brand', Classifier: 'success' }}
-  chart={`flowchart LR
+	title="Pipeline de datos"
+	description="Pipeline de investigación desde los datos de actividad de GitHub hasta el clasificador de abandono."
+	tones={{ Source: 'info', Train: 'brand', Classifier: 'success' }}
+	chart={`flowchart LR
     Source["GitHub API / GH Archive"] --> Raw["Datos Crudos de Actividad"]
     Raw --> Features["Ingeniería de Características"]
     Features --> Sequences["Secuencias Temporales"]
@@ -82,13 +82,19 @@ Dataset curado de repositorios OSS en GitHub de múltiples dominios, etiquetados
 </ResearchSection>
 
 <EvaluationCriteria
-  title="Métricas de evaluación"
-  items={[
-    { label: 'ACC', detail: 'Accuracy de clasificación vs. baselines Logistic Regression y Random Forest' },
-    { label: 'F1', detail: 'F1-Score sobre clases de abandono desbalanceadas' },
-    { label: 'AUC', detail: 'AUC-ROC para ranking de probabilidad de abandono' },
-    { label: 'LOSS', detail: 'Curvas de Binary Cross-Entropy para convergencia del entrenamiento BiLSTM' },
-  ]}
+	title="Métricas de evaluación"
+	items={[
+		{
+			label: 'ACC',
+			detail: 'Accuracy de clasificación vs. baselines Logistic Regression y Random Forest',
+		},
+		{ label: 'F1', detail: 'F1-Score sobre clases de abandono desbalanceadas' },
+		{ label: 'AUC', detail: 'AUC-ROC para ranking de probabilidad de abandono' },
+		{
+			label: 'LOSS',
+			detail: 'Curvas de Binary Cross-Entropy para convergencia del entrenamiento BiLSTM',
+		},
+	]}
 />
 
 <ResearchSection eyebrow="Estado actual">

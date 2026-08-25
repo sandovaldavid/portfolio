@@ -12,12 +12,16 @@ const { eyebrow, title } = Astro.props;
 	data-research-section
 >
 	<header class="mb-4 flex flex-col gap-2">
-		<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+		<p
+			class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
+		>
 			{eyebrow}
 		</p>
 		{
 			title && (
-				<h2 class="text-component-title text-content-strong md:text-feature-title">{title}</h2>
+				<h2 class="text-component-title text-content-strong md:text-feature-title">
+					{title}
+				</h2>
 			)
 		}
 	</header>

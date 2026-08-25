@@ -6,18 +6,18 @@ title: Predicting the Abandonment State of OSS Repositories using BiLSTM Neural 
 status: in-progress
 institution: National University of Piura
 featuredSignals:
-  - Commit frequency (weekly rolling avg)
-  - Unique contributors per time window
-  - Open issue aging (days unresolved)
-  - PR merge rate & close rate
+    - Commit frequency (weekly rolling avg)
+    - Unique contributors per time window
+    - Open issue aging (days unresolved)
+    - PR merge rate & close rate
 keywords:
-  - BiLSTM
-  - OSS Abandonment
-  - MSR
-  - Deep Learning
-  - GitHub Mining
-  - Repository Health
-  - Time Series Classification
+    - BiLSTM
+    - OSS Abandonment
+    - MSR
+    - Deep Learning
+    - GitHub Mining
+    - Repository Health
+    - Time Series Classification
 ---
 
 <ResearchSection eyebrow="Problem statement" title="OSS ABANDONMENT RISK">
@@ -39,10 +39,10 @@ Mining Software Repositories (MSR) — extracting temporal sequences of activity
 </ResearchSection>
 
 <MermaidDiagram
-  title="Data pipeline"
-  description="Research pipeline from GitHub activity data to the abandonment classifier."
-  tones={{ Source: 'info', Train: 'brand', Classifier: 'success' }}
-  chart={`flowchart LR
+	title="Data pipeline"
+	description="Research pipeline from GitHub activity data to the abandonment classifier."
+	tones={{ Source: 'info', Train: 'brand', Classifier: 'success' }}
+	chart={`flowchart LR
     Source["GitHub API / GH Archive"] --> Raw["Raw Repo Activity Data"]
     Raw --> Features["Feature Engineering"]
     Features --> Sequences["Temporal Sequences"]
@@ -82,13 +82,19 @@ Curated dataset of GitHub OSS repositories spanning multiple domains, labeled by
 </ResearchSection>
 
 <EvaluationCriteria
-  title="Evaluation metrics"
-  items={[
-    { label: 'ACC', detail: 'Classification accuracy vs. Logistic Regression & Random Forest baselines' },
-    { label: 'F1', detail: 'F1-Score on imbalanced abandonment classes' },
-    { label: 'AUC', detail: 'AUC-ROC for abandonment probability ranking' },
-    { label: 'LOSS', detail: 'Binary Cross-Entropy loss curves for BiLSTM training convergence' },
-  ]}
+	title="Evaluation metrics"
+	items={[
+		{
+			label: 'ACC',
+			detail: 'Classification accuracy vs. Logistic Regression & Random Forest baselines',
+		},
+		{ label: 'F1', detail: 'F1-Score on imbalanced abandonment classes' },
+		{ label: 'AUC', detail: 'AUC-ROC for abandonment probability ranking' },
+		{
+			label: 'LOSS',
+			detail: 'Binary Cross-Entropy loss curves for BiLSTM training convergence',
+		},
+	]}
 />
 
 <ResearchSection eyebrow="Current status">

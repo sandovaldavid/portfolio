@@ -75,8 +75,12 @@ describe('localized research MDX content', () => {
 		}
 		expect(english).toContain('Results will be published upon thesis completion.');
 		expect(spanish).toContain('Los resultados se publicarán al completar la tesis.');
-		expect(english).toContain('Classification accuracy vs. Logistic Regression & Random Forest baselines');
-		expect(spanish).toContain('Accuracy de clasificación vs. baselines Logistic Regression y Random Forest');
+		expect(english).toContain(
+			'Classification accuracy vs. Logistic Regression & Random Forest baselines'
+		);
+		expect(spanish).toContain(
+			'Accuracy de clasificación vs. baselines Logistic Regression y Random Forest'
+		);
 	});
 
 	it('loads validated entries for MDX routes while Home can keep reading frontmatter data', () => {

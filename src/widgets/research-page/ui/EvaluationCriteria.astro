@@ -23,7 +23,9 @@ const { title, items } = Astro.props;
 					<span class="w-fit bg-channel-accent-primary px-2 py-1 text-editorial-label-compact uppercase text-button-primary-content">
 						{item.label}
 					</span>
-					<span class="text-secondary leading-relaxed text-content-default">{item.detail}</span>
+					<span class="text-secondary leading-relaxed text-content-default">
+						{item.detail}
+					</span>
 				</li>
 			))
 		}
