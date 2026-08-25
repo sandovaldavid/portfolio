@@ -2,10 +2,12 @@ export {
 	EXPERIENCE_METADATA,
 	EXPERIENCE_TECHNOLOGIES,
 	getExperienceData,
+	getExperienceDetailBySlug,
 	isExperienceId,
 } from './model';
 export type {
 	ExperienceContentEntry,
+	ExperienceDetail,
 	ExperienceId,
 	ExperienceItem,
 	ExperienceList,
