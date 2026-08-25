@@ -82,13 +82,12 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		{
 			route: '/',
 			tablistName: 'Experience tabs',
-			achievement: 'Migrated an educational institutional site from WordPress to Angular',
+			achievement: 'Migrated an institutional portal frontend from WordPress to Angular 19',
 		},
 		{
 			route: '/es/',
 			tablistName: 'Pestañas de experiencia',
-			achievement:
-				'Realicé la migración de un sitio institucional educativo de WordPress a Angular',
+			achievement: 'Migré el frontend de un portal institucional de WordPress a Angular 19',
 		},
 	] as const) {
 		test(`${scenario.route} renders localized keyboard-accessible experience tabs`, async ({
@@ -123,7 +122,8 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			lifecycle: 'Maintained',
 			imageAlt: 'UNP Campus Map academic faculty and school directory preview',
 			kicker: 'PROJECT CASE STUDY · ACADEMIC DIRECTORY',
-			status: 'MAINTAINED · NEXT.JS 16 CODEBASE',
+			detailSource: 'Public source',
+			detailLifecycle: 'Maintained',
 			evidenceHeading: 'The current repository defines the product boundary',
 			forbidden: ['3 months', 'Solo Developer', 'BOSS FIGHT // CASE STUDY'],
 		},
@@ -135,7 +135,8 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			imageAlt:
 				'Vista previa del directorio académico de facultades y escuelas UNP Campus Map',
 			kicker: 'CASO DE ESTUDIO · DIRECTORIO ACADÉMICO',
-			status: 'MANTENIDO · CODEBASE NEXT.JS 16',
+			detailSource: 'Código público',
+			detailLifecycle: 'Mantenido',
 			evidenceHeading: 'El repositorio actual define el límite del producto',
 			forbidden: ['3 meses', 'Desarrollador independiente', 'BOSS FIGHT // CASE STUDY'],
 		},
@@ -152,7 +153,9 @@ test.describe('Pull request smoke and accessibility gates', () => {
 				page.getByRole('heading', { level: 1, name: 'UNP Campus Map' })
 			).toBeVisible();
 			await expect(page.getByText(scenario.kicker, { exact: true })).toBeVisible();
-			await expect(page.getByText(scenario.status, { exact: true })).toBeVisible();
+			const status = page.locator('[data-project-status]');
+			await expect(status.getByText(scenario.detailSource, { exact: true })).toBeVisible();
+			await expect(status.getByText(scenario.detailLifecycle, { exact: true })).toBeVisible();
 			await expect(
 				page.getByRole('heading', { name: scenario.evidenceHeading })
 			).toBeVisible();
