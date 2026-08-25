@@ -1,309 +1,24 @@
 ---
-import { normalizeQuotedDiagramLineBreaks } from '../model/diagram';
-
-export type DiagramTone = 'brand' | 'info' | 'success' | 'secondary' | 'warning' | 'danger';
+import {
+	getMermaidDirection,
+	prepareMermaidChart,
+	type DiagramTone,
+} from '../model/diagram';
 
 interface Props {
 	title: string;
 	description: string;
 	chart: string;
-	/** Optional stable color assignment for important actors. Unassigned nodes rotate through the semantic palette. */
+	/** Optional stable semantic color assignment for important flowchart actors. */
 	tones?: Partial<Record<string, DiagramTone>>;
 }
 
-interface DiagramNode {
-	id: string;
-	label: string;
-	lines: string[];
-	index: number;
-	level: number;
-	tone: DiagramTone;
-	x: number;
-	y: number;
-}
-
-interface DiagramEdge {
-	from: string;
-	to: string;
-	label?: string;
-	optional: boolean;
-}
-
 const { title, description, chart, tones = {} } = Astro.props;
-const lines = normalizeQuotedDiagramLineBreaks(chart, title)
-	.split('\n')
-	.map(line => line.trim())
-	.filter(line => line.length > 0 && !line.startsWith('%%'));
-const header = lines[0]?.match(/^flowchart\s+(LR|TD)$/i);
-if (!header) {
-	throw new Error(
-		`Unsupported case-study Mermaid header for "${title}". Use flowchart LR or flowchart TD.`
-	);
-}
-
-const direction = header[1].toUpperCase() as 'LR' | 'TD';
-const nodes = new Map<string, DiagramNode>();
-const edges: DiagramEdge[] = [];
-const nodeTokenPattern = /^([A-Za-z0-9_-]+)(?:\[(?:"([\s\S]+)"|([^\]]+))\])?$/;
-const toneCycle: DiagramTone[] = ['brand', 'info', 'success', 'secondary', 'warning', 'danger'];
-const toneTokens: Record<DiagramTone, { background: string; foreground: string }> = {
-	brand: {
-		background: 'var(--color-badge-brand-bg)',
-		foreground: 'var(--color-badge-brand-text)',
-	},
-	info: { background: 'var(--color-badge-info-bg)', foreground: 'var(--color-badge-info-text)' },
-	success: {
-		background: 'var(--color-status-success-bg)',
-		foreground: 'var(--color-status-success-text)',
-	},
-	secondary: {
-		background: 'var(--color-badge-secondary-bg)',
-		foreground: 'var(--color-badge-secondary-text)',
-	},
-	warning: {
-		background: 'var(--color-badge-warning-bg)',
-		foreground: 'var(--color-badge-warning-text)',
-	},
-	danger: {
-		background: 'var(--color-badge-danger-bg)',
-		foreground: 'var(--color-badge-danger-text)',
-	},
-};
-
-const wrapLabel = (value: string, maxLength = 28): string[] => {
-	const explicitLines = value.replaceAll('\\n', '\n').split('\n');
-	const wrapped: string[] = [];
-
-	for (const explicitLine of explicitLines) {
-		const words = explicitLine.trim().split(/\s+/).filter(Boolean);
-		if (words.length === 0) continue;
-		let current = '';
-		for (const word of words) {
-			const next = current ? `${current} ${word}` : word;
-			if (current && next.length > maxLength) {
-				wrapped.push(current);
-				current = word;
-			} else {
-				current = next;
-			}
-		}
-		if (current) wrapped.push(current);
-	}
-
-	return wrapped.length > 0 ? wrapped : [value.trim()];
-};
-
-const parseNode = (token: string): DiagramNode => {
-	const match = token.trim().match(nodeTokenPattern);
-	if (!match) throw new Error(`Unsupported node syntax in diagram "${title}": ${token}`);
-	const id = match[1];
-	const existing = nodes.get(id);
-	const rawLabel = match[2] ?? match[3];
-	if (!rawLabel && existing) return existing;
-
-	const label = (rawLabel ?? existing?.label ?? id).replaceAll('\\n', ' · ').trim();
-	const node: DiagramNode = {
-		id,
-		label,
-		lines: wrapLabel(rawLabel ?? existing?.label ?? id),
-		index: existing?.index ?? nodes.size,
-		level: existing?.level ?? 0,
-		tone:
-			tones[id] ??
-			existing?.tone ??
-			toneCycle[(existing?.index ?? nodes.size) % toneCycle.length],
-		x: 0,
-		y: 0,
-	};
-	nodes.set(id, node);
-	return node;
-};
-
-for (const line of lines.slice(1)) {
-	const dotted = line.match(/^(.+?)\s*-\.\s*(.*?)\s*\.->\s*(.+)$/);
-	if (dotted) {
-		const from = parseNode(dotted[1]);
-		const to = parseNode(dotted[3]);
-		const label = dotted[2].trim();
-		edges.push({ from: from.id, to: to.id, ...(label ? { label } : {}), optional: true });
-		continue;
-	}
-
-	const solid = line.match(/^(.+?)\s*-->\s*(?:\|([^|]+)\|\s*)?(.+)$/);
-	if (solid) {
-		const from = parseNode(solid[1]);
-		const to = parseNode(solid[3]);
-		const label = solid[2]?.trim();
-		edges.push({ from: from.id, to: to.id, ...(label ? { label } : {}), optional: false });
-		continue;
-	}
-
-	parseNode(line);
-}
-
-if (nodes.size === 0) throw new Error(`Diagram "${title}" has no nodes.`);
-const nodeList = [...nodes.values()].sort((left, right) => left.index - right.index);
-const nodeOrder = new Map(nodeList.map((node, index) => [node.id, index]));
-const isForwardEdge = (edge: DiagramEdge) =>
-	(nodeOrder.get(edge.to) ?? 0) > (nodeOrder.get(edge.from) ?? 0);
-
-// Authored order establishes the principal direction. Back/cyclic edges do not inflate ranks.
-for (let pass = 0; pass < nodeList.length; pass += 1) {
-	let changed = false;
-	for (const edge of edges) {
-		if (!isForwardEdge(edge)) continue;
-		const from = nodes.get(edge.from);
-		const to = nodes.get(edge.to);
-		if (!from || !to) continue;
-		const nextLevel = from.level + 1;
-		if (nextLevel > to.level) {
-			to.level = nextLevel;
-			changed = true;
-		}
-	}
-	if (!changed) break;
-}
-
-// Root-like workers that feed a deep target belong beside the target's previous architectural layer.
-for (const node of nodeList) {
-	if (node.level !== 0) continue;
-	const incomingForward = edges.some(edge => edge.to === node.id && isForwardEdge(edge));
-	if (incomingForward) continue;
-	const targetLevels = edges
-		.filter(edge => edge.from === node.id && isForwardEdge(edge))
-		.map(edge => nodes.get(edge.to)?.level ?? 0)
-		.filter(level => level > 1);
-	if (targetLevels.length > 0) node.level = Math.max(0, Math.min(...targetLevels) - 1);
-}
-
-const levels = new Map<number, DiagramNode[]>();
-for (const node of nodeList) {
-	const levelNodes = levels.get(node.level) ?? [];
-	levelNodes.push(node);
-	levels.set(node.level, levelNodes);
-}
-const levelList = [...levels.entries()].sort(([left], [right]) => left - right);
-
-const nodeWidth = 232;
-const nodeHeight = 108;
-const mainGap = 116;
-const crossGap = 32;
-const margin = 64;
-const backEdgeOffset = 42;
-const backEdgeStep = 18;
-const maxCrossCount = Math.max(...levelList.map(([, levelNodes]) => levelNodes.length));
-const levelCount = levelList.length;
-const graphWidth =
-	direction === 'LR'
-		? margin * 2 + levelCount * nodeWidth + Math.max(0, levelCount - 1) * mainGap
-		: margin * 2 + maxCrossCount * nodeWidth + Math.max(0, maxCrossCount - 1) * crossGap;
-const graphHeight =
-	direction === 'TD'
-		? margin * 2 + levelCount * nodeHeight + Math.max(0, levelCount - 1) * mainGap
-		: margin * 2 + maxCrossCount * nodeHeight + Math.max(0, maxCrossCount - 1) * crossGap;
-
-for (let levelIndex = 0; levelIndex < levelList.length; levelIndex += 1) {
-	const [, levelNodes] = levelList[levelIndex];
-	const crossSize =
-		direction === 'LR'
-			? levelNodes.length * nodeHeight + Math.max(0, levelNodes.length - 1) * crossGap
-			: levelNodes.length * nodeWidth + Math.max(0, levelNodes.length - 1) * crossGap;
-	const crossAvailable = direction === 'LR' ? graphHeight : graphWidth;
-	const crossStart = (crossAvailable - crossSize) / 2;
-
-	for (let nodeIndex = 0; nodeIndex < levelNodes.length; nodeIndex += 1) {
-		const node = levelNodes[nodeIndex];
-		if (direction === 'LR') {
-			node.x = margin + levelIndex * (nodeWidth + mainGap);
-			node.y = crossStart + nodeIndex * (nodeHeight + crossGap);
-		} else {
-			node.x = crossStart + nodeIndex * (nodeWidth + crossGap);
-			node.y = margin + levelIndex * (nodeHeight + mainGap);
-		}
-	}
-}
-
-const backEdges = edges.filter(edge => {
-	const from = nodes.get(edge.from);
-	const to = nodes.get(edge.to);
-	return Boolean(from && to && to.level <= from.level);
-});
-
-const edgePath = (edge: DiagramEdge) => {
-	const from = nodes.get(edge.from);
-	const to = nodes.get(edge.to);
-	if (!from || !to) return { path: '', labelX: 0, labelY: 0 };
-
-	const fromCenterX = from.x + nodeWidth / 2;
-	const fromCenterY = from.y + nodeHeight / 2;
-	const toCenterX = to.x + nodeWidth / 2;
-	const toCenterY = to.y + nodeHeight / 2;
-	const backward = to.level <= from.level;
-
-	if (direction === 'LR' && !backward) {
-		const startX = from.x + nodeWidth;
-		const endX = to.x;
-		const controlX = (startX + endX) / 2;
-		return {
-			path: `M ${startX} ${fromCenterY} C ${controlX} ${fromCenterY}, ${controlX} ${toCenterY}, ${endX} ${toCenterY}`,
-			labelX: controlX,
-			labelY: (fromCenterY + toCenterY) / 2 - 16,
-		};
-	}
-
-	if (direction === 'TD' && !backward) {
-		const startY = from.y + nodeHeight;
-		const endY = to.y;
-		const controlY = (startY + endY) / 2;
-		return {
-			path: `M ${fromCenterX} ${startY} C ${fromCenterX} ${controlY}, ${toCenterX} ${controlY}, ${toCenterX} ${endY}`,
-			labelX: (fromCenterX + toCenterX) / 2,
-			labelY: controlY - 16,
-		};
-	}
-
-	const laneIndex = Math.max(0, backEdges.indexOf(edge));
-	const laneOffset = backEdgeOffset + laneIndex * backEdgeStep;
-	if (direction === 'LR') {
-		const topBoundary = Math.min(from.y, to.y);
-		const bottomBoundary = Math.max(from.y + nodeHeight, to.y + nodeHeight);
-		const topRoom = topBoundary;
-		const bottomRoom = graphHeight - bottomBoundary;
-		const useTopLane = topRoom >= bottomRoom;
-		const unclampedLaneY = useTopLane ? topBoundary - laneOffset : bottomBoundary + laneOffset;
-		const laneY = Math.max(16, Math.min(graphHeight - 16, unclampedLaneY));
-		const startX = from.x;
-		const endX = to.x + nodeWidth;
-		return {
-			path: `M ${startX} ${fromCenterY} C ${startX - 26} ${laneY}, ${endX + 26} ${laneY}, ${endX} ${toCenterY}`,
-			labelX: (startX + endX) / 2,
-			labelY: laneY + (useTopLane ? -12 : 12),
-		};
-	}
-
-	const leftBoundary = Math.min(from.x, to.x);
-	const rightBoundary = Math.max(from.x + nodeWidth, to.x + nodeWidth);
-	const leftRoom = leftBoundary;
-	const rightRoom = graphWidth - rightBoundary;
-	const useLeftLane = leftRoom >= rightRoom;
-	const unclampedLaneX = useLeftLane ? leftBoundary - laneOffset : rightBoundary + laneOffset;
-	const laneX = Math.max(16, Math.min(graphWidth - 16, unclampedLaneX));
-	const startY = from.y;
-	const endY = to.y + nodeHeight;
-	return {
-		path: `M ${fromCenterX} ${startY} C ${laneX} ${startY - 26}, ${laneX} ${endY + 26}, ${toCenterX} ${endY}`,
-		labelX: laneX + (useLeftLane ? -12 : 12),
-		labelY: (startY + endY) / 2,
-	};
-};
-
-const diagramHash = [...title]
+const preparedChart = prepareMermaidChart(chart, title, description, tones);
+const direction = getMermaidDirection(chart);
+const diagramHash = [...`${title}\u0000${chart}`]
 	.reduce((hash, character) => (hash * 31 + character.charCodeAt(0)) >>> 0, 7)
 	.toString(36);
-const solidMarkerId = `diagram-arrow-${diagramHash}`;
-const optionalMarkerId = `diagram-arrow-muted-${diagramHash}`;
-const titleId = `diagram-title-${diagramHash}`;
-const descriptionId = `diagram-description-${diagramHash}`;
 ---
 
 <figure
@@ -313,163 +28,123 @@ const descriptionId = `diagram-description-${diagramHash}`;
 	data-diagram-density="balanced"
 >
 	<div
-		class="diagram-scroll overflow-x-auto overscroll-x-contain border-2 border-edge-strong bg-channel-surface-default p-3 shadow-retro-md md:p-5"
+		class="diagram-scroll min-h-72 overflow-x-auto overscroll-x-contain border-2 border-edge-strong bg-channel-surface-default p-3 shadow-retro-md md:p-5"
 		data-mermaid-host
-		data-mermaid-state="rendered"
+		data-mermaid-id={diagramHash}
+		data-mermaid-source={preparedChart}
+		data-mermaid-state="pending"
+		aria-busy="true"
 	>
-		<svg
-			width={graphWidth}
-			height={graphHeight}
-			viewBox={`0 0 ${graphWidth} ${graphHeight}`}
-			class="mx-auto block h-auto max-w-none md:max-w-full"
+		<div
+			class="flex min-h-64 flex-col items-center justify-center gap-3 px-4 text-center"
 			role="img"
-			aria-labelledby={`${titleId} ${descriptionId}`}
-			data-diagram-svg
+			aria-label={`${title}. ${description}`}
+			data-mermaid-fallback
 		>
-			<title id={titleId}>{title}</title>
-			<desc id={descriptionId}>{description}</desc>
-			<defs>
-				<marker
-					id={solidMarkerId}
-					viewBox="0 0 10 10"
-					refX="9"
-					refY="5"
-					markerWidth="7"
-					markerHeight="7"
-					orient="auto-start-reverse"
-				>
-					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-accent-primary)"></path>
-				</marker>
-				<marker
-					id={optionalMarkerId}
-					viewBox="0 0 10 10"
-					refX="9"
-					refY="5"
-					markerWidth="7"
-					markerHeight="7"
-					orient="auto-start-reverse"
-				>
-					<path d="M 0 0 L 10 5 L 0 10 z" fill="var(--channel-content-muted)"></path>
-				</marker>
-			</defs>
-
-			<g aria-hidden="true" data-diagram-edges>
-				{
-					edges.map(edge => {
-						const geometry = edgePath(edge);
-						const stroke = edge.optional
-							? 'var(--channel-content-muted)'
-							: 'var(--channel-accent-primary)';
-						const marker = edge.optional ? optionalMarkerId : solidMarkerId;
-						const labelWidth = edge.label
-							? Math.max(72, edge.label.length * 7.5 + 24)
-							: 0;
-						return (
-							<g data-diagram-edge data-edge-optional={String(edge.optional)}>
-								<path
-									d={geometry.path}
-									fill="none"
-									stroke={stroke}
-									stroke-width={edge.optional ? '1.75' : '2.25'}
-									stroke-dasharray={edge.optional ? '8 7' : undefined}
-									stroke-linecap="round"
-									stroke-linejoin="round"
-									vector-effect="non-scaling-stroke"
-									marker-end={`url(#${marker})`}
-								/>
-								{edge.label && (
-									<g
-										transform={`translate(${geometry.labelX - labelWidth / 2} ${geometry.labelY - 13})`}
-									>
-										<rect
-											width={labelWidth}
-											height="26"
-											fill="var(--channel-surface-default)"
-											stroke="var(--color-edge-subtle)"
-											stroke-width="1"
-											vector-effect="non-scaling-stroke"
-										/>
-										<text
-											x={labelWidth / 2}
-											y="17"
-											text-anchor="middle"
-											font-family="var(--font-mono)"
-											font-size="12"
-											font-weight="700"
-											fill="var(--channel-content-default)"
-										>
-											{edge.label}
-										</text>
-									</g>
-								)}
-							</g>
-						);
-					})
-				}
-			</g>
-
-			<g data-diagram-nodes>
-				{
-					nodeList.map(node => {
-						const tone = toneTokens[node.tone];
-						const lineHeight = 19;
-						const firstLineY =
-							node.y +
-							nodeHeight / 2 -
-							((node.lines.length - 1) * lineHeight) / 2 +
-							5;
-						return (
-							<g data-diagram-node data-node-id={node.id} data-node-tone={node.tone}>
-								<rect
-									x={node.x}
-									y={node.y}
-									width={nodeWidth}
-									height={nodeHeight}
-									fill={tone.background}
-									stroke={tone.foreground}
-									stroke-width="2"
-									vector-effect="non-scaling-stroke"
-								/>
-								<line
-									x1={node.x + 2}
-									y1={node.y + 2}
-									x2={node.x + nodeWidth - 2}
-									y2={node.y + 2}
-									stroke={tone.foreground}
-									stroke-width="5"
-									vector-effect="non-scaling-stroke"
-								/>
-								<text
-									x={node.x + nodeWidth / 2}
-									y={firstLineY}
-									text-anchor="middle"
-									font-family="var(--font-mono)"
-									font-size="14"
-									font-weight="700"
-									fill={tone.foreground}
-								>
-									{node.lines.map((line, index) => (
-										<tspan
-											x={node.x + nodeWidth / 2}
-											dy={index === 0 ? 0 : lineHeight}
-										>
-											{line}
-										</tspan>
-									))}
-								</text>
-								<title>{node.label}</title>
-							</g>
-						);
-					})
-				}
-			</g>
-		</svg>
+			<span class="text-editorial-label text-channel-accent-primary">{title}</span>
+			<span class="max-w-180 text-secondary text-content-muted">{description}</span>
+		</div>
 	</div>
 	<figcaption class="mt-3 text-caption leading-relaxed text-content-muted">
 		<span class="font-bold text-content-strong">{title}.</span>
 		{description}
 	</figcaption>
 </figure>
+
+<script>
+	let mermaidPromise: Promise<(typeof import('mermaid'))['default']> | undefined;
+	let renderSequence = 0;
+
+	const getMermaid = () => {
+		mermaidPromise ??= import('mermaid').then(({ default: mermaid }) => {
+			mermaid.initialize({
+				startOnLoad: false,
+				securityLevel: 'strict',
+				theme: 'base',
+				flowchart: {
+					htmlLabels: false,
+					useMaxWidth: false,
+					curve: 'basis',
+					nodeSpacing: 40,
+					rankSpacing: 72,
+				},
+			});
+			return mermaid;
+		});
+		return mermaidPromise;
+	};
+
+	const renderHost = async (host: HTMLElement) => {
+		if (host.dataset.mermaidState !== 'pending') return;
+		const source = host.dataset.mermaidSource;
+		if (!source) return;
+
+		host.dataset.mermaidState = 'loading';
+
+		try {
+			await document.fonts.ready;
+			const mermaid = await getMermaid();
+			const renderId = `portfolio-mermaid-${host.dataset.mermaidId ?? 'diagram'}-${renderSequence++}`;
+			const { svg, bindFunctions } = await mermaid.render(renderId, source);
+
+			host.innerHTML = svg;
+			const svgElement = host.querySelector('svg');
+			if (!svgElement) throw new Error('Mermaid rendered without an SVG root.');
+
+			const viewBox = svgElement
+				.getAttribute('viewBox')
+				?.trim()
+				.split(/\s+/)
+				.map(Number);
+			if (viewBox?.length === 4 && viewBox.every(Number.isFinite)) {
+				const [, , width, height] = viewBox;
+				if (width > 0 && height > 0) {
+					svgElement.setAttribute('width', String(Math.ceil(width)));
+					svgElement.setAttribute('height', String(Math.ceil(height)));
+				}
+			}
+
+			svgElement.removeAttribute('style');
+			svgElement.setAttribute('role', 'img');
+			svgElement.setAttribute('preserveAspectRatio', 'xMidYMid meet');
+			svgElement.setAttribute('data-diagram-svg', '');
+			bindFunctions?.(host);
+			host.dataset.mermaidState = 'rendered';
+			host.removeAttribute('aria-busy');
+			host.removeAttribute('data-mermaid-source');
+		} catch (error) {
+			host.dataset.mermaidState = 'error';
+			host.removeAttribute('aria-busy');
+			console.error('[MermaidDiagram] Failed to render diagram.', error);
+		}
+	};
+
+	const hosts = Array.from(
+		document.querySelectorAll<HTMLElement>('[data-mermaid-host][data-mermaid-state="pending"]')
+	);
+
+	if ('IntersectionObserver' in window) {
+		const observer = new IntersectionObserver(
+			entries => {
+				for (const entry of entries) {
+					if (!entry.isIntersecting) continue;
+					observer.unobserve(entry.target);
+					void renderHost(entry.target as HTMLElement);
+				}
+			},
+			{ rootMargin: '600px 0px' }
+		);
+		hosts.forEach(host => observer.observe(host));
+	} else {
+		hosts.forEach(host => void renderHost(host));
+	}
+
+	window.addEventListener('beforeprint', () => {
+		document
+			.querySelectorAll<HTMLElement>('[data-mermaid-host][data-mermaid-state="pending"]')
+			.forEach(host => void renderHost(host));
+	});
+</script>
 
 <style>
 	.diagram-scroll {
@@ -481,5 +156,141 @@ const descriptionId = `diagram-description-${diagramHash}`;
 		display: none;
 		width: 0;
 		height: 0;
+	}
+
+	.diagram-scroll :global(svg) {
+		display: block;
+		height: auto;
+		max-width: none;
+		margin-inline: auto;
+		font-family: var(--font-mono) !important;
+	}
+
+	.diagram-scroll :global(svg text),
+	.diagram-scroll :global(svg .nodeLabel),
+	.diagram-scroll :global(svg .edgeLabel) {
+		font-family: var(--font-mono) !important;
+		fill: var(--channel-content-default) !important;
+		color: var(--channel-content-default) !important;
+	}
+
+	.diagram-scroll :global(.node rect),
+	.diagram-scroll :global(.node polygon),
+	.diagram-scroll :global(.node path) {
+		fill: var(--channel-surface-default) !important;
+		stroke: var(--color-edge-strong) !important;
+		stroke-width: 2px !important;
+	}
+
+	.diagram-scroll :global(.flowchart-link),
+	.diagram-scroll :global(.edgePath path) {
+		stroke: var(--channel-accent-primary) !important;
+		stroke-width: 2.25px !important;
+	}
+
+	.diagram-scroll :global(marker path) {
+		fill: var(--channel-accent-primary) !important;
+		stroke: var(--channel-accent-primary) !important;
+	}
+
+	.diagram-scroll :global(.edgeLabel rect),
+	.diagram-scroll :global(.labelBkg) {
+		fill: var(--channel-surface-default) !important;
+		stroke: var(--color-edge-subtle) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-brand rect),
+	.diagram-scroll :global(g.portfolio-tone-brand polygon),
+	.diagram-scroll :global(g.portfolio-tone-brand path) {
+		fill: var(--color-badge-brand-bg) !important;
+		stroke: var(--color-badge-brand-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-info rect),
+	.diagram-scroll :global(g.portfolio-tone-info polygon),
+	.diagram-scroll :global(g.portfolio-tone-info path) {
+		fill: var(--color-badge-info-bg) !important;
+		stroke: var(--color-badge-info-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-success rect),
+	.diagram-scroll :global(g.portfolio-tone-success polygon),
+	.diagram-scroll :global(g.portfolio-tone-success path) {
+		fill: var(--color-status-success-bg) !important;
+		stroke: var(--color-status-success-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-secondary rect),
+	.diagram-scroll :global(g.portfolio-tone-secondary polygon),
+	.diagram-scroll :global(g.portfolio-tone-secondary path) {
+		fill: var(--color-badge-secondary-bg) !important;
+		stroke: var(--color-badge-secondary-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-warning rect),
+	.diagram-scroll :global(g.portfolio-tone-warning polygon),
+	.diagram-scroll :global(g.portfolio-tone-warning path) {
+		fill: var(--color-badge-warning-bg) !important;
+		stroke: var(--color-badge-warning-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-danger rect),
+	.diagram-scroll :global(g.portfolio-tone-danger polygon),
+	.diagram-scroll :global(g.portfolio-tone-danger path) {
+		fill: var(--color-badge-danger-bg) !important;
+		stroke: var(--color-badge-danger-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-brand text),
+	.diagram-scroll :global(g.portfolio-tone-brand .nodeLabel) {
+		fill: var(--color-badge-brand-text) !important;
+		color: var(--color-badge-brand-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-info text),
+	.diagram-scroll :global(g.portfolio-tone-info .nodeLabel) {
+		fill: var(--color-badge-info-text) !important;
+		color: var(--color-badge-info-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-success text),
+	.diagram-scroll :global(g.portfolio-tone-success .nodeLabel) {
+		fill: var(--color-status-success-text) !important;
+		color: var(--color-status-success-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-secondary text),
+	.diagram-scroll :global(g.portfolio-tone-secondary .nodeLabel) {
+		fill: var(--color-badge-secondary-text) !important;
+		color: var(--color-badge-secondary-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-warning text),
+	.diagram-scroll :global(g.portfolio-tone-warning .nodeLabel) {
+		fill: var(--color-badge-warning-text) !important;
+		color: var(--color-badge-warning-text) !important;
+	}
+
+	.diagram-scroll :global(g.portfolio-tone-danger text),
+	.diagram-scroll :global(g.portfolio-tone-danger .nodeLabel) {
+		fill: var(--color-badge-danger-text) !important;
+		color: var(--color-badge-danger-text) !important;
+	}
+
+	@media (min-width: 768px) {
+		.diagram-scroll :global(svg) {
+			max-width: 100%;
+		}
+	}
+
+	@media print {
+		.diagram-scroll {
+			overflow: visible;
+			box-shadow: none;
+		}
+
+		.diagram-scroll :global(svg) {
+			max-width: 100%;
+		}
 	}
 </style>
