@@ -7,10 +7,10 @@ import footerEn from './locales/en/footer.json';
 import metadataEn from './locales/en/metadata.json';
 import navigationEn from './locales/en/navigation.json';
 import aboutPageEn from './locales/en/pages/about.json';
-import atenaEn from './locales/en/pages/atena.json';
 import blogEn from './locales/en/pages/blog.json';
 import componentsEn from './locales/en/pages/components.json';
 import devlogEn from './locales/en/pages/devlog.json';
+import experiencePageEn from './locales/en/pages/experience.json';
 import researchPageEn from './locales/en/pages/research.json';
 import projectsPageEn from './locales/en/pages/projects.json';
 import skillsEn from './locales/en/pages/skills.json';
@@ -32,10 +32,10 @@ import footerEs from './locales/es/footer.json';
 import metadataEs from './locales/es/metadata.json';
 import navigationEs from './locales/es/navigation.json';
 import aboutPageEs from './locales/es/pages/about.json';
-import atenaEs from './locales/es/pages/atena.json';
 import blogEs from './locales/es/pages/blog.json';
 import componentsEs from './locales/es/pages/components.json';
 import devlogEs from './locales/es/pages/devlog.json';
+import experiencePageEs from './locales/es/pages/experience.json';
 import researchPageEs from './locales/es/pages/research.json';
 import projectsPageEs from './locales/es/pages/projects.json';
 import skillsEs from './locales/es/pages/skills.json';
@@ -65,10 +65,10 @@ const englishCatalog = {
 	splash: splashEn,
 	pages: {
 		about: aboutPageEn,
-		atena: atenaEn,
 		blog: blogEn,
 		components: componentsEn,
 		devlog: devlogEn,
+		experience: experiencePageEn,
 		research: researchPageEn,
 		projects: projectsPageEn,
 		skills: skillsEn,
@@ -97,10 +97,10 @@ const spanishCatalog = {
 	splash: splashEs,
 	pages: {
 		about: aboutPageEs,
-		atena: atenaEs,
 		blog: blogEs,
 		components: componentsEs,
 		devlog: devlogEs,
+		experience: experiencePageEs,
 		research: researchPageEs,
 		projects: projectsPageEs,
 		skills: skillsEs,
@@ -128,10 +128,10 @@ export const UI_CATALOG_MODULES = [
 	'recruiter',
 	'splash',
 	'pages.about',
-	'pages.atena',
 	'pages.blog',
 	'pages.components',
 	'pages.devlog',
+	'pages.experience',
 	'pages.research',
 	'pages.projects',
 	'pages.skills',
