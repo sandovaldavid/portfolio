@@ -71,7 +71,9 @@ describe('Portfolio v2 icon contract', () => {
 	});
 
 	it('keeps the Core Stack on the current official product marks', () => {
+		const coreStack = read('src/shared/config/technology/core-stack.ts');
 		const techStack = read('src/widgets/tech-stack/ui/TechStack.astro');
+		const skillsPage = read('src/widgets/skills-page/ui/SkillsPage.astro');
 		const angular = read('src/assets/technologies/Angular.astro');
 		const typeScript = read('src/assets/technologies/TypeScript.astro');
 		const astro = read('src/assets/technologies/AstroIcon.astro');
@@ -89,7 +91,12 @@ describe('Portfolio v2 icon contract', () => {
 			'Playwright.astro',
 			'GitHubActions.astro',
 		]) {
-			expect(techStack).toContain(`@assets/technologies/${asset}`);
+			expect(coreStack).toContain(`@assets/technologies/${asset}`);
+		}
+
+		for (const consumer of [techStack, skillsPage]) {
+			expect(consumer).toContain('CORE_STACK');
+			expect(consumer).not.toContain('@assets/technologies/');
 		}
 
 		// Angular v17+ gradient shield from the current Angular press kit.
