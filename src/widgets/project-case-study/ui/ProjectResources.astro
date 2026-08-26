@@ -1,0 +1,266 @@
+---
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
+import BookOpenIcon from '@assets/icons/BookOpen.astro';
+import LinkIcon from '@assets/icons/Link.astro';
+import ShareIcon from '@assets/icons/Share.astro';
+import GitHubIcon from '@assets/technologies/GitHub.astro';
+import { PROJECT_METADATA, type ProjectId } from '@entities/project';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+interface Props {
+	projectId: ProjectId;
+}
+
+const { projectId } = Astro.props;
+const metadata = PROJECT_METADATA[projectId];
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.projects');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+
+const repositories =
+	metadata.sourceAccess === 'private'
+		? []
+		: metadata.repositories?.length
+			? [...metadata.repositories]
+			: metadata.github
+				? [{ label: tPage('resourceSource'), url: metadata.github }]
+				: [];
+
+const docs = metadata.resources?.docs;
+const packageUrl = metadata.resources?.package;
+const related = metadata.resources?.related;
+const liveDemo = metadata.link && metadata.demoAccess !== 'unavailable' ? metadata.link : undefined;
+const hasExternalResources =
+	repositories.length > 0 || Boolean(docs || packageUrl || related || liveDemo);
+
+const resourceBaseClasses =
+	'inline-flex min-h-11 items-center gap-2 border-2 px-4 py-2 text-button-label shadow-retro-sm transition-[box-shadow] duration-150 hover:shadow-retro-md active:shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas';
+const resourceToneClasses = {
+	repository: 'border-badge-info-text bg-badge-info-bg text-badge-info-text',
+	docs: 'border-badge-brand-text bg-badge-brand-bg text-badge-brand-text',
+	demo: 'border-status-success-text bg-status-success-bg text-status-success-text',
+	package: 'border-badge-secondary-text bg-badge-secondary-bg text-badge-secondary-text',
+	related: 'border-badge-warning-text bg-badge-warning-bg text-badge-warning-text',
+	share: 'border-edge-strong bg-badge-default-bg text-badge-default-text',
+} as const;
+---
+
+<nav
+	aria-label={tPage('resourcesTitle')}
+	class="w-full bg-channel-background-canvas px-5 pb-8 md:px-8 md:pb-10 lg:px-20 lg:pb-12"
+	data-project-resources
+>
+	<div class="mx-auto w-full max-w-320 border-t border-edge-subtle pt-5 md:pt-6">
+		<p class="text-editorial-label-compact uppercase text-content-muted">
+			{tPage('resourcesTitle')}
+		</p>
+		<ul class="mt-3 flex flex-wrap gap-3">
+			{
+				repositories.map(repository => (
+					<li>
+						<a
+							href={repository.url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class:list={[resourceBaseClasses, resourceToneClasses.repository]}
+							data-project-resource="repository"
+							data-resource-tone="info"
+						>
+							<GitHubIcon class="size-4" />
+							<span>{repository.label}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				))
+			}
+
+			{
+				docs && (
+					<li>
+						<a
+							href={docs}
+							target="_blank"
+							rel="noopener noreferrer"
+							class:list={[resourceBaseClasses, resourceToneClasses.docs]}
+							data-project-resource="docs"
+							data-resource-tone="brand"
+						>
+							<BookOpenIcon class="size-4" />
+							<span>{tPage('resourceDocs')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			{
+				liveDemo && (
+					<li>
+						<a
+							href={liveDemo}
+							target="_blank"
+							rel="noopener noreferrer"
+							class:list={[resourceBaseClasses, resourceToneClasses.demo]}
+							data-project-resource="demo"
+							data-resource-tone="success"
+						>
+							<ArrowUpRightIcon class="size-4" />
+							<span>{tPage('resourceDemo')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			{
+				packageUrl && (
+					<li>
+						<a
+							href={packageUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							class:list={[resourceBaseClasses, resourceToneClasses.package]}
+							data-project-resource="package"
+							data-resource-tone="secondary"
+						>
+							<LinkIcon class="size-4" />
+							<span>{tPage('resourcePackage')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			{
+				related && (
+					<li>
+						<a
+							href={related}
+							target="_blank"
+							rel="noopener noreferrer"
+							class:list={[resourceBaseClasses, resourceToneClasses.related]}
+							data-project-resource="related"
+							data-resource-tone="warning"
+						>
+							<LinkIcon class="size-4" />
+							<span>{tPage('resourceRelated')}</span>
+							<span class="sr-only"> {tAccessibility('externalLink')}</span>
+						</a>
+					</li>
+				)
+			}
+
+			<li>
+				<button
+					type="button"
+					class:list={[resourceBaseClasses, resourceToneClasses.share, 'cursor-pointer']}
+					data-project-share
+					data-project-resource="share"
+					data-resource-tone="neutral"
+					data-share-label={tPage('resourceShare')}
+					data-share-copied={tPage('shareCopied')}
+				>
+					<ShareIcon class="size-4 shrink-0" />
+					<span class="inline-block" data-share-text>{tPage('resourceShare')}</span>
+				</button>
+			</li>
+		</ul>
+		<p class="sr-only" aria-live="polite" data-share-status></p>
+		{!hasExternalResources && <span class="sr-only">{tPage('shareOnlyHint')}</span>}
+	</div>
+</nav>
+
+<script>
+	const wait = (milliseconds: number) =>
+		new Promise<void>(resolve => window.setTimeout(resolve, milliseconds));
+
+	async function swapShareText(text: HTMLElement | null, value: string) {
+		if (!text) return;
+		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+			text.textContent = value;
+			return;
+		}
+
+		text.dataset.shareMotion = 'out';
+		await wait(120);
+		text.textContent = value;
+		text.dataset.shareMotion = 'in';
+		await wait(180);
+		delete text.dataset.shareMotion;
+	}
+
+	function setupProjectShare() {
+		document.querySelectorAll<HTMLButtonElement>('[data-project-share]').forEach(button => {
+			if (button.dataset.shareReady === 'true') return;
+			button.dataset.shareReady = 'true';
+
+			button.addEventListener('click', async () => {
+				if (button.dataset.shareBusy === 'true') return;
+				button.dataset.shareBusy = 'true';
+
+				const text = button.querySelector<HTMLElement>('[data-share-text]');
+				const nav = button.closest('[data-project-resources]');
+				const status = nav?.querySelector<HTMLElement>('[data-share-status]');
+				const label = button.dataset.shareLabel ?? '';
+				const copied = button.dataset.shareCopied ?? label;
+				const shareData = { title: document.title, url: window.location.href };
+
+				try {
+					if (navigator.share) {
+						await navigator.share(shareData);
+						return;
+					}
+
+					await navigator.clipboard.writeText(shareData.url);
+					await swapShareText(text, copied);
+					if (status) status.textContent = copied;
+					await wait(1500);
+					await swapShareText(text, label);
+					if (status) status.textContent = '';
+				} catch {
+					if (status) status.textContent = label;
+				} finally {
+					button.dataset.shareBusy = 'false';
+				}
+			});
+		});
+	}
+
+	setupProjectShare();
+	document.addEventListener('astro:page-load', setupProjectShare);
+</script>
+
+<style>
+	[data-share-text][data-share-motion='out'] {
+		animation: project-share-label-out 120ms ease-in forwards;
+	}
+
+	[data-share-text][data-share-motion='in'] {
+		animation: project-share-label-in 180ms ease-out both;
+	}
+
+	@keyframes project-share-label-out {
+		to {
+			opacity: 0;
+			transform: translateY(-0.3rem);
+		}
+	}
+
+	@keyframes project-share-label-in {
+		from {
+			opacity: 0;
+			transform: translateY(0.3rem);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		[data-share-text] {
+			animation: none !important;
+			transform: none !important;
+		}
+	}
+</style>

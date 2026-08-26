@@ -1,0 +1,131 @@
+---
+type ResearchSectionVariant = 'narrative' | 'feature-grid' | 'technical-list' | 'status';
+
+interface Props {
+	eyebrow: string;
+	title?: string;
+	variant?: ResearchSectionVariant;
+}
+
+const { eyebrow, title, variant = 'narrative' } = Astro.props;
+const variantClasses: Record<ResearchSectionVariant, string> = {
+	narrative: 'border-b border-edge-subtle pb-6 last:border-b-0 last:pb-0 md:pb-8',
+	'feature-grid':
+		'research-feature-grid border-b border-edge-subtle pb-6 last:border-b-0 last:pb-0 md:pb-8',
+	'technical-list':
+		'research-technical-list border-b border-edge-subtle pb-6 last:border-b-0 last:pb-0 md:pb-8',
+	status: 'border-l-4 border-channel-accent-primary py-1 pl-4',
+};
+const sectionClasses = `research-section w-full ${variantClasses[variant]}`;
+const contentMeasure = variant === 'narrative' ? 'max-w-280' : 'max-w-210';
+---
+
+<section class={sectionClasses} data-research-section data-research-variant={variant}>
+	<header class:list={['mb-4 flex flex-col gap-2', contentMeasure]}>
+		<p
+			class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
+		>
+			{eyebrow}
+		</p>
+		{title && <h2 class="text-component-title text-content-strong">{title}</h2>}
+	</header>
+	<div
+		class:list={[
+			'research-prose text-body leading-relaxed text-content-default',
+			contentMeasure,
+		]}
+	>
+		<slot />
+	</div>
+</section>
+
+<style>
+	.research-prose :global(p + p),
+	.research-prose :global(p + ul),
+	.research-prose :global(ul + p),
+	.research-prose :global(blockquote + p) {
+		margin-top: 1rem;
+	}
+
+	.research-prose :global(ul) {
+		display: grid;
+		gap: 0.5rem;
+		padding-left: 1.25rem;
+		list-style: square;
+	}
+
+	.research-prose :global(blockquote) {
+		border-left: 2px solid var(--channel-accent-primary);
+		padding-left: 1rem;
+		font-style: italic;
+		color: var(--channel-content-strong);
+	}
+
+	.research-feature-grid .research-prose :global(ul) {
+		counter-reset: research-feature;
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0.75rem 2rem;
+		padding-left: 0;
+		list-style: none;
+	}
+
+	.research-feature-grid .research-prose :global(li) {
+		counter-increment: research-feature;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		gap: 0.75rem;
+		align-items: start;
+	}
+
+	.research-feature-grid .research-prose :global(li::before) {
+		content: counter(research-feature, decimal-leading-zero);
+		padding-top: 0.125rem;
+		font-family: var(--font-retro-tag);
+		font-size: 0.75rem;
+		line-height: 1.125rem;
+		font-weight: 700;
+		letter-spacing: 0.4px;
+		color: var(--channel-accent-primary);
+	}
+
+	.research-technical-list .research-prose :global(ul) {
+		gap: 0;
+		padding-left: 0;
+		border-block: 1px solid var(--channel-edge-subtle);
+		list-style: none;
+	}
+
+	.research-technical-list .research-prose :global(li) {
+		padding-block: 0.75rem;
+		border-bottom: 1px solid var(--channel-edge-subtle);
+	}
+
+	.research-technical-list .research-prose :global(li:last-child) {
+		border-bottom: 0;
+	}
+
+	.research-technical-list .research-prose :global(strong) {
+		display: block;
+		margin-bottom: 0.25rem;
+		font-family: var(--font-retro-tag);
+		font-size: 0.75rem;
+		line-height: 1.125rem;
+		font-weight: 700;
+		letter-spacing: 0.4px;
+		text-transform: uppercase;
+		color: var(--channel-accent-primary);
+	}
+
+	@media (min-width: 48rem) {
+		.research-feature-grid .research-prose :global(ul) {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+
+		.research-technical-list .research-prose :global(strong) {
+			display: inline-block;
+			min-width: 7rem;
+			margin-right: 1rem;
+			margin-bottom: 0;
+		}
+	}
+</style>

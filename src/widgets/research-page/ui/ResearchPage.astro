@@ -1,0 +1,64 @@
+---
+import BrainIcon from '@assets/icons/Brain.astro';
+import type { ResearchContent } from '@entities/research';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { Badge, TechPill, TitleSection } from '@shared/ui';
+
+interface Props {
+	research: ResearchContent;
+}
+
+const { research } = Astro.props;
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tCommon = createScopedUiTranslator(lang, 'common');
+const tPage = createScopedUiTranslator(lang, 'pages.research');
+const statusLabel = tCommon('status.inProgress');
+---
+
+<article class="flex w-full max-w-320 flex-col" data-research-page="mdx">
+	<header class="relative mx-5 py-10 md:mx-8 lg:mx-0" aria-labelledby="research-title">
+		<span
+			class="absolute inset-y-0 left-0 w-2 bg-channel-accent-primary md:w-2.5"
+			aria-hidden="true"></span>
+		<div class="flex flex-col gap-4 pl-2 lg:gap-6 lg:pl-4">
+			<span
+				class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
+			>
+				{research.institution} · {research.label}
+			</span>
+			<h1
+				id="research-title"
+				class="max-w-280 text-page-title-mobile text-content-strong md:text-page-title"
+			>
+				{research.title}
+			</h1>
+			<Badge variant="info" size="md">{statusLabel}</Badge>
+		</div>
+	</header>
+
+	<div
+		class="mx-5 mt-12 flex flex-col items-start gap-8 md:mx-8 lg:mx-0 lg:mt-16 lg:gap-10"
+		data-research-content
+	>
+		<slot />
+	</div>
+
+	<section
+		class="relative left-1/2 mt-16 w-screen -translate-x-1/2 border-y border-edge-strong bg-channel-surface-highlight py-10"
+		aria-label={tPage('keywordsLabel')}
+		data-research-keywords-band
+	>
+		<div class="mx-auto w-full max-w-320 px-5 md:px-8 lg:px-0">
+			<TitleSection className="mb-6"><BrainIcon />{tPage('keywordsLabel')}</TitleSection>
+			<ul class="flex flex-wrap gap-3">
+				{
+					research.keywords.map(keyword => (
+						<li>
+							<TechPill label={keyword} size="sm" variant="card" />
+						</li>
+					))
+				}
+			</ul>
+		</div>
+	</section>
+</article>

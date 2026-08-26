@@ -1,0 +1,244 @@
+---
+import type { ImageMetadata } from 'astro';
+import CloseIcon from '@assets/icons/Close.astro';
+import ZoomInIcon from '@assets/icons/ZoomIn.astro';
+import ZoomOutIcon from '@assets/icons/ZoomOut.astro';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+interface ProjectGalleryItem {
+	src: string | ImageMetadata;
+	alt: string;
+	caption?: string;
+}
+
+interface Props {
+	items: ProjectGalleryItem[];
+	columns?: 2 | 3;
+	label?: string;
+}
+
+const { items, columns = 2, label } = Astro.props;
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.projects');
+const resolvedLabel = label ?? tPage('galleryLabel');
+const gridClass = columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2';
+const resolvedItems = items.map(item => ({
+	...item,
+	src: typeof item.src === 'string' ? item.src : item.src.src,
+}));
+---
+
+{
+	resolvedItems.length > 0 && (
+		<div class="w-full" data-project-gallery>
+			<div
+				class:list={['grid gap-4 md:grid-cols-2', gridClass]}
+				role="list"
+				aria-label={resolvedLabel}
+			>
+				{resolvedItems.map((item, index) => (
+					<figure class="min-w-0" role="listitem">
+						<button
+							type="button"
+							class="group relative block w-full cursor-zoom-in overflow-hidden border-2 border-edge-strong bg-channel-surface-highlight shadow-retro-sm transition-[box-shadow,transform] duration-150 hover:shadow-retro-lg active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas motion-reduce:transform-none motion-reduce:transition-none"
+							aria-label={`${tPage('galleryOpen')}: ${item.alt}`}
+							data-gallery-open
+							data-gallery-index={String(index)}
+						>
+							<img
+								src={item.src}
+								alt={item.alt}
+								class="aspect-video w-full object-contain transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none"
+								loading="lazy"
+								decoding="async"
+							/>
+							<span
+								class="absolute right-3 bottom-3 flex size-10 items-center justify-center border-2 border-edge-strong bg-channel-background-canvas text-channel-accent-primary shadow-retro-sm"
+								aria-hidden="true"
+							>
+								<ZoomInIcon class="size-5" />
+							</span>
+						</button>
+						{item.caption && (
+							<figcaption class="mt-2 text-caption text-content-muted">
+								{item.caption}
+							</figcaption>
+						)}
+					</figure>
+				))}
+			</div>
+
+			<dialog
+				class="m-auto max-h-[92svh] w-[min(92vw,80rem)] overflow-hidden border-2 border-edge-strong bg-channel-background-canvas p-0 text-content-default shadow-retro-3xl"
+				aria-label={resolvedLabel}
+				data-gallery-dialog
+			>
+				<div class="flex min-h-0 max-h-[92svh] flex-col">
+					<header class="flex shrink-0 items-center justify-between gap-4 border-b border-edge-subtle px-4 py-3 md:px-5">
+						<p
+							class="text-editorial-label-compact uppercase text-content-muted"
+							data-gallery-dialog-label
+						>
+							{resolvedLabel}
+						</p>
+						<div class="flex items-center gap-2">
+							<button
+								type="button"
+								class="flex size-11 cursor-pointer items-center justify-center border-2 border-button-border bg-channel-surface-default text-content-strong transition-[background-color,box-shadow] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+								aria-label={tPage('galleryZoomIn')}
+								data-gallery-zoom
+								data-label-in={tPage('galleryZoomIn')}
+								data-label-out={tPage('galleryZoomOut')}
+							>
+								<span data-gallery-zoom-in-icon>
+									<ZoomInIcon class="size-5" />
+								</span>
+								<span class="hidden" data-gallery-zoom-out-icon>
+									<ZoomOutIcon class="size-5" />
+								</span>
+							</button>
+							<button
+								type="button"
+								class="flex size-11 cursor-pointer items-center justify-center border-2 border-button-border bg-channel-surface-default text-content-strong transition-[background-color,box-shadow] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+								aria-label={tPage('galleryClose')}
+								data-gallery-close
+							>
+								<CloseIcon class="size-5" />
+							</button>
+						</div>
+					</header>
+
+					<div
+						class="min-h-0 grow overflow-auto bg-channel-surface-highlight p-4 md:p-6"
+						data-gallery-stage
+						data-zoomed="false"
+					>
+						<img
+							src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+							alt=""
+							class="mx-auto block max-h-[72svh] max-w-full object-contain"
+							data-gallery-active-image
+						/>
+					</div>
+					<p
+						class="shrink-0 px-4 py-3 text-caption text-content-muted md:px-5"
+						data-gallery-caption
+					/>
+				</div>
+			</dialog>
+		</div>
+	)
+}
+
+<style>
+	dialog[data-gallery-dialog]::backdrop {
+		background: color-mix(in oklab, var(--channel-background-canvas) 82%, transparent);
+	}
+
+	[data-gallery-stage] [data-gallery-active-image] {
+		transform-origin: center;
+		transition: transform 180ms ease-out;
+		cursor: zoom-in;
+	}
+
+	[data-gallery-stage][data-zoomed='true'] [data-gallery-active-image] {
+		transform: scale(1.6);
+		cursor: zoom-out;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		[data-gallery-stage] [data-gallery-active-image] {
+			transition: none;
+		}
+	}
+</style>
+
+<script>
+	interface GalleryItemData {
+		src: string;
+		alt: string;
+		caption: string;
+	}
+
+	function setupProjectGalleries() {
+		document.querySelectorAll<HTMLElement>('[data-project-gallery]').forEach(gallery => {
+			if (gallery.dataset.galleryReady === 'true') return;
+			gallery.dataset.galleryReady = 'true';
+
+			const dialog = gallery.querySelector<HTMLDialogElement>('[data-gallery-dialog]');
+			const image = gallery.querySelector<HTMLImageElement>('[data-gallery-active-image]');
+			const caption = gallery.querySelector<HTMLElement>('[data-gallery-caption]');
+			const stage = gallery.querySelector<HTMLElement>('[data-gallery-stage]');
+			const zoom = gallery.querySelector<HTMLButtonElement>('[data-gallery-zoom]');
+			const zoomInIcon = gallery.querySelector<HTMLElement>('[data-gallery-zoom-in-icon]');
+			const zoomOutIcon = gallery.querySelector<HTMLElement>('[data-gallery-zoom-out-icon]');
+			const close = gallery.querySelector<HTMLButtonElement>('[data-gallery-close]');
+			const openers = [...gallery.querySelectorAll<HTMLButtonElement>('[data-gallery-open]')];
+			if (
+				!dialog ||
+				!image ||
+				!caption ||
+				!stage ||
+				!zoom ||
+				!zoomInIcon ||
+				!zoomOutIcon ||
+				!close
+			)
+				return;
+
+			let opener: HTMLButtonElement | null = null;
+			const data: GalleryItemData[] = openers.map(button => {
+				const thumbnail = button.querySelector<HTMLImageElement>('img');
+				const figureCaption = button
+					.closest('figure')
+					?.querySelector('figcaption')
+					?.textContent?.trim();
+				return {
+					src: thumbnail?.currentSrc || thumbnail?.src || '',
+					alt: thumbnail?.alt || '',
+					caption: figureCaption || '',
+				};
+			});
+
+			const setZoomed = (value: boolean) => {
+				stage.dataset.zoomed = String(value);
+				zoom.setAttribute(
+					'aria-label',
+					value ? zoom.dataset.labelOut || '' : zoom.dataset.labelIn || ''
+				);
+				zoomInIcon.classList.toggle('hidden', value);
+				zoomOutIcon.classList.toggle('hidden', !value);
+			};
+
+			const openAt = (index: number, source: HTMLButtonElement) => {
+				const item = data[index];
+				if (!item) return;
+				opener = source;
+				image.src = item.src;
+				image.alt = item.alt;
+				caption.textContent = item.caption;
+				caption.hidden = !item.caption;
+				setZoomed(false);
+				dialog.showModal();
+				close.focus();
+			};
+
+			openers.forEach((button, index) =>
+				button.addEventListener('click', () => openAt(index, button))
+			);
+			close.addEventListener('click', () => dialog.close());
+			zoom.addEventListener('click', () => setZoomed(stage.dataset.zoomed !== 'true'));
+			image.addEventListener('click', () => setZoomed(stage.dataset.zoomed !== 'true'));
+			dialog.addEventListener('click', event => {
+				if (event.target === dialog) dialog.close();
+			});
+			dialog.addEventListener('close', () => {
+				setZoomed(false);
+				opener?.focus();
+			});
+		});
+	}
+
+	setupProjectGalleries();
+	document.addEventListener('astro:page-load', setupProjectGalleries);
+</script>

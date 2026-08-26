@@ -1,478 +1,99 @@
 ---
-import { Image } from 'astro:assets';
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import LinkIcon from '@assets/icons/Link.astro';
-import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
-import { TechPill, LinkButton, LinkInline } from '@shared/ui';
+import { Badge } from '@shared/ui';
 import type { ProjectItem } from '@entities/project';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import ProjectResources from './ProjectResources.astro';
 
 interface Props {
 	project: ProjectItem;
-	backText: string;
-	codeButtonText: string;
-	previewButtonText: string;
-	caseStudyLabel: string;
-	labelProblem: string;
-	labelApproach: string;
-	labelTradeoffs: string;
-	labelOutcome: string;
-	labelLearnings: string;
-	labelTimeline: string;
-	labelRole: string;
-	backLink: string;
 }
 
-const {
-	project,
-	backText,
-	codeButtonText,
-	previewButtonText,
-	caseStudyLabel,
-	labelProblem,
-	labelApproach,
-	labelTradeoffs,
-	labelOutcome,
-	labelLearnings,
-	labelTimeline,
-	labelRole,
-	backLink,
-} = Astro.props;
+const { project } = Astro.props;
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.projects');
+const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 
-const { caseStudy } = project;
-const evidence = caseStudy?.evidence;
-const evidenceDecisionSections = evidence
-	? [
-			{ label: evidence.securityLabel, items: evidence.security },
-			{ label: evidence.testingLabel, items: evidence.testing },
-			{ label: evidence.deploymentLabel, items: evidence.deployment },
-		]
-	: [];
+const lifecycleBadgeVariant = {
+	active: 'success',
+	maintained: 'info',
+	experimental: 'warning',
+	archived: 'default',
+	deprecated: 'danger',
+} as const;
+
+const lifecycleLabel = {
+	active: tProjects('lifecycle.active'),
+	maintained: tProjects('lifecycle.maintained'),
+	experimental: tProjects('lifecycle.experimental'),
+	archived: tProjects('lifecycle.archived'),
+	deprecated: tProjects('lifecycle.deprecated'),
+}[project.lifecycle];
+
+const sourceLabel = {
+	public: tPage('sourcePublic'),
+	private: tPage('sourcePrivate'),
+	mixed: tPage('sourceMixed'),
+}[project.sourceAccess];
+
+const sourceBadgeVariant = {
+	public: 'info',
+	private: 'default',
+	mixed: 'warning',
+} as const;
+const versionLabel = project.version ? `${tPage('versionPrefix')}${project.version}` : undefined;
+const heroStatusLabel = [versionLabel, sourceLabel, lifecycleLabel].filter(Boolean).join(', ');
 ---
 
-<section>
-	<div class="mx-auto max-w-4xl">
-		<LinkInline href={backLink} class="mb-6 inline-flex items-center gap-2 text-sm">
-			<ArrowLeftIcon class="size-4" />
-			{backText}
-		</LinkInline>
-
-		<header class="mb-10">
-			<div class="mb-2 text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-				{caseStudyLabel}
-			</div>
-			<h1 class="mb-4 text-3xl md:text-page-title">
-				{project.title}
-			</h1>
-			<p class="mb-6 max-w-2xl text-body text-content-muted">
-				{project.description}
-			</p>
-
-			<div class="mb-4 flex flex-wrap gap-3">
-				{
-					project.github && (
-						<LinkButton href={project.github}>
-							<GitHubIcon class="size-5" />
-							{codeButtonText}
-						</LinkButton>
-					)
-				}
-				{
-					project.link && (
-						<LinkButton href={project.link}>
-							<LinkIcon class="size-4" />
-							{previewButtonText}
-						</LinkButton>
-					)
-				}
+<article class="w-full pt-18" data-project-case-study="mdx">
+	<header
+		class="w-full bg-channel-background-canvas px-5 py-8 md:px-8 md:py-10 lg:px-20 lg:py-12"
+		data-case-study-hero
+	>
+		<div
+			class="mx-auto grid w-full max-w-320 gap-4 lg:grid-cols-[minmax(0,640px)_minmax(0,560px)] lg:items-center lg:gap-20"
+			data-case-study-hero-shell
+		>
+			<div class="flex min-w-0 flex-col gap-2">
+				<p
+					class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
+				>
+					{project.caseStudy.kicker}
+				</p>
+				<h1 class="text-page-title-mobile text-content-strong md:text-page-title">
+					{project.title}
+				</h1>
 			</div>
 
-			<div class="flex flex-wrap gap-2">
-				{
-					project.tags.map(tag => (
-						<TechPill
-							label={tag.name}
-							icon={tag.icon}
-							size="sm"
-							variant="card"
-							class={tag.class}
-						/>
-					))
-				}
-			</div>
-		</header>
-
-		<figure class="relative mb-12 overflow-hidden border-2 border-black dark:border-white">
-			<Image
-				src={project.image}
-				width={1200}
-				height={630}
-				class="h-auto w-full object-cover"
-				alt={project.imageAlt}
-				loading="eager"
-				decoding="sync"
-			/>
-		</figure>
-
-		{
-			caseStudy && (
-				<div class="space-y-12">
-					<section
-						class="border-2 border-black bg-surface p-6 shadow-retro-md dark:border-white"
-						aria-label={`${caseStudy.status.lifecycleLabel}, ${caseStudy.status.sourceLabel}, ${caseStudy.status.demoLabel}`}
-					>
-						<dl class="grid gap-4 sm:grid-cols-3">
-							<div>
-								<dt class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-									{caseStudy.status.lifecycleLabel}
-								</dt>
-								<dd class="mt-1 text-secondary font-bold text-content-strong">
-									{caseStudy.status.lifecycle}
-								</dd>
-							</div>
-							<div>
-								<dt class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-									{caseStudy.status.sourceLabel}
-								</dt>
-								<dd class="mt-1 text-secondary font-bold text-content-strong">
-									{caseStudy.status.source}
-								</dd>
-							</div>
-							<div>
-								<dt class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-									{caseStudy.status.demoLabel}
-								</dt>
-								<dd class="mt-1 text-secondary font-bold text-content-strong">
-									{caseStudy.status.demo}
-								</dd>
-							</div>
-						</dl>
-						<div class="mt-5 border-t border-neutral-300 pt-4 dark:border-neutral-700">
-							<div class="mb-2 text-editorial-label uppercase text-error-500">
-								{caseStudy.status.limitationsLabel}
-							</div>
-							<ul class="space-y-2">
-								{caseStudy.status.limitations.map(item => (
-									<li class="text-body text-content-muted">{item}</li>
-								))}
-							</ul>
-						</div>
-					</section>
-
-					{evidence && (
-						<section
-							class="border-2 border-black bg-surface p-6 shadow-retro-md dark:border-white"
-							aria-labelledby="case-study-status"
-						>
-							<h2
-								id="case-study-status"
-								class="mb-3 text-subheading uppercase text-primary-500 dark:text-primary-400"
-							>
-								{evidence.statusLabel}
-							</h2>
-							<p class="text-xl font-bold text-content-strong">{evidence.status}</p>
-							<p class="mt-3 text-body text-content-muted">{evidence.statusDetail}</p>
-						</section>
-					)}
-
-					<div class="border-l-4 border-red-500 pl-6">
-						<h2 class="mb-2 text-subheading uppercase text-error-500">
-							{labelProblem}
-						</h2>
-						<p class="text-body">{caseStudy.problem}</p>
-					</div>
-
-					<div class="border-l-4 border-yellow-500 pl-6">
-						<h2 class="mb-2 text-subheading uppercase text-warning-500">
-							{labelApproach}
-						</h2>
-						<p class="text-body">{caseStudy.approach}</p>
-					</div>
-
-					<div class="border-l-4 border-orange-500 pl-6">
-						<h2 class="mb-2 text-subheading uppercase text-orange-500">
-							{labelTradeoffs}
-						</h2>
-						<p class="text-body">{caseStudy.tradeoffs}</p>
-					</div>
-
-					<div class="border-l-4 border-green-500 pl-6">
-						<h2 class="mb-2 text-subheading uppercase text-success-500">
-							{labelOutcome}
-						</h2>
-						<p class="text-body">{caseStudy.outcome}</p>
-					</div>
-
-					{evidence && (
-						<div class="grid gap-8 lg:grid-cols-2">
-							<section aria-labelledby="implemented-evidence">
-								<h2
-									id="implemented-evidence"
-									class="mb-4 text-subheading uppercase text-success-500"
-								>
-									{evidence.implementedLabel}
-								</h2>
-								<ul class="space-y-3">
-									{evidence.implemented.map(item => (
-										<li class="flex items-start gap-3 text-body">
-											<span
-												class="mt-1 font-bold text-success-500"
-												aria-hidden="true"
-											>
-												✓
-											</span>
-											<span>{item}</span>
-										</li>
-									))}
-								</ul>
-							</section>
-
-							<section aria-labelledby="planned-evidence">
-								<h2
-									id="planned-evidence"
-									class="mb-4 text-subheading uppercase text-warning-500"
-								>
-									{evidence.plannedLabel}
-								</h2>
-								<ul class="space-y-3">
-									{evidence.planned.map(item => (
-										<li class="flex items-start gap-3 text-body">
-											<span
-												class="mt-1 font-bold text-warning-500"
-												aria-hidden="true"
-											>
-												○
-											</span>
-											<span>{item}</span>
-										</li>
-									))}
-								</ul>
-							</section>
-						</div>
-					)}
-
-					{evidence && (
-						<section aria-labelledby="architecture-evidence">
-							<h2
-								id="architecture-evidence"
-								class="mb-5 text-subheading uppercase text-primary-500 dark:text-primary-400"
-							>
-								{evidence.architectureLabel}
-							</h2>
-							<figure class="border-2 border-black bg-neutral-950 p-5 text-white shadow-retro-lg dark:border-white">
-								<div class="grid gap-4 md:grid-cols-[1fr_auto_1fr] md:items-center">
-									<div class="border-2 border-red-500 bg-neutral-900 p-4 text-center">
-										{evidence.architecture.client
-											.split('\n')
-											.map((line, index) => (
-												<p
-													class={
-														index === 0
-															? 'font-bold text-white'
-															: 'mt-1 text-xs text-neutral-300'
-													}
-												>
-													{line}
-												</p>
-											))}
-									</div>
-									<div class="hidden text-2xl md:block" aria-hidden="true">
-										→
-									</div>
-									<div class="border-2 border-purple-500 bg-neutral-900 p-4 text-center">
-										{evidence.architecture.api
-											.split('\n')
-											.map((line, index) => (
-												<p
-													class={
-														index === 0
-															? 'font-bold text-white'
-															: 'mt-1 text-xs text-neutral-300'
-													}
-												>
-													{line}
-												</p>
-											))}
-									</div>
-								</div>
-
-								<div class="my-4 text-center text-2xl" aria-hidden="true">
-									↓
-								</div>
-
-								<div class="grid gap-4 md:grid-cols-3">
-									<div class="border-2 border-sky-400 bg-neutral-900 p-4 text-center">
-										{evidence.architecture.identity
-											.split('\n')
-											.map((line, index) => (
-												<p
-													class={
-														index === 0
-															? 'font-bold text-white'
-															: 'mt-1 text-xs text-neutral-300'
-													}
-												>
-													{line}
-												</p>
-											))}
-									</div>
-									<div class="border-2 border-emerald-400 bg-neutral-900 p-4 text-center">
-										{evidence.architecture.modules
-											.split('\n')
-											.map((line, index) => (
-												<p
-													class={
-														index === 0
-															? 'font-bold text-white'
-															: 'mt-1 text-xs text-neutral-300'
-													}
-												>
-													{line}
-												</p>
-											))}
-									</div>
-									<div class="border-2 border-blue-400 bg-neutral-900 p-4 text-center">
-										{evidence.architecture.database
-											.split('\n')
-											.map((line, index) => (
-												<p
-													class={
-														index === 0
-															? 'font-bold text-white'
-															: 'mt-1 text-xs text-neutral-300'
-													}
-												>
-													{line}
-												</p>
-											))}
-									</div>
-								</div>
-
-								<div class="mt-4 border-2 border-neutral-500 bg-neutral-900 p-4 text-center">
-									{evidence.architecture.processes
-										.split('\n')
-										.map((line, index) => (
-											<p
-												class={
-													index === 0
-														? 'font-bold text-white'
-														: 'mt-1 text-xs text-neutral-300'
-												}
-											>
-												{line}
-											</p>
-										))}
-								</div>
-								<figcaption class="mt-5 text-caption text-neutral-300">
-									{evidence.architecture.caption}
-								</figcaption>
-							</figure>
-						</section>
-					)}
-
-					{evidence && (
-						<div class="grid gap-8 md:grid-cols-3">
-							{evidenceDecisionSections.map(({ label, items }) => (
-								<section class="border-t-4 border-primary-500 pt-4">
-									<h2 class="mb-4 text-subheading uppercase text-primary-500 dark:text-primary-400">
-										{label}
-									</h2>
-									<ul class="space-y-3">
-										{items.map(item => (
-											<li class="text-body">{item}</li>
-										))}
-									</ul>
-								</section>
-							))}
-						</div>
-					)}
-
-					{(caseStudy.timeline || caseStudy.role) && (
-						<div class="flex flex-wrap gap-6 border-t border-neutral-300 pt-6 dark:border-neutral-700">
-							{caseStudy.timeline && (
-								<div>
-									<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-										{labelTimeline}
-									</span>
-									<p class="mt-1 text-secondary">{caseStudy.timeline}</p>
-								</div>
-							)}
-							{caseStudy.role && (
-								<div>
-									<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-										{labelRole}
-									</span>
-									<p class="mt-1 text-secondary">{caseStudy.role}</p>
-								</div>
-							)}
-						</div>
-					)}
-
-					<div>
-						<h2 class="mb-4 text-subheading uppercase text-purple-500">
-							{labelLearnings}
-						</h2>
-						<ul class="space-y-3">
-							{caseStudy.learnings.map(learning => (
-								<li class="flex items-start gap-3">
-									<span
-										class="mt-1 size-2 shrink-0 bg-purple-500"
-										aria-hidden="true"
-									/>
-									<span class="text-body">{learning}</span>
-								</li>
-							))}
-						</ul>
-					</div>
-
-					{evidence && (
-						<div class="grid gap-8 lg:grid-cols-2">
-							<section aria-labelledby="limitations-evidence">
-								<h2
-									id="limitations-evidence"
-									class="mb-4 text-subheading uppercase text-error-500"
-								>
-									{evidence.limitationsLabel}
-								</h2>
-								<ul class="space-y-3">
-									{evidence.limitations.map(item => (
-										<li class="text-body">{item}</li>
-									))}
-								</ul>
-							</section>
-
-							<section aria-labelledby="sources-evidence">
-								<h2
-									id="sources-evidence"
-									class="mb-4 text-subheading uppercase text-primary-500 dark:text-primary-400"
-								>
-									{evidence.sourcesLabel}
-								</h2>
-								<ul class="space-y-4">
-									{evidence.sources.map(source => (
-										<li class="border-2 border-black p-4 dark:border-white">
-											{source.href ? (
-												<a
-													href={source.href}
-													target="_blank"
-													rel="noreferrer"
-													class="font-bold text-primary-500 underline decoration-2 underline-offset-4 hover:no-underline dark:text-primary-400"
-												>
-													{source.label}
-												</a>
-											) : (
-												<p class="font-bold">{source.label}</p>
-											)}
-											<p class="mt-2 text-secondary text-content-muted">
-												{source.access}
-											</p>
-										</li>
-									))}
-								</ul>
-							</section>
-						</div>
-					)}
+			<div class="flex min-w-0 flex-col gap-4">
+				<p class="text-body text-content-default">
+					{project.description}
+				</p>
+				<div
+					class="flex flex-wrap items-center gap-3"
+					aria-label={heroStatusLabel}
+					data-project-status
+				>
+					{
+						versionLabel && (
+							<Badge variant="secondary" size="sm">
+								{versionLabel}
+							</Badge>
+						)
+					}
+					<Badge variant={sourceBadgeVariant[project.sourceAccess]} size="sm">
+						{sourceLabel}
+					</Badge>
+					<Badge variant={lifecycleBadgeVariant[project.lifecycle]} size="sm">
+						{lifecycleLabel}
+					</Badge>
 				</div>
-			)
-		}
+			</div>
+		</div>
+	</header>
+
+	<ProjectResources projectId={project.projectId} />
+
+	<div class="w-full" data-case-study-content>
+		<slot />
 	</div>
-</section>
+</article>

@@ -1,0 +1,138 @@
+---
+interface Props {
+	href?: string;
+	accessibleLabel: string;
+	/**
+	 * Lockup presentation. `responsive` (default) keeps the shell contract:
+	 * compact icon-only below lg, full lockup at lg+. `full`/`compact` pin a
+	 * single state for QA surfaces like the Components Showcase.
+	 */
+	variant?: 'responsive' | 'full' | 'compact';
+	class?: string;
+}
+
+const { href = '/', accessibleLabel, variant = 'responsive', class: className = '' } = Astro.props;
+
+const widthClass =
+	variant === 'full' ? 'w-[250px]' : variant === 'compact' ? 'w-12' : 'w-12 lg:w-[250px]';
+const signatureVisibility =
+	variant === 'full'
+		? 'inline-block'
+		: variant === 'compact'
+			? 'hidden'
+			: 'hidden lg:inline-block';
+---
+
+<!--
+	Navigation lockup (spec/03 Header + ADR-0008): dedicated navigation link,
+	restrained interaction. Desktop (lg+) full lockup 250x44 px8 py6; tablet/mobile
+	compact 48x44 icon-only. Fixed widths keep focus-geometry insets symmetric.
+-->
+<a
+	{href}
+	aria-label={accessibleLabel}
+	class:list={[
+		'brand-logo-link inline-flex h-11 items-center justify-center gap-2 rounded-lg px-2 py-1.5 whitespace-nowrap select-none',
+		widthClass,
+		className,
+	]}
+>
+	<img
+		src="/brand/logo-primary-dark.svg"
+		alt=""
+		width="32"
+		height="32"
+		class="block size-8 shrink-0"
+		data-brand-logo
+		data-brand-mode="dark"
+		aria-hidden="true"
+	/>
+	<span
+		class:list={[
+			'brand-logo-signature font-gaming-mono text-base leading-[22px] tracking-[1px]',
+			signatureVisibility,
+		]}
+		aria-hidden="true"
+	>
+		&lt;sandovaldavid/&gt;
+	</span>
+</a>
+
+<script>
+	const syncBrandLogoAssets = () => {
+		const mode = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+		const source = `/brand/logo-primary-${mode}.svg`;
+
+		document.querySelectorAll<HTMLImageElement>('[data-brand-logo]').forEach(image => {
+			if (image.getAttribute('src') !== source) image.setAttribute('src', source);
+			image.dataset.brandMode = mode;
+		});
+	};
+
+	const setupBrandLogoAssets = () => {
+		syncBrandLogoAssets();
+
+		if (document.documentElement.dataset.brandLogoObserver === 'ready') return;
+
+		document.documentElement.dataset.brandLogoObserver = 'ready';
+
+		new MutationObserver(syncBrandLogoAssets).observe(document.documentElement, {
+			attributes: true,
+			attributeFilter: ['class'],
+		});
+	};
+
+	setupBrandLogoAssets();
+	document.addEventListener('astro:page-load', setupBrandLogoAssets);
+</script>
+
+<style>
+	.brand-logo-link {
+		color: var(--color-content-strong);
+		outline: 2px solid transparent;
+		outline-offset: -2px;
+		transition:
+			color 160ms ease,
+			outline-color 160ms ease;
+	}
+
+	.brand-logo-signature {
+		position: relative;
+		transition: color 160ms ease;
+	}
+
+	.brand-logo-signature::after {
+		content: '';
+		position: absolute;
+		left: 0;
+		right: 0;
+		bottom: -3px;
+		height: 2px;
+		background-color: currentColor;
+		transform: scaleX(0);
+		transform-origin: left;
+		transition: transform 160ms ease;
+	}
+
+	.brand-logo-link:hover,
+	.brand-logo-link:focus-visible {
+		color: var(--channel-accent-primary);
+	}
+
+	.brand-logo-link:hover .brand-logo-signature::after,
+	.brand-logo-link:focus-visible .brand-logo-signature::after {
+		transform: scaleX(1);
+	}
+
+	.brand-logo-link:focus-visible {
+		outline-color: var(--channel-accent-primary);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.brand-logo-link,
+		.brand-logo-signature,
+		.brand-logo-signature::after {
+			transition: none;
+		}
+	}
+</style>

@@ -1,1 +1,1 @@
-export { default as CLITerminal } from './ui/CLITerminalCatalog.astro';
+export { default as CLITerminal } from './ui/CLITerminalHome.astro';

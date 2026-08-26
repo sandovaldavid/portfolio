@@ -1,0 +1,95 @@
+---
+interface ProfileFact {
+	id: string;
+	label: string;
+	value: string;
+}
+
+interface Props {
+	portraitSrc: string;
+	portraitAlt: string;
+	name: string;
+	role: string;
+	heading: string;
+	facts: ProfileFact[];
+}
+
+const { portraitSrc, portraitAlt, name, role, heading, facts } = Astro.props;
+const mobileFactIds = new Set(['stack', 'location', 'current', 'domain']);
+---
+
+<!--
+	Portfolio / Hero Profile Record (Figma v2)
+	Desktop 956×380: portrait 256 / data remainder.
+	Tablet  766×380: portrait 220 / data remainder.
+	Mobile   360 wide: portrait-led vertical record; only Core Stack, Location,
+	Currently and Domain remain because role/work-mode are already established
+	by the hero narrative. Availability belongs only to the outer banner.
+	Spacing uses Tailwind's numeric scale; arbitrary values are reserved for
+	component geometry and grid templates that cannot be expressed semantically.
+-->
+<div
+	class="mx-auto w-full max-w-90 rounded-none border-2 border-edge-strong bg-channel-surface-default p-0.5 shadow-retro-3xl md:max-w-191.5 lg:max-w-239"
+>
+	<div
+		class="flex w-full flex-col gap-0.5 md:grid md:grid-cols-[220px_minmax(0,1fr)] md:gap-0 lg:grid-cols-[256px_minmax(0,1fr)]"
+	>
+		<figure class="relative h-56.5 overflow-hidden bg-channel-surface-highlight md:h-94">
+			<img
+				src={portraitSrc}
+				alt={portraitAlt}
+				width="192"
+				height="192"
+				decoding="sync"
+				fetchpriority="high"
+				class="absolute top-3 left-1/2 size-37 -translate-x-1/2 rounded-none border-2 border-edge-strong object-cover object-center shadow-retro-md md:top-10 md:size-48"
+			/>
+
+			<span
+				class="hero-profile-name-band absolute top-42 left-1/2 flex h-7 w-70 -translate-x-1/2 items-center justify-center bg-channel-accent-primary px-2 text-navigation text-button-primary-content md:top-67.5 md:h-8 md:w-50 lg:w-55"
+			>
+				{name}
+			</span>
+
+			<figcaption
+				class="absolute top-50.5 left-1/2 w-70 -translate-x-1/2 text-center text-editorial-label-compact text-content-muted md:top-80 md:w-55"
+			>
+				{role}
+			</figcaption>
+		</figure>
+
+		<div
+			class="flex h-56 min-w-0 flex-col gap-3.5 overflow-hidden bg-channel-surface-default p-4.5 md:h-94 md:gap-5 md:p-8"
+		>
+			<h2 class="w-full text-center text-component-title text-content-strong md:text-left">
+				{heading}
+			</h2>
+
+			<dl
+				class="grid min-h-0 flex-1 grid-cols-2 content-center items-start justify-between gap-x-3 gap-y-2.5 overflow-hidden md:content-start md:gap-x-5 md:gap-y-4.5 lg:gap-x-8"
+			>
+				{
+					facts.map(fact => {
+						const visibleOnMobile = mobileFactIds.has(fact.id);
+						return (
+							<div
+								data-profile-fact={fact.id}
+								class:list={[
+									'min-w-0 flex-col gap-1',
+									visibleOnMobile ? 'flex' : 'hidden md:flex',
+								]}
+							>
+								<dt class="text-editorial-label-compact text-content-muted">
+									{fact.label}
+								</dt>
+								<dd class="text-secondary text-content-strong md:text-body">
+									{fact.value}
+								</dd>
+							</div>
+						);
+					})
+				}
+			</dl>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,29 @@
+---
+interface Props {
+	eyebrow?: string;
+	title: string;
+	emphasis?: boolean;
+}
+
+const { eyebrow, title, emphasis = false } = Astro.props;
+---
+
+<article
+	class:list={[
+		'flex h-full min-w-0 flex-col gap-3 bg-channel-surface-default p-4 md:p-5',
+		emphasis ? 'border-2 border-edge-strong shadow-retro-md' : 'border border-edge-subtle',
+	]}
+	data-experience-panel
+>
+	{
+		eyebrow && (
+			<p class="text-editorial-label-compact uppercase text-channel-accent-primary">
+				{eyebrow}
+			</p>
+		)
+	}
+	<h3 class="text-component-title text-content-strong">{title}</h3>
+	<div class="text-body text-content-default [&>p+p]:mt-3">
+		<slot />
+	</div>
+</article>

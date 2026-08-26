@@ -55,7 +55,7 @@ describe('granular UI catalogs', () => {
 		const translateHero = createScopedUiTranslator(Language.ENGLISH, 'sections.hero');
 
 		expect(navigation.projects).toBe('Proyectos');
-		expect(translateHero('roleLabel')).toBe('Role');
+		expect(translateHero('roleLabel')).toBe('ROLE');
 	});
 
 	it('fails loudly for a missing key instead of returning a key or English fallback', () => {
@@ -68,7 +68,7 @@ describe('granular UI catalogs', () => {
 		const catalog = getUiCatalog(Language.ENGLISH);
 		const key: UiCatalogKey = 'sections.techStack.sectionTitle';
 
-		expect(catalog[key]).toBe('Technologies');
+		expect(catalog[key]).toBe('CORE STACK');
 		expectTypeOf<UiCatalogKey>().toMatchTypeOf<string>();
 	});
 

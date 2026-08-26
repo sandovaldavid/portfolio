@@ -2,7 +2,7 @@
 import type { render } from 'astro:content';
 import type { DevlogPost } from '@entities/devlog';
 import ArrowLeftIcon from '@assets/icons/ArrowLeft.astro';
-import { LinkInline } from '@shared/ui';
+import { ContentPanel, LinkInline } from '@shared/ui';
 
 interface Props {
 	post: DevlogPost;
@@ -13,38 +13,74 @@ interface Props {
 
 const { post, Content, backText, backLink } = Astro.props;
 const { title, summary, pubDate, version, tags } = post.data;
+
+/*
+ * Devlog detail composition (spec/04 "Devlog Detail" +
+ * plans/pages/devlog-detail.md): detail header in the centered editorial
+ * column (350px mobile / 720px tablet / 980px desktop), the release summary
+ * as a Standard ContentPanel (620x240 desktop, 340x220 mobile) centered in
+ * the body, then the real MDX record re-presented with the same
+ * ContentPanel/code-rule patterns as Blog Detail (reading blocks at 620,
+ * terminal code slabs at 760). Historical records keep their factual strings
+ * unchanged (spec/06 drift rules); long localized rows grow vertically.
+ */
+const articleBodyClasses =
+	'article-body prose prose-neutral mt-12 max-w-none dark:prose-invert ' +
+	'[&_h2]:font-mono [&_h2]:font-bold [&_h2]:tracking-[-0.5px] ' +
+	'lg:[&_h2]:mx-auto lg:[&_h2]:max-w-[620px] lg:[&_p]:mx-auto lg:[&_p]:max-w-[620px] ' +
+	'lg:[&_ul]:mx-auto lg:[&_ul]:max-w-[620px] lg:[&_ol]:mx-auto lg:[&_ol]:max-w-[620px] ' +
+	'lg:[&_blockquote]:mx-auto lg:[&_blockquote]:max-w-[620px] ' +
+	'[&_pre]:overflow-x-auto [&_pre]:rounded-none [&_pre]:border-2 [&_pre]:border-edge-strong [&_pre]:shadow-retro-md ' +
+	'lg:[&_pre]:mx-auto lg:[&_pre]:max-w-[760px]';
 ---
 
-<article class="mx-auto max-w-3xl">
-	<header class="mb-10">
-		<LinkInline href={backLink} class="mb-8 inline-flex items-center gap-2 text-sm">
-			<ArrowLeftIcon class="size-4" />
-			{backText}
-		</LinkInline>
+<article class="w-full font-sans px-5 md:px-8 lg:px-0">
+	<div class="mx-auto flex w-full max-w-[350px] flex-col md:max-w-[720px] lg:max-w-[980px]">
+		<header class="mb-12">
+			<nav aria-label={backText} class="mb-6">
+				<LinkInline
+					href={backLink}
+					class="inline-flex items-center gap-2 self-start text-sm"
+				>
+					<ArrowLeftIcon class="size-4" />
+					{backText}
+				</LinkInline>
+			</nav>
 
-		<div class="mb-3 flex items-center gap-2 text-caption text-content-muted">
-			<time datetime={pubDate.toISOString()}>[{pubDate.toISOString().split('T')[0]}]</time>
-			<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
-				{version}
-			</span>
-			{
-				tags.map(tag => (
-					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
-						{tag}
-					</span>
-				))
-			}
+			<div class="mb-3 flex flex-wrap items-center gap-2 text-caption text-content-muted">
+				<time datetime={pubDate.toISOString()}>{pubDate.toISOString().split('T')[0]}</time>
+				<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
+					{version}
+				</span>
+			</div>
+
+			<h1
+				class="font-mono text-4xl font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-5xl lg:leading-14 lg:tracking-[-1px]"
+			>
+				{title}
+			</h1>
+		</header>
+
+		<div class="flex justify-center">
+			<ContentPanel label={version}>
+				<p class="text-base leading-relaxed">{summary}</p>
+			</ContentPanel>
 		</div>
 
-		<h1 class="mb-4 text-3xl md:text-page-title">
-			{title}
-		</h1>
-		<p class="max-w-2xl text-body text-content-muted">
-			{summary}
-		</p>
-	</header>
+		{
+			tags.length > 0 && (
+				<div class="mt-4 flex flex-wrap items-center gap-2 self-center">
+					{tags.map(tag => (
+						<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
+							{tag}
+						</span>
+					))}
+				</div>
+			)
+		}
 
-	<div class="prose prose-neutral dark:prose-invert max-w-none">
-		<Content />
+		<div class={articleBodyClasses}>
+			<Content />
+		</div>
 	</div>
 </article>

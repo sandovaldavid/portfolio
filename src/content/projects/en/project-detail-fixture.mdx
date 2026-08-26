@@ -1,0 +1,153 @@
+---
+projectId: project-detail-fixture
+locale: en
+title: MCP Systems Fixture
+description: 'Development-only MCP and backend-infrastructure case study used to review a systems-heavy Project Detail composition.'
+category: 'Internal MCP Fixture'
+imageAlt: 'Development-only MCP systems Project Detail fixture preview'
+caseStudy:
+    kicker: 'INTERNAL FIXTURE · MCP / BACKEND INFRASTRUCTURE'
+    status:
+        lifecycle: 'DEVELOPMENT ONLY'
+        source: 'PUBLIC TEST RESOURCES'
+        demo: 'VIDEO FIXTURE'
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection
+	eyebrow="DEVELOPMENT FIXTURE"
+	title="A systems-first case study for an MCP product"
+>
+	This is **not a real portfolio project**. It exists only in development to review a Project
+	Detail where protocol boundaries, multiple repositories, documentation and runtime architecture
+	carry more weight than product screenshots.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROBLEM" title="Agent tooling needs durable context beyond one process">
+	The fixture models a local MCP service that accepts requests from several agent clients,
+	persists durable records and exposes optional retrieval integrations. The narrative deliberately
+	starts from the system boundary instead of a visual product surface.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Protocol, persistence and optional integrations are visible at a glance"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="MCP fixture runtime boundary"
+		description="Agent clients call one MCP server. The server owns the durable store and can optionally invoke retrieval and local inference adapters."
+		tones={{
+			Clients: 'brand',
+			Server: 'info',
+			Vault: 'success',
+			Retrieval: 'secondary',
+			Model: 'warning',
+			Bridge: 'danger',
+		}}
+		chart={`flowchart LR
+      Clients["Claude · Codex · OpenCode"] --> Server["MCP server\nstdio + HTTP"]
+      Server --> Vault["Durable store\nMarkdown + YAML"]
+      Server --> Retrieval["Retrieval\nfull-text + semantic"]
+      Retrieval -. optional .-> Model["Local inference"]
+      Server -. optional .-> Bridge["UI bridge"]`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="PROTOCOL" title="The technical story is organized around contracts">
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="BOUNDARY 01" title="CLIENTS SPEAK ONE TOOL CONTRACT" tone="primary">
+			Client-specific behavior stays outside the service boundary; the case study can explain
+			the stable contract before implementation details.
+		</CaseStudyCard>
+		<CaseStudyCard label="BOUNDARY 02" title="DURABILITY IS SERVER-OWNED" tone="primary">
+			The central narrative is persistence and recoverability, so the architecture diagram
+			appears before implementation screenshots.
+		</CaseStudyCard>
+		<CaseStudyCard label="BOUNDARY 03" title="INTEGRATIONS REMAIN OPTIONAL" tone="primary">
+			Dashed relationships identify optional adapters without visually giving them the same
+			authority as the core persistence path.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="REQUEST LIFECYCLE"
+	title="A second diagram can focus on sequence rather than topology"
+>
+	<MermaidDiagram
+		title="MCP request lifecycle fixture"
+		description="A request resolves a tool, persists a durable result and then returns a response. Retrieval enriches selected operations without owning the record."
+		tones={{
+			Request: 'brand',
+			Tool: 'info',
+			Record: 'success',
+			Retrieval: 'secondary',
+			Response: 'warning',
+		}}
+		chart={`flowchart TD
+      Request["Client request"] --> Tool["Tool contract"]
+      Tool --> Record["Durable record"]
+      Tool -. selected tools .-> Retrieval["Retrieval context"]
+      Record --> Response["Structured response"]
+      Retrieval --> Response`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="DEMO"
+	title="Systems projects can use video when UI screenshots are secondary"
+	surface="highlight"
+>
+	<ProjectVideo
+		title="MCP development fixture video"
+		src="https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4"
+		caption="CC0 sample media used only to exercise ProjectVideo inside this development-only MCP fixture."
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="ARTIFACTS"
+	title="Architecture exports and operational captures still belong in a gallery"
+>
+	<ProjectGallery
+		label="MCP systems fixture gallery"
+		columns={2}
+		items={[
+			{
+				src: fixtureOverview,
+				alt: 'Abstract MCP architecture fixture',
+				caption:
+					'Architecture artifact placeholder for zoom and object-contain validation.',
+			},
+			{
+				src: fixtureDetail,
+				alt: 'Abstract MCP operational fixture',
+				caption: 'Operational artifact placeholder for a systems-oriented case study.',
+			},
+		]}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="EVIDENCE"
+	title="Public artifacts and explicit boundaries stay separate"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="FIXTURE EVIDENCE"
+			title="MULTI-REPO · DOCS · PACKAGE · VIDEO"
+			tone="verified"
+		>
+			The shared shell exposes multiple repositories, documentation and package actions while
+			the MDX body demonstrates systems diagrams, video and gallery content.
+		</EvidenceBlock>
+		<EvidenceBlock label="BOUNDARY" title="DEVELOPMENT-ONLY CONTENT" tone="boundary">
+			The language-neutral metadata uses `developmentOnly`; this fixture must never generate a
+			production route or portfolio claim.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

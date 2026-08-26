@@ -41,12 +41,10 @@ const { Content } = await render(post);
 	breadcrumbLabel={post.data.title}
 	{localizedPaths}
 >
-	<div class="py-16 md:py-24">
-		<DevlogDetail
-			{post}
-			{Content}
-			backText={tDevlog('back')}
-			backLink={getRelativeLocaleUrl(lang, 'devlog')}
-		/>
-	</div>
+	<DevlogDetail
+		{post}
+		{Content}
+		backText={tDevlog('back')}
+		backLink={getRelativeLocaleUrl(lang, 'devlog')}
+	/>
 </Layout>

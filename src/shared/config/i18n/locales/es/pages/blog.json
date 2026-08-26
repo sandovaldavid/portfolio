@@ -1,7 +1,9 @@
 {
 	"label": "Blog",
-	"heading": "Artículos",
-	"subheading": "Ingeniería de software, IA aplicada y notas sobre la construcción de este portafolio.",
+	"introKicker": "NOTAS DE INGENIERÍA",
+	"introTitle": "Blog",
+	"introBody": "Escritura técnica basada en trabajo implementado, investigación y límites explícitos de evidencia.",
+	"gridSectionLabel": "Cuadrícula de artículos",
 	"pageTitle": "Blog | David Sandoval",
 	"pageDescription": "Artículos sobre ingeniería de software, IA aplicada e investigación OSS por David Sandoval.",
 	"readMore": "Leer artículo",

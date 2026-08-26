@@ -1,0 +1,105 @@
+---
+projectId: fullstack-project-fixture
+locale: en
+title: Full-Stack Platform Fixture
+description: 'Development-only full-stack case study used to review a Project Detail composition split across web, API, identity, background work and persistence.'
+category: 'Internal Full-Stack Fixture'
+imageAlt: 'Development-only full-stack Project Detail fixture preview'
+caseStudy:
+    kicker: 'INTERNAL FIXTURE · FULL-STACK PLATFORM'
+    status:
+        lifecycle: 'DEVELOPMENT ONLY'
+        source: 'TWO PUBLIC TEST REPOS'
+        demo: 'LIVE FIXTURE'
+---
+
+<CaseStudySection
+	eyebrow="DEVELOPMENT FIXTURE"
+	title="A boundary-first case study for a full-stack platform"
+>
+	This is **not a real portfolio project**. It demonstrates a layout where frontend and backend
+	have separate responsibilities and the system diagram needs to explain authority before feature
+	detail.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Identity, presentation, API rules and durable state have different owners"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Full-stack fixture architecture"
+		description="A browser application authenticates through identity, sends durable commands to an API, and receives background updates while PostgreSQL remains the source of record."
+		tones={{
+			Web: 'brand',
+			Identity: 'info',
+			API: 'success',
+			Worker: 'danger',
+			DB: 'warning',
+			Events: 'secondary',
+		}}
+		chart={`flowchart LR
+      Web["Web application"] --> Identity["Identity provider"]
+      Web -->|REST commands| API["Application API"]
+      API --> DB["PostgreSQL"]
+      Worker["Background worker"] --> DB
+      API --> Events["Event channel"]
+      Events -. incremental updates .-> Web`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="TWO SIDES"
+	title="Frontend and backend decisions can be compared without duplicating the page"
+>
+	<CaseStudyGrid columns={2}>
+		<CaseStudyCard label="WEB" title="PRESENTATION + CLIENT INTENT" tone="primary">
+			The frontend owns navigation, optimistic interaction and rendering, but does not
+			redefine server-side authorization or business rules.
+		</CaseStudyCard>
+		<CaseStudyCard label="API" title="AUTHORITY + DURABLE RULES" tone="primary">
+			The backend owns validation, authorization, transactions and persistence so the case
+			study can discuss both halves as one product boundary.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="REQUEST FLOW"
+	title="A focused diagram can explain one cross-stack transaction"
+>
+	<MermaidDiagram
+		title="Full-stack command flow fixture"
+		description="The UI expresses intent, the API validates it, persistence commits it and the client later receives an incremental update."
+		tones={{
+			UI: 'brand',
+			Command: 'info',
+			Domain: 'success',
+			DB: 'warning',
+			Update: 'secondary',
+		}}
+		chart={`flowchart TD
+      UI["User action"] --> Command["Typed command"]
+      Command --> Domain["Domain validation"]
+      Domain --> DB["Transactional write"]
+      DB --> Update["Incremental update"]
+      Update --> UI`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="EVIDENCE"
+	title="Repository boundaries and deployed behavior can coexist"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock label="FIXTURE" title="TWO REPOSITORIES · DOCS · LIVE DEMO" tone="verified">
+			The resource bar exercises separate web/API repository actions together with
+			documentation, live demo and share.
+		</EvidenceBlock>
+		<EvidenceBlock label="BOUNDARY" title="DEVELOPMENT-ONLY CONTENT" tone="boundary">
+			The fixture demonstrates composition only; none of its technical statements are
+			portfolio claims.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

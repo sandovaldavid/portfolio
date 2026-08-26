@@ -1,11 +1,6 @@
 {
 	"actions": {
-		"viewWork": "View work",
-		"contact": "Contact me",
-		"downloadResume": "Download resume",
-		"readMore": "Read more",
-		"back": "Back",
-		"home": "Go to home"
+		"viewWork": "View work"
 	},
 	"status": {
 		"available": "Available",

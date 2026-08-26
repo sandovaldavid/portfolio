@@ -1,7 +1,10 @@
 import { test, expect } from './fixtures';
 
 test.describe('Homepage', () => {
-	test('shows professional positioning and primary actions immediately', async ({ page }) => {
+	test('shows professional positioning and primary actions immediately', async ({
+		page,
+		isMobile,
+	}) => {
 		await page.goto('/');
 
 		await expect(page).toHaveTitle(/David Sandoval.*Software Engineer/i);
@@ -9,11 +12,21 @@ test.describe('Homepage', () => {
 		await expect(page.getByText(/Angular · \.NET · TypeScript/i).first()).toBeVisible();
 		await expect(page.getByRole('link', { name: /view work/i })).toBeVisible();
 		await expect(page.getByRole('link', { name: /get in touch/i })).toBeVisible();
-		await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
-		await expect(page.getByRole('link', { name: 'GitHub', exact: true }).first()).toBeVisible();
-		await expect(
-			page.getByRole('link', { name: 'LinkedIn', exact: true }).first()
-		).toBeVisible();
+
+		if (isMobile) {
+			const mobileToggle = page.locator('#mobile-menu-btn');
+			await expect(mobileToggle).toBeVisible();
+			await mobileToggle.click();
+			await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
+		} else {
+			await expect(page.getByRole('link', { name: /resume/i }).first()).toBeVisible();
+		}
+
+		// Social evidence belongs to secondary surfaces (Recruiter HUD/footer), so
+		// it must remain available in the document without competing with the
+		// immediate hero actions.
+		await expect(page.locator('a[href*="github.com"]').first()).toBeAttached();
+		await expect(page.locator('a[href*="linkedin.com"]').first()).toBeAttached();
 	});
 
 	test('does not block the default first visit', async ({ page }) => {
@@ -42,7 +55,7 @@ test.describe('Homepage', () => {
 		await page.goto('/');
 
 		const desktopNav = page.locator('header nav a').first();
-		const mobileToggle = page.locator('button[aria-label="Toggle menu"]');
+		const mobileToggle = page.locator('#mobile-menu-btn');
 
 		const hasDesktop = await desktopNav.isVisible().catch(() => false);
 		const hasMobile = await mobileToggle.isVisible().catch(() => false);
@@ -75,15 +88,14 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
-	test('navigates section by section on wheel scroll', async ({ page }) => {
+	test('navigates section by section on wheel scroll', async ({ page, isMobile }) => {
+		test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.goto('/');
 
-		// Initial scroll position should be at top
 		const initialScrollY = await page.evaluate(() => window.scrollY);
 		expect(initialScrollY).toBe(0);
 
-		// Dispatch a wheel event to scroll down to next section
 		await page.mouse.wheel(0, 100);
 		await page.waitForTimeout(650);
 

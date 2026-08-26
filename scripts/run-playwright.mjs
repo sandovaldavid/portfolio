@@ -1,6 +1,17 @@
 import { spawnSync } from 'node:child_process';
 
-if (process.env.DEVCONTAINER === 'true') {
+const isDevContainer = process.env.DEVCONTAINER === 'true';
+const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';
+
+if (!isDevContainer && !isGitHubActions) {
+	console.error(
+		'[error] Local Playwright execution is restricted to the repository DevContainer.\n' +
+			'Run "bun run validate:local" from the host, or reopen the repository in the DevContainer.'
+	);
+	process.exit(1);
+}
+
+if (isDevContainer) {
 	const repairResult = spawnSync('bash', ['.devcontainer/scripts/post-start.sh'], {
 		stdio: 'inherit',
 	});

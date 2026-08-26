@@ -2,10 +2,11 @@ import { test, expect } from '@playwright/test';
 
 /**
  * End-to-end contract for the primary recruiter journey (#209): a reviewer must be
- * able to identify David's role, verify the two strongest projects and their
- * public/private evidence, reach the correct localized resume, and reach GitHub,
- * LinkedIn and email — in English and Spanish, on desktop and mobile — without
- * dismissing the retro splash, opening the CLI, or opening the Recruiter HUD.
+ * able to identify David's role, reach the two strongest project case studies,
+ * inspect public source evidence where the card exposes it, reach the correct
+ * localized resume, and reach GitHub, LinkedIn and email — in English and Spanish,
+ * on desktop and mobile — without dismissing the retro splash, opening the CLI,
+ * or opening the Recruiter HUD.
  */
 
 const LOCALES = [
@@ -14,20 +15,18 @@ const LOCALES = [
 		home: '/',
 		roleText: 'Software Engineer',
 		viewWorkText: 'View work',
-		contactText: 'Get in touch',
+		contactText: 'GET IN TOUCH',
+		caseStudyText: 'Case Study',
 		resumeHref: 'https://sandovaldavid.com/resume/david-sandoval-resume.pdf',
-		kiokuSource: 'Public source',
-		yukidokeSource: 'Private source',
 	},
 	{
 		code: 'es',
 		home: '/es/',
 		roleText: 'Ingeniero de software',
 		viewWorkText: 'Ver proyectos',
-		contactText: 'Contactarme',
+		contactText: 'CONTACTARME',
+		caseStudyText: 'Caso de estudio',
 		resumeHref: 'https://sandovaldavid.com/resume/david-sandoval-resume-es.pdf',
-		kiokuSource: 'Código público',
-		yukidokeSource: 'Código privado',
 	},
 ] as const;
 
@@ -55,8 +54,9 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 					page.getByText(locale.roleText, { exact: true }).first()
 				).toBeVisible();
 
-				// 2. The two strongest, publicly verifiable projects are reachable with their
-				// lifecycle/source-access evidence (#207), distinguishing public from private.
+				// 2. The two strongest projects expose their case studies. Public source is
+				// an optional secondary action on tablet/desktop; private-source projects do
+				// not expose a source CTA on the card.
 				const yukidokeCard = page.locator('article', {
 					has: page.getByRole('heading', { name: 'Yukidoke' }),
 				});
@@ -66,11 +66,24 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 				await expect(yukidokeCard).toBeVisible();
 				await expect(kiokuCard).toBeVisible();
 				await expect(
-					yukidokeCard.getByText(locale.yukidokeSource, { exact: true })
+					yukidokeCard.getByRole('link', { name: locale.caseStudyText, exact: true })
 				).toBeVisible();
 				await expect(
-					kiokuCard.getByText(locale.kiokuSource, { exact: true })
+					kiokuCard.getByRole('link', { name: locale.caseStudyText, exact: true })
 				).toBeVisible();
+
+				const yukidokeSource = yukidokeCard.locator(
+					'a[href*="github.com/sandovaldavid/yukidoke"]'
+				);
+				const kiokuSource = kiokuCard.locator(
+					'a[href="https://github.com/sandovaldavid/kioku"]'
+				);
+				await expect(yukidokeSource).toHaveCount(0);
+				if (viewport.name === 'desktop') {
+					await expect(kiokuSource).toBeVisible();
+				} else {
+					await expect(kiokuSource).toBeHidden();
+				}
 
 				// 3. Resume resolves to the correct localized artifact. On mobile the resume
 				// CTA lives inside the primary nav overlay, so open it first — that is
@@ -86,12 +99,15 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 					await page.locator('#mobile-menu-close').click();
 				}
 
-				// 4. Professional contact channels resolve to the canonical registry.
+				// 4. Professional contact channels resolve to the canonical registry. Their
+				// accessible name is prefixed with the visible label and suffixed with a
+				// screen-reader-only "opens in a new tab" announcement, so match loosely.
+				await expect(page.getByRole('link', { name: /^GitHub\b/ }).first()).toHaveAttribute(
+					'href',
+					'https://github.com/sandovaldavid'
+				);
 				await expect(
-					page.getByRole('link', { name: 'GitHub', exact: true }).first()
-				).toHaveAttribute('href', 'https://github.com/sandovaldavid');
-				await expect(
-					page.getByRole('link', { name: 'LinkedIn', exact: true }).first()
+					page.getByRole('link', { name: /^LinkedIn\b/ }).first()
 				).toHaveAttribute('href', 'https://www.linkedin.com/in/jdsandovals');
 				await expect(page.locator('a[href^="mailto:"]').first()).toHaveAttribute(
 					'href',

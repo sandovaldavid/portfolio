@@ -1,8 +1,4 @@
 {
-	"launch": "Launch retro mode",
-	"skip": "Skip intro",
-	"loading": "Loading portfolio",
-	"ready": "System ready",
 	"title": "Retro mode",
 	"intro": "Optional portfolio boot sequence",
 	"line1": "Loading backend-oriented Software Engineer profile…",

@@ -10,11 +10,11 @@ test.describe('Localized home sections', () => {
 		await expect(page.getByText('Professional profile').first()).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Experience' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Research' })).toBeVisible();
-		await expect(page.getByRole('heading', { name: 'Projects' })).toBeVisible();
+		await expect(page.getByRole('heading', { name: 'Selected Projects' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'About me' })).toBeVisible();
-		await expect(page.getByRole('heading', { name: 'Technologies' })).toBeVisible();
-		await expect(page.getByText('[ Core frontend stack ]')).toBeVisible();
-		await expect(page.getByRole('link', { name: 'View full research' })).toBeVisible();
+		await expect(page.getByRole('heading', { name: 'Core Stack' })).toBeVisible();
+		await expect(page.getByRole('link', { name: 'View biography' })).toBeVisible();
+		await expect(page.getByRole('link', { name: 'View research' })).toBeVisible();
 	});
 
 	test('renders complete Spanish home copy without English section labels', async ({ page }) => {
@@ -26,11 +26,11 @@ test.describe('Localized home sections', () => {
 		await expect(page.getByText('Perfil profesional').first()).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Experiencia' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Investigación' })).toBeVisible();
-		await expect(page.getByRole('heading', { name: 'Proyectos' })).toBeVisible();
+		await expect(page.getByRole('heading', { name: 'Proyectos destacados' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Sobre mí' })).toBeVisible();
-		await expect(page.getByRole('heading', { name: 'Tecnologías' })).toBeVisible();
-		await expect(page.getByText('[ Stack frontend principal ]')).toBeVisible();
-		await expect(page.getByRole('link', { name: 'Ver investigación completa' })).toBeVisible();
+		await expect(page.getByRole('heading', { name: 'Stack principal' })).toBeVisible();
+		await expect(page.getByRole('link', { name: 'Ver biografía' })).toBeVisible();
+		await expect(page.getByRole('link', { name: 'Ver investigación' })).toBeVisible();
 		await expect(page.getByRole('heading', { name: 'Experience' })).toHaveCount(0);
 	});
 });

@@ -7,28 +7,35 @@ interface Props {
 
 const { variant = 'default', size = 'md', class: className } = Astro.props;
 
+/*
+ * Badge contract (spec/03 + spec/01 "Badge variants"):
+ * SM h24 px8 py2 icon12 label12; MD h28 px10 py4 icon14 label14;
+ * LG h34 px12 py6 icon16 label16; gap 4, border 2 strong edge,
+ * hard shadow 1.5px, width always hugs content.
+ */
 const variantClasses = {
-	default: 'bg-surface-highlight text-content',
+	default: 'bg-badge-default-bg text-badge-default-text',
 	primary: 'bg-badge-brand-bg text-badge-brand-text',
-	secondary: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+	secondary: 'bg-badge-secondary-bg text-badge-secondary-text',
 	success: 'bg-status-success-bg text-status-success-text',
-	warning: 'bg-warning-500/15 text-warning-900 dark:bg-warning-500/20 dark:text-warning-500',
-	danger: 'bg-error-500/10 text-error-900 dark:bg-error-500/20 dark:text-error-500',
-	info: 'bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300',
+	warning: 'bg-badge-warning-bg text-badge-warning-text',
+	danger: 'bg-badge-danger-bg text-badge-danger-text',
+	info: 'bg-badge-info-bg text-badge-info-text',
 	custom: '', // No default colors - use class prop for full customization
 } as const;
 
 const sizeClasses = {
-	sm: 'px-2 py-0.5 text-xs',
-	md: 'px-2.5 py-1 text-sm',
-	lg: 'px-3 py-1.5 text-base',
+	sm: 'badge-sm h-6 px-2 py-0.5 text-xs leading-4',
+	md: 'badge-md h-7 px-2.5 py-1 text-sm leading-4',
+	lg: 'badge-lg h-8.5 px-3 py-1.5 text-base leading-4.5',
 } as const;
 ---
 
 <span
 	class:list={[
-		'inline-flex items-center gap-1 font-bold uppercase tracking-wider rounded-none border-2 border-black dark:border-white shadow-retro-sm',
-		'transition-colors duration-100',
+		'badge-base inline-flex items-center gap-1 w-fit whitespace-nowrap',
+		'font-mono font-bold',
+		'rounded-none border-2 border-edge-strong shadow-retro-sm',
 		variant !== 'custom' && variantClasses[variant],
 		sizeClasses[size],
 		className,
@@ -36,3 +43,25 @@ const sizeClasses = {
 >
 	<slot />
 </span>
+
+<style>
+	/* Slot icons lock to the per-size contract dimensions (12/14/16px). */
+	.badge-base :global(svg) {
+		flex-shrink: 0;
+	}
+
+	.badge-sm :global(svg) {
+		width: 0.75rem;
+		height: 0.75rem;
+	}
+
+	.badge-md :global(svg) {
+		width: 0.875rem;
+		height: 0.875rem;
+	}
+
+	.badge-lg :global(svg) {
+		width: 1rem;
+		height: 1rem;
+	}
+</style>

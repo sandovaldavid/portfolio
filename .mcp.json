@@ -7,15 +7,6 @@
 		"astro-docs": {
 			"type": "http",
 			"url": "https://mcp.docs.astro.build/mcp"
-		},
-		"kioku": {
-			"command": "kioku",
-			"args": [],
-			"env": {
-				"KIOKU_VAULT_PATH": "/home/sandovaldavid/workspaces/me/Cortex-L7",
-				"KIOKU_OLLAMA_URL": "http://localhost:11434",
-				"KIOKU_EMBEDDING_MODEL": "nomic-embed-text"
-			}
 		}
 	}
 }

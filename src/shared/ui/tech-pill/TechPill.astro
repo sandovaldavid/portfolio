@@ -8,6 +8,8 @@ interface Props {
 	size?: 'sm' | 'md';
 	variant?: 'card' | 'stack';
 	class?: string;
+	/** Screen-reader-only text announcing the link opens in a new tab. Omit for non-navigating targets (e.g. mailto:). */
+	newTabLabel?: string;
 }
 const {
 	label,
@@ -16,51 +18,62 @@ const {
 	size = 'md',
 	variant = 'card',
 	class: additionalClasses = '',
-} = Astro.props as Props;
+	newTabLabel,
+} = Astro.props;
 
-// Base classes
-const baseClasses = `inline-flex items-center rounded-none border-2 border-black dark:border-white transition-all duration-100 ${additionalClasses}`;
+/*
+ * Tech Pill contract (spec/03): border 2 strong edge, hard shadow 1.5px,
+ * optional icon inside a fixed 24x24 frame, min-width driven so long
+ * translated labels never clip.
+ * Card SM h30/min126/px12/gap6 default surface label 12
+ * Card MD h30/min138/px12/gap6 default surface label 14
+ * Stack SM h34/min124/px10/gap8 highlight surface label 12
+ * Stack MD h46/min156/px20/gap8 highlight surface label 14
+ */
+const comboGeometry = {
+	'card-sm': 'h-7.5 min-w-31.5 px-3 gap-1.5 text-xs',
+	'card-md': 'h-7.5 min-w-34.5 px-3 gap-1.5 text-sm',
+	'stack-sm': 'h-8.5 min-w-31 px-2.5 gap-2 text-xs',
+	'stack-md': 'h-11.5 min-w-39 px-5 gap-2 text-sm',
+} as const;
 
-// Size-specific classes for Card variant
-const cardPadding = 'px-3 py-1';
-const cardText = size === 'sm' ? 'text-xs' : 'text-sm';
-const cardIcon = 'mr-1.5 h-4 w-4';
-const cardShadow = 'shadow-retro-sm';
-
-// Size-specific classes for Stack variant
-const stackPadding = size === 'sm' ? 'px-2.5 py-1.5 gap-1.5' : 'px-4 md:px-5 py-2.5 md:py-3 gap-2';
-const stackText = size === 'sm' ? 'text-xs' : 'text-xs md:text-sm';
-const stackIcon = size === 'sm' ? 'w-4 h-4 mr-0.5' : 'w-5 h-5 mr-1';
-const stackBg =
-	'bg-neutral-200/80 dark:bg-neutral-800/80 hover:bg-neutral-300 hover:dark:bg-neutral-700 text-content-strong font-bold uppercase tracking-wider backdrop-blur-sm';
-const stackAnimation =
-	'hover:border-primary-500 hover:-translate-x-[1.5px] hover:-translate-y-[1.5px] active:translate-x-[1px] active:translate-y-[1px] cursor-default';
-const stackShadow =
-	size === 'sm'
-		? 'shadow-retro-sm hover:shadow-retro-md active:shadow-retro-xs'
-		: 'shadow-retro-sm hover:shadow-retro-lg active:shadow-retro-xs';
-
-// Final classes selection
+// Consumer-provided bg-/text- classes replace the contract surfaces (existing data-driven brand colors).
 const hasBg = additionalClasses.includes('bg-');
 const hasText = additionalClasses.includes('text-');
 
-const containerClasses =
-	variant === 'stack'
-		? `${baseClasses} ${stackPadding} ${stackText} ${stackBg} ${stackAnimation} ${stackShadow}`
-		: `${baseClasses} ${cardPadding} ${cardText} ${cardShadow} ${hasBg ? '' : 'bg-neutral-100 dark:bg-neutral-800'} ${hasText ? '' : 'text-content-strong'} font-mono`;
+const containerClasses = [
+	'tech-pill inline-flex w-fit items-center rounded-none border-2 border-edge-strong',
+	'shadow-retro-sm font-mono font-bold',
+	!hasText && 'text-content-strong',
+	!hasBg && (variant === 'stack' ? 'bg-channel-surface-highlight' : 'bg-channel-surface-default'),
+	comboGeometry[`${variant}-${size}`],
+	additionalClasses,
+]
+	.filter(Boolean)
+	.join(' ');
 
-const iconClasses = variant === 'stack' ? stackIcon : cardIcon;
+const iconFrameClasses = 'tech-pill-icon-frame flex size-6 shrink-0 items-center justify-center';
+const iconClasses = 'block size-full max-h-6 max-w-6 shrink-0';
 ---
 
 {
 	href ? (
 		<a href={href} class={containerClasses} rel="noopener noreferrer" target="_blank">
-			{Icon && <Icon class={iconClasses} />}
+			{Icon && (
+				<span class={iconFrameClasses} aria-hidden="true">
+					<Icon class={iconClasses} aria-hidden="true" />
+				</span>
+			)}
 			<span>{label}</span>
+			{newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 		</a>
 	) : (
 		<span class={containerClasses}>
-			{Icon && <Icon class={iconClasses} />}
+			{Icon && (
+				<span class={iconFrameClasses} aria-hidden="true">
+					<Icon class={iconClasses} aria-hidden="true" />
+				</span>
+			)}
 			<span>{label}</span>
 		</span>
 	)

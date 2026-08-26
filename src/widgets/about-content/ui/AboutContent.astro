@@ -1,82 +1,116 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import type { PortfolioProfileData } from '@entities/profile';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { SectionContainer } from '@shared/ui';
+import { createScopedUiTranslator, type Language } from '@shared/config/i18n';
+import { TitleSection } from '@shared/ui';
 
 interface Props {
 	lang: Language;
 	profile: PortfolioProfileData;
+	portraitSrc: string;
+	portraitAlt: string;
 }
 
-const { lang, profile } = Astro.props;
+const { lang, profile, portraitSrc, portraitAlt } = Astro.props;
+const tPage = createScopedUiTranslator(lang, 'pages.about');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
+
+const summaryParts = profile.summary.match(/.*?[.!?](?=\s|$)|.+$/g)?.map(part => part.trim()) ?? [
+	profile.summary,
+];
+const summaryLead = summaryParts[0] ?? profile.summary;
+const summarySupport = summaryParts.slice(1).join(' ');
 ---
 
-<SectionContainer id="about-details" class="w-full max-w-4xl px-4 flex flex-col gap-8">
-	<div class="text-center space-y-3">
-		<h1
-			class="text-4xl md:text-5xl font-bold font-pixel-clean text-content-strong uppercase tracking-wide"
-		>
-			{tAbout('biographyTitle')}
-		</h1>
-		<p class="text-content-muted font-mono text-sm uppercase">{tAbout('profileRecord')}</p>
-	</div>
+<div class="w-full">
+	<section
+		class="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-28 pb-16 md:gap-12 md:px-8 md:pb-20 lg:grid-cols-5 lg:gap-16 lg:pb-24"
+		aria-labelledby="about-page-title"
+	>
+		<div class="lg:col-span-3">
+			<p class="text-editorial-label uppercase text-channel-accent-primary">
+				{tAbout('heroKicker')}
+			</p>
 
-	<div class="space-y-6">
-		<article
-			class="rounded-none bg-surface border-2 border-edge-strong p-8 md:p-10 shadow-retro-lg transition-all duration-100"
-		>
-			<div class="flex flex-col items-center justify-center gap-8 md:gap-12 md:flex-row">
-				<div
-					class="flex-1 space-y-4 text-content text-pretty font-mono text-base leading-relaxed"
-				>
-					{profile.biography.map(paragraph => <p>{paragraph}</p>)}
-				</div>
-
-				<div class="shrink-0">
-					<img
-						width="240"
-						height="240"
-						src="/profile/perfil.webp"
-						alt={tAbout('imageAlt')}
-						class="w-56 h-56 object-cover aspect-square rounded-none border-2 border-black dark:border-white shadow-retro-lg"
-						style="object-position: 50% 50%"
-					/>
-				</div>
-			</div>
-		</article>
-
-		<article
-			class="rounded-none bg-surface border-2 border-edge-strong p-8 md:p-10 shadow-retro-lg transition-all duration-100"
-		>
-			<h2
-				class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 mb-6 border-b-2 border-dashed border-edge-subtle pb-2"
+			<h1
+				id="about-page-title"
+				class="mt-4 text-page-title-mobile text-content-strong lg:text-page-title"
 			>
-				{tAbout('focusTitle')}
-			</h2>
-			<ul class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6 font-mono text-base">
+				{tPage('introTitle')}
+			</h1>
+
+			<p
+				class="mt-6 max-w-3xl text-subheading text-channel-content-strong md:text-component-title"
+			>
+				{summaryLead}
+			</p>
+
+			{
+				summarySupport && (
+					<p class="mt-5 max-w-3xl text-body text-channel-content-default">
+						{summarySupport}
+					</p>
+				)
+			}
+		</div>
+
+		<figure class="mx-auto w-full max-w-xs md:max-w-sm lg:col-span-2 lg:justify-self-end">
+			<div class="border border-channel-edge-strong bg-channel-surface-default p-0.5">
+				<img
+					src={portraitSrc}
+					alt={portraitAlt}
+					width="768"
+					height="960"
+					loading="eager"
+					decoding="async"
+					fetchpriority="high"
+					class="aspect-4/5 w-full object-cover object-top"
+				/>
+			</div>
+		</figure>
+	</section>
+
+	<section class="mx-auto w-full max-w-7xl px-5 pb-16 md:px-8 md:pb-20 lg:pb-24">
+		<TitleSection align="center" className="mb-8 md:mb-10">
+			<span aria-hidden="true" class="text-channel-accent-primary">&gt;</span>
+			<span>{tAbout('biographyTitle')}</span>
+		</TitleSection>
+
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
+			{
+				profile.biography.map((paragraph, index) => (
+					<div class="min-w-0">
+						<p class="mb-3 text-editorial-label-compact uppercase text-channel-accent-primary">
+							{tAbout('biographyLabel')} {String(index + 1).padStart(2, '0')}
+						</p>
+						<p class="text-body text-channel-content-default">{paragraph}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="w-full border-t border-channel-edge-subtle bg-channel-surface-highlight">
+		<div class="mx-auto w-full max-w-7xl px-5 py-10 md:px-8 md:py-12 lg:py-14">
+			<TitleSection align="center" className="mb-8 md:mb-10">
+				<span aria-hidden="true" class="text-channel-accent-primary">&gt;</span>
+				<span>{tAbout('focusTitle')}</span>
+			</TitleSection>
+
+			<ul class="grid grid-cols-1 gap-x-10 gap-y-6 md:grid-cols-2 lg:grid-cols-3" role="list">
 				{
-					profile.focusAreas.map((area, idx) => (
-						<li
-							class="flex items-start gap-3 transition-all duration-300"
-							style={`animation: var(--animate-slide-up); animation-delay: ${idx * 50}ms;`}
-						>
-							<span class="shrink-0 w-2.5 h-2.5 rounded-none bg-primary-500 dark:bg-primary-400 mt-1.5" />
-							<span class="text-content leading-relaxed">{area}</span>
+					profile.focusAreas.map((area, index) => (
+						<li class="flex min-w-0 gap-4">
+							<span
+								class="w-6 shrink-0 text-editorial-label-compact text-channel-accent-primary"
+								aria-hidden="true"
+							>
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<p class="text-body text-channel-content-default">{area}</p>
 						</li>
 					))
 				}
 			</ul>
-		</article>
-	</div>
-
-	<div class="w-full flex justify-center mt-4">
-		<a
-			href={getRelativeLocaleUrl(lang, '')}
-			class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
-		>
-			{tAbout('returnHome')}
-		</a>
-	</div>
-</SectionContainer>
+		</div>
+	</section>
+</div>

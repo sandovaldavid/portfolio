@@ -6,7 +6,7 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 const colors = readSource('src/app/styles/colors.css');
 const buttons = readSource('src/shared/ui/button/button.css');
-const logo = readSource('src/widgets/header/ui/BrandLogo.astro');
+const logo = readSource('src/shared/ui/brand-logo/BrandLogo.astro');
 const header = readSource('src/widgets/header/ui/Header.astro');
 const splash = readSource('src/features/splash-screen/ui/SplashScreen.astro');
 const cliCatalog = readSource('src/features/cli-terminal/ui/CLITerminalCatalog.astro');
@@ -165,9 +165,11 @@ describe('Portfolio Retro color architecture', () => {
 		expect(colors).toContain(
 			'--color-logo-brackets: light-dark(var(--color-primary-800), var(--color-primary-400-light));'
 		);
-		expect(logo).toContain('text-logo-primary');
-		expect(logo).toContain('var(--color-logo-effect-magenta)');
+		expect(logo).toContain('color: var(--color-content-strong);');
+		expect(logo).toContain('color: var(--channel-accent-primary);');
 		expect(logo).toContain('@media (prefers-reduced-motion: reduce)');
+		expect(logo).not.toContain('var(--color-logo-effect-magenta)');
+		expect(logo).not.toContain('var(--color-logo-effect-cyan)');
 		expect(logo).not.toMatch(/#(?:1e40af|3b82f6)/i);
 	});
 
@@ -191,12 +193,22 @@ describe('Portfolio Retro color architecture', () => {
 			[cliCatalog, 'border-channel-portfolio-terminal-cyan'],
 			[cliRuntime, 'text-channel-portfolio-terminal-phosphor'],
 			[recruiterHud, 'bg-button-primary-background'],
-			[themeToggle, 'bg-theme-menu-background'],
+			[themeToggle, 'bg-channel-surface-default'],
 			[notFound, 'bg-channel-background-canvas'],
 			[header, 'var(--color-header-surface-scrolled)'],
 		] as const) {
 			expect(source).toContain(expectedToken);
 		}
 		expect(header).not.toMatch(/rgba?\(|#[0-9a-f]{3,8}\b/i);
+	});
+
+	it('keeps Theme Toggle as the Figma cyclic control instead of a menu', () => {
+		expect(themeToggle).toContain('data-theme-toggle');
+		expect(themeToggle).toContain(
+			"const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];"
+		);
+		expect(themeToggle).not.toContain('theme-menu');
+		expect(themeToggle).not.toContain('data-theme-option');
+		expect(themeToggle).not.toContain('aria-haspopup');
 	});
 });

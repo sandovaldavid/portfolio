@@ -1,0 +1,57 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getDevlogPosts, getDevlogSlug } from '@entities/devlog';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import DevlogCard from './DevlogCard.astro';
+
+/*
+ * Devlog list composition (spec/04 "Devlog List" +
+ * plans/pages/devlog-list.md): intro inside the 1280 container — kicker
+ * VERSIONED PROJECT HISTORY / HISTORIAL VERSIONADO DEL PROYECTO, title and
+ * body line — followed by three Editorial Cards wrapping as a centered 2+1
+ * arrangement (520 + 32 + 520 desktop / 369 pairs tablet / single 340 stack
+ * with 24px gap on mobile). Historical release records keep their factual
+ * strings unchanged (spec/06 drift rules).
+ */
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
+const posts = await getDevlogPosts(lang);
+---
+
+<div class="w-full px-5 md:px-8 lg:px-0">
+	<div class="mx-auto flex w-full max-w-[1280px] flex-col">
+		<header aria-labelledby="devlog-list-title">
+			<p class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary">
+				{tDevlog('introKicker')}
+			</p>
+			<h1
+				id="devlog-list-title"
+				class="mt-2 max-w-[720px] font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
+			>
+				{tDevlog('introTitle')}
+			</h1>
+			<p class="mt-4 max-w-[720px] text-body text-content-muted">{tDevlog('introBody')}</p>
+		</header>
+
+		<section class="pt-10 lg:pt-16" aria-label={tDevlog('gridSectionLabel')}>
+			<div
+				class="flex w-full flex-col items-center gap-6 md:flex-row md:flex-wrap md:items-stretch md:justify-center md:gap-8"
+			>
+				{
+					posts.map(post => (
+						<div class="flex w-full max-w-[340px] md:max-w-[369px] lg:max-w-[520px]">
+							<DevlogCard
+								post={post}
+								readMoreText={tDevlog('readMore')}
+								readMoreLink={getRelativeLocaleUrl(
+									lang,
+									`devlog/${getDevlogSlug(post)}`
+								)}
+							/>
+						</div>
+					))
+				}
+			</div>
+		</section>
+	</div>
+</div>

@@ -1,0 +1,19 @@
+---
+import Layout from '@app/layouts/Layout.astro';
+import { getExperienceData } from '@entities/experience';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { ExperienceArchive } from '@widgets/experience-case-study';
+
+const lang = Language.SPANISH;
+const tPage = createScopedUiTranslator(lang, 'pages.experience');
+const experience = await getExperienceData(lang);
+---
+
+<Layout
+	title={`${tPage('archiveTitle')} | David Sandoval`}
+	description={tPage('archiveSummary')}
+	img_preview="/profile/perfil.webp"
+	breadcrumbLabel={tPage('archiveTitle')}
+>
+	<ExperienceArchive {experience} />
+</Layout>

@@ -1,11 +1,6 @@
 {
 	"actions": {
-		"viewWork": "Ver proyectos",
-		"contact": "Contactarme",
-		"downloadResume": "Descargar CV",
-		"readMore": "Leer más",
-		"back": "Volver",
-		"home": "Ir al inicio"
+		"viewWork": "Ver proyectos"
 	},
 	"status": {
 		"available": "Disponible",

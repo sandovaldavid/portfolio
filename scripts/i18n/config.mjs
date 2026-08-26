@@ -6,18 +6,8 @@ export const INTENTIONAL_SINGLE_LOCALE_EDITORIAL = Object.freeze({
 	devlog: Object.freeze({}),
 });
 
-export const HARD_CODED_TEXT_ALLOWLIST = Object.freeze([
-	Object.freeze({
-		file: 'src/features/cli-terminal/ui/CLITerminalCatalog.astro',
-		value: 'portfolio@sandovaldavid:~',
-		reason: 'Decorative shell prompt composed only from the public handle and source-code syntax.',
-	}),
-	Object.freeze({
-		file: 'src/widgets/hero/ui/Hero.astro',
-		value: 'David Sandoval',
-		reason: 'Proper name displayed as the portfolio owner identity; proper names are language-neutral.',
-	}),
-]);
+/** @type {readonly { file: string; value: string; reason: string }[]} */
+export const HARD_CODED_TEXT_ALLOWLIST = Object.freeze([]);
 
 export const SPANISH_FORBIDDEN_PHRASES = Object.freeze([
 	'Skip to main content',
@@ -35,18 +25,25 @@ export const SPANISH_FORBIDDEN_PHRASES = Object.freeze([
 	'Terminal command input',
 	'Close terminal',
 	'Developer secret mode',
-	'Something went wrong',
-	'The requested content could not be loaded.',
 	'Page not found',
 	'Go to home',
 	'Go back',
-	'A required translation is missing.',
 ]);
+
+/** @type {Readonly<Record<string, string>>} */
+export const LEGACY_REDIRECT_ROUTES = Object.freeze({
+	'/atena': '/experience/atena-software-engineer',
+	'/es/atena': '/es/experience/atena-software-engineer',
+});
 
 export const REPRESENTATIVE_ROUTE_PAIRS = Object.freeze([
 	Object.freeze({ english: '/', spanish: '/es/' }),
 	Object.freeze({ english: '/about', spanish: '/es/about' }),
-	Object.freeze({ english: '/atena', spanish: '/es/atena' }),
+	Object.freeze({ english: '/experience', spanish: '/es/experience' }),
+	Object.freeze({
+		english: '/experience/atena-software-engineer',
+		spanish: '/es/experience/atena-software-engineer',
+	}),
 	Object.freeze({ english: '/components', spanish: '/es/components' }),
 	Object.freeze({ english: '/research', spanish: '/es/research' }),
 	Object.freeze({ english: '/skills', spanish: '/es/skills' }),

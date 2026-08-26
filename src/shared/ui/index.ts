@@ -1,6 +1,9 @@
 export { Avatar } from './avatar';
 export { Badge } from './badge';
+export { BrandLogo } from './brand-logo';
 export { Button } from './button';
+export { ContentPanel } from './content-panel';
+export { EditorialCard } from './editorial-card';
 export { LinkButton } from './link-button';
 export { LinkInline } from './link-inline';
 export { SectionContainer } from './section-container';

@@ -1,0 +1,108 @@
+---
+projectId: campus-map
+locale: en
+title: UNP Campus Map
+description: 'An independent open-source academic directory for National University of Piura faculties and schools, built on Next.js 16 App Router with database-backed search, administrative CRUD and Cloudinary media.'
+category: 'Full-Stack Development'
+imageAlt: 'UNP Campus Map academic faculty and school directory preview'
+caseStudy:
+    kicker: 'PROJECT CASE STUDY · ACADEMIC DIRECTORY'
+    status:
+        lifecycle: 'MAINTAINED · NEXT.JS 16 CODEBASE'
+        source: 'PUBLIC SOURCE'
+        demo: 'NO PUBLIC DEMO'
+---
+
+<CaseStudySection
+	eyebrow="PUBLIC EVIDENCE"
+	title="The current repository defines the product boundary"
+>
+	The repository is an independent open-source project and is not an official Universidad Nacional
+	de Piura product. Its current executable surface is a searchable academic directory with
+	administrative content management; the interactive geospatial map described in older product
+	direction remains roadmap rather than a shipped capability.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="PROBLEM"
+	title="Campus information is more useful when it is structured and searchable"
+>
+	Faculty names, schools, pavilion references and official links are easier to use when they live
+	in one queryable directory instead of being rediscovered across unrelated pages or documents.
+	The implementation therefore centers on **faculty and school discovery** rather than claiming an
+	interactive navigation system that the current code does not ship.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Next.js owns both the public directory and its administrative surface"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Current UNP Campus Map architecture"
+		description="Public and administrative App Router surfaces reach API and service code. A faculty service queries through Knex, which can target the default MySQL configuration or PostgreSQL. Cloudinary stores managed media."
+		chart={`flowchart LR
+      Public["Public directory\nfaculties · schools · search"] --> Next["Next.js 16 App Router"]
+      Admin["Admin UI\nfaculty content CRUD"] --> Next
+      Next --> API["Route handlers / API"]
+      API --> Service["facultyService\nquery + CRUD"]
+      Service --> Knex["Knex adapter"]
+      Knex --> MySQL["MySQL\ndefault configuration"]
+      Knex -. supported .-> Postgres["PostgreSQL"]
+      Next --> Cloudinary["Cloudinary\nmanaged media"]`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="IMPLEMENTATION" title="What the code actually supports">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="DISCOVERY" title="FACULTIES + SCHOOLS" tone="primary">
+      The service layer selects faculties, counts related schools and searches across faculty names, descriptions and school names. School records expose pavilion and official website information.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="CONTENT" title="ADMINISTRATIVE CRUD" tone="primary">
+      The current App Router tree includes an admin area, while `facultyService` implements create, update and delete operations against the same persistence boundary used by public reads.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="MEDIA + DATA" title="CLOUDINARY + KNEX" tone="primary">
+      Media configuration is separated through Cloudinary. Database access is centralized behind Knex and the repository carries both MySQL and PostgreSQL schema fixtures rather than binding every query to one driver.
+    </CaseStudyCard>
+
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="VERSION DRIFT" title="Executable manifests override stale README architecture tables" surface="highlight">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFIED IN PACKAGE MANIFEST" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
+      The current `package.json` uses Next.js **16.0.10**, React **19.2.3** and Tailwind CSS **4.1.17**. Older README sections still mention Next.js 14 and MySQL 8, so those older tables are not used as the portfolio's technical source of truth.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="BOUNDARY" title="THE INTERACTIVE MAP IS NOT PRESENTED AS SHIPPED" tone="boundary">
+      The repository roadmap still describes interactive mapping and geospatial behavior as future work. This case study therefore does **not** repeat earlier portfolio claims about live positioning, map markers or measured reductions in campus orientation time.
+    </EvidenceBlock>
+
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="TRADE-OFFS" title="A directory first, map later">
+  Building the data model, search and content-management path first creates a verifiable information layer that a future map can consume. It also avoids coupling the value of the project to GPS or geospatial UX before the underlying faculty and school records are reliable.
+
+Knex adds a small abstraction layer, but it gives the repository one query surface for its documented MySQL default and PostgreSQL-compatible configuration.
+
+</CaseStudySection>
+
+<CaseStudySection eyebrow="LEARNINGS" title="What the repository audit changed">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="LEARNING 01" title="PRODUCT NAMES CAN OUTRUN IMPLEMENTATION" tone="success">
+      A “Campus Map” can currently be a strong directory without pretending the map itself already exists. Portfolio copy should reflect the shipped boundary, not the aspirational name.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 02" title="EXECUTABLE CONFIG BEATS STALE DOCUMENTATION" tone="success">
+      Package manifests, route trees and service code are better evidence for current versions and capabilities when prose has not kept pace with dependency upgrades.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="LEARNING 03" title="PORTABILITY NEEDS A REAL BOUNDARY" tone="success">
+      Supporting more than one database is most credible when queries flow through one adapter layer and both schema paths exist, not when portability is only stated in a README.
+    </CaseStudyCard>
+
+  </CaseStudyGrid>
+</CaseStudySection>

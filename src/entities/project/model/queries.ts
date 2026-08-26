@@ -1,48 +1,13 @@
 import { getCollection } from 'astro:content';
 import type { Language } from '@shared/config/i18n';
-import { PROJECT_METADATA, PROJECT_TECHNOLOGIES, isProjectId, type ProjectId } from './metadata';
-import type { CaseStudyEvidence, ProjectContentEntry, ProjectItem, ProjectList } from './types';
-
-function toEvidence(
-	entry: ProjectContentEntry,
-	projectId: ProjectId
-): CaseStudyEvidence | undefined {
-	const evidence = entry.data.caseStudy.evidence;
-	if (!evidence) return undefined;
-
-	const sourceUrls: Readonly<Record<string, string>> =
-		PROJECT_METADATA[projectId].evidenceSourceUrls ?? {};
-	const seenSources = new Set<string>();
-	const sources = evidence.sources.map(source => {
-		if (seenSources.has(source.sourceId)) {
-			throw new Error(
-				`Duplicate evidence source "${source.sourceId}" for project "${projectId}" and locale "${entry.data.locale}".`
-			);
-		}
-		seenSources.add(source.sourceId);
-
-		const href = sourceUrls[source.sourceId];
-		if (!href) {
-			throw new Error(
-				`Missing language-neutral URL for evidence source "${source.sourceId}" in project "${projectId}".`
-			);
-		}
-
-		return { ...source, href };
-	});
-
-	return {
-		...evidence,
-		implemented: [...evidence.implemented],
-		planned: [...evidence.planned],
-		architecture: { ...evidence.architecture },
-		security: [...evidence.security],
-		testing: [...evidence.testing],
-		deployment: [...evidence.deployment],
-		limitations: [...evidence.limitations],
-		sources,
-	};
-}
+import {
+	PROJECT_METADATA,
+	PROJECT_TECHNOLOGIES,
+	isProjectId,
+	isProjectVisible,
+	type ProjectId,
+} from './metadata';
+import type { ProjectContentEntry, ProjectDetail, ProjectItem, ProjectList } from './types';
 
 function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 	const { projectId, title, description, category, imageAlt, caseStudy } = entry.data;
@@ -54,7 +19,7 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 	const metadata = PROJECT_METADATA[projectId];
 	const link = metadata.link ? { link: metadata.link } : {};
 	const github = metadata.github ? { github: metadata.github } : {};
-	const evidence = toEvidence(entry, projectId);
+	const version = metadata.version ? { version: metadata.version } : {};
 
 	return {
 		projectId,
@@ -70,59 +35,79 @@ function toProjectItem(entry: ProjectContentEntry): ProjectItem {
 		sourceAccess: metadata.sourceAccess,
 		demoAccess: metadata.demoAccess,
 		caseStudy: {
-			problem: caseStudy.problem,
-			approach: caseStudy.approach,
-			tradeoffs: caseStudy.tradeoffs,
-			outcome: caseStudy.outcome,
-			learnings: [...caseStudy.learnings],
-			timeline: caseStudy.timeline,
-			role: caseStudy.role,
-			status: {
-				...caseStudy.status,
-				limitations: [...caseStudy.status.limitations],
-			},
-			...(evidence ? { evidence } : {}),
+			kicker: caseStudy.kicker,
+			status: { ...caseStudy.status },
 		},
 		...link,
 		...github,
+		...version,
 	};
 }
 
-export async function getProjectsData(lang: Language): Promise<ProjectList> {
-	const entries = await getCollection('projects', ({ data }) => data.locale === lang);
+async function getLocalizedProjectEntries(lang: Language): Promise<ProjectContentEntry[]> {
+	const allEntries = await getCollection('projects', ({ data }) => data.locale === lang);
+	const entries: ProjectContentEntry[] = [];
 	const seen = new Set<string>();
 
-	const projects = entries.map(entry => {
+	for (const entry of allEntries) {
 		if (entry.data.locale !== lang) {
 			throw new Error(
 				`Project locale mismatch: requested "${lang}", received "${entry.data.locale}".`
 			);
 		}
 
+		if (!isProjectId(entry.data.projectId)) {
+			throw new Error(
+				`Missing language-neutral metadata for project "${entry.data.projectId}".`
+			);
+		}
+
+		if (!isProjectVisible(entry.data.projectId)) continue;
+
 		if (seen.has(entry.data.projectId)) {
 			throw new Error(`Duplicate project ID "${entry.data.projectId}" for locale "${lang}".`);
 		}
 		seen.add(entry.data.projectId);
+		entries.push(entry);
+	}
 
-		return toProjectItem(entry);
-	});
-
-	const expectedIds = Object.keys(PROJECT_METADATA) as ProjectId[];
+	const expectedIds = (Object.keys(PROJECT_METADATA) as ProjectId[]).filter(projectId =>
+		isProjectVisible(projectId)
+	);
 	const missingIds = expectedIds.filter(projectId => !seen.has(projectId));
 	if (missingIds.length > 0) {
 		throw new Error(`Missing project content for locale "${lang}": ${missingIds.join(', ')}.`);
 	}
 
-	return projects.sort(
-		(left, right) =>
-			PROJECT_METADATA[right.projectId].order - PROJECT_METADATA[left.projectId].order
-	);
+	return entries;
+}
+
+export async function getProjectsData(lang: Language): Promise<ProjectList> {
+	const entries = await getLocalizedProjectEntries(lang);
+	return entries
+		.map(toProjectItem)
+		.sort(
+			(left, right) =>
+				PROJECT_METADATA[right.projectId].order - PROJECT_METADATA[left.projectId].order
+		);
+}
+
+export async function getProjectDetailBySlug(
+	lang: Language,
+	slug: string
+): Promise<ProjectDetail | undefined> {
+	const entries = await getLocalizedProjectEntries(lang);
+	const entry = entries.find(candidate => {
+		const projectId = candidate.data.projectId;
+		return isProjectId(projectId) && PROJECT_METADATA[projectId].slug === slug;
+	});
+	return entry ? { project: toProjectItem(entry), entry } : undefined;
 }
 
 export async function getProjectBySlug(
 	lang: Language,
 	slug: string
 ): Promise<ProjectItem | undefined> {
-	const projects = await getProjectsData(lang);
-	return projects.find(project => project.slug === slug);
+	const detail = await getProjectDetailBySlug(lang, slug);
+	return detail?.project;
 }

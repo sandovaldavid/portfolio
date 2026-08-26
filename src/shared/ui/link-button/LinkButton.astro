@@ -5,10 +5,20 @@ interface Props {
 	href: string;
 	target?: '_blank' | '_self';
 	variant?: 'primary' | 'secondary';
+	disabled?: boolean;
 	class?: string;
+	/** Screen-reader-only text announcing the link opens in a new tab. Omit for non-navigating targets (e.g. mailto:). */
+	newTabLabel?: string;
 }
 
-const { href, target = '_blank', variant = 'primary', class: className } = Astro.props;
+const {
+	href,
+	target = '_blank',
+	variant = 'primary',
+	disabled = false,
+	class: className,
+	newTabLabel,
+} = Astro.props;
 ---
 
 <a
@@ -16,12 +26,15 @@ const { href, target = '_blank', variant = 'primary', class: className } = Astro
 	{target}
 	rel={target === '_blank' ? 'noopener noreferrer' : undefined}
 	role="link"
+	aria-disabled={disabled ? 'true' : undefined}
+	tabindex={disabled ? -1 : undefined}
 	class:list={[
 		'btn-base',
 		variant === 'primary' ? 'btn-primary' : 'btn-secondary',
-		'group',
+		disabled && 'btn-disabled',
 		className,
 	]}
 >
 	<slot />
+	{target === '_blank' && newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 </a>
