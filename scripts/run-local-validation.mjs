@@ -4,6 +4,7 @@ import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const workspaceFolder = '.';
 const isDevContainer = process.env.DEVCONTAINER === 'true';
 const devcontainer = process.platform === 'win32' ? 'devcontainer.cmd' : 'devcontainer';
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
@@ -11,7 +12,8 @@ const validationLogFile =
 	process.env.VALIDATION_LOG_FILE?.trim() || `validation-logs/validate-local-${timestamp}.log`;
 const validationLogPath = resolve(repositoryRoot, validationLogFile);
 const relativeValidationLogPath = relative(repositoryRoot, validationLogPath);
-const workerOverride = process.env.PLAYWRIGHT_WORKERS?.trim();
+const rawWorkerOverride = process.env.PLAYWRIGHT_WORKERS?.trim();
+let normalizedWorkerOverride;
 
 if (
 	!relativeValidationLogPath ||
@@ -23,63 +25,40 @@ if (
 	process.exit(1);
 }
 
-if (workerOverride && (!/^\d+$/.test(workerOverride) || Number(workerOverride) < 1)) {
-	console.error('[error] PLAYWRIGHT_WORKERS must be a positive integer.');
-	process.exit(1);
-}
-
-/**
- * @param {string} command
- * @param {string[]} args
- * @param {import('node:child_process').SpawnSyncOptions} [options]
- */
-function run(command, args, options = {}) {
-	const result = spawnSync(command, args, {
-		cwd: repositoryRoot,
-		stdio: 'inherit',
-		...options,
-	});
-
-	if (result.error) {
-		console.error(`[error] Failed to run ${command}: ${result.error.message}`);
+if (rawWorkerOverride) {
+	const parsedWorkerOverride = Number(rawWorkerOverride);
+	if (!Number.isInteger(parsedWorkerOverride) || parsedWorkerOverride < 1) {
+		console.error('[error] PLAYWRIGHT_WORKERS must be a positive integer.');
 		process.exit(1);
 	}
-
-	if (result.status !== 0) process.exit(result.status ?? 1);
+	normalizedWorkerOverride = String(parsedWorkerOverride);
 }
 
+mkdirSync(dirname(validationLogPath), { recursive: true });
+const logStream = createWriteStream(validationLogPath, { flags: 'w' });
+
 /**
- * Run the validation command without a shell while mirroring stdout/stderr to
- * both the terminal and a workspace-local evidence log.
+ * Mirror a spawned validation process to both the terminal and the evidence log.
  *
- * @param {string} command
- * @param {string[]} args
- * @param {import('node:child_process').SpawnOptions} [options]
+ * @param {import('node:child_process').ChildProcessWithoutNullStreams} child
+ * @param {string} label
  * @returns {Promise<number>}
  */
-function runLogged(command, args, options = {}) {
-	mkdirSync(dirname(validationLogPath), { recursive: true });
-	const logStream = createWriteStream(validationLogPath, { flags: 'w' });
-
+function waitForLoggedProcess(child, label) {
 	return new Promise(resolveRun => {
-		const child = spawn(command, args, {
-			cwd: repositoryRoot,
-			stdio: ['inherit', 'pipe', 'pipe'],
-			...options,
-		});
 		let spawnFailed = false;
 
-		child.stdout?.on('data', chunk => {
+		child.stdout.on('data', chunk => {
 			process.stdout.write(chunk);
 			logStream.write(chunk);
 		});
-		child.stderr?.on('data', chunk => {
+		child.stderr.on('data', chunk => {
 			process.stderr.write(chunk);
 			logStream.write(chunk);
 		});
 		child.on('error', error => {
 			spawnFailed = true;
-			const message = `[error] Failed to run ${command}: ${error.message}\n`;
+			const message = `[error] Failed to run ${label}: ${error.message}\n`;
 			process.stderr.write(message);
 			logStream.write(message);
 		});
@@ -92,7 +71,11 @@ function runLogged(command, args, options = {}) {
 console.log(`[validation] Full in-container log will be written to ${validationLogFile}`);
 
 if (isDevContainer) {
-	const status = await runLogged('bun', ['run', 'validate:local:inside']);
+	const child = spawn('bun', ['run', 'validate:local:inside'], {
+		cwd: repositoryRoot,
+		stdio: ['inherit', 'pipe', 'pipe'],
+	});
+	const status = await waitForLoggedProcess(child, 'bun run validate:local:inside');
 	process.exit(status);
 }
 
@@ -109,22 +92,38 @@ if (probe.error || probe.status !== 0) {
 	process.exit(1);
 }
 
-run(devcontainer, ['up', '--workspace-folder', repositoryRoot]);
+const up = spawnSync(devcontainer, ['up', '--workspace-folder', workspaceFolder], {
+	cwd: repositoryRoot,
+	stdio: 'inherit',
+});
+if (up.error) {
+	console.error(`[error] Failed to run devcontainer up: ${up.error.message}`);
+	process.exit(1);
+}
+if (up.status !== 0) process.exit(up.status ?? 1);
 
 /** @type {string[]} */
 const remoteEnvironment = [];
-if (workerOverride) {
-	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${workerOverride}`);
+if (normalizedWorkerOverride) {
+	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${normalizedWorkerOverride}`);
 }
 
-const status = await runLogged(devcontainer, [
-	'exec',
-	'--workspace-folder',
-	repositoryRoot,
-	'env',
-	...remoteEnvironment,
-	'bun',
-	'run',
-	'validate:local:inside',
-]);
+const child = spawn(
+	devcontainer,
+	[
+		'exec',
+		'--workspace-folder',
+		workspaceFolder,
+		'env',
+		...remoteEnvironment,
+		'bun',
+		'run',
+		'validate:local:inside',
+	],
+	{
+		cwd: repositoryRoot,
+		stdio: ['inherit', 'pipe', 'pipe'],
+	}
+);
+const status = await waitForLoggedProcess(child, 'devcontainer exec');
 process.exit(status);
