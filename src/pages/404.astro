@@ -82,7 +82,8 @@ const localizedShell = {
 				const saved = localStorage.getItem('theme') || 'dark';
 				const isDark =
 					saved === 'dark' ||
-					(saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+					(saved === 'system' &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches);
 				document.documentElement.classList.toggle('dark', isDark);
 			})();
 		</script>
@@ -189,7 +190,9 @@ const localizedShell = {
 				header?.querySelectorAll('nav[aria-label]').forEach(nav => {
 					nav.setAttribute(
 						'aria-label',
-						nav.closest('#mobile-menu') ? shell.accessibility.mobileNavigation : shell.accessibility.mainNavigation
+						nav.closest('#mobile-menu')
+							? shell.accessibility.mobileNavigation
+							: shell.accessibility.mainNavigation
 					);
 				});
 
@@ -223,7 +226,9 @@ const localizedShell = {
 				const footerSubtitle = footerContent?.querySelector('p');
 				if (footerTitle) footerTitle.textContent = shell.footer.title;
 				if (footerSubtitle) footerSubtitle.textContent = shell.footer.subtitle;
-				const footerContact = footerContent?.querySelector('a.btn-primary[href^="mailto:"]');
+				const footerContact = footerContent?.querySelector(
+					'a.btn-primary[href^="mailto:"]'
+				);
 				setOwnText(footerContact, shell.footer.contact);
 
 				const footerCopyright = footer?.querySelector(':scope > p');
@@ -241,12 +246,16 @@ const localizedShell = {
 				const emailSocial = footerContent?.querySelector('ul a[href^="mailto:"]');
 				emailSocial?.setAttribute('title', shell.footer.emailDavid);
 				emailSocial?.setAttribute('aria-label', shell.footer.emailDavid);
-				const backToTop = document.querySelector('[aria-label="Back to top"], [aria-label="Volver arriba"]');
+				const backToTop = document.querySelector(
+					'[aria-label="Back to top"], [aria-label="Volver arriba"]'
+				);
 				backToTop?.setAttribute('aria-label', shell.accessibility.backToTop);
 			};
 
 			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', applyLocalizedNotFoundCopy, { once: true });
+				document.addEventListener('DOMContentLoaded', applyLocalizedNotFoundCopy, {
+					once: true,
+				});
 			} else {
 				applyLocalizedNotFoundCopy();
 			}
@@ -312,7 +321,11 @@ const localizedShell = {
 								<span id="not-found-home-label">{tErrors('homeButton')}</span>
 							</LinkButton>
 						</div>
-						<Button variant="secondary" onclick="history.back()" class="w-full sm:w-47.5">
+						<Button
+							variant="secondary"
+							onclick="history.back()"
+							class="w-full sm:w-47.5"
+						>
 							<ArrowUpRightIcon aria-hidden="true" />
 							<span id="not-found-back-label">{tErrors('backButton')}</span>
 						</Button>

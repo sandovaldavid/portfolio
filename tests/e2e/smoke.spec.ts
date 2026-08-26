@@ -69,18 +69,14 @@ test.describe('Pull request smoke and accessibility gates', () => {
 	}) => {
 		await page.goto('/about');
 		await expect(page).toHaveTitle('About David Sandoval — Software Engineer');
-		await expect(
-			page.getByRole('heading', { level: 1, name: 'David Sandoval' })
-		).toBeVisible();
+		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
 		await expect(page.getByText('Angular and reactive frontend architecture')).toBeVisible();
 
 		await page.goto('/es/about');
 		await expect(page).toHaveTitle('Sobre David Sandoval — Ingeniero de Software');
-		await expect(
-			page.getByRole('heading', { level: 1, name: 'David Sandoval' })
-		).toBeVisible();
+		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
 		await expect(page.getByText('Angular y arquitectura frontend reactiva')).toBeVisible();

@@ -31,7 +31,9 @@ test.describe('404 localized fallback', () => {
 	for (const viewport of VIEWPORTS) {
 		for (const locale of ['en', 'es'] as const) {
 			for (const theme of THEMES) {
-				test(`404 ${locale} follows the ${viewport.label} contract in ${theme}`, async ({ page }) => {
+				test(`404 ${locale} follows the ${viewport.label} contract in ${theme}`, async ({
+					page,
+				}) => {
 					await page.setViewportSize({ width: viewport.width, height: viewport.height });
 					await page.goto(locale === 'en' ? '/route-probe-404' : '/es/route-probe-404');
 					await setTheme(page, theme);
@@ -45,7 +47,9 @@ test.describe('404 localized fallback', () => {
 					);
 
 					const goBack = page.getByRole('button', { name: /go back|volver/i });
-					const goHome = page.getByRole('link', { name: /go to home|ir al inicio/i }).first();
+					const goHome = page
+						.getByRole('link', { name: /go to home|ir al inicio/i })
+						.first();
 					await expect(goBack).toBeVisible();
 					await expect(goHome).toBeVisible();
 
@@ -77,7 +81,9 @@ test.describe('Skills page contract', () => {
 	for (const viewport of VIEWPORTS) {
 		for (const locale of ['en', 'es'] as const) {
 			for (const theme of THEMES) {
-				test(`skills ${locale} follows the ${viewport.label} contract in ${theme}`, async ({ page }) => {
+				test(`skills ${locale} follows the ${viewport.label} contract in ${theme}`, async ({
+					page,
+				}) => {
 					await page.setViewportSize({ width: viewport.width, height: viewport.height });
 					await page.goto(locale === 'en' ? '/skills' : '/es/skills');
 					await setTheme(page, theme);
@@ -98,11 +104,13 @@ test.describe('Skills page contract', () => {
 					await expect(page.locator('[data-skills-supporting]')).toBeVisible();
 
 					const categoryBoxes = await categories.evaluateAll(elements =>
-						elements.map(element => element.getBoundingClientRect()).map(rect => ({
-							x: rect.x,
-							y: rect.y,
-							width: rect.width,
-						}))
+						elements
+							.map(element => element.getBoundingClientRect())
+							.map(rect => ({
+								x: rect.x,
+								y: rect.y,
+								width: rect.width,
+							}))
 					);
 
 					if (viewport.label === 'mobile') {
@@ -130,7 +138,9 @@ test.describe('Components Showcase contract', () => {
 	for (const viewport of VIEWPORTS) {
 		for (const locale of ['en', 'es'] as const) {
 			for (const theme of THEMES) {
-				test(`showcase ${locale} covers Shared UI at ${viewport.label} in ${theme}`, async ({ page }) => {
+				test(`showcase ${locale} covers Shared UI at ${viewport.label} in ${theme}`, async ({
+					page,
+				}) => {
 					await page.setViewportSize({ width: viewport.width, height: viewport.height });
 					await page.goto(locale === 'en' ? '/components' : '/es/components');
 					await setTheme(page, theme);
@@ -139,18 +149,25 @@ test.describe('Components Showcase contract', () => {
 					const panelHeadings = await page
 						.locator('[data-showcase-panel] h3')
 						.evaluateAll(elements =>
-							elements.map(element => (element.textContent ?? '').replace(/\s+/g, ' ').trim())
+							elements.map(element =>
+								(element.textContent ?? '').replace(/\s+/g, ' ').trim()
+							)
 						);
 					expect(panelHeadings).toEqual([...contractSections[locale]]);
 
-					const shellHeading = locale === 'en' ? 'Shell components' : 'Componentes de shell';
-					await expect(page.getByRole('heading', { level: 2, name: shellHeading })).toBeVisible();
+					const shellHeading =
+						locale === 'en' ? 'Shell components' : 'Componentes de shell';
+					await expect(
+						page.getByRole('heading', { level: 2, name: shellHeading })
+					).toBeVisible();
 
 					// The page demonstrates only the two lockups present in the approved screen:
 					// full signature and compact mark. The global header is intentionally excluded.
 					const logos = page.locator('main').locator('.brand-logo-link');
 					await expect(logos).toHaveCount(2);
-					await expect(page.locator('main').locator('.brand-logo-signature')).toHaveCount(1);
+					await expect(page.locator('main').locator('.brand-logo-signature')).toHaveCount(
+						1
+					);
 
 					await expectNoHorizontalOverflow(page);
 				});

@@ -116,7 +116,9 @@ const panelClasses = 'border border-channel-edge-subtle bg-channel-background-ca
 					<div class="mt-4 flex flex-wrap items-center gap-3">
 						{
 							badgeVariants.map(variant => (
-								<Badge variant={variant}>{tPage(badgeVariantLabels[variant])}</Badge>
+								<Badge variant={variant}>
+									{tPage(badgeVariantLabels[variant])}
+								</Badge>
 							))
 						}
 					</div>
@@ -142,7 +144,11 @@ const panelClasses = 'border border-channel-edge-subtle bg-channel-background-ca
 						{tPage('linksHeading')}
 					</h3>
 					<div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
-						<LinkInline href="#shell-components" icon={ArrowRightIcon} iconPosition="trailing">
+						<LinkInline
+							href="#shell-components"
+							icon={ArrowRightIcon}
+							iconPosition="trailing"
+						>
 							{tPage('linkDefault')}
 						</LinkInline>
 						<LinkInline
@@ -191,7 +197,11 @@ const panelClasses = 'border border-channel-edge-subtle bg-channel-background-ca
 					<div class="mt-4 flex flex-wrap items-end gap-4 md:gap-6">
 						{
 							avatarSizes.map(size => (
-								<Avatar src="/profile/perfil.webp" alt={tPage('profileAlt')} {size} />
+								<Avatar
+									src="/profile/perfil.webp"
+									alt={tPage('profileAlt')}
+									{size}
+								/>
 							))
 						}
 					</div>

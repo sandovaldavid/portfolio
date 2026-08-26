@@ -56,7 +56,11 @@ const supportingCategories = [
 		>
 			<div class="flex flex-col gap-3">
 				<p class="text-editorial-label uppercase text-channel-accent-primary">
-					<span aria-hidden="true">[ </span>{tPage('introKicker')}<span aria-hidden="true"> ]</span>
+					<span aria-hidden="true">[ </span>{tPage('introKicker')}<span
+						aria-hidden="true"
+					>
+						]</span
+					>
 				</p>
 				<h1
 					id="skills-page-title"
@@ -66,8 +70,14 @@ const supportingCategories = [
 				</h1>
 			</div>
 
-			<p class="max-w-md text-editorial-label uppercase text-channel-content-muted md:text-right">
-				<span aria-hidden="true">[ </span>{tPage('currentStackLabel')}<span aria-hidden="true"> ]</span>
+			<p
+				class="max-w-md text-editorial-label uppercase text-channel-content-muted md:text-right"
+			>
+				<span aria-hidden="true">[ </span>{tPage('currentStackLabel')}<span
+					aria-hidden="true"
+				>
+					]</span
+				>
 			</p>
 		</header>
 
@@ -116,9 +126,14 @@ const supportingCategories = [
 							]}
 						>
 							<h3 class="text-subheading uppercase text-channel-accent-primary">
-								<span aria-hidden="true">[ </span>{category.heading}<span aria-hidden="true"> ]</span>
+								<span aria-hidden="true">[ </span>
+								{category.heading}
+								<span aria-hidden="true"> ]</span>
 							</h3>
-							<ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
+							<ul
+								class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+								role="list"
+							>
 								{category.technologies.map(technology => (
 									<li class="min-w-0">
 										<TechPill

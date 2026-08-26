@@ -14,8 +14,9 @@ const { lang, profile, portraitSrc, portraitAlt } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.about');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
 
-const summaryParts =
-	profile.summary.match(/.*?[.!?](?=\s|$)|.+$/g)?.map(part => part.trim()) ?? [profile.summary];
+const summaryParts = profile.summary.match(/.*?[.!?](?=\s|$)|.+$/g)?.map(part => part.trim()) ?? [
+	profile.summary,
+];
 const summaryLead = summaryParts[0] ?? profile.summary;
 const summarySupport = summaryParts.slice(1).join(' ');
 ---
@@ -37,7 +38,9 @@ const summarySupport = summaryParts.slice(1).join(' ');
 				{tPage('introTitle')}
 			</h1>
 
-			<p class="mt-6 max-w-3xl text-subheading text-channel-content-strong md:text-component-title">
+			<p
+				class="mt-6 max-w-3xl text-subheading text-channel-content-strong md:text-component-title"
+			>
 				{summaryLead}
 			</p>
 
