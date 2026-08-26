@@ -224,7 +224,9 @@ test.describe('Experience Detail contract', () => {
 });
 
 test.describe('Project Card contract', () => {
-	test('media slot and hover shadow respect the secondary variant contract', async ({ page }) => {
+	test('media slot and static hover geometry respect the secondary variant contract', async ({
+		page,
+	}) => {
 		await page.setViewportSize({ width: DESKTOP.width, height: DESKTOP.height });
 		await page.goto('/');
 		await setTheme(page, 'light');
@@ -247,7 +249,7 @@ test.describe('Project Card contract', () => {
 		await card.hover();
 		const shadowAfter = await frame.evaluate(el => getComputedStyle(el).boxShadow);
 		const after = await frame.boundingBox();
-		expect(shadowBefore).not.toBe(shadowAfter);
+		expect(shadowAfter).toBe(shadowBefore);
 		expect(after?.width).toBe(before?.width);
 		expect(after?.height).toBe(before?.height);
 
@@ -281,7 +283,8 @@ test.describe('Content Panel contract', () => {
 
 		const compact = page.locator('.showcase-panel-default');
 		await expect(compact).toBeVisible();
-		expect((await compact.boundingBox())?.height).toBeGreaterThanOrEqual(180);
+		const compactBox = await compact.boundingBox();
+		expect(compactBox?.height).toBeGreaterThanOrEqual(180);
 		expect(
 			(await page.locator('.showcase-panel-success').boundingBox())?.height
 		).toBeGreaterThanOrEqual(240);
