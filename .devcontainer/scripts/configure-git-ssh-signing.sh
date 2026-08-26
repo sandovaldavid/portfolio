@@ -50,7 +50,8 @@ if [[ -z "$agent_key" ]]; then
   exit 0
 fi
 
-desired_entry="${email} namespaces=\"git\" ${agent_key}"
+namespace_option='namespaces="git"'
+desired_entry="${email} ${namespace_option} ${agent_key}"
 current_entry=""
 if [[ -f "$allowed_signers" ]]; then
   current_entry="$(cat "$allowed_signers")"
