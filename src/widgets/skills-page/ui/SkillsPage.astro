@@ -66,7 +66,7 @@ const supportingCategories = [
 				</h1>
 			</div>
 
-			<p class="text-editorial-label uppercase text-channel-content-muted md:text-right">
+			<p class="max-w-md text-editorial-label uppercase text-channel-content-muted md:text-right">
 				<span aria-hidden="true">[ </span>{tPage('currentStackLabel')}<span aria-hidden="true"> ]</span>
 			</p>
 		</header>
@@ -98,16 +98,21 @@ const supportingCategories = [
 			</TitleSection>
 
 			<div
-				class="mt-6 grid grid-cols-1 gap-x-16 gap-y-10 lg:grid-cols-2 lg:gap-y-12"
+				class="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:gap-x-16 lg:gap-y-12"
 				aria-label={tPage('categoriesSectionLabel')}
 			>
 				{
-					supportingCategories.map(category => (
-						<article class="min-w-0">
+					supportingCategories.map((category, categoryIndex) => (
+						<article
+							class:list={[
+								'min-w-0',
+								categoryIndex === 2 && 'md:col-span-2 lg:col-span-1',
+							]}
+						>
 							<h3 class="text-subheading uppercase text-channel-accent-primary">
 								<span aria-hidden="true">[ </span>{category.heading}<span aria-hidden="true"> ]</span>
 							</h3>
-							<ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4" role="list">
+							<ul class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4" role="list">
 								{category.technologies.map(technology => (
 									<li class="min-w-0">
 										<TechPill
