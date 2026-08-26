@@ -49,7 +49,14 @@ test.describe('404 localized fallback', () => {
 
 					const footerBox = await footer.boundingBox();
 					expect(footerBox).not.toBeNull();
-					expect(footerBox!.y).toBeGreaterThanOrEqual(viewport.height);
+					const renderedViewportHeight = await page.evaluate(
+						() => document.documentElement.clientHeight
+					);
+					// boundingBox() and mobile emulation may expose fractional CSS pixels or a
+					// rendered viewport that differs from the requested Playwright viewport.
+					expect(Math.round(footerBox!.y)).toBeGreaterThanOrEqual(
+						Math.round(renderedViewportHeight)
+					);
 
 					const goBack = page.getByRole('button', { name: /go back|volver/i });
 					const goHome = page
