@@ -69,6 +69,13 @@ async function preparePage(page: Page, path: string, options: { hideHeader?: boo
 	await page.waitForTimeout(300);
 }
 
+async function expectMainPageSnapshot(page: Page, path: string, snapshot: string) {
+	await preparePage(page, path);
+	const main = page.locator('main#main-content');
+	await expect(main).toBeVisible();
+	await expect(main).toHaveScreenshot(snapshot, { maxDiffPixelRatio: 0.05 });
+}
+
 test.describe('Visual regression — Hero section', () => {
 	test('homepage hero should match baseline (EN dark)', async ({ page }) => {
 		await preparePage(page, '/');
@@ -116,4 +123,18 @@ test.describe('Visual regression — Navigation & Main sections', () => {
 		await expect(footer).toBeVisible();
 		await expect(footer).toHaveScreenshot('footer.png', { maxDiffPixelRatio: 0.05 });
 	});
+});
+
+test.describe('Visual regression — Standalone v2 pages', () => {
+	for (const { path, snapshot } of [
+		{ path: '/about', snapshot: 'about-page-en-dark.png' },
+		{ path: '/es/about', snapshot: 'about-page-es-dark.png' },
+		{ path: '/skills', snapshot: 'skills-page-en-dark.png' },
+		{ path: '/components', snapshot: 'components-page-en-dark.png' },
+		{ path: '/route-probe-404', snapshot: '404-page-en-dark.png' },
+	] as const) {
+		test(`${path} main content should match the v2 baseline`, async ({ page }) => {
+			await expectMainPageSnapshot(page, path, snapshot);
+		});
+	}
 });
