@@ -71,7 +71,11 @@ const supportingCategories = [
 			</p>
 		</header>
 
-		<section class="mt-16 md:mt-20" aria-labelledby="skills-core-stack-title">
+		<section
+			class="mt-16 md:mt-20"
+			aria-labelledby="skills-core-stack-title"
+			data-skills-core-stack
+		>
 			<TitleSection className="uppercase">
 				<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
 				<span id="skills-core-stack-title">{tPage('coreStackHeading')}</span>
@@ -91,6 +95,7 @@ const supportingCategories = [
 		<section
 			class="mt-16 md:mt-20"
 			aria-labelledby="skills-supporting-technologies-title"
+			data-skills-supporting
 		>
 			<TitleSection className="uppercase">
 				<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
@@ -104,6 +109,7 @@ const supportingCategories = [
 				{
 					supportingCategories.map((category, categoryIndex) => (
 						<article
+							data-skills-category
 							class:list={[
 								'min-w-0',
 								categoryIndex === 2 && 'md:col-span-2 lg:col-span-1',
