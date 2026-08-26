@@ -102,7 +102,9 @@ expect(
 expect(
 	localValidation.includes("process.env.DEVCONTAINER === 'true'") &&
 		localValidation.includes("const workspaceFolder = '.'") &&
-		localValidation.includes("spawnSync(devcontainer, ['up', '--workspace-folder', workspaceFolder]") &&
+		localValidation.includes(
+			"spawnSync(devcontainer, ['up', '--workspace-folder', workspaceFolder]"
+		) &&
 		localValidation.includes("'exec'") &&
 		localValidation.includes("'--workspace-folder'") &&
 		localValidation.includes('PLAYWRIGHT_WORKERS='),
