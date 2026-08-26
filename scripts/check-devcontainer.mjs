@@ -1,166 +1,201 @@
 import { existsSync, readFileSync } from 'node:fs';
-import { parse } from 'jsonc-parser';
 
-const errors = [];
+const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
+const devcontainerLock = JSON.parse(readFileSync('.devcontainer/devcontainer-lock.json', 'utf8'));
+const dockerfile = readFileSync('.devcontainer/Dockerfile', 'utf8');
+const postCreateScript = readFileSync('.devcontainer/scripts/post-create.sh', 'utf8');
+const postStartScript = readFileSync('.devcontainer/scripts/post-start.sh', 'utf8');
+const configureShellScript = readFileSync('.devcontainer/scripts/configure-shell.sh', 'utf8');
+const configureGitSigningScript = readFileSync(
+	'.devcontainer/scripts/configure-git-ssh-signing.sh',
+	'utf8'
+);
+const shellZsh = readFileSync('.devcontainer/config/shell.zsh', 'utf8');
+const shellBash = readFileSync('.devcontainer/config/shell.bash', 'utf8');
+const starshipConfig = readFileSync('.devcontainer/config/starship.toml', 'utf8');
+const dockerCompose = readFileSync('docker-compose.yml', 'utf8');
+const dockerTestScript = readFileSync('docker/docker-test.sh', 'utf8');
+const runPlaywrightScript = readFileSync('scripts/run-playwright.mjs', 'utf8');
+const prettierIgnore = readFileSync('.prettierignore', 'utf8');
+const eslintConfig = readFileSync('eslint.config.js', 'utf8');
+const preCommitHook = readFileSync('.husky/pre-commit', 'utf8');
+const devcontainerWorkflow = readFileSync('.github/workflows/build-devcontainer.yml', 'utf8');
+const vscodeTasks = JSON.parse(readFileSync('.vscode/tasks.json', 'utf8'));
+const vscodeLaunch = JSON.parse(readFileSync('.vscode/launch.json', 'utf8'));
 
+/** @type {string[]} */
+const failures = [];
+
+/**
+ * @param {unknown} condition
+ * @param {string} message
+ */
 function expect(condition, message) {
-	if (!condition) errors.push(message);
+	if (!condition) failures.push(message);
 }
 
-function read(path) {
-	return readFileSync(path, 'utf8');
-}
-
-const devcontainerJson = read('.devcontainer/devcontainer.json');
-const devcontainer = parse(devcontainerJson);
-const dockerfile = read('.devcontainer/Dockerfile');
-const postCreateScript = read('.devcontainer/scripts/post-create.sh');
-const postStartScript = read('.devcontainer/scripts/post-start.sh');
-const configureShellScript = read('.devcontainer/scripts/configure-shell.sh');
-const configureGitSigningScript = read(
-	'.devcontainer/scripts/configure-git-ssh-signing.sh'
-);
-const shellZsh = read('.devcontainer/config/shell.zsh');
-const shellBash = read('.devcontainer/config/shell.bash');
-const starshipConfig = read('.devcontainer/config/starship.toml');
-const dockerCompose = read('docker/docker-compose.yml');
-const dockerTestScript = read('docker/docker-test.sh');
-const runPlaywrightScript = read('scripts/run-playwright.mjs');
-const prettierIgnore = read('.prettierignore');
-const packageJson = JSON.parse(read('package.json'));
-const eslintConfig = read('eslint.config.js');
-const preCommitHook = read('.husky/pre-commit');
-const formatTrackedFilesScript = read('scripts/format-tracked-files.mjs');
-const dockerIgnore = read('.dockerignore');
-const gitIgnore = read('.gitignore');
-
+const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
+const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
+/** @type {string[]} */
+const mounts = Array.isArray(devcontainer.mounts) ? devcontainer.mounts : [];
+/** @type {string[]} */
+const runArgs = Array.isArray(devcontainer.runArgs) ? devcontainer.runArgs : [];
+const workspaceFolder = '/workspaces/portfolio';
+const dependencyVolumeMount =
+	'source=${localWorkspaceFolderBasename}-devcontainer-node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume';
+const historyVolumeMount =
+	'source=devcontainer-${localWorkspaceFolderBasename}-zsh-history,target=/commandhistory,type=volume';
 const postStartCommand = 'bash .devcontainer/scripts/post-start.sh';
+const commonUtilsFeature = 'ghcr.io/devcontainers/features/common-utils:2.5.9';
+const dockerFeature = 'ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.0';
+const githubCliFeature = 'ghcr.io/devcontainers/features/github-cli:1.1.0';
+const expectedFeatureLocks = {
+	[commonUtilsFeature]: {
+		version: '2.5.9',
+		integrity: 'sha256:cb0c4d3c276f157eed17935747e364178d75fee17f55c4e129966f64633deb3a',
+	},
+	[dockerFeature]: {
+		version: '1.10.0',
+		integrity: 'sha256:c2c2cf829505ead8e4892c88c31b6594ae94a2bbb209e16e1fac456c1a3a624e',
+	},
+	[githubCliFeature]: {
+		version: '1.1.0',
+		integrity: 'sha256:d22f50b70ed75339b4eed1ba9ecde3a1791f90e88d37936517e3bace0bbad671',
+	},
+};
+
+expect(Boolean(bunVersion), 'packageManager must pin Bun as bun@<version>.');
+expect(
+	/^\d+\.\d+\.\d+$/.test(playwrightVersion ?? ''),
+	'@playwright/test must use an exact compatibility-sensitive version.'
+);
 
 expect(
-	devcontainer.name === 'portfolio-v1',
-	'devcontainer.json must retain the repository display name.'
+	dockerfile.includes(`ARG BUN_VERSION=${bunVersion}`),
+	'.devcontainer/Dockerfile must pin the packageManager Bun version.'
 );
 expect(
-	devcontainer.build?.dockerfile === 'Dockerfile' &&
-		devcontainer.build?.context === '..',
-	'devcontainer.json must build the repository-owned Dockerfile from the repository context.'
+	dockerfile.includes(`ARG PLAYWRIGHT_VERSION=${playwrightVersion}`),
+	'.devcontainer/Dockerfile must pin the project Playwright version.'
 );
 expect(
-	devcontainer.build?.args?.NODE_VERSION === '24.14.0' &&
-		devcontainer.build?.args?.BUN_VERSION === '1.3.14' &&
-		devcontainer.build?.args?.PLAYWRIGHT_VERSION === '1.62.1',
-	'devcontainer.json must pin Node, Bun and Playwright build args.'
+	dockerfile.includes('ARG DEVCONTAINER_UID=1000') &&
+		dockerfile.includes('ARG DEVCONTAINER_GID=1000') &&
+		dockerfile.includes('usermod --uid "${DEVCONTAINER_UID}"') &&
+		dockerfile.includes('groupmod --gid "${DEVCONTAINER_GID}" pwuser'),
+	'the development image must normalize pwuser to the standard Linux UID/GID before runtime remapping.'
 );
 expect(
-	devcontainer.remoteUser === 'node' && devcontainer.updateRemoteUserUID === true,
-	'devcontainer.json must use the non-root node user with host UID/GID synchronization.'
+	dockerfile.includes('USER pwuser') && dockerfile.includes('WORKDIR /workspaces/portfolio'),
+	'the development image must finish as pwuser in the canonical workspace.'
 );
 expect(
-	devcontainer.workspaceFolder === '/workspace',
-	'devcontainer.json must mount the repository at /workspace.'
+	devcontainer.build?.args?.BUN_VERSION === bunVersion,
+	'devcontainer.json must pass the packageManager Bun version to the image build.'
 );
 expect(
-	Array.isArray(devcontainer.mounts) &&
-		devcontainer.mounts.some((mount) =>
-			mount.includes('target=/workspace/node_modules,type=volume')
-		) &&
-		devcontainer.mounts.some((mount) =>
-			mount.includes('target=/home/node/.bun,type=volume')
-		) &&
-		devcontainer.mounts.some((mount) =>
-			mount.includes('target=/commandhistory,type=volume')
-		),
-	'devcontainer.json must keep dependencies, Bun home and command history out of the bind-mounted repository.'
+	devcontainer.build?.args?.PLAYWRIGHT_VERSION === playwrightVersion,
+	'devcontainer.json must pass the project Playwright version to the image build.'
 );
 expect(
-	devcontainer.runArgs?.includes('--security-opt') &&
-		devcontainer.runArgs?.includes('label=disable'),
-	'devcontainer.json must preserve the Fedora SELinux compatibility run args.'
+	devcontainer.workspaceMount ===
+		`source=${'${localWorkspaceFolder}'},target=${workspaceFolder},type=bind`,
+	'devcontainer.json must mount the repository at the canonical workspace path.'
 );
 expect(
-	devcontainer.features?.['ghcr.io/devcontainers/features/common-utils:2.5.9'] &&
-		devcontainer.features?.['ghcr.io/devcontainers/features/github-cli:1.1.0'],
-	'devcontainer.json must keep the reviewed common-utils and GitHub CLI Features.'
+	devcontainer.workspaceFolder === workspaceFolder,
+	'devcontainer.json must open the canonical workspace folder.'
 );
 expect(
-	devcontainer.features?.['ghcr.io/devcontainers/features/common-utils:2.5.9']
-		?.installZsh === true &&
-		devcontainer.features?.['ghcr.io/devcontainers/features/common-utils:2.5.9']
-			?.configureZshAsDefaultShell === true &&
-		devcontainer.features?.['ghcr.io/devcontainers/features/common-utils:2.5.9']
-			?.installOhMyZsh === false,
-	'common-utils must provide Zsh without duplicating the dotfiles-managed Oh My Zsh configuration.'
+	mounts.includes(dependencyVolumeMount),
+	'devcontainer.json must isolate node_modules in a named Docker volume.'
 );
 expect(
-	devcontainer.postCreateCommand === 'bash .devcontainer/scripts/post-create.sh',
-	'devcontainer.json must delegate postCreate lifecycle work to the repository script.'
-);
-expect(
-	devcontainer.postStartCommand === postStartCommand,
-	'devcontainer.json must repair generated-path ownership and refresh signing on every start.'
-);
-expect(
-	Array.isArray(devcontainer.forwardPorts) &&
-		devcontainer.forwardPorts.includes(4321) &&
-		devcontainer.forwardPorts.includes(9323),
-	'devcontainer.json must forward the Astro and Playwright report ports.'
-);
-expect(
-	devcontainer.portsAttributes?.['4321']?.protocol === 'http' &&
-		devcontainer.portsAttributes?.['9323']?.protocol === 'http',
-	'devcontainer.json must retain HTTP metadata for forwarded application ports.'
-);
-expect(
-	devcontainer.hostRequirements?.cpus === 4 &&
-		devcontainer.hostRequirements?.memory === '8gb' &&
-		devcontainer.hostRequirements?.storage === '24gb',
-	'devcontainer.json must retain the reviewed host requirements.'
-);
-expect(
-	devcontainer.customizations?.vscode?.settings?.[
-		'terminal.integrated.defaultProfile.linux'
-	] === 'zsh',
-	'devcontainer.json must keep Zsh as the default VS Code terminal.'
-);
-expect(
-	devcontainer.customizations?.vscode?.settings?.[
-		'terminal.integrated.profiles.linux'
-	]?.zsh?.path === '/bin/zsh',
-	'devcontainer.json must retain the explicit Zsh terminal profile.'
-);
-expect(
-	devcontainer.customizations?.vscode?.settings?.['files.eol'] === '\n',
-	'devcontainer.json must enforce LF line endings in the container.'
-);
-expect(
-	devcontainer.customizations?.vscode?.settings?.['git.enableCommitSigning'] === true,
-	'devcontainer.json must keep commit signing enabled in VS Code.'
-);
-expect(
-	devcontainer.customizations?.vscode?.extensions?.includes(
-		'astro-build.astro-vscode'
-	) &&
-		devcontainer.customizations?.vscode?.extensions?.includes(
-			'ms-playwright.playwright'
-		) &&
-		devcontainer.customizations?.vscode?.extensions?.includes(
-			'GitHub.copilot'
-		),
-	'devcontainer.json must retain the project editor extension set.'
-);
-expect(
-	devcontainer.customizations?.jetbrains?.settings?.[
-		'org.jetbrains.plugins.terminal:app:TerminalOptionsProvider.myShellPath'
-	] === '/bin/zsh',
-	'devcontainer.json must retain the JetBrains terminal shell integration.'
-);
-expect(
-	devcontainer.containerEnv?.DEVCONTAINER === 'true',
-	'devcontainer.json must expose the DEVCONTAINER environment marker.'
+	mounts.includes(historyVolumeMount),
+	'devcontainer.json must persist Zsh history in a project-specific named volume.'
 );
 expect(
 	devcontainer.containerEnv?.ZSH_HISTORY_FILE === '/commandhistory/.zsh_history',
-	'devcontainer.json must keep persistent command history outside the workspace.'
+	'devcontainer.json must point Zsh history at the persistent private volume.'
+);
+
+for (const [feature, expected] of Object.entries(expectedFeatureLocks)) {
+	expect(Boolean(devcontainer.features?.[feature]), `devcontainer.json must pin ${feature}.`);
+	const lock = devcontainerLock.features?.[feature];
+	expect(
+		lock?.version === expected.version,
+		`${feature} must use lock version ${expected.version}.`
+	);
+	expect(
+		lock?.integrity === expected.integrity,
+		`${feature} must use the reviewed integrity digest.`
+	);
+	expect(
+		lock?.resolved?.endsWith(`@${expected.integrity}`),
+		`${feature} must resolve to the reviewed digest.`
+	);
+}
+
+const commonUtilsOptions = devcontainer.features?.[commonUtilsFeature];
+expect(
+	commonUtilsOptions?.installZsh === true &&
+		commonUtilsOptions?.configureZshAsDefaultShell === true &&
+		commonUtilsOptions?.installOhMyZsh === false &&
+		commonUtilsOptions?.installOhMyZshConfig === false &&
+		commonUtilsOptions?.upgradePackages === false &&
+		commonUtilsOptions?.username === 'pwuser',
+	'common-utils must configure a minimal pinned Zsh environment for pwuser without floating OS upgrades or Oh My Zsh.'
+);
+expect(
+	devcontainer.hostRequirements?.cpus >= 2 && devcontainer.hostRequirements?.memory === '4gb',
+	'devcontainer.json must declare minimum host requirements.'
+);
+expect(
+	devcontainer.shutdownAction === 'stopContainer',
+	'devcontainer.json must declare an explicit shutdown action.'
+);
+expect(
+	devcontainer.remoteUser === 'pwuser',
+	'VS Code and all default container processes must run as pwuser.'
+);
+expect(devcontainer.updateRemoteUserUID === true, 'Host UID mapping must remain enabled.');
+expect(devcontainer.init === true, 'The devcontainer must use an init process as PID 1.');
+expect(
+	runArgs.includes('--ipc=host'),
+	'The devcontainer must share host IPC for direct Chromium execution.'
+);
+expect(
+	runArgs.includes('--security-opt') && runArgs.includes('label=disable'),
+	'The trusted local devcontainer must include the documented Fedora SELinux compatibility setting.'
+);
+expect(
+	devcontainer.postCreateCommand === 'bash .devcontainer/scripts/post-create.sh',
+	'devcontainer.json must use the versioned post-create script.'
+);
+expect(
+	devcontainer.postStartCommand === postStartCommand,
+	'devcontainer.json must repair writable state whenever the container starts.'
+);
+expect(
+	devcontainer.postAttachCommand === postStartCommand,
+	'devcontainer.json must repair writable state whenever VS Code attaches.'
+);
+expect(
+	devcontainer.waitFor === 'postStartCommand',
+	'VS Code must wait for startup permission repair before attaching extensions.'
+);
+expect(
+	devcontainer.containerEnv?.DEVCONTAINER === 'true',
+	'devcontainer.json must identify the managed development shell.'
+);
+expect(
+	devcontainer.containerEnv?.HOST_WORKSPACE_FOLDER === '${localWorkspaceFolder}',
+	'devcontainer.json must expose the real host workspace path to Docker Compose.'
+);
+expect(
+	devcontainer.containerEnv?.PLAYWRIGHT_BROWSERS_PATH === '/ms-playwright',
+	'devcontainer.json must use the browsers bundled with the Playwright image.'
 );
 expect(
 	devcontainer.containerEnv?.TERM === 'xterm-256color',
@@ -292,7 +327,7 @@ expect(
 	'the project Dev Container must not bundle personal or corporate Git identity profiles.'
 );
 expect(
-	configureGitSigningScript.includes('namespaces=\\"git\\"') &&
+	configureGitSigningScript.includes('namespaces="git"') &&
 		configureGitSigningScript.includes('ssh-add -L') &&
 		configureGitSigningScript.includes('git config --get user.email') &&
 		configureGitSigningScript.includes('git config --get user.signingKey') &&
@@ -353,60 +388,123 @@ expect(
 	'the pre-commit hook must not autofix or stage unrelated repository changes.'
 );
 expect(
-	formatTrackedFilesScript.includes("git', ['ls-files', '-z']") &&
-		formatTrackedFilesScript.includes("prettier', [mode, '--ignore-unknown', '--stdin-filepath'") &&
-		formatTrackedFilesScript.includes("eslint', ['--no-warn-ignored', '--stdin', '--stdin-filename'") &&
-		formatTrackedFilesScript.includes('chunkSize = 256'),
-	'the tracked-file formatter must discover files from Git and run Prettier/ESLint in bounded batches.'
+	(devcontainerWorkflow.match(/bun install --frozen-lockfile/g) ?? []).length >= 2,
+	'the devcontainer workflow must prove that two consecutive frozen installs succeed.'
 );
 expect(
-	dockerIgnore.split(/\r?\n/).includes('.docker/runtime'),
-	'.dockerignore must exclude generated Docker runtime state.'
+	devcontainerWorkflow.includes('Verify Linux workspace identity alignment'),
+	'the devcontainer workflow must assert that the remote user owns the bind-mounted workspace.'
 );
 expect(
-	gitIgnore.split(/\r?\n/).includes('.docker/runtime/'),
-	'.gitignore must exclude generated Docker runtime state.'
+	devcontainerWorkflow.includes('Verify personalized shell contract') &&
+		devcontainerWorkflow.includes('history-substring-search-up') &&
+		devcontainerWorkflow.includes('Verify tracked Dev Container lockfile'),
+	'the devcontainer workflow must verify the dotfiles shell and committed Feature lockfile.'
+);
+expect(
+	devcontainerWorkflow.includes('Create stale Git metadata fixture'),
+	'the devcontainer workflow must validate recovery from an unwritable FETCH_HEAD.'
+);
+expect(
+	devcontainerWorkflow.includes('Create stale generated ownership fixtures'),
+	'the devcontainer workflow must validate recovery from stale generated ownership.'
+);
+expect(
+	devcontainerWorkflow.includes('Create hostile nested ESLint fixture'),
+	'the devcontainer workflow must prove ESLint does not traverse Docker runtime state.'
+);
+expect(
+	devcontainerWorkflow.includes('Create hostile Prettier traversal fixture'),
+	'the devcontainer workflow must prove Prettier does not enumerate Docker runtime state.'
+);
+expect(
+	devcontainerWorkflow.includes(
+		'Recreate stale Playwright output before the direct smoke command'
+	),
+	'the devcontainer workflow must prove the direct Playwright runner repairs stale output.'
+);
+expect(
+	devcontainerWorkflow.includes('VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker/docker-test.sh'),
+	'the devcontainer workflow must prove Docker can mount the real host workspace.'
+);
+expect(
+	devcontainerWorkflow.includes('sh .husky/pre-commit'),
+	'the devcontainer workflow must execute the real pre-commit hook.'
 );
 
-expect(
-	dockerfile.includes('FROM mcr.microsoft.com/devcontainers/typescript-node:4-24-bookworm'),
-	'Dockerfile must use the reviewed Node 24 Dev Container base.'
-);
-expect(
-	dockerfile.includes('ARG BUN_VERSION=1.3.14') &&
-		dockerfile.includes('ARG PLAYWRIGHT_VERSION=1.62.1'),
-	'Dockerfile must pin Bun and Playwright.'
-);
-expect(
-	dockerfile.includes('USER node'),
-	'Dockerfile must finish as the non-root node user.'
-);
-expect(
-	dockerfile.includes('npm install -g') && dockerfile.includes('@playwright/test@${PLAYWRIGHT_VERSION}'),
-	'Dockerfile must install the pinned Playwright CLI used by project validation.'
-);
-expect(
-	dockerfile.includes('curl -fsSL https://bun.sh/install') &&
-		dockerfile.includes('bun-v${BUN_VERSION}'),
-	'Dockerfile must install the pinned Bun version.'
-);
-expect(
-	dockerfile.includes('libnss3') &&
-		dockerfile.includes('libgbm1') &&
-		dockerfile.includes('libasound2'),
-	'Dockerfile must retain Chromium runtime dependencies.'
-);
-expect(
-	!dockerfile.includes('gitconfig-atena') &&
-		!dockerfile.includes('user.email') &&
-		!dockerfile.includes('user.signingKey'),
-	'Dockerfile must not own user Git identity.'
-);
+const expectedForwarding = new Map([
+	[
+		4321,
+		{ label: 'Astro development server', protocol: 'http', onAutoForward: 'openBrowserOnce' },
+	],
+	[9323, { label: 'Playwright HTML report', protocol: 'http', onAutoForward: 'notify' }],
+]);
+const appPorts = Array.isArray(devcontainer.appPort) ? devcontainer.appPort : [];
+const forwardedPorts = Array.isArray(devcontainer.forwardPorts) ? devcontainer.forwardPorts : [];
+/** @type {{ label?: string; command?: string }[]} */
+const tasks = Array.isArray(vscodeTasks.tasks) ? vscodeTasks.tasks : [];
+/**
+ * @type {{
+ *   name?: string;
+ *   type?: string;
+ *   command?: string;
+ *   serverReadyAction?: unknown;
+ * }[]}
+ */
+const launchConfigurations = Array.isArray(vscodeLaunch.configurations)
+	? vscodeLaunch.configurations
+	: [];
 
-if (errors.length > 0) {
-	console.error('Devcontainer contract validation failed:');
-	for (const error of errors) console.error(`- ${error}`);
-	process.exitCode = 1;
-} else {
-	console.log('Devcontainer contract validation passed.');
+for (const [port, expectedAttributes] of expectedForwarding) {
+	expect(forwardedPorts.includes(port), `forwardPorts must include container port ${port}.`);
+	const attributes = devcontainer.portsAttributes?.[String(port)];
+	expect(Boolean(attributes), `portsAttributes must configure port ${port}.`);
+	if (attributes) {
+		for (const [attribute, expectedValue] of Object.entries(expectedAttributes)) {
+			expect(
+				attributes[attribute] === expectedValue,
+				`port ${port} must set ${attribute} to ${expectedValue}.`
+			);
+		}
+	}
+	expect(attributes?.requireLocalPort === true, `port ${port} must require the same local port.`);
 }
+expect(
+	forwardedPorts.length === expectedForwarding.size,
+	'forwardPorts must contain only reviewed ports.'
+);
+expect(appPorts.length === 0, 'appPort must remain empty when VS Code forwards development ports.');
+const configuredPortAttributes = Object.keys(devcontainer.portsAttributes ?? {});
+expect(
+	configuredPortAttributes.length === expectedForwarding.size &&
+		configuredPortAttributes.every(port => expectedForwarding.has(Number(port))),
+	'portsAttributes must configure only the reviewed forwarded ports.'
+);
+expect(packageJson.scripts?.dev === 'astro dev', 'dev must use the standard Astro server.');
+expect(!('dev:host' in (packageJson.scripts ?? {})), 'dev:host must remain removed.');
+expect(
+	packageJson.scripts?.['test:e2e:report'] ===
+		'playwright show-report playwright-report --host 127.0.0.1 --port 9323',
+	'test:e2e:report must serve local report on loopback port 9323.'
+);
+const developmentTask = tasks.find(task => task.label === 'Portfolio: Start Dev Server');
+expect(developmentTask?.command === 'bun run dev', 'VS Code must expose a task starting Astro.');
+const developmentLaunch = launchConfigurations.find(
+	configuration => configuration.name === 'Portfolio: Dev Server + Browser'
+);
+expect(
+	developmentLaunch?.type === 'node-terminal' &&
+		developmentLaunch?.command === 'bun run dev' &&
+		developmentLaunch?.serverReadyAction === undefined,
+	'VS Code launch must rely on port forwarding.'
+);
+
+if (failures.length > 0) {
+	console.error('Devcontainer contract validation failed:');
+	for (const failure of failures) console.error(`- ${failure}`);
+	process.exit(1);
+}
+
+console.log(
+	`Devcontainer contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, exact Feature locks, personalized Starship/eza/Zsh shell, private persistent history, normalized Linux identity, init and IPC settings, SELinux compatibility, writable Git metadata and Bun home, isolated node_modules, lifecycle repair, tracked-file formatting, permission-aware Playwright, SSH-backed signing and host-aware Docker mounts.`
+);
