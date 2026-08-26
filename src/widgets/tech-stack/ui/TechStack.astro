@@ -1,31 +1,13 @@
 ---
-import AngularIcon from '@assets/technologies/Angular.astro';
-import AstroIcon from '@assets/technologies/AstroIcon.astro';
-import CSharpIcon from '@assets/technologies/CSharp.astro';
-import DotNetIcon from '@assets/technologies/DotNet.astro';
-import GitHubActionsIcon from '@assets/technologies/GitHubActions.astro';
-import PlaywrightIcon from '@assets/technologies/Playwright.astro';
-import PostgreSQLIcon from '@assets/technologies/PostgreSQL.astro';
-import TypeScriptIcon from '@assets/technologies/TypeScript.astro';
+import { CORE_STACK } from '@shared/config/technology';
 import { TechPill } from '@shared/ui';
-
-const coreStack = [
-	{ label: '.NET', icon: DotNetIcon },
-	{ label: 'C#', icon: CSharpIcon },
-	{ label: 'Angular', icon: AngularIcon },
-	{ label: 'TypeScript', icon: TypeScriptIcon },
-	{ label: 'Astro', icon: AstroIcon },
-	{ label: 'PostgreSQL', icon: PostgreSQLIcon },
-	{ label: 'Playwright', icon: PlaywrightIcon },
-	{ label: 'GitHub Actions', icon: GitHubActionsIcon },
-];
 ---
 
 <ul class="flex w-full max-w-270 flex-wrap items-center justify-center gap-4 self-center">
 	{
-		coreStack.map(({ label, icon }) => (
+		CORE_STACK.map(({ name, icon }) => (
 			<li>
-				<TechPill label={label} icon={icon} variant="stack" size="md" />
+				<TechPill label={name} icon={icon} variant="stack" size="md" />
 			</li>
 		))
 	}
