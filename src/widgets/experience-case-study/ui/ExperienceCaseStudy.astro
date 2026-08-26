@@ -96,7 +96,7 @@ const detailUrl = (item: ExperienceItem) =>
 			</div>
 
 			<div class="flex min-w-0 flex-col gap-4">
-				<p class="text-secondary text-content-default md:text-body">{experience.summary}</p>
+				<p class="text-body text-content-default">{experience.summary}</p>
 				<div class="flex flex-wrap items-center gap-3" data-experience-status>
 					<Badge variant={experience.isCurrent ? 'success' : 'default'} size="sm">
 						{experience.isCurrent ? tPage('currentStatus') : tPage('pastStatus')}
@@ -151,9 +151,7 @@ const detailUrl = (item: ExperienceItem) =>
 							<span class="shrink-0 font-mono text-caption text-channel-accent-primary">
 								{String(index + 1).padStart(2, '0')}
 							</span>
-							<span class="text-secondary text-content-default md:text-body">
-								{achievement}
-							</span>
+							<span class="text-body text-content-default">{achievement}</span>
 						</li>
 					))
 				}
