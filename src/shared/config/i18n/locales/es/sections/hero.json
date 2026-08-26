@@ -1,19 +1,19 @@
 {
 	"banner": "[ DISPONIBLE PARA OPORTUNIDADES EN INGENIERÍA DE SOFTWARE ]",
-	"title": "Ingeniero de software que construye productos web confiables",
+	"title": "Construyendo productos web confiables con decisiones de ingeniería claras",
 	"subtitle": "Ingeniero de software orientado a backend con experiencia frontend",
 	"credential": "Remoto desde Perú (UTC-5) · Dominio fintech · Resolución estructurada de problemas",
-	"profile": "Perfil profesional",
-	"roleLabel": "Rol",
+	"profile": "PERFIL PROFESIONAL",
+	"roleLabel": "ROL",
 	"role": "Ingeniero de software",
-	"stackLabel": "Stack principal",
+	"stackLabel": "STACK PRINCIPAL",
 	"stack": "Angular · .NET · TypeScript",
-	"locationLabel": "Ubicación",
+	"locationLabel": "UBICACIÓN",
 	"location": "Perú · UTC-5",
-	"workModeLabel": "Modalidad",
+	"workModeLabel": "MODALIDAD",
 	"workMode": "Remoto · Perú",
-	"currentLabel": "Actualmente",
+	"currentLabel": "ACTUALMENTE",
 	"current": "Jr. Software Engineer @ Atena",
-	"researchLabel": "Dominio",
-	"research": "Fintech"
+	"domainLabel": "DOMINIO",
+	"domain": "Fintech"
 }

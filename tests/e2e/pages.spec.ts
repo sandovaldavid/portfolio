@@ -42,10 +42,16 @@ pages.forEach(({ path, name }) => {
 });
 
 const internalRouteExpectations = [
-	{ path: '/about', heading: 'Full biography' },
-	{ path: '/projects', heading: 'Projects Catalog' },
-	{ path: '/es/about', heading: 'Biografía completa' },
-	{ path: '/es/projects', heading: 'Catálogo de Proyectos' },
+	{ path: '/about', heading: 'David Sandoval' },
+	{
+		path: '/projects',
+		heading: 'Projects built with evidence, scope and trade-offs.',
+	},
+	{ path: '/es/about', heading: 'David Sandoval' },
+	{
+		path: '/es/projects',
+		heading: 'Proyectos construidos con evidencia, alcance y trade-offs.',
+	},
 ];
 
 test.describe('Internal route layout regression', () => {

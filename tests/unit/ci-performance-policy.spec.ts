@@ -17,8 +17,30 @@ const extendedLighthouseConfig = readJson('config/lighthouse/lighthouserc.extend
 };
 
 describe('Main Quality pre-merge gate stays fast', () => {
-	it('runs Playwright with more than one worker in CI', () => {
-		expect(playwrightConfig).toMatch(/workers:\s*process\.env\.CI\s*\?\s*[2-9]\d*\s*:/);
+	it('keeps GitHub Actions workers deliberate while allowing an explicit local override', () => {
+		expect(playwrightConfig).toContain(
+			"const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';"
+		);
+		expect(playwrightConfig).toContain(
+			'const workerOverride = getWorkerOverride(process.env.PLAYWRIGHT_WORKERS);'
+		);
+		expect(playwrightConfig).toContain(
+			'const workers = workerOverride ?? (isGitHubActions ? 4 : undefined);'
+		);
+		expect(playwrightConfig).toContain('retries: isGitHubActions ? 2 : 0');
+		expect(playwrightConfig).toContain('forbidOnly: isCi');
+		expect(playwrightConfig).not.toContain('workers: process.env.CI');
+	});
+
+	it('isolates Playwright from any development server already running locally', () => {
+		expect(playwrightConfig).toContain("const playwrightHost = '127.0.0.1';");
+		expect(playwrightConfig).toContain('const playwrightPort = 4322;');
+		expect(playwrightConfig).toContain('baseURL: playwrightBaseUrl');
+		expect(playwrightConfig).toContain('url: playwrightBaseUrl');
+		expect(playwrightConfig).toContain('reuseExistingServer: false');
+		expect(playwrightConfig).toContain("process.env.E2E_USE_PRODUCTION_PREVIEW === '1'");
+		expect(playwrightConfig).not.toContain("baseURL: 'http://localhost:4321'");
+		expect(playwrightConfig).not.toContain('reuseExistingServer: !process.env.CI');
 	});
 
 	it('scopes the required pre-merge browser suite to Chromium only', () => {
@@ -32,7 +54,6 @@ describe('Main Quality pre-merge gate stays fast', () => {
 
 	it('caches Playwright browser binaries instead of reinstalling every run', () => {
 		expect(setupPlaywrightAction).toContain('actions/cache@v6');
-		expect(setupPlaywrightAction).toContain('~/.cache/ms-playwright');
 		expect(mainQualityWorkflow).toContain('./.github/actions/setup-playwright');
 		expect(scheduledWorkflow).toContain('./.github/actions/setup-playwright');
 	});

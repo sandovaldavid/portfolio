@@ -1,0 +1,54 @@
+---
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+	title: string;
+	src: string;
+	caption?: string;
+	poster?: string | ImageMetadata;
+	kind?: 'file' | 'embed';
+}
+
+const { title, src, caption, poster, kind = 'file' } = Astro.props;
+const posterSrc = typeof poster === 'string' ? poster : poster?.src;
+---
+
+<figure class="w-full" data-project-video>
+	<div
+		class="overflow-hidden border-2 border-edge-strong bg-channel-surface-default shadow-retro-md"
+	>
+		{
+			kind === 'embed' ? (
+				<div class="aspect-video w-full">
+					<iframe
+						src={src}
+						title={title}
+						class="size-full border-0"
+						loading="lazy"
+						referrerpolicy="strict-origin-when-cross-origin"
+						allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+						allowfullscreen
+					/>
+				</div>
+			) : (
+				<video
+					class="aspect-video w-full bg-channel-background-canvas object-contain"
+					controls
+					playsinline
+					preload="metadata"
+					poster={posterSrc}
+					aria-label={title}
+				>
+					<source src={src} />
+				</video>
+			)
+		}
+	</div>
+	{
+		caption && (
+			<figcaption class="mt-3 text-caption text-content-muted">
+				<span class="font-bold text-content-strong">{title}.</span> {caption}
+			</figcaption>
+		)
+	}
+</figure>

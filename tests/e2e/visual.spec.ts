@@ -1,7 +1,12 @@
 import { test, expect } from './fixtures';
 import type { Page } from '@playwright/test';
 
-const skipVisualInCi = !!process.env.CI && process.env.RUN_VISUAL_TESTS !== 'true';
+const visualBaselineEnabled = process.env.RUN_VISUAL_TESTS === 'true';
+
+test.skip(
+	!visualBaselineEnabled,
+	'Visual regressions are an explicit pinned-baseline gate; set RUN_VISUAL_TESTS=true.'
+);
 
 /**
  * Prepares the page for visual regression testing by:
@@ -64,27 +69,30 @@ async function preparePage(page: Page, path: string, options: { hideHeader?: boo
 	await page.waitForTimeout(300);
 }
 
-test.describe('Visual regression — Hero section', () => {
-	test.skip(skipVisualInCi, 'Visual regressions run only in scheduled/manual CI');
+async function expectMainPageSnapshot(page: Page, path: string, snapshot: string) {
+	await preparePage(page, path);
+	const main = page.locator('main#main-content');
+	await expect(main).toBeVisible();
+	await expect(main).toHaveScreenshot(snapshot, { maxDiffPixelRatio: 0.05 });
+}
 
+test.describe('Visual regression — Hero section', () => {
 	test('homepage hero should match baseline (EN dark)', async ({ page }) => {
 		await preparePage(page, '/');
-		const hero = page.locator('.hero-gradient').first();
+		const hero = page.locator('#hero');
 		await expect(hero).toBeVisible();
 		await expect(hero).toHaveScreenshot('hero-en-dark.png', { maxDiffPixelRatio: 0.05 });
 	});
 
 	test('homepage hero should render correctly in ES', async ({ page }) => {
 		await preparePage(page, '/es/');
-		const hero = page.locator('.hero-gradient').first();
+		const hero = page.locator('#hero');
 		await expect(hero).toBeVisible();
 		await expect(hero).toHaveScreenshot('hero-es-dark.png', { maxDiffPixelRatio: 0.05 });
 	});
 });
 
 test.describe('Visual regression — Navigation & Main sections', () => {
-	test.skip(skipVisualInCi, 'Visual regressions run only in scheduled/manual CI');
-
 	test('header navbar should match baseline', async ({ page }) => {
 		await preparePage(page, '/', { hideHeader: false });
 		const header = page.locator('header').first();
@@ -115,4 +123,18 @@ test.describe('Visual regression — Navigation & Main sections', () => {
 		await expect(footer).toBeVisible();
 		await expect(footer).toHaveScreenshot('footer.png', { maxDiffPixelRatio: 0.05 });
 	});
+});
+
+test.describe('Visual regression — Standalone v2 pages', () => {
+	for (const { path, snapshot } of [
+		{ path: '/about', snapshot: 'about-page-en-dark.png' },
+		{ path: '/es/about', snapshot: 'about-page-es-dark.png' },
+		{ path: '/skills', snapshot: 'skills-page-en-dark.png' },
+		{ path: '/components', snapshot: 'components-page-en-dark.png' },
+		{ path: '/route-probe-404', snapshot: '404-page-en-dark.png' },
+	] as const) {
+		test(`${path} main content should match the v2 baseline`, async ({ page }) => {
+			await expectMainPageSnapshot(page, path, snapshot);
+		});
+	}
 });

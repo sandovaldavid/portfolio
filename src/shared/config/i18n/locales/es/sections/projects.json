@@ -1,19 +1,12 @@
 {
-	"sectionTitle": "Proyectos",
+	"sectionTitle": "PROYECTOS DESTACADOS",
 	"codeButton": "Código",
 	"previewButton": "Vista previa",
+	"source": "Código fuente",
 	"viewAll": "Ver todos los proyectos",
-	"cardFeature": "Destacado",
-	"cardProject": "Proyecto",
 	"caseStudy": "Caso de estudio",
-	"caseStudyBanner": "BATALLA FINAL // CASO DE ESTUDIO",
-	"back": "[ VOLVER A PROYECTOS ]",
-	"problem": "EL JEFE // PROBLEMA",
-	"approach": "LA ESTRATEGIA // ENFOQUE",
-	"tradeoffs": "EL SACRIFICIO // COMPENSACIONES",
-	"outcome": "VICTORIA // RESULTADO",
-	"learnings": "XP GANADA // APRENDIZAJES",
-	"timeline": "DURACIÓN",
+	"back": "Volver a proyectos",
+	"timeline": "Duración",
 	"role": "ROL",
 	"catalogTitle": "Catálogo de Proyectos - David Sandoval",
 	"catalogDescription": "Explora todos los proyectos desarrollados por David Sandoval: aplicaciones web y móviles escalables.",
@@ -24,16 +17,5 @@
 		"experimental": "Experimental",
 		"archived": "Archivado",
 		"deprecated": "Obsoleto"
-	},
-	"sourceAccess": {
-		"public": "Código público",
-		"private": "Código privado"
-	},
-	"demoAccess": {
-		"live": "Demo en vivo",
-		"preview": "Vista previa",
-		"video": "Demo en video",
-		"screenshots": "Capturas de pantalla",
-		"unavailable": "Sin demo pública"
 	}
 }

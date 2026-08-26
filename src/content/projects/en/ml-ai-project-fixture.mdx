@@ -1,0 +1,126 @@
+---
+projectId: ml-ai-project-fixture
+locale: en
+title: ML / AI Experiment Fixture
+description: 'Development-only machine-learning case study used to review a research-oriented Project Detail with pipeline, experiments, metrics, plots and limitations.'
+category: 'Internal ML / AI Fixture'
+imageAlt: 'Development-only ML and AI Project Detail fixture preview'
+caseStudy:
+    kicker: 'INTERNAL FIXTURE · MACHINE LEARNING / AI'
+    status:
+        lifecycle: 'DEVELOPMENT ONLY'
+        source: 'PUBLIC TEST SOURCE'
+        demo: 'PLOT FIXTURE'
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection
+	eyebrow="DEVELOPMENT FIXTURE"
+	title="A research-oriented case study for ML and AI work"
+>
+	This is **not a real portfolio project**. Its composition privileges research question, dataset,
+	pipeline, evaluation and limitations instead of product-feature cards.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="RESEARCH QUESTION"
+	title="Can temporal signals predict a future repository state?"
+>
+	The fixture models a supervised time-series experiment. The important narrative is not a UI
+	surface but how raw observations become features, how experiments are compared and what the
+	reported metrics do **not** prove.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="PIPELINE"
+	title="Data preparation and evaluation are explicit system stages"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="ML fixture experiment pipeline"
+		description="Raw observations are cleaned, transformed into temporal windows, split before training, evaluated and then compared with baselines."
+		tones={{
+			Raw: 'brand',
+			Clean: 'info',
+			Features: 'secondary',
+			Split: 'warning',
+			Train: 'success',
+			Evaluate: 'danger',
+			Baseline: 'info',
+		}}
+		chart={`flowchart TD
+      Raw["Raw observations"] --> Clean["Cleaning + normalization"]
+      Clean --> Features["Temporal features"]
+      Features --> Split["Train · validation · test"]
+      Split --> Train["Model training"]
+      Train --> Evaluate["Evaluation"]
+      Split --> Baseline["Baseline models"]
+      Baseline --> Evaluate`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="EXPERIMENT DESIGN"
+	title="Method and evaluation belong before headline results"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="DATA" title="SPLIT BEFORE FITTING" tone="primary">
+			The fixture reserves a dedicated block for leakage boundaries, sampling strategy and
+			dataset limitations.
+		</CaseStudyCard>
+		<CaseStudyCard label="MODEL" title="ARCHITECTURE IS ONE VARIABLE" tone="primary">
+			Hyperparameters and model family are presented as experiment choices rather than as
+			evidence by themselves.
+		</CaseStudyCard>
+		<CaseStudyCard label="BASELINES" title="RESULTS NEED A REFERENCE POINT" tone="primary">
+			Comparative baselines give metrics context and make the page read like engineering
+			research instead of marketing copy.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="RESULTS"
+	title="Plots can be inspected without forcing every result into HTML cards"
+	surface="highlight"
+>
+	<ProjectGallery
+		label="ML fixture result plots"
+		columns={2}
+		items={[
+			{
+				src: fixtureOverview,
+				alt: 'Placeholder training curve for the ML fixture',
+				caption: 'Placeholder for training and validation curves.',
+			},
+			{
+				src: fixtureDetail,
+				alt: 'Placeholder model comparison chart for the ML fixture',
+				caption: 'Placeholder for model and baseline comparison.',
+			},
+		]}
+	/>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVALUATION" title="Metrics and limitations are paired">
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="FIXTURE METRICS"
+			title="AUC · F1 · PRECISION · RECALL"
+			tone="verified"
+		>
+			A real project can place current verified metrics here and expand them over time with
+			plots, tables and experiment notes in MDX.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="LIMITATION"
+			title="A METRIC IS NOT A DEPLOYMENT CLAIM"
+			tone="boundary"
+		>
+			This fixture deliberately keeps dataset validity, generalization and production
+			readiness separate from model scores.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

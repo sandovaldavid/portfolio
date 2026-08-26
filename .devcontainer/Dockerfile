@@ -6,7 +6,7 @@ ARG DEVCONTAINER_UID=1000
 ARG DEVCONTAINER_GID=1000
 
 LABEL org.opencontainers.image.source="https://github.com/sandovaldavid/portfolio"
-LABEL org.opencontainers.image.description="Reproducible development container for Portfolio V1"
+LABEL org.opencontainers.image.description="Reproducible development container for Portfolio"
 LABEL org.opencontainers.image.licenses="MIT"
 
 ENV DEBIAN_FRONTEND=noninteractive

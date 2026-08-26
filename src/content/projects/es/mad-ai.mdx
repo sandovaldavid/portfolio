@@ -1,0 +1,128 @@
+---
+projectId: mad-ai
+locale: es
+title: MAD AI
+description: 'Un cliente administrativo en Angular 20 con SSR y capas explícitas de dominio/aplicación/infraestructura/presentación, acompañado por una API REST privada en Django 5.2 mantenida por separado.'
+category: 'Arquitectura Full-Stack'
+imageAlt: 'Vista previa del cliente administrativo MAD AI y su arquitectura en capas'
+caseStudy:
+    kicker: 'CASO DE ESTUDIO · ARQUITECTURA FULL-STACK'
+    status:
+        lifecycle: 'MANTENIDO · ANGULAR 20 + DJANGO 5.2'
+        source: 'CLIENTE PÚBLICO · API PRIVADA'
+        demo: 'SIN DEMO PÚBLICA'
+---
+
+<CaseStudySection
+	eyebrow="LÍMITE DE EVIDENCIA"
+	title="El cliente es público; la API compañera es privada"
+>
+	El repositorio público `MAD-AI` expone la aplicación Angular, la entrada SSR, la arquitectura
+	cliente por capas y sus adaptadores HTTP. Un repositorio separado `MAD-AI-API` contiene el
+	servicio Django REST, pero ese repositorio es privado. Este caso de estudio usa el backend
+	privado como contexto verificable por el propietario y mantiene el badge de código público
+	enlazado sólo al frontend que un reclutador puede inspeccionar de forma independiente.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="Los flujos administrativos acumulan responsabilidades transversales rápidamente"
+>
+	Autenticación, navegación protegida, administración de usuarios, roles, notificaciones y
+	reporting necesitan comportamiento compartido sin convertir los componentes en clientes de
+	transporte. El proyecto separa estas responsabilidades en ambos extremos: un cliente Angular con
+	capas explícitas y un servicio Django REST con sus propios límites de aplicación, dominio e
+	infraestructura.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Dos repositorios, dos límites arquitectónicos independientes"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Límite actual del sistema MAD AI"
+		description="El cliente público Angular 20 renderiza en navegador o SSR y consume una API REST privada en Django 5.2. El backend usa adaptadores DRF/JWT y soporte PostgreSQL; Celery está presente para trabajo asíncrono."
+		chart={`flowchart LR
+      Browser["Navegador"] --> Angular["Cliente Angular 20\nrutas + presentación"]
+      SSR["Angular SSR\nExpress 5"] --> Angular
+      Angular --> App["Contratos de aplicación + dominio"]
+      App --> Infra["Infraestructura\nrepositorios HTTP"]
+      Infra --> API["API privada Django 5.2\nDRF + JWT"]
+      API --> Service["Capa de aplicación / servicios"]
+      Service --> DB["PostgreSQL\nDjango ORM"]
+      Service -. asíncrono .-> Celery["Tareas Celery"]`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="FRONTEND" title="Los nombres de las capas corresponden a límites reales de Angular">
+  <CaseStudyGrid columns={2}>
+    <CaseStudyCard label="DOMINIO" title="CONTRATOS ANTES QUE TRANSPORTE" tone="primary">
+      Entidades y abstracciones de repositorio definen lo que autenticación, usuarios, roles y notificaciones necesitan sin incrustar detalles de endpoints en componentes enrutados.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APLICACIÓN" title="LOS CASOS DE USO COORDINAN LA INTENCIÓN" tone="primary">
+      La aplicación se ubica entre presentación e infraestructura para que los flujos UI expresen acciones mediante casos de uso en vez de acoplar cada componente a la mecánica HTTP.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="INFRAESTRUCTURA" title="LOS REPOSITORIOS HTTP ADAPTAN LA API" tone="primary">
+      Implementaciones concretas de autenticación, notificaciones, roles y usuarios encapsulan DTOs e interacción con la API detrás de contratos de repositorio. El environment apunta esos adaptadores a `/api/v1`.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="PRESENTACIÓN" title="LAS RUTAS SEPARAN ÁREAS PÚBLICAS Y PROTEGIDAS" tone="primary">
+      Las rutas de autenticación usan su propio layout; dashboard y administración de usuarios viven detrás de `AuthGuard` dentro del shell protegido. Angular SSR y Express proporcionan la entrada renderizada en servidor.
+    </CaseStudyCard>
+
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="BACKEND" title="La API privada usa una arquitectura Django modular y pragmática" surface="highlight">
+  El manifest del backend fija **Django 5.2.3** y **Django REST Framework 3.16.0**, con JWT/cryptography, PostgreSQL mediante `psycopg2`, filtering, tooling OpenAPI y Celery. Su documento de arquitectura describe un enfoque híbrido modular que combina service layer, modelos Django centrados en dominio y ports/adapters en lugar de forzar un dominio agnóstico que duplique el ORM.
+
+Como el repositorio es privado, estos datos no se presentan como evidencia pública inspeccionable de forma independiente. Explican la arquitectura que construí y mantengo; el cliente público sigue siendo la superficie que un revisor externo sí puede verificar.
+
+</CaseStudySection>
+
+<CaseStudySection eyebrow="REPORTING" title="El cliente posee visualización y exportación">
+	El manifest Angular incluye ECharts, jsPDF y PapaParse. Mantener charting y exportación en el
+	cliente permite convertir respuestas de API en visualizaciones interactivas y representaciones
+	descargables sin devolver preocupaciones de presentación al servicio REST.
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
+  <CaseStudyGrid columns={2}>
+    <EvidenceBlock label="VERIFICABLE PÚBLICAMENTE" title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4" tone="verified">
+      El manifest y código frontend públicos exponen Angular 20, Angular SSR, Express 5, RxJS, Tailwind CSS 4, rutas protegidas, directorios explícitos `domain`, `application`, `infrastructure` y `presentation`, e implementaciones concretas de repositorios HTTP.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="VERIFICADO POR EL PROPIETARIO / PRIVADO" title="DJANGO 5.2 · DRF 3.16 · JWT · POSTGRESQL · CELERY" tone="verified">
+      El manifest y documentación arquitectónica de la API compañera respaldan estas tecnologías y límites, pero el repositorio es privado. El portfolio no expone un enlace de código backend ni implica que un revisor externo pueda reproducir esa evidencia.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="LÍMITE" title="SIN CLAIM DE WEBSOCKET NI READINESS DE PRODUCCIÓN" tone="boundary">
+      Copy antiguo del portfolio describía Django Channels/WebSockets y un despliegue listo para producción. Los requirements actuales no incluyen Channels y no existe evidencia pública de despliegue, así que esos claims se eliminan deliberadamente.
+    </EvidenceBlock>
+
+    <EvidenceBlock label="LÍMITE" title="SIN MÉTRICAS DE ADOPCIÓN O IMPACTO DE CLIENTE" tone="boundary">
+      Este caso de estudio explica implementación y decisiones arquitectónicas. No afirma adopción externa, uso por clientes, carga productiva ni impacto comercial que los repositorios no respalden.
+    </EvidenceBlock>
+
+  </CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="APRENDIZAJES" title="Qué reforzó el diseño en dos repositorios" surface="highlight">
+  <CaseStudyGrid columns={3}>
+    <CaseStudyCard label="APRENDIZAJE 01" title="LA ARQUITECTURA CLIENTE TAMBIÉN PUEDE TENER LÍMITES REALES" tone="success">
+      Un frontend puede separar intención de dominio de adaptadores HTTP en lugar de tratar cada componente como un wrapper directo de un endpoint.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APRENDIZAJE 02" title="LÍMITES LIMPIOS Y PRAGMÁTICOS CON EL FRAMEWORK PUEDEN SER FUERTES" tone="success">
+      Los modelos Django pueden seguir siendo entidades de dominio ricas mientras servicios y puertos de repositorio protegen orquestación y adaptadores externos; Clean Architecture no exige pelear contra el framework.
+    </CaseStudyCard>
+
+    <CaseStudyCard label="APRENDIZAJE 03" title="EL NIVEL DE ACCESO FORMA PARTE DE LA CALIDAD DE EVIDENCIA" tone="success">
+      Un claim verificable por mí en un repositorio privado no equivale a evidencia que un reclutador puede inspeccionar. El case study debe expresar esa diferencia en vez de resumir ambos como “código público”.
+    </CaseStudyCard>
+
+  </CaseStudyGrid>
+</CaseStudySection>

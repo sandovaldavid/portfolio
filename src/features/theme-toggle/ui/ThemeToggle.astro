@@ -6,113 +6,104 @@ import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tTheme = createScopedUiTranslator(lang, 'theme');
-
-const THEMES = [
-	{ id: 'light', name: tTheme('light') },
-	{ id: 'dark', name: tTheme('dark') },
-	{ id: 'system', name: tTheme('system') },
-];
 ---
 
-<div class="theme-toggle relative ml-1 mr-1">
-	<button
-		class="theme-toggle-btn relative appearance-none border-none size-7 flex justify-center items-center rounded-lg hover:bg-theme-control-background-hover hover:scale-110 transition-all duration-300 p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
-		aria-label={tTheme('select')}
-	>
-		<span class="sr-only">{tTheme('select')}</span>
-		<SunIcon data-icon="light" class="theme-icon absolute size-5 transition-all text-content" />
-		<MoonIcon
-			data-icon="dark"
-			class="theme-icon hidden absolute size-5 transition-all text-content"
-		/>
-		<SystemIcon
-			data-icon="system"
-			class="theme-icon hidden absolute size-5 transition-all text-content"
-		/>
-	</button>
-
-	<div
-		class="themes-menu absolute hidden w-28 top-10 right-0 text-sm p-1.5 rounded-xl border border-theme-menu-border bg-theme-menu-background backdrop-blur-lg shadow-lg z-50 transition-all duration-200"
-	>
-		<ul class="space-y-0.5">
-			{
-				THEMES.map(theme => (
-					<li
-						data-theme={theme.id}
-						class="themes-menu-option px-3 py-2 cursor-pointer rounded-lg text-content hover:text-channel-accent-primary-hover hover:bg-theme-option-background-hover transition-all duration-200 font-medium"
-					>
-						{theme.name}
-					</li>
-				))
-			}
-		</ul>
-	</div>
-</div>
+<!--
+	Portfolio / Theme Toggle (Figma v2): one 40×40 cyclic control.
+	Current is runtime preference state, not a menu axis:
+	Light → Dark → System → Light.
+-->
+<button
+	type="button"
+	class="theme-toggle grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+	data-theme-toggle
+	data-theme-select-label={tTheme('select')}
+	data-theme-light-label={tTheme('light')}
+	data-theme-dark-label={tTheme('dark')}
+	data-theme-system-label={tTheme('system')}
+	aria-label={tTheme('select')}
+>
+	<span data-theme-icon="light" hidden><SunIcon class="size-5" aria-hidden="true" /></span>
+	<span data-theme-icon="dark" hidden><MoonIcon class="size-5" aria-hidden="true" /></span>
+	<span data-theme-icon="system" hidden><SystemIcon class="size-5" aria-hidden="true" /></span>
+</button>
 
 <script>
-	const media = window.matchMedia('(prefers-color-scheme: dark)');
+	type ThemePreference = 'light' | 'dark' | 'system';
 
-	const applyTheme = (theme: string) => {
-		const isDark = theme === 'dark' || (theme === 'system' && media.matches);
+	const THEME_STORAGE_KEY = 'theme';
+	const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];
+	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+
+	const isThemePreference = (value: string | null): value is ThemePreference =>
+		value === 'light' || value === 'dark' || value === 'system';
+
+	const getSavedTheme = (): ThemePreference => {
+		const saved = localStorage.getItem(THEME_STORAGE_KEY);
+		return isThemePreference(saved) ? saved : 'dark';
+	};
+
+	const getNextTheme = (theme: ThemePreference): ThemePreference => {
+		const index = THEME_ORDER.indexOf(theme);
+		return THEME_ORDER[(index + 1) % THEME_ORDER.length] ?? 'light';
+	};
+
+	const getThemeLabel = (button: HTMLButtonElement, theme: ThemePreference): string => {
+		if (theme === 'light') return button.dataset.themeLightLabel ?? '';
+		if (theme === 'dark') return button.dataset.themeDarkLabel ?? '';
+		return button.dataset.themeSystemLabel ?? '';
+	};
+
+	const syncThemeState = () => {
+		const theme = getSavedTheme();
+		const isDark = theme === 'dark' || (theme === 'system' && darkSchemeMedia.matches);
 		document.documentElement.classList.toggle('dark', isDark);
-		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
-			const show = (selector: string, on: boolean) => {
-				const el = root.querySelector<HTMLElement>(selector);
-				if (el) el.style.display = on ? 'block' : 'none';
-			};
-			show('[data-icon="light"]', theme === 'light');
-			show('[data-icon="dark"]', theme === 'dark');
-			show('[data-icon="system"]', theme === 'system');
+
+		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
+			button.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(icon => {
+				icon.hidden = icon.dataset.themeIcon !== theme;
+			});
+
+			const nextTheme = getNextTheme(theme);
+			const selectLabel = button.dataset.themeSelectLabel ?? '';
+			button.setAttribute(
+				'aria-label',
+				`${selectLabel}: ${getThemeLabel(button, theme)} → ${getThemeLabel(button, nextTheme)}`
+			);
+			button.dataset.themeCurrent = theme;
 		});
 	};
 
 	const setupThemeToggles = () => {
-		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
-			if (root.dataset.themeReady === 'true') return;
-			root.dataset.themeReady = 'true';
+		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
+			if (button.dataset.themeReady === 'true') return;
+			button.dataset.themeReady = 'true';
 
-			const btn = root.querySelector<HTMLButtonElement>('.theme-toggle-btn');
-			const menu = root.querySelector<HTMLDivElement>('.themes-menu');
-			const opts = root.querySelectorAll<HTMLLIElement>('.themes-menu-option');
-			if (!btn || !menu) {
-				console.error('Required elements not found in theme toggle');
-				return;
-			}
-
-			const toggleMenu = (event: Event) => {
-				event.stopPropagation();
-				event.preventDefault();
-				menu.classList.toggle('hidden');
-			};
-			btn.addEventListener('click', toggleMenu);
-			btn.addEventListener('touchend', toggleMenu);
-
-			opts.forEach(opt => {
-				opt.addEventListener('click', () => {
-					const theme = opt.getAttribute('data-theme');
-					if (!theme) return;
-					localStorage.setItem('theme', theme);
-					applyTheme(theme);
-					menu.classList.add('hidden');
-				});
+			button.addEventListener('click', () => {
+				const nextTheme = getNextTheme(getSavedTheme());
+				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+				syncThemeState();
 			});
 		});
 
-		applyTheme(localStorage.getItem('theme') || 'dark');
+		syncThemeState();
 	};
 
-	media.addEventListener('change', () => {
-		if ((localStorage.getItem('theme') || 'dark') === 'system') applyTheme('system');
-	});
-	document.addEventListener('click', (event: MouseEvent) => {
-		const target = event.target as Node;
-		document.querySelectorAll<HTMLElement>('.theme-toggle').forEach(root => {
-			const menu = root.querySelector<HTMLDivElement>('.themes-menu');
-			if (menu && !menu.classList.contains('hidden') && !root.contains(target)) {
-				menu.classList.add('hidden');
-			}
+	if (document.documentElement.dataset.themeSchemeListener !== 'ready') {
+		document.documentElement.dataset.themeSchemeListener = 'ready';
+		darkSchemeMedia.addEventListener('change', () => {
+			if (getSavedTheme() === 'system') syncThemeState();
 		});
-	});
+	}
 
+	setupThemeToggles();
 	document.addEventListener('astro:page-load', setupThemeToggles);
 </script>
+
+<style>
+	@media (prefers-reduced-motion: reduce) {
+		.theme-toggle {
+			transition: none;
+		}
+	}
+</style>

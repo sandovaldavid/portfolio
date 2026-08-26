@@ -21,12 +21,13 @@
 	header,
 	footer,
 	nav,
-	#theme-toggle,
-	.cli-terminal,
-	.contact-sidebar,
-	.splash-screen,
-	.recruiter-hud,
-	.skip-link,
+	[data-theme-toggle],
+	#cli-terminal-root,
+	#contact-sidebar,
+	#back-to-top,
+	#splash-screen,
+	#recruiter-hud,
+	a[href='#main-content'],
 	[role='navigation'],
 	.crt-overlay {
 		display: none !important;
@@ -72,10 +73,5 @@
 		font-size: 9pt;
 		white-space: pre-wrap;
 		word-break: break-word;
-	}
-
-	.container {
-		max-width: none !important;
-		padding: 0 !important;
 	}
 }

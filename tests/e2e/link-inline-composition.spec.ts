@@ -3,15 +3,15 @@ import { test, expect } from './fixtures';
 /**
  * Regression coverage for issue #244: LinkInline used to hardcode its own
  * class list and drop every class/attribute a consumer passed, so the
- * `mb-8`/`gap-2`/`text-sm` classes on blog, devlog and project back-links
- * were silently discarded.
+ * `mb-8`/`gap-2`/`text-sm` classes on blog and devlog back-links were
+ * silently discarded. Project case studies no longer render this inline
+ * back-link composition and are covered by their own navigation contracts.
  */
 
 const BACK_LINK_CONSUMERS = [
 	{ path: '/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (EN)' },
 	{ path: '/es/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (ES)' },
 	{ path: '/devlog/v1-3-0-beta', name: 'Devlog detail (EN)' },
-	{ path: '/projects/mad-ai', name: 'Project case study (EN)' },
 ];
 
 for (const { path, name } of BACK_LINK_CONSUMERS) {

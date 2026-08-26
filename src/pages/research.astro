@@ -1,10 +1,15 @@
 ---
+import { render } from 'astro:content';
 import Layout from '@app/layouts/Layout.astro';
+import { getResearchEntry } from '@entities/research';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { ResearchContent } from '@widgets/research-content';
+import { ResearchPage, researchMdxComponents } from '@widgets/research-page';
 
 const lang = Language.ENGLISH;
 const tPage = createScopedUiTranslator(lang, 'pages.research');
+const entry = await getResearchEntry(lang);
+const research = entry.data;
+const { Content } = await render(entry);
 ---
 
 <Layout
@@ -13,5 +18,7 @@ const tPage = createScopedUiTranslator(lang, 'pages.research');
 	img_preview="/projects/portfolio.webp"
 	pageType="research"
 >
-	<ResearchContent {lang} backHref="/#research" />
+	<ResearchPage {research}>
+		<Content components={researchMdxComponents} />
+	</ResearchPage>
 </Layout>

@@ -24,19 +24,32 @@ const pairedRoutes = [
 	},
 ] as const;
 
+async function openLanguageSurface(page: import('@playwright/test').Page) {
+	const recruiterToggle = page.locator('#recruiter-hud-toggle');
+	if (await recruiterToggle.isVisible().catch(() => false)) {
+		await recruiterToggle.click();
+		const panel = page.locator('#recruiter-hud-panel');
+		await expect(panel).toBeVisible();
+		return panel;
+	}
+
+	await page.locator('#mobile-menu-btn').click();
+	const menu = page.locator('#mobile-menu');
+	await expect(menu).toBeVisible();
+	return menu;
+}
+
 test.describe('editorial translation switching', () => {
 	for (const scenario of pairedRoutes) {
 		test(`${scenario.source} exposes only the verified counterpart route`, async ({ page }) => {
 			await page.goto(scenario.source);
-			await page.locator('#recruiter-hud-toggle').click();
+			const surface = await openLanguageSurface(page);
 
-			const panel = page.locator('#recruiter-hud-panel');
-			await expect(panel).toBeVisible();
-			await expect(panel.getByRole('link', { name: scenario.targetLabel })).toHaveAttribute(
+			await expect(surface.getByRole('link', { name: scenario.targetLabel })).toHaveAttribute(
 				'href',
 				scenario.target
 			);
-			await expect(panel.locator('button:disabled')).toHaveCount(0);
+			await expect(surface.locator('button:disabled')).toHaveCount(0);
 		});
 	}
 

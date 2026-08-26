@@ -1,5 +1,5 @@
 import type { CollectionEntry } from 'astro:content';
-import type { ExperienceId } from './metadata';
+import type { ExperienceId, ExperiencePresentation, ExperienceTechnology } from './metadata';
 
 export type ExperienceContentEntry = CollectionEntry<'experience'>;
 
@@ -11,13 +11,24 @@ export interface ExperienceItem {
 	date: string;
 	title: string;
 	company: string;
+	summary: string;
 	description: string[];
-	technologies: string[];
+	technologies: ExperienceTechnology[];
+	presentation: ExperiencePresentation;
 	startDate: string;
 	endDate: string | null;
 	isCurrent: boolean;
 	featured: boolean;
+	domain?: string;
+	organizationUrl?: string;
 	link?: string;
+}
+
+export interface ExperienceDetail {
+	experience: ExperienceItem;
+	entry: ExperienceContentEntry;
+	previous?: ExperienceItem;
+	next?: ExperienceItem;
 }
 
 export type ExperienceList = ExperienceItem[];

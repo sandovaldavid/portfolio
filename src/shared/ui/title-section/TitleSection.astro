@@ -1,3 +1,25 @@
-<h2 class={`flex items-center mb-12 text-4xl gap-x-3 text-content-strong ${Astro.props.className}`}>
+---
+interface Props {
+	className?: string;
+	align?: 'start' | 'center';
+}
+
+const { className, align = 'start' } = Astro.props;
+---
+
+<!--
+	Section Title contract (Portfolio v2): Mobile uses the Feature Title scale
+	(28/36) with a 16px leading icon so section headings do not dominate narrow
+	viewports. Tablet/Desktop use the canonical Section Title scale (36/40)
+	with a 20px icon. The component owns no external margin; section parents own
+	vertical rhythm through gap/padding.
+-->
+<h2
+	class:list={[
+		'title-section flex items-center gap-3 text-feature-title text-content-strong [&>svg]:size-4 md:text-section-title md:[&>svg]:size-5',
+		align === 'center' ? 'justify-center text-center' : 'justify-start text-left',
+		className,
+	]}
+>
 	<slot />
 </h2>

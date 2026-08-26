@@ -1,0 +1,33 @@
+---
+interface EvaluationCriterion {
+	label: string;
+	detail: string;
+}
+
+interface Props {
+	title: string;
+	items: EvaluationCriterion[];
+}
+
+const { title, items } = Astro.props;
+---
+
+<section class="w-full max-w-210" data-evaluation-criteria>
+	<h2 class="mb-4 text-component-title text-content-strong">
+		{title}
+	</h2>
+	<ul class="divide-y divide-edge-subtle border-y border-edge-subtle">
+		{
+			items.map(item => (
+				<li class="grid min-w-0 grid-cols-[auto_minmax(0,1fr)] gap-4 py-3">
+					<span class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{item.label}
+					</span>
+					<span class="text-secondary leading-relaxed text-content-default">
+						{item.detail}
+					</span>
+				</li>
+			))
+		}
+	</ul>
+</section>

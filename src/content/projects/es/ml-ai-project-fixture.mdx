@@ -1,0 +1,127 @@
+---
+projectId: ml-ai-project-fixture
+locale: es
+title: Fixture de Experimento ML / AI
+description: 'Case study interno y exclusivo de desarrollo para revisar un Project Detail orientado a investigación con pipeline, experimentos, métricas, gráficos y limitaciones.'
+category: 'Fixture interno ML / AI'
+imageAlt: 'Vista previa del fixture de desarrollo ML y AI'
+caseStudy:
+    kicker: 'FIXTURE INTERNO · MACHINE LEARNING / AI'
+    status:
+        lifecycle: 'SOLO DESARROLLO'
+        source: 'CÓDIGO PÚBLICO DE PRUEBA'
+        demo: 'FIXTURE DE GRÁFICOS'
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection
+	eyebrow="FIXTURE DE DESARROLLO"
+	title="Un case study orientado a investigación para trabajo ML y AI"
+>
+	Este **no es un proyecto real del portfolio**. Su composición prioriza pregunta de
+	investigación, dataset, pipeline, evaluación y limitaciones en lugar de cards de funcionalidades
+	de producto.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="PREGUNTA DE INVESTIGACIÓN"
+	title="¿Las señales temporales pueden predecir un estado futuro del repositorio?"
+>
+	El fixture modela un experimento supervisado de series temporales. La narrativa importante no es
+	una UI, sino cómo observaciones crudas se convierten en features, cómo se comparan experimentos
+	y qué cosas **no** demuestran las métricas reportadas.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="PIPELINE"
+	title="Preparación de datos y evaluación son etapas explícitas del sistema"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Pipeline experimental del fixture ML"
+		description="Las observaciones crudas se limpian, se convierten en ventanas temporales, se separan antes del entrenamiento, se evalúan y se comparan con baselines."
+		tones={{
+			Raw: 'brand',
+			Clean: 'info',
+			Features: 'secondary',
+			Split: 'warning',
+			Train: 'success',
+			Evaluate: 'danger',
+			Baseline: 'info',
+		}}
+		chart={`flowchart TD
+      Raw["Observaciones crudas"] --> Clean["Limpieza + normalización"]
+      Clean --> Features["Features temporales"]
+      Features --> Split["Train · validation · test"]
+      Split --> Train["Entrenamiento del modelo"]
+      Train --> Evaluate["Evaluación"]
+      Split --> Baseline["Modelos baseline"]
+      Baseline --> Evaluate`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="DISEÑO EXPERIMENTAL"
+	title="Método y evaluación aparecen antes que resultados llamativos"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="DATOS" title="SEPARAR ANTES DE AJUSTAR" tone="primary">
+			El fixture reserva un bloque específico para leakage, estrategia de muestreo y
+			limitaciones del dataset.
+		</CaseStudyCard>
+		<CaseStudyCard label="MODELO" title="LA ARQUITECTURA ES UNA VARIABLE" tone="primary">
+			Hiperparámetros y familia del modelo se presentan como decisiones experimentales y no
+			como evidencia por sí solas.
+		</CaseStudyCard>
+		<CaseStudyCard label="BASELINES" title="LOS RESULTADOS NECESITAN REFERENCIA" tone="primary">
+			Baselines comparativos dan contexto a las métricas y hacen que la página se lea como
+			investigación de ingeniería y no como marketing.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="RESULTADOS"
+	title="Los gráficos pueden inspeccionarse sin forzar cada resultado a cards HTML"
+	surface="highlight"
+>
+	<ProjectGallery
+		label="Gráficos de resultados del fixture ML"
+		columns={2}
+		items={[
+			{
+				src: fixtureOverview,
+				alt: 'Curva de entrenamiento placeholder del fixture ML',
+				caption: 'Placeholder para curvas de entrenamiento y validación.',
+			},
+			{
+				src: fixtureDetail,
+				alt: 'Gráfico placeholder de comparación de modelos',
+				caption: 'Placeholder para comparación de modelo y baselines.',
+			},
+		]}
+	/>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="EVALUACIÓN" title="Métricas y limitaciones se presentan juntas">
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="MÉTRICAS DEL FIXTURE"
+			title="AUC · F1 · PRECISION · RECALL"
+			tone="verified"
+		>
+			Un proyecto real puede colocar aquí métricas actuales verificadas y ampliarlas con
+			gráficos, tablas y notas experimentales en MDX.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="LIMITACIÓN"
+			title="UNA MÉTRICA NO ES UN CLAIM DE DESPLIEGUE"
+			tone="boundary"
+		>
+			Este fixture mantiene deliberadamente validez del dataset, generalización y readiness
+			productivo separados de los scores del modelo.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

@@ -1,38 +1,54 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import { getProjectsData, ProjectCard } from '@entities/project';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { LinkButton } from '@shared/ui';
 
 interface Props {
 	showAll?: boolean;
+	layout?: 'home' | 'catalog';
 }
-const { showAll = false } = Astro.props;
+const { showAll = false, layout = 'home' } = Astro.props;
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const projects = await getProjectsData(lang);
 
 const projectsToDisplay = showAll
 	? projects
 	: projects.filter(project => project.featured).slice(0, 2);
+const isCatalog = layout === 'catalog';
 ---
 
-<section class="font-sans w-full">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full items-stretch">
+<div class="w-full">
+	<div
+		data-projects-layout={layout}
+		class:list={[
+			'w-full items-stretch',
+			isCatalog
+				? 'grid grid-cols-1 justify-items-center gap-y-6 md:grid-cols-[repeat(2,minmax(0,369px))] md:justify-center md:gap-x-8 lg:grid-cols-[repeat(2,minmax(0,592px))] lg:justify-between lg:gap-x-0 lg:gap-y-8'
+				: 'grid grid-cols-1 justify-center gap-8 md:grid-cols-[repeat(2,minmax(0,369px))] lg:grid-cols-[repeat(2,minmax(0,560px))] lg:gap-12',
+		]}
+	>
 		{
 			projectsToDisplay.map((project, i) => (
-				<div class="h-full">
+				<div
+					class:list={[
+						'h-full min-w-0',
+						isCatalog && 'w-full max-w-85 md:max-w-92.25 lg:max-w-148',
+					]}
+				>
 					<ProjectCard
 						project={project}
-						variant="secondary"
+						variant={isCatalog ? 'catalog' : 'secondary'}
 						headingLevel={showAll ? 'h2' : 'h3'}
-						codeButtonText={tProjects('codeButton')}
-						previewButtonText={tProjects('previewButton')}
-						cardTypeText={tProjects(project.featured ? 'cardFeature' : 'cardProject')}
-						lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
-						sourceAccessText={tProjects(`sourceAccess.${project.sourceAccess}`)}
 						caseStudyText={tProjects('caseStudy')}
 						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
+						sourceText={tProjects('source')}
+						lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
+						newTabLabel={tAccessibility('externalLink')}
 						priority={i < 2}
 					/>
 				</div>
@@ -42,14 +58,17 @@ const projectsToDisplay = showAll
 
 	{
 		!showAll && (
-			<div class="w-full flex justify-center mt-12">
-				<a
+			<div class="mt-8 flex w-full justify-center md:mt-10">
+				<LinkButton
 					href={getRelativeLocaleUrl(lang, 'projects')}
-					class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
+					target="_self"
+					variant="secondary"
+					class="w-fit"
 				>
+					<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 					{tProjects('viewAll')}
-				</a>
+				</LinkButton>
 			</div>
 		)
 	}
-</section>
+</div>

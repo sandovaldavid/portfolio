@@ -2,19 +2,59 @@
 interface Props {
 	class?: string;
 	id?: string;
+	layout?: 'contained' | 'viewport' | 'compact';
+	surface?: 'canvas' | 'highlight';
 }
 
-const { class: className, id } = Astro.props;
+const { class: className, id, layout = 'contained', surface = 'canvas' } = Astro.props;
+
+/**
+ * Section composition is explicit at the call site:
+ *
+ * - contained: ordinary max-width section used by internal pages;
+ * - viewport: full-bleed surface whose title and content form one vertically
+ *   centered composition inside the usable viewport from Tablet upward;
+ * - compact: same full-bleed surface/shell without a viewport minimum. It
+ *   keeps the same title-to-content rhythm while remaining content-driven.
+ *
+ * The title/content gap is a shell contract so local call-site spacing cannot
+ * accidentally make Home sections drift apart visually.
+ *
+ * Hero and Experience own dedicated widgets because their internal layout
+ * contracts differ from the generic section shell.
+ */
+const isFullBleed = layout === 'viewport' || layout === 'compact';
+const surfaceClass =
+	surface === 'highlight' ? 'bg-channel-surface-highlight' : 'bg-channel-background-canvas';
 ---
 
-<section
-	{id}
-	class:list={[
-		'w-full max-w-5xl px-4 md:px-6 mx-auto',
-		'flex flex-col justify-center',
-		'scroll-mt-[4.5rem]',
-		className,
-	]}
->
-	<slot />
-</section>
+{
+	isFullBleed ? (
+		<section id={id} class:list={['w-full max-w-none scroll-mt-18', surfaceClass]}>
+			<div
+				data-home-section-shell
+				data-home-viewport-shell={layout === 'viewport' ? 'true' : undefined}
+				data-home-compact-shell={layout === 'compact' ? 'true' : undefined}
+				class:list={[
+					'mx-auto flex w-full max-w-360 flex-col justify-center !gap-y-10 px-5 md:!gap-y-12 md:px-8 lg:!gap-y-14 lg:px-20',
+					layout === 'viewport' && 'md:min-h-[calc(100svh-4.5rem)]',
+					className,
+				]}
+			>
+				<slot />
+			</div>
+		</section>
+	) : (
+		<section
+			{id}
+			class:list={[
+				'w-full max-w-360 px-5 md:px-8 lg:px-20 mx-auto',
+				'flex flex-col justify-center',
+				'scroll-mt-18',
+				className,
+			]}
+		>
+			<slot />
+		</section>
+	)
+}

@@ -1,69 +1,14 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { TAGS } from '@shared/config/technology';
+import { CORE_STACK } from '@shared/config/technology';
 import { TechPill } from '@shared/ui';
-
-const lang = getLanguageFromLocale(Astro.currentLocale);
-const tTechStack = createScopedUiTranslator(lang, 'sections.techStack');
-
-const coreFrontend = [
-	TAGS.TYPESCRIPT,
-	TAGS.ANGULAR,
-	TAGS.RXJS,
-	TAGS.NEXTJS,
-	TAGS.REACT,
-	TAGS.ASTRO,
-].filter(Boolean);
-
-const coreBackend = [TAGS.JAVA, TAGS.PYTHON, TAGS.DJANGO, TAGS.POSTGRESQL, TAGS.MYSQL].filter(
-	Boolean
-);
 ---
 
-<div class="font-sans w-full flex flex-col items-center gap-8 mt-2">
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-5xl">
-		<article
-			class="rounded-none bg-surface border-2 border-black dark:border-white p-6 shadow-retro-md hover:-translate-y-1 hover:shadow-retro-xl transition-all duration-100 flex flex-col gap-4"
-		>
-			<h3
-				class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 border-b-2 border-dashed border-edge-subtle pb-2"
-			>
-				[ {tTechStack('frontendTitle')} ]
-			</h3>
-			<div class="flex flex-wrap gap-2.5">
-				{
-					coreFrontend.map(tech => (
-						<TechPill label={tech.name} icon={tech.icon} variant="stack" size="sm" />
-					))
-				}
-			</div>
-		</article>
-
-		<article
-			class="rounded-none bg-surface border-2 border-black dark:border-white p-6 shadow-retro-md hover:-translate-y-1 hover:shadow-retro-xl transition-all duration-100 flex flex-col gap-4"
-		>
-			<h3
-				class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 border-b-2 border-dashed border-edge-subtle pb-2"
-			>
-				[ {tTechStack('backendTitle')} ]
-			</h3>
-			<div class="flex flex-wrap gap-2.5">
-				{
-					coreBackend.map(tech => (
-						<TechPill label={tech.name} icon={tech.icon} variant="stack" size="sm" />
-					))
-				}
-			</div>
-		</article>
-	</div>
-
-	<div class="w-full flex justify-center">
-		<a
-			href={getRelativeLocaleUrl(lang, 'skills')}
-			class="inline-flex items-center justify-center rounded-none bg-surface text-content-strong border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-retro-xs"
-		>
-			{tTechStack('viewAll')}
-		</a>
-	</div>
-</div>
+<ul class="flex w-full max-w-270 flex-wrap items-center justify-center gap-4 self-center">
+	{
+		CORE_STACK.map(({ name, icon }) => (
+			<li>
+				<TechPill label={name} icon={icon} variant="stack" size="md" />
+			</li>
+		))
+	}
+</ul>

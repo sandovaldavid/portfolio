@@ -55,6 +55,22 @@
 	--color-base-content-strong-dark: oklch(96.826% 0.00685 247.9); /* #F1F5F9 */
 	--color-base-status-success-text-light: oklch(43.18% 0.08647 166.91); /* #065F46 */
 	--color-base-status-success-text-dark: oklch(77.294% 0.15349 163.22); /* #34D399 */
+	--color-base-status-warning-text-light: oklch(47.319% 0.1247 46.2); /* #92400E */
+	--color-base-status-warning-text-dark: oklch(83.686% 0.16442 84.43); /* #FBBF24 */
+	--color-base-status-error-text-light: oklch(50.542% 0.19049 27.52); /* #B91C1C */
+	--color-base-status-error-text-dark: oklch(71.063% 0.16615 22.22); /* #F87171 */
+	--color-badge-secondary-bg-light: oklch(94.643% 0.03274 307.17); /* #F3E8FF */
+	--color-badge-secondary-text-light: oklch(43.828% 0.19833 303.72); /* #6B21A8 */
+	--color-badge-secondary-bg-dark: oklch(22.234% 0.07006 300.78); /* #211136 */
+	--color-badge-secondary-text-dark: oklch(82.676% 0.10823 306.38); /* #D8B4FE */
+	--color-badge-info-bg-light: oklch(95.626% 0.04433 203.39); /* #CFFAFE */
+	--color-badge-info-text-light: oklch(45.003% 0.07707 224.28); /* #155E75 */
+	--color-badge-info-bg-dark: oklch(23.43% 0.03333 239.51); /* #0E202C */
+	--color-badge-info-text-dark: oklch(86.507% 0.11535 207.08); /* #67E8F9 */
+	--color-badge-warning-bg-light: oklch(96.041% 0.03267 79.28); /* #FEF0DA */
+	--color-badge-warning-bg-dark: oklch(29.642% 0.04352 77.51); /* #392A12 */
+	--color-badge-danger-bg-light: oklch(95.656% 0.01849 17.48); /* #FDECEC */
+	--color-badge-danger-bg-dark: oklch(25.781% 0.0512 9.47); /* #38181E */
 	--color-retro-phosphor: oklch(87.628% 0.22779 152.55); /* #00FF88 */
 	--color-terminal-success: oklch(87.628% 0.22779 152.55); /* #00FF88 */
 
@@ -83,7 +99,6 @@
 	--color-primary-600: light-dark(var(--color-primary-600-light), var(--color-primary-600-dark));
 	--color-background: light-dark(var(--color-base-background-light), var(--color-neutral-950));
 	--color-surface: light-dark(var(--color-base-white), var(--color-base-surface-dark));
-	--color-surface-light: var(--color-base-white);
 	--color-surface-highlight: light-dark(
 		var(--color-base-surface-highlight-light),
 		var(--color-base-surface-highlight-dark)
@@ -121,6 +136,40 @@
 		var(--alpha-primary-500-10-light),
 		var(--alpha-primary-500-10-dark)
 	);
+	--color-badge-default-bg: var(--channel-surface-highlight);
+	--color-badge-default-text: var(--channel-content-strong);
+	--color-badge-secondary-bg: light-dark(
+		var(--color-badge-secondary-bg-light),
+		var(--color-badge-secondary-bg-dark)
+	);
+	--color-badge-secondary-text: light-dark(
+		var(--color-badge-secondary-text-light),
+		var(--color-badge-secondary-text-dark)
+	);
+	--color-badge-info-bg: light-dark(
+		var(--color-badge-info-bg-light),
+		var(--color-badge-info-bg-dark)
+	);
+	--color-badge-info-text: light-dark(
+		var(--color-badge-info-text-light),
+		var(--color-badge-info-text-dark)
+	);
+	--color-badge-warning-bg: light-dark(
+		var(--color-badge-warning-bg-light),
+		var(--color-badge-warning-bg-dark)
+	);
+	--color-badge-warning-text: light-dark(
+		var(--color-base-status-warning-text-light),
+		var(--color-base-status-warning-text-dark)
+	);
+	--color-badge-danger-bg: light-dark(
+		var(--color-badge-danger-bg-light),
+		var(--color-badge-danger-bg-dark)
+	);
+	--color-badge-danger-text: light-dark(
+		var(--color-base-status-error-text-light),
+		var(--color-base-status-error-text-dark)
+	);
 	--color-status-success-bg: light-dark(
 		var(--alpha-success-05-light),
 		var(--alpha-success-10-dark)
@@ -132,10 +181,6 @@
 	--color-status-success-text: light-dark(
 		var(--color-base-status-success-text-light),
 		var(--color-base-status-success-text-dark)
-	);
-	--color-hero-glow: light-dark(
-		var(--alpha-primary-500-06-light),
-		var(--alpha-primary-500-14-dark)
 	);
 	--color-terminal-primary: var(--color-primary-500-dark);
 	--color-terminal-glow: var(--alpha-primary-500-35-dark);
@@ -166,6 +211,7 @@
 	--channel-content-default: light-dark(var(--color-neutral-700), var(--color-neutral-300));
 	--channel-content-muted: light-dark(var(--color-neutral-600), var(--color-neutral-400));
 	--channel-edge-default: light-dark(var(--color-neutral-300), var(--color-neutral-800));
+	--channel-edge-strong: light-dark(var(--color-neutral-900), var(--color-neutral-300));
 	--channel-accent-primary: light-dark(
 		var(--color-primary-500-light),
 		var(--color-primary-500-dark)
@@ -174,7 +220,10 @@
 		var(--color-primary-400-light),
 		var(--color-primary-400-dark)
 	);
-	--channel-status-online: light-dark(var(--color-success-900), var(--color-retro-phosphor));
+	--channel-status-online: light-dark(
+		var(--color-base-status-success-text-light),
+		var(--color-base-status-success-text-dark)
+	);
 	--color-terminal-background: var(--color-neutral-950);
 	--color-terminal-surface: var(--color-base-surface-dark);
 	--color-terminal-content: var(--color-base-content-strong-dark);
@@ -191,6 +240,7 @@
 	--color-channel-content-default: var(--channel-content-default);
 	--color-channel-content-muted: var(--channel-content-muted);
 	--color-channel-edge-default: var(--channel-edge-default);
+	--color-channel-edge-strong: var(--channel-edge-strong);
 	--color-channel-edge-subtle: var(--color-edge-subtle);
 	--color-channel-accent-primary: var(--channel-accent-primary);
 	--color-channel-accent-primary-hover: light-dark(
@@ -200,10 +250,15 @@
 	--color-channel-accent-secondary: var(--channel-accent-secondary);
 	--color-channel-status-online: var(--channel-status-online);
 	--color-channel-status-success: var(--color-success-500);
-	--color-channel-status-warning: var(--color-warning-500);
-	--color-channel-status-error: var(--color-error-500);
-	--color-channel-overlay: color-mix(in oklch, var(--color-neutral-950) 88%, transparent);
-	--color-channel-hero-glow: var(--color-hero-glow);
+	--color-channel-status-warning: light-dark(
+		var(--color-base-status-warning-text-light),
+		var(--color-base-status-warning-text-dark)
+	);
+	--color-channel-status-error: light-dark(
+		var(--color-base-status-error-text-light),
+		var(--color-base-status-error-text-dark)
+	);
+	--color-channel-overlay: light-dark(rgb(0 0 0 / 36%), rgb(0 0 0 / 62%));
 	--color-channel-portfolio-terminal-background: var(--color-terminal-background);
 	--color-channel-portfolio-terminal-surface: var(--color-terminal-surface);
 	--color-channel-portfolio-terminal-surface-raised: var(--color-base-surface-highlight-dark);
@@ -220,24 +275,6 @@
 	--color-channel-portfolio-terminal-error: var(--color-error-500);
 	--color-channel-portfolio-terminal-warning: var(--color-warning-500);
 
-	/* Backward-compatible aliases while consumers migrate to channel roles. */
-	--color-surface-highlight-light: var(--color-base-surface-highlight-light);
-	--color-surface-highlight-dark: var(--color-base-surface-highlight-dark);
-	--color-background-light: var(--color-base-background-light);
-	--color-background-dark: var(--color-neutral-950);
-	--color-content-strong-light: var(--color-neutral-900);
-	--color-content-strong-dark: var(--color-base-content-strong-dark);
-	--color-content-light: var(--color-neutral-700);
-	--color-content-dark: var(--color-neutral-300);
-	--color-content-muted-light: var(--color-neutral-600);
-	--color-content-muted-dark: var(--color-neutral-400);
-	--color-edge-subtle-light: var(--color-neutral-300);
-	--color-edge-subtle-dark: var(--color-neutral-800);
-	--color-edge-strong-light: var(--color-neutral-900);
-	--color-edge-strong-dark: var(--color-neutral-300);
-	--color-retro-cyan: var(--color-primary-500-dark);
-	--color-retro-cyan-bright: var(--color-primary-400-dark);
-
 	/* Component roles: components encode behavior, never ramp steps. */
 	--color-button-primary-background: var(--channel-accent-primary);
 	--color-button-primary-background-hover: light-dark(
@@ -252,26 +289,13 @@
 	);
 	--color-button-secondary-content: var(--channel-content-strong);
 	--color-button-border: var(--color-edge-strong);
-	--color-button-focus: var(--channel-accent-secondary);
+	--color-button-focus: light-dark(var(--color-primary-600-light), var(--color-primary-500-dark));
 	--color-component-button-primary-bg: var(--color-button-primary-background);
 	--color-component-button-primary-text: var(--color-button-primary-content);
 	--color-component-button-border: var(--color-button-border);
 	--color-logo-content: var(--color-logo-monochrome);
 	--color-logo-primary: var(--color-logo-brackets);
 	--color-logo-primary-hover: var(--color-logo-slash-end);
-	--color-logo-effect-magenta: var(--color-error-500);
-	--color-logo-effect-cyan: var(--color-terminal-phosphor);
-	--color-theme-control-background-hover: var(--channel-surface-highlight);
-	--color-theme-menu-background: color-mix(
-		in oklch,
-		var(--channel-surface-default) 95%,
-		transparent
-	);
-	--color-theme-menu-border: color-mix(in oklch, var(--color-edge-subtle) 50%, transparent);
-	--color-theme-option-background-hover: light-dark(
-		var(--color-neutral-200),
-		var(--color-neutral-700)
-	);
 	--color-header-surface-scrolled: light-dark(
 		color-mix(in oklch, var(--color-base-background-light) 78%, transparent),
 		color-mix(in oklch, var(--color-neutral-900) 88%, transparent)
@@ -290,6 +314,8 @@
 	--shadow-retro-sm: 1.5px 1.5px 0 0 var(--color-edge-strong);
 	--shadow-retro-md: 3px 3px 0 0 var(--color-edge-strong);
 	--shadow-retro-lg: 4px 4px 0 0 var(--color-edge-strong);
+	/* Accent variant of the LG offset for surfaces that project with brand color (spec/03 Experience Detail). */
+	--shadow-retro-lg-accent: 4px 4px 0 0 var(--channel-accent-primary);
 	--shadow-retro-xl: 5px 5px 0 0 var(--color-edge-strong);
 	--shadow-retro-2xl: 6px 6px 0 0 var(--color-edge-strong);
 	--shadow-retro-3xl: 8px 8px 0 0 var(--color-edge-strong);
@@ -297,6 +323,20 @@
 	--shadow-header-scrolled:
 		0 8px 24px -6px var(--color-header-shadow-primary),
 		0 6px 12px -6px var(--color-header-shadow-secondary);
+
+	/* Pixel primitives: border weight, radius, touch target and fixed sizes. */
+	--border-pixel: 2px;
+	--radius-pixel: 0px;
+	--radius-pixel-soft: 4px;
+	--size-touch-target: 44px;
+	--size-icon-sm: 16px;
+	--size-icon-md: 24px;
+	--size-icon-lg: 32px;
+	--size-avatar-xs: 32px;
+	--size-avatar-sm: 48px;
+	--size-avatar-md: 96px;
+	--size-avatar-lg: 192px;
+	--size-avatar-xl: 256px;
 
 	/* Pixel-grid spacing scale (4px increments) */
 	--space-1: 0.25rem;
@@ -311,28 +351,6 @@
 	--space-16: 4rem;
 	--space-20: 5rem;
 	--space-24: 6rem;
-	--animate-fade-in: fade-in 0.4s ease-out forwards;
-	--animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-	@keyframes fade-in {
-		from {
-			opacity: 0;
-		}
-		to {
-			opacity: 1;
-		}
-	}
-
-	@keyframes slide-up {
-		from {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
 }
 
 :root {
@@ -346,8 +364,4 @@ body {
 	background-color: var(--channel-background-canvas);
 	color: var(--channel-content-default);
 	-webkit-font-smoothing: antialiased;
-}
-
-.hero-gradient {
-	background: radial-gradient(circle at 50% 0%, var(--color-hero-glow) 0%, transparent 50%);
 }

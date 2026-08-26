@@ -1,11 +1,13 @@
 {
-	"sectionTitle": "About me",
+	"sectionTitle": "ABOUT ME",
 	"profileTitle": "Professional profile",
-	"readMore": "Read full biography",
-	"currentTitle": "Current role @ Atena",
+	"readMore": "View biography",
+	"homeCurrentLabel": "CURRENT ROLE",
+	"homeCurrentMeta": "ATENA · FINTECH",
 	"imageAlt": "Juan David Sandoval, Software Engineer",
+	"heroKicker": "ABOUT / PROFILE",
+	"biographyLabel": "BIOGRAPHY",
 	"biographyTitle": "Full biography",
-	"profileRecord": "[ PROFILE: DAVID_S // SOFTWARE ENGINEERING ]",
-	"focusTitle": "Currently focused on",
-	"returnHome": "[ RETURN TO HOME ]"
+	"profileRecord": "[ PROFILE: sandovaldavid // SOFTWARE ENGINEERING ]",
+	"focusTitle": "Currently focused on"
 }

@@ -105,39 +105,51 @@ test.describe('deduplicated legacy page pairs', () => {
 	for (const scenario of [
 		{
 			route: '/atena',
+			canonicalRoute: '/experience/atena-software-engineer',
 			locale: 'en',
-			heading: 'Mission details: Atena',
-			forbiddenHeading: 'Detalles de misión: Atena',
 		},
 		{
 			route: '/es/atena',
+			canonicalRoute: '/es/experience/atena-software-engineer',
 			locale: 'es',
-			heading: 'Detalles de misión: Atena',
-			forbiddenHeading: 'Mission details: Atena',
 		},
+	] as const) {
+		test(`${scenario.route} redirects to its canonical localized career route`, async ({
+			page,
+		}) => {
+			const response = await page.goto(scenario.route);
+			expect(response?.ok()).toBe(true);
+			await expect(page).toHaveURL(new RegExp(`${scenario.canonicalRoute}/?$`));
+			await expect(page.locator('html')).toHaveAttribute('lang', scenario.locale);
+			await expect(page.locator('main')).toHaveCount(1);
+			await expect(page.getByRole('heading', { level: 1, name: 'Atena' })).toBeVisible();
+		});
+	}
+
+	for (const scenario of [
 		{
 			route: '/skills',
 			locale: 'en',
-			heading: 'Skills inventory',
-			forbiddenHeading: 'Inventario de habilidades',
+			heading: 'Skills',
+			forbiddenHeading: 'Habilidades',
 		},
 		{
 			route: '/es/skills',
 			locale: 'es',
-			heading: 'Inventario de habilidades',
-			forbiddenHeading: 'Skills inventory',
+			heading: 'Habilidades',
+			forbiddenHeading: 'Skills',
 		},
 		{
 			route: '/components',
 			locale: 'en',
-			heading: 'UI components showcase',
-			forbiddenHeading: 'Muestra de componentes UI',
+			heading: 'Components Showcase',
+			forbiddenHeading: 'Catálogo de Componentes',
 		},
 		{
 			route: '/es/components',
 			locale: 'es',
-			heading: 'Muestra de componentes UI',
-			forbiddenHeading: 'UI components showcase',
+			heading: 'Catálogo de Componentes',
+			forbiddenHeading: 'Components Showcase',
 		},
 	] as const) {
 		test(`${scenario.route} renders only its canonical localized presentation`, async ({

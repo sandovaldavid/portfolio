@@ -1,0 +1,129 @@
+---
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import {
+	ExperienceTechnologyPill,
+	type ExperienceItem as ExperienceItemData,
+} from '@entities/experience';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { LinkButton } from '@shared/ui';
+
+type Props = Pick<
+	ExperienceItemData,
+	| 'experienceId'
+	| 'title'
+	| 'date'
+	| 'description'
+	| 'technologies'
+	| 'company'
+	| 'isCurrent'
+	| 'domain'
+>;
+
+const { experienceId, title, date, description, technologies, company, isCurrent, domain } =
+	Astro.props;
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tExperience = createScopedUiTranslator(lang, 'sections.experience');
+const roleUrl = getRelativeLocaleUrl(lang, `experience/${experienceId}`);
+const visibleTechnologies = technologies.slice(0, 4);
+const visibleAchievements = description.slice(0, 4);
+const companyContext = domain ? `${company.toUpperCase()} · ${domain}` : company.toUpperCase();
+---
+
+<div
+	data-experience-detail
+	class="flex h-full min-h-100 w-full min-w-0 flex-col border-2 border-edge-strong bg-channel-surface-default p-5 md:min-h-104 md:p-6 lg:min-h-110 lg:p-8"
+>
+	<header
+		data-experience-detail-header
+		class="grid min-w-0 grid-cols-1 gap-4 md:grid-cols-[minmax(0,1fr)_auto] md:items-start md:gap-8"
+	>
+		<div class="min-w-0">
+			<h3 class="max-w-180 uppercase text-component-title text-content-strong">
+				{title}
+			</h3>
+			<p class="mt-2 text-editorial-label uppercase text-channel-accent-primary">
+				{companyContext}
+			</p>
+		</div>
+
+		<div
+			class="flex min-h-9 w-fit items-center gap-2 border border-edge-subtle bg-channel-surface-highlight px-3 py-2 md:justify-self-end"
+		>
+			{isCurrent && <span class="size-2 bg-channel-status-online" aria-hidden="true" />}
+			<p class="font-mono text-caption uppercase text-channel-status-online">{date}</p>
+		</div>
+	</header>
+
+	<ul
+		data-experience-achievements
+		class="mt-6 grid min-w-0 grid-cols-1 content-start gap-x-8 gap-y-5 md:mt-7 lg:grid-cols-2 lg:gap-y-6"
+	>
+		{
+			visibleAchievements.map((point, index) => {
+				const isLastOdd =
+					visibleAchievements.length % 2 === 1 &&
+					index === visibleAchievements.length - 1;
+				const itemNumber = String(index + 1).padStart(2, '0');
+
+				return (
+					<li
+						data-experience-achievement
+						class:list={['min-w-0 py-1', isLastOdd && 'lg:col-span-2']}
+					>
+						<div
+							class:list={[
+								'flex min-w-0 items-start gap-3',
+								isLastOdd && 'lg:max-w-180',
+							]}
+						>
+							<div class="flex shrink-0 items-center gap-2 pt-0.5">
+								<span class="font-mono text-caption text-channel-accent-primary">
+									{itemNumber}
+								</span>
+								<ArrowRightIcon
+									class="size-4 text-channel-accent-primary"
+									aria-hidden="true"
+									focusable="false"
+								/>
+							</div>
+							<span class="min-w-0 flex-1 text-secondary text-content-default md:text-body">
+								{point}
+							</span>
+						</div>
+					</li>
+				);
+			})
+		}
+	</ul>
+
+	<footer
+		data-experience-detail-footer
+		class="mt-auto flex flex-col items-start gap-4 border-t border-edge-subtle pt-5 md:mt-6 md:flex-row md:items-end md:justify-between md:gap-6 lg:pt-6"
+	>
+		{
+			visibleTechnologies.length > 0 && (
+				<ul
+					data-experience-technologies
+					class="flex w-full flex-wrap justify-center gap-2 md:w-auto md:justify-start"
+				>
+					{visibleTechnologies.map(technology => (
+						<li data-experience-technology-kind={technology.kind}>
+							<ExperienceTechnologyPill technology={technology} size="sm" />
+						</li>
+					))}
+				</ul>
+			)
+		}
+
+		<LinkButton
+			href={roleUrl}
+			target="_self"
+			variant={isCurrent ? 'primary' : 'secondary'}
+			class="w-fit shrink-0"
+		>
+			{isCurrent ? tExperience('viewCurrentRole') : tExperience('viewRole')}
+			<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
+		</LinkButton>
+	</footer>
+</div>

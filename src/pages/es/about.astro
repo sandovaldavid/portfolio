@@ -1,11 +1,12 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
 import { getPortfolioProfile } from '@entities/profile';
-import { Language } from '@shared/config/i18n';
+import { createScopedUiTranslator, Language } from '@shared/config/i18n';
 import { AboutContent } from '@widgets/about-content';
 
 const lang = Language.SPANISH;
 const profile = await getPortfolioProfile(lang);
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 ---
 
 <Layout
@@ -13,6 +14,12 @@ const profile = await getPortfolioProfile(lang);
 	description={profile.data.seo.description}
 	img_preview="/projects/portfolio.webp"
 	pageType="profile"
+	contentLayout="flush"
 >
-	<AboutContent {lang} profile={profile.data} />
+	<AboutContent
+		{lang}
+		profile={profile.data}
+		portraitSrc="/profile/perfil.webp"
+		portraitAlt={tAccessibility('profileImageAlt')}
+	/>
 </Layout>

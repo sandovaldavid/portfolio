@@ -1,7 +1,9 @@
 {
 	"label": "Devlog",
-	"heading": "Patch notes",
-	"subheading": "Development log tracking changes, decisions and progress across portfolio iterations.",
+	"introKicker": "VERSIONED PROJECT HISTORY",
+	"introTitle": "Devlog",
+	"introBody": "Release-oriented records that separate completed changes, validation and remaining work.",
+	"gridSectionLabel": "Devlog grid",
 	"pageTitle": "Devlog — Patch Notes | David Sandoval",
 	"pageDescription": "Development log tracking portfolio iterations, technical decisions and progress.",
 	"readMore": "Read patch notes",

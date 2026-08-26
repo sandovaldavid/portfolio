@@ -31,7 +31,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'Inter',
 			cssVariable: '--font-sans',
-			display: 'optional',
+			display: 'swap',
 			fallbacks: ['system-ui', 'sans-serif'],
 			options: {
 				variants: [
@@ -125,7 +125,7 @@ export default defineConfig({
 			provider: fontProviders.local(),
 			name: 'JetBrains Mono',
 			cssVariable: '--font-mono',
-			display: 'optional',
+			display: 'swap',
 			fallbacks: ['monospace'],
 			options: {
 				variants: [

@@ -1,9 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Yukidoke flagship case study', () => {
-	test('is one of the first two featured projects on the English homepage', async ({ page }) => {
+	test('is the first featured project on the English homepage', async ({ page }) => {
 		await page.goto('/');
-
 		await expect(page.getByRole('heading', { name: 'Yukidoke' })).toBeVisible();
 		await expect(page.getByRole('link', { name: 'Case Study' }).first()).toHaveAttribute(
 			'href',
@@ -14,41 +13,58 @@ test.describe('Yukidoke flagship case study', () => {
 	for (const locale of [
 		{
 			path: '/projects/yukidoke',
-			status: 'V1 beta — active architecture migration',
-			implemented: 'IMPLEMENTED // VERIFIED IN REPOSITORY DOCUMENTATION',
-			planned: 'PLANNED // NOT PRESENTED AS SHIPPED',
-			limitations: 'ACCESS AND EVIDENCE LIMITATIONS',
-			client: 'Angular 22 SPA',
-			api: '.NET 10 Minimal API',
+			lifecycle: 'Active',
+			source: 'Private source',
+			problem: 'Shared household money still contains private information',
+			system: 'Presentation is separated from financial authority',
+			implementation: 'What the V1 beta demonstrates today',
+			privacy: 'Resource existence is part of the authorization model',
+			boundary: 'What this case study does not claim',
+			learning: 'Engineering lessons from the household boundary',
 		},
 		{
 			path: '/es/projects/yukidoke',
-			status: 'Beta V1 — migración arquitectónica activa',
-			implemented: 'IMPLEMENTADO // VERIFICADO EN LA DOCUMENTACIÓN DE LOS REPOSITORIOS',
-			planned: 'PLANIFICADO // NO PRESENTADO COMO ENTREGADO',
-			limitations: 'LIMITACIONES DE ACCESO Y EVIDENCIA',
-			client: 'SPA Angular 22',
-			api: 'Minimal API .NET 10',
+			lifecycle: 'Activo',
+			source: 'Código privado',
+			problem: 'El dinero compartido del hogar todavía contiene información privada',
+			system: 'La presentación está separada de la autoridad financiera',
+			implementation: 'Qué demuestra hoy la beta V1',
+			privacy: 'La existencia de un recurso forma parte del modelo de autorización',
+			boundary: 'Qué no afirma este caso de estudio',
+			learning: 'Lecciones de ingeniería del límite por hogar',
 		},
-	]) {
-		test(`renders verifiable bilingual evidence at ${locale.path}`, async ({ page }) => {
+	] as const) {
+		test(`renders evidence-aware bilingual MDX at ${locale.path}`, async ({ page }) => {
 			await page.goto(locale.path);
 
+			await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();
 			await expect(page.getByRole('heading', { level: 1, name: 'Yukidoke' })).toBeVisible();
-			await expect(page.getByText(locale.status, { exact: true })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.implemented })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.planned })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.limitations })).toBeVisible();
-			await expect(page.getByText(locale.client, { exact: true })).toBeVisible();
-			await expect(page.getByText(locale.api, { exact: true })).toBeVisible();
-			await expect(page.getByText('PostgreSQL 16', { exact: true })).toBeVisible();
-			await expect(page.getByRole('link', { name: /Yukidoke Web/ })).toHaveAttribute(
-				'href',
-				'https://github.com/sandovaldavid/yukidoke-web'
-			);
-			await expect(page.getByRole('link', { name: /Yukidoke API/ })).toHaveAttribute(
-				'href',
-				'https://github.com/sandovaldavid/yukidoke-api'
+
+			const status = page.locator('[data-project-status]');
+			await expect(status).toContainText(locale.lifecycle);
+			await expect(status).toContainText(locale.source);
+
+			for (const heading of [
+				locale.problem,
+				locale.system,
+				locale.implementation,
+				locale.privacy,
+				locale.boundary,
+				locale.learning,
+			]) {
+				await expect(page.getByRole('heading', { name: heading })).toBeVisible();
+			}
+
+			await expect(page.getByText('0.9.0-rc.1', { exact: true })).toBeVisible();
+
+			const mermaidFigure = page.locator('[data-mermaid-figure]');
+			await expect(mermaidFigure).toHaveCount(1);
+			await mermaidFigure.scrollIntoViewIfNeeded();
+			await expect(mermaidFigure.locator('svg')).toBeVisible();
+			await expect(mermaidFigure.getByText('PostgreSQL 16', { exact: true })).toBeVisible();
+
+			await expect(page.locator('a[href*="github.com/sandovaldavid/yukidoke"]')).toHaveCount(
+				0
 			);
 		});
 	}

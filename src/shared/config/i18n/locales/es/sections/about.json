@@ -1,11 +1,13 @@
 {
-	"sectionTitle": "Sobre mí",
+	"sectionTitle": "SOBRE MÍ",
 	"profileTitle": "Perfil profesional",
-	"readMore": "Leer biografía completa",
-	"currentTitle": "Rol actual @ Atena",
+	"readMore": "Ver biografía",
+	"homeCurrentLabel": "ROL ACTUAL",
+	"homeCurrentMeta": "ATENA · FINTECH",
 	"imageAlt": "Juan David Sandoval, ingeniero de software",
+	"heroKicker": "SOBRE MÍ / PERFIL",
+	"biographyLabel": "BIOGRAFÍA",
 	"biographyTitle": "Biografía completa",
-	"profileRecord": "[ PERFIL: DAVID_S // INGENIERÍA DE SOFTWARE ]",
-	"focusTitle": "Enfoque actual",
-	"returnHome": "[ VOLVER AL INICIO ]"
+	"profileRecord": "[ PERFIL: sandovaldavid // INGENIERÍA DE SOFTWARE ]",
+	"focusTitle": "Enfoque actual"
 }

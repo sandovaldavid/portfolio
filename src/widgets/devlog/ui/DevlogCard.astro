@@ -1,58 +1,29 @@
 ---
-import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
 import type { DevlogPost } from '@entities/devlog';
 import { getDevlogSlug } from '@entities/devlog';
+import { EditorialCard } from '@shared/ui';
 
 interface Props {
 	post: DevlogPost;
 	readMoreText: string;
 	readMoreLink: string;
+	/** Heading level for the card title inside the page outline. */
+	headingLevel?: 'h2' | 'h3';
 }
 
-const { post, readMoreText, readMoreLink } = Astro.props;
+const { post, readMoreText, readMoreLink, headingLevel = 'h2' } = Astro.props;
 const { title, summary, pubDate, version, tags } = post.data;
-const formattedDate = pubDate.toISOString().split('T')[0];
 const slug = getDevlogSlug(post);
 ---
 
-<article
-	class="border-2 border-black dark:border-white bg-white/95 dark:bg-neutral-900/95 shadow-retro-md"
->
-	<div
-		class="flex items-center gap-2 border-b-2 border-black dark:border-white bg-primary-500/10 px-4 py-2"
-	>
-		<span class="text-editorial-label uppercase text-primary-600 dark:text-primary-400">
-			{version}
-		</span>
-		<span class="ml-auto text-caption text-content-muted">
-			#{slug}
-		</span>
-	</div>
-	<div class="p-5">
-		<div class="mb-2 flex items-center gap-2">
-			<time class="text-caption text-content-muted" datetime={pubDate.toISOString()}>
-				[{formattedDate}]
-			</time>
-			{
-				tags.map(tag => (
-					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
-						{tag}
-					</span>
-				))
-			}
-		</div>
-		<h2 class="mb-2 text-subheading text-content-strong">
-			{title}
-		</h2>
-		<p class="mb-4 text-body text-content-muted">
-			{summary}
-		</p>
-		<a
-			href={readMoreLink}
-			class="inline-flex items-center gap-1.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400 hover:underline"
-		>
-			{readMoreText}
-			<ArrowRightIcon class="size-4" aria-hidden="true" focusable="false" />
-		</a>
-	</div>
-</article>
+<EditorialCard
+	typeLabel={version}
+	metaText={`${pubDate.toISOString().split('T')[0]} · #${slug}`}
+	datetime={pubDate.toISOString()}
+	{tags}
+	{title}
+	description={summary}
+	ctaText={readMoreText}
+	ctaHref={readMoreLink}
+	{headingLevel}
+/>

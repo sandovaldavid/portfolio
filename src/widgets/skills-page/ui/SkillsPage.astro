@@ -1,8 +1,8 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { TAGS } from '@shared/config/technology';
-import { SectionContainer } from '@shared/ui';
+import ChevronRightIcon from '@assets/icons/ChevronRight.astro';
+import { createScopedUiTranslator, type Language } from '@shared/config/i18n';
+import { CORE_STACK, TAGS } from '@shared/config/technology';
+import { TechPill, TitleSection } from '@shared/ui';
 
 interface Props {
 	lang: Language;
@@ -11,7 +11,20 @@ interface Props {
 const { lang } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.skills');
 
-const categories = [
+const supportingCategories = [
+	{
+		heading: tPage('backendHeading'),
+		technologies: [
+			TAGS.CSHARP,
+			TAGS.JAVA,
+			TAGS.PYTHON,
+			TAGS.DJANGO,
+			TAGS.EXPRESS,
+			TAGS.POSTGRESQL,
+			TAGS.MYSQL,
+			TAGS.SQLITE,
+		],
+	},
 	{
 		heading: tPage('frontendHeading'),
 		technologies: [
@@ -29,75 +42,113 @@ const categories = [
 		],
 	},
 	{
-		heading: tPage('backendHeading'),
-		technologies: [
-			TAGS.CSHARP,
-			TAGS.JAVA,
-			TAGS.PYTHON,
-			TAGS.DJANGO,
-			TAGS.EXPRESS,
-			TAGS.POSTGRESQL,
-			TAGS.MYSQL,
-			TAGS.SQLITE,
-		],
-	},
-	{
 		heading: tPage('toolsHeading'),
 		technologies: [TAGS.CLOUDINARY, TAGS.SANITY, TAGS.CHARTJS, TAGS.MARKDOWN],
 	},
 ];
 ---
 
-<SectionContainer id="all-skills" class="w-full max-w-5xl px-4 flex flex-col gap-8">
-	<div class="text-center space-y-3 mb-4">
-		<h1
-			class="text-4xl md:text-5xl font-bold font-pixel-clean text-content-strong uppercase tracking-wide"
+<div class="w-full px-5 md:px-8">
+	<div class="mx-auto flex w-full max-w-7xl flex-col">
+		<header
+			class="flex flex-col gap-8 md:flex-row md:items-end md:justify-between"
+			aria-labelledby="skills-page-title"
 		>
-			{tPage('heading')}
-		</h1>
-		<p class="text-content-muted font-mono text-base uppercase">
-			[ {tPage('status')} ]
-		</p>
-	</div>
-
-	<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full mt-2">
-		{
-			categories.map((category, categoryIndex) => (
-				<article
-					class:list={[
-						'rounded-none bg-surface border-2 border-black dark:border-white p-6 shadow-[3px_3px_0px_var(--color-primary-500)] hover:-translate-y-1 hover:shadow-[5px_5px_0px_var(--color-primary-500)] transition-all duration-150 flex flex-col gap-4',
-						categoryIndex === 2 && 'md:col-span-2 lg:col-span-1',
-					]}
+			<div class="flex flex-col gap-3">
+				<p class="text-editorial-label uppercase text-channel-accent-primary">
+					<span aria-hidden="true">[ </span>{tPage('introKicker')}<span
+						aria-hidden="true"
+					>
+						]</span
+					>
+				</p>
+				<h1
+					id="skills-page-title"
+					class="text-page-title-mobile text-channel-content-strong lg:text-page-title"
 				>
-					<h2 class="font-pixel-clean text-2xl font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400 border-b-2 border-dashed border-edge-subtle pb-2">
-						[ {category.heading} ]
-					</h2>
-					<div class="grid grid-cols-2 gap-2">
-						{category.technologies.map(technology => {
-							const Icon = technology.icon;
-							return (
-								<div class="flex items-center gap-2 p-2 border border-edge-subtle bg-surface/50 hover:bg-primary-500/5 hover:border-primary-500/30 transition-all duration-150 group cursor-default">
-									{Icon && (
-										<Icon class="w-4 h-4 text-primary-500 dark:text-primary-400 shrink-0" />
-									)}
-									<span class="font-gaming-mono text-xs uppercase tracking-wider text-content-strong font-bold">
-										{technology.name}
-									</span>
-								</div>
-							);
-						})}
-					</div>
-				</article>
-			))
-		}
-	</div>
+					{tPage('heading')}
+				</h1>
+			</div>
 
-	<div class="w-full flex justify-center mt-8">
-		<a
-			href={getRelativeLocaleUrl(lang, '')}
-			class="inline-flex items-center justify-center rounded-none bg-primary-500 text-white dark:text-black border-2 border-black dark:border-white text-base px-6 py-3.5 font-bold uppercase tracking-wider transition-all duration-100 shadow-retro-md hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-retro-xl active:translate-x-[1px] active:translate-y-[1px] active:shadow-none"
+			<p
+				class="max-w-md text-editorial-label uppercase text-channel-content-muted md:text-right"
+			>
+				<span aria-hidden="true">[ </span>{tPage('currentStackLabel')}<span
+					aria-hidden="true"
+				>
+					]</span
+				>
+			</p>
+		</header>
+
+		<section
+			class="mt-16 md:mt-20"
+			aria-labelledby="skills-core-stack-title"
+			data-skills-core-stack
 		>
-			[ {tPage('returnHome')} ]
-		</a>
+			<TitleSection className="uppercase">
+				<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
+				<span id="skills-core-stack-title">{tPage('coreStackHeading')}</span>
+			</TitleSection>
+
+			<ul class="mt-6 flex flex-wrap items-center gap-4" role="list">
+				{
+					CORE_STACK.map(({ name, icon }) => (
+						<li>
+							<TechPill label={name} icon={icon} size="md" variant="stack" />
+						</li>
+					))
+				}
+			</ul>
+		</section>
+
+		<section
+			class="mt-16 md:mt-20"
+			aria-labelledby="skills-supporting-technologies-title"
+			data-skills-supporting
+		>
+			<TitleSection className="uppercase">
+				<ChevronRightIcon class="text-channel-accent-primary" aria-hidden="true" />
+				<span id="skills-supporting-technologies-title">{tPage('supportingHeading')}</span>
+			</TitleSection>
+
+			<div
+				class="mt-6 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:gap-x-16 lg:gap-y-12"
+				aria-label={tPage('categoriesSectionLabel')}
+			>
+				{
+					supportingCategories.map((category, categoryIndex) => (
+						<article
+							data-skills-category
+							class:list={[
+								'min-w-0',
+								categoryIndex === 2 && 'md:col-span-2 lg:col-span-1',
+							]}
+						>
+							<h3 class="text-subheading uppercase text-channel-accent-primary">
+								<span aria-hidden="true">[ </span>
+								{category.heading}
+								<span aria-hidden="true"> ]</span>
+							</h3>
+							<ul
+								class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4"
+								role="list"
+							>
+								{category.technologies.map(technology => (
+									<li class="min-w-0">
+										<TechPill
+											label={technology.name}
+											icon={technology.icon}
+											size="sm"
+											variant="stack"
+										/>
+									</li>
+								))}
+							</ul>
+						</article>
+					))
+				}
+			</div>
+		</section>
 	</div>
-</SectionContainer>
+</div>
