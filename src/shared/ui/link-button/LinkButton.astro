@@ -1,7 +1,7 @@
 ---
 import '../button/button.css';
 
-type Props = Omit<astroHTML.JSX.AnchorHTMLAttributes, 'href' | 'target' | 'class'> & {
+interface Props {
 	href: string;
 	target?: '_blank' | '_self';
 	variant?: 'primary' | 'secondary';
@@ -9,7 +9,7 @@ type Props = Omit<astroHTML.JSX.AnchorHTMLAttributes, 'href' | 'target' | 'class
 	class?: string;
 	/** Screen-reader-only text announcing the link opens in a new tab. Omit for non-navigating targets (e.g. mailto:). */
 	newTabLabel?: string;
-};
+}
 
 const {
 	href,
@@ -18,7 +18,6 @@ const {
 	disabled = false,
 	class: className,
 	newTabLabel,
-	...rest
 } = Astro.props;
 ---
 
@@ -35,7 +34,6 @@ const {
 		disabled && 'btn-disabled',
 		className,
 	]}
-	{...rest}
 >
 	<slot />
 	{target === '_blank' && newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
