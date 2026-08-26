@@ -2,10 +2,12 @@
 	"pageTitle": "Habilidades y Tecnologías | David Sandoval",
 	"pageDescription": "Explora los lenguajes de programación, frameworks, librerías y herramientas utilizados por David Sandoval.",
 	"introKicker": "Capacidades técnicas",
-	"heading": "Inventario de habilidades",
-	"categoriesSectionLabel": "Categorías de tecnologías",
-	"frontendHeading": "Tecnologías frontend",
-	"backendHeading": "Tecnologías backend",
-	"toolsHeading": "Herramientas y utilidades",
-	"returnHome": "Volver al inicio"
+	"heading": "Habilidades",
+	"currentStackLabel": "Stack actual y herramientas de apoyo",
+	"coreStackHeading": "Stack principal",
+	"supportingHeading": "Tecnologías complementarias",
+	"categoriesSectionLabel": "Categorías de tecnologías complementarias",
+	"frontendHeading": "Frontend",
+	"backendHeading": "Backend",
+	"toolsHeading": "Herramientas"
 }
