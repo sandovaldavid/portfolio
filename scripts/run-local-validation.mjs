@@ -1,5 +1,6 @@
-import { spawnSync } from 'node:child_process';
-import { dirname, resolve } from 'node:path';
+import { createWriteStream, mkdirSync } from 'node:fs';
+import { spawn, spawnSync } from 'node:child_process';
+import { dirname, isAbsolute, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repositoryRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -8,10 +9,18 @@ const devcontainer = process.platform === 'win32' ? 'devcontainer.cmd' : 'devcon
 const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
 const validationLogFile =
 	process.env.VALIDATION_LOG_FILE?.trim() || `validation-logs/validate-local-${timestamp}.log`;
-const loggedValidationCommand =
-	'set -o pipefail; mkdir -p "$(dirname "$VALIDATION_LOG_FILE")"; ' +
-	'echo "[validation] Full log: $VALIDATION_LOG_FILE"; ' +
-	'bun run validate:local:inside 2>&1 | tee "$VALIDATION_LOG_FILE"';
+const validationLogPath = resolve(repositoryRoot, validationLogFile);
+const relativeValidationLogPath = relative(repositoryRoot, validationLogPath);
+
+if (
+	!relativeValidationLogPath ||
+	isAbsolute(relativeValidationLogPath) ||
+	relativeValidationLogPath === '..' ||
+	relativeValidationLogPath.startsWith(`..${sep}`)
+) {
+	console.error('[error] VALIDATION_LOG_FILE must be a workspace-relative file path.');
+	process.exit(1);
+}
 
 /**
  * @param {string} command
@@ -34,13 +43,53 @@ function run(command, args, options = {}) {
 	if (result.status !== 0) process.exit(result.status ?? 1);
 }
 
+/**
+ * Run the validation command without a shell while mirroring stdout/stderr to
+ * both the terminal and a workspace-local evidence log.
+ *
+ * @param {string} command
+ * @param {string[]} args
+ * @param {import('node:child_process').SpawnOptions} [options]
+ * @returns {Promise<number>}
+ */
+function runLogged(command, args, options = {}) {
+	mkdirSync(dirname(validationLogPath), { recursive: true });
+	const logStream = createWriteStream(validationLogPath, { flags: 'w' });
+
+	return new Promise(resolveRun => {
+		const child = spawn(command, args, {
+			cwd: repositoryRoot,
+			env: process.env,
+			stdio: ['inherit', 'pipe', 'pipe'],
+			...options,
+		});
+		let spawnFailed = false;
+
+		child.stdout?.on('data', chunk => {
+			process.stdout.write(chunk);
+			logStream.write(chunk);
+		});
+		child.stderr?.on('data', chunk => {
+			process.stderr.write(chunk);
+			logStream.write(chunk);
+		});
+		child.on('error', error => {
+			spawnFailed = true;
+			const message = `[error] Failed to run ${command}: ${error.message}\n`;
+			process.stderr.write(message);
+			logStream.write(message);
+		});
+		child.on('close', code => {
+			logStream.end(() => resolveRun(spawnFailed ? 1 : (code ?? 1)));
+		});
+	});
+}
+
 console.log(`[validation] Full in-container log will be written to ${validationLogFile}`);
 
 if (isDevContainer) {
-	run('bash', ['-c', loggedValidationCommand], {
-		env: { ...process.env, VALIDATION_LOG_FILE: validationLogFile },
-	});
-	process.exit(0);
+	const status = await runLogged('bun', ['run', 'validate:local:inside']);
+	process.exit(status);
 }
 
 const probe = spawnSync(devcontainer, ['--version'], {
@@ -59,18 +108,19 @@ if (probe.error || probe.status !== 0) {
 run(devcontainer, ['up', '--workspace-folder', repositoryRoot]);
 
 /** @type {string[]} */
-const remoteEnvironment = [`VALIDATION_LOG_FILE=${validationLogFile}`];
+const remoteEnvironment = [];
 if (process.env.PLAYWRIGHT_WORKERS) {
 	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${process.env.PLAYWRIGHT_WORKERS}`);
 }
 
-run(devcontainer, [
+const status = await runLogged(devcontainer, [
 	'exec',
 	'--workspace-folder',
 	repositoryRoot,
 	'env',
 	...remoteEnvironment,
-	'bash',
-	'-c',
-	loggedValidationCommand,
+	'bun',
+	'run',
+	'validate:local:inside',
 ]);
+process.exit(status);
