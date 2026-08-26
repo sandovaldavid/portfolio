@@ -101,11 +101,12 @@ expect(
 
 expect(
 	localValidation.includes("process.env.DEVCONTAINER === 'true'") &&
-		localValidation.includes("devcontainer, ['up', '--workspace-folder', repositoryRoot]") &&
+		localValidation.includes("const workspaceFolder = '.'") &&
+		localValidation.includes("spawnSync(devcontainer, ['up', '--workspace-folder', workspaceFolder]") &&
 		localValidation.includes("'exec'") &&
 		localValidation.includes("'--workspace-folder'") &&
 		localValidation.includes('PLAYWRIGHT_WORKERS='),
-	'Host validation must detect nested execution, up/exec the DevContainer and propagate worker overrides.'
+	'Host validation must detect nested execution, up/exec the DevContainer from the repository cwd and propagate worker overrides.'
 );
 expect(
 	localValidation.includes('Complete local browser validation requires the Dev Containers CLI'),
@@ -119,6 +120,7 @@ expect(
 		localValidation.includes('createWriteStream') &&
 		localValidation.includes("stdio: ['inherit', 'pipe', 'pipe']") &&
 		localValidation.includes('logStream.write(chunk)') &&
+		localValidation.includes('waitForLoggedProcess') &&
 		!localValidation.includes("'bash', ['-c'") &&
 		!localValidation.includes('set -o pipefail') &&
 		!localValidation.includes('tee "$VALIDATION_LOG_FILE"'),
@@ -126,9 +128,10 @@ expect(
 );
 expect(
 	localValidation.includes('PLAYWRIGHT_WORKERS must be a positive integer') &&
-		localValidation.includes('/^\\d+$/') &&
+		localValidation.includes('Number.isInteger(parsedWorkerOverride)') &&
+		localValidation.includes('normalizedWorkerOverride = String(parsedWorkerOverride)') &&
 		localValidation.includes('relativeValidationLogPath'),
-	'Host validation must validate environment-derived worker and log-path inputs before process execution.'
+	'Host validation must validate and normalize environment-derived worker and log-path inputs before process execution.'
 );
 expect(
 	localValidationInside.includes("process.env.DEVCONTAINER !== 'true'") &&
