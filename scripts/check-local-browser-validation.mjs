@@ -115,9 +115,20 @@ expect(
 	gitignore.includes('validation-logs/') &&
 		localValidation.includes('validation-logs/validate-local-') &&
 		localValidation.includes('VALIDATION_LOG_FILE') &&
-		localValidation.includes('set -o pipefail') &&
-		localValidation.includes('tee "$VALIDATION_LOG_FILE"'),
-	'Canonical local validation must persist the complete in-container gate log without masking failures.'
+		localValidation.includes('workspace-relative file path') &&
+		localValidation.includes('createWriteStream') &&
+		localValidation.includes("stdio: ['inherit', 'pipe', 'pipe']") &&
+		localValidation.includes('logStream.write(chunk)') &&
+		!localValidation.includes("'bash', ['-c'") &&
+		!localValidation.includes('set -o pipefail') &&
+		!localValidation.includes('tee "$VALIDATION_LOG_FILE"'),
+	'Canonical local validation must persist the complete gate log without shell interpolation or masking failures.'
+);
+expect(
+	localValidation.includes('PLAYWRIGHT_WORKERS must be a positive integer') &&
+		localValidation.includes('/^\\d+$/') &&
+		localValidation.includes('relativeValidationLogPath'),
+	'Host validation must validate environment-derived worker and log-path inputs before process execution.'
 );
 expect(
 	localValidationInside.includes("process.env.DEVCONTAINER !== 'true'") &&
