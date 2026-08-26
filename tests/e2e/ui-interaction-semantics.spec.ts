@@ -217,5 +217,6 @@ test.describe('Detail-page accessibility coverage', () => {
 				await disableMotion(page);
 				await expectNoBlockingAxeViolations(page);
 			});
+		}
 	}
 });
