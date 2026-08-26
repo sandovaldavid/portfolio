@@ -73,7 +73,7 @@ test.describe('mandatory bilingual route matrix', () => {
 			locale: 'en',
 			title: '404 - Page not found | David Sandoval',
 			heading: 'Page not found',
-			homeLabel: 'Return to home',
+			homeLabel: 'Go to home',
 			homePath: '/',
 		},
 		{
@@ -81,7 +81,7 @@ test.describe('mandatory bilingual route matrix', () => {
 			locale: 'es',
 			title: '404 - Página no encontrada | David Sandoval',
 			heading: 'Página no encontrada',
-			homeLabel: 'Volver al inicio',
+			homeLabel: 'Ir al inicio',
 			homePath: '/es/',
 		},
 	] as const) {
@@ -130,14 +130,14 @@ test.describe('deduplicated legacy page pairs', () => {
 		{
 			route: '/skills',
 			locale: 'en',
-			heading: 'Skills inventory',
-			forbiddenHeading: 'Inventario de habilidades',
+			heading: 'Skills',
+			forbiddenHeading: 'Habilidades',
 		},
 		{
 			route: '/es/skills',
 			locale: 'es',
-			heading: 'Inventario de habilidades',
-			forbiddenHeading: 'Skills inventory',
+			heading: 'Habilidades',
+			forbiddenHeading: 'Skills',
 		},
 		{
 			route: '/components',
