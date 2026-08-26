@@ -1,36 +1,25 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-repository_root="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/git"
 allowed_signers="${config_dir}/allowed_signers"
-atena_config_source="${repository_root}/.devcontainer/config/gitconfig-atena"
-atena_config_target="${HOME}/.gitconfig-atena"
 
 mkdir -p "$config_dir"
 
-# VS Code copies the host's main Git configuration into the container, but a
-# conditionally included file is not guaranteed to exist there. Install the
-# bundled corporate identity before Git resolves includeIf conditions.
-if [[ -f "$atena_config_source" ]]; then
-	if [[ ! -f "$atena_config_target" ]] || ! cmp -s "$atena_config_source" "$atena_config_target"; then
-		install -m 600 "$atena_config_source" "$atena_config_target"
-	fi
-fi
-
-# Resolve the effective repository identity after conditional includes. This
-# selects the personal key by default and the Atena key for matching projects.
+# Resolve the effective repository identity after Git has applied its global,
+# conditional, and repository-local configuration. The Dev Container never
+# owns identity data; VS Code/user dotfiles provide the profile fragments.
 email="$(git config --get user.email || true)"
 signing_key="$(git config --get user.signingKey || true)"
 
 if [[ -z "$email" ]]; then
-	echo "Warning: Git user.email was not inherited from the host." >&2
-	exit 0
+  echo "Warning: Git user.email is unavailable; configure host/user dotfiles before signing." >&2
+  exit 0
 fi
 
 if [[ "$signing_key" != key::* ]]; then
-	echo "Warning: Git user.signingKey is not an inline SSH public key." >&2
-	exit 0
+  echo "Warning: Git user.signingKey is not an inline SSH public key." >&2
+  exit 0
 fi
 
 public_key="${signing_key#key::}"
@@ -38,30 +27,39 @@ key_type="$(awk '{print $1}' <<<"$public_key")"
 key_blob="$(awk '{print $2}' <<<"$public_key")"
 
 if [[ -z "$key_type" || -z "$key_blob" ]]; then
-	echo "Warning: Git user.signingKey is malformed." >&2
-	exit 0
+  echo "Warning: Git user.signingKey is malformed." >&2
+  exit 0
 fi
 
 agent_keys="$(ssh-add -L 2>/dev/null || true)"
 if [[ -z "$agent_keys" ]]; then
-	echo "Warning: SSH agent is unavailable or has no loaded keys." >&2
-	exit 0
+  echo "Warning: SSH agent is unavailable or has no loaded keys." >&2
+  exit 0
 fi
 
 agent_key="$(
-	awk \
-		-v expected_type="$key_type" \
-		-v expected_blob="$key_blob" \
-		'$1 == expected_type && $2 == expected_blob { print $1 " " $2; exit }' \
-		<<<"$agent_keys"
+  awk \
+    -v expected_type="$key_type" \
+    -v expected_blob="$key_blob" \
+    '$1 == expected_type && $2 == expected_blob { print $1 " " $2; exit }' \
+    <<<"$agent_keys"
 )"
 
 if [[ -z "$agent_key" ]]; then
-	echo "Warning: the configured Git signing key is not loaded in the SSH agent." >&2
-	exit 0
+  echo "Warning: the effective Git signing key is not loaded in the forwarded SSH agent." >&2
+  exit 0
 fi
 
-printf '%s namespaces="git" %s\n' "$email" "$agent_key" > "$allowed_signers"
+namespace_option='namespaces="git"'
+desired_entry="${email} ${namespace_option} ${agent_key}"
+current_entry=""
+if [[ -f "$allowed_signers" ]]; then
+  current_entry="$(cat "$allowed_signers")"
+fi
+
+if [[ "$current_entry" != "$desired_entry" ]]; then
+  printf '%s\n' "$desired_entry" > "$allowed_signers"
+fi
 chmod 600 "$allowed_signers"
 
 printf 'Git SSH signing configured for %s.\n' "$email"

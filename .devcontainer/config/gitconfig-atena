@@ -1,8 +1,0 @@
-# ~/.gitconfig-atena
-# Atena corporate identity with a dedicated SSH signing key managed by the
-# Bitwarden SSH agent. Loaded conditionally from the global Git configuration.
-
-[user]
-    name = David Sandoval
-    email = david.sandoval@atena.la
-    signingKey = key::ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOo03mJgowVdFsJXPgWuS5sPPRAfke8a89EBkTCdR0uY
