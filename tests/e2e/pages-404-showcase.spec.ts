@@ -89,7 +89,7 @@ test.describe('Components Showcase contract', () => {
 
 					await expect(page.locator('[data-showcase-panel]')).toHaveCount(6);
 					const panelHeadings = await page
-						.locator('[data-showcase-panel] h2')
+						.locator('[data-showcase-panel] h3')
 						.evaluateAll(elements =>
 							elements.map(element => (element.textContent ?? '').replace(/\s+/g, ' ').trim())
 						);
