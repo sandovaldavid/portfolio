@@ -1,21 +1,18 @@
 ---
-import CodeIcon from '@assets/icons/Code.astro';
-import MailIcon from '@assets/icons/Mail.astro';
 import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
+import MailIcon from '@assets/icons/Mail.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { CORE_STACK } from '@shared/config/technology';
 import {
 	Avatar,
 	Badge,
 	BrandLogo,
 	Button,
-	ContentPanel,
-	EditorialCard,
-	LinkButton,
 	LinkInline,
-	SectionContainer,
 	SocialPill,
 	TechPill,
 	TitleSection,
@@ -31,14 +28,7 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const newTabLabel = tAccessibility('externalLink');
 const homeUrl = getRelativeLocaleUrl(lang, '');
 
-/*
- * Components Showcase composition (spec/04 + plans/pages/components-showcase.md):
- * runtime QA catalog rendering production components only. Contract sections
- * follow the spec order (Buttons, Badges, Tech Pills, Links, Social Pills,
- * Avatars, Shell Components); the remaining sections keep extra shared
- * primitives under QA coverage, including the .showcase-panel-* regression hooks.
- */
-const avatarSizes = ['xs', 'sm', 'md', 'lg', 'responsive'] as const;
+const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 const badgeVariants = [
 	'default',
 	'primary',
@@ -52,392 +42,180 @@ const badgeVariantLabels = {
 	default: 'defaultBadge',
 	primary: 'primaryBadge',
 	secondary: 'secondaryBadge',
-	success: 'completedBadge',
+	success: 'successBadge',
 	warning: 'warningBadge',
 	danger: 'dangerBadge',
 	info: 'infoBadge',
 } as const;
+const showcasedTechnologies = [CORE_STACK[3], CORE_STACK[0], CORE_STACK[2], CORE_STACK[5]];
+const panelClasses =
+	'border border-channel-edge-subtle bg-channel-background-canvas p-4 md:p-5';
 ---
 
-<div class="w-full px-5 md:px-8 lg:px-0">
-	<div class="mx-auto flex w-full max-w-[1280px] flex-col">
-		<header class="flex flex-col gap-3" aria-labelledby="components-showcase-title">
-			<p class="text-editorial-label uppercase tracking-[0.5px] text-channel-accent-primary">
-				{tPage('introKicker')}
-			</p>
-			<h1
-				id="components-showcase-title"
-				class="font-mono text-[40px] font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-[48px] lg:leading-14 lg:tracking-[-1px]"
-			>
-				{tPage('heading')}
-			</h1>
-			<p class="max-w-[720px] text-content-muted">{tPage('introDescription')}</p>
-		</header>
-
-		<p
-			class="mt-10 font-mono text-sm font-bold uppercase tracking-wide text-channel-accent-primary lg:mt-12"
-		>
-			{tPage('sharedUiLabel')}
+<div class="w-full">
+	<header
+		class="mx-auto flex w-full max-w-7xl flex-col gap-3 px-5 md:px-8"
+		aria-labelledby="components-showcase-title"
+	>
+		<p class="text-editorial-label uppercase text-channel-accent-primary">
+			{tPage('introKicker')}
 		</p>
+		<h1
+			id="components-showcase-title"
+			class="text-page-title-mobile text-channel-content-strong lg:text-page-title"
+		>
+			{tPage('heading')}
+		</h1>
+		<p class="max-w-180 text-body text-channel-content-default">{tPage('introDescription')}</p>
+	</header>
 
-		<div class="space-y-16 mt-6">
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('buttonsHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('buttonsDescription')}</p>
-				<p class="text-content-muted mb-4">
-					{tPage('linksDescription')}
-				</p>
-				<div class="flex flex-wrap items-center gap-4">
-					<LinkButton href="https://github.com" {newTabLabel} class="min-w-[190px]">
-						<GitHubIcon aria-hidden="true" />
-						{tPage('githubLabel')}
-					</LinkButton>
-					<LinkButton
-						href="https://linkedin.com"
-						{newTabLabel}
-						variant="secondary"
-						class="min-w-[190px]"
-					>
-						<LinkedInIcon aria-hidden="true" />
-						{tPage('linkedinLabel')}
-					</LinkButton>
-					<LinkButton
-						href="mailto:example@email.com"
-						target="_self"
-						class="min-w-[190px]"
-					>
-						<MailIcon aria-hidden="true" />
-						{tPage('contactLabel')}
-					</LinkButton>
-				</div>
-				<div class="mt-4 flex flex-wrap items-center gap-4">
-					<LinkButton
-						href="mailto:example@email.com"
-						target="_self"
-						disabled
-						class="min-w-[190px]"
-					>
-						{tPage('disabledState')} · {tPage('primaryAction')}
-					</LinkButton>
-					<Button variant="secondary" disabled class="min-w-[190px]">
-						{tPage('disabledState')} · {tPage('secondaryAction')}
-					</Button>
-				</div>
-			</section>
+	<section class="mt-12 w-full bg-channel-surface-highlight py-10 md:mt-14 md:py-12">
+		<div class="mx-auto w-full max-w-7xl px-5 md:px-8">
+			<TitleSection className="uppercase">
+				<ArrowRightIcon class="text-channel-accent-primary" aria-hidden="true" />
+				{tPage('sharedUiLabel')}
+			</TitleSection>
 
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('badgesHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('badgesDescription')}</p>
-				<div class="flex flex-wrap gap-3">
-					{
-						badgeVariants.map(variant => (
-							<Badge variant={variant}>{tPage(badgeVariantLabels[variant])}</Badge>
-						))
-					}
-					<Badge variant="info">
-						<CodeIcon aria-hidden="true" />
-						{tPage('typescriptLabel')}
-					</Badge>
-				</div>
-				<div class="mt-4 flex flex-wrap items-center gap-3">
-					<Badge variant="success" size="sm">{tPage('completedBadge')}</Badge>
-					<Badge variant="success" size="md">{tPage('completedBadge')}</Badge>
-					<Badge variant="success" size="lg">{tPage('completedBadge')}</Badge>
-					<Badge variant="warning" size="sm">
-						<CodeIcon aria-hidden="true" />
-						{tPage('warningBadge')}
-					</Badge>
-					<Badge variant="danger" size="lg">
-						<CodeIcon aria-hidden="true" />
-						{tPage('dangerBadge')}
-					</Badge>
-				</div>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('techPillsHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('techPillsDescription')}</p>
-				<div class="flex flex-wrap items-center gap-3">
-					<TechPill label={tPage('techPillShortLabel')} size="sm" variant="card" />
-					<TechPill
-						label={tPage('techPillShortLabel')}
-						size="sm"
-						variant="card"
-						icon={CodeIcon}
-					/>
-					<TechPill label={tPage('typescriptLabel')} size="md" variant="card" />
-					<TechPill
-						label={tPage('typescriptLabel')}
-						size="md"
-						variant="card"
-						icon={CodeIcon}
-					/>
-				</div>
-				<div class="mt-4 flex flex-wrap items-center gap-3">
-					<TechPill label={tPage('techPillShortLabel')} size="sm" variant="stack" />
-					<TechPill
-						label={tPage('techPillShortLabel')}
-						size="sm"
-						variant="stack"
-						icon={CodeIcon}
-					/>
-					<TechPill label={tPage('typescriptLabel')} size="md" variant="stack" />
-					<TechPill
-						label={tPage('typescriptLabel')}
-						size="md"
-						variant="stack"
-						icon={CodeIcon}
-					/>
-				</div>
-				<div class="mt-4 flex flex-wrap items-center gap-3">
-					<TechPill
-						label={tPage('techPillLongLabel')}
-						size="sm"
-						variant="stack"
-						icon={CodeIcon}
-					/>
-				</div>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('linksHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('linksDescription')}</p>
-				<div class="flex flex-wrap gap-6">
-					<LinkInline href="https://github.com" icon={GitHubIcon} {newTabLabel}>
-						{tPage('profileLink')}
-					</LinkInline>
-					<LinkInline
-						href="https://linkedin.com"
-						icon={ArrowRightIcon}
-						iconPosition="trailing"
-						{newTabLabel}
-					>
-						{tPage('networkLink')}
-					</LinkInline>
-					<LinkInline href="mailto:example@email.com" target="_self">
-						{tPage('contactLabel')}
-					</LinkInline>
-				</div>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('socialHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('socialDescription')}</p>
-				<div class="flex flex-wrap gap-4">
-					<SocialPill href="https://github.com" {newTabLabel}>
-						<GitHubIcon aria-hidden="true" />
-						{tPage('githubLabel')}
-					</SocialPill>
-					<SocialPill href="https://linkedin.com" {newTabLabel}>
-						<LinkedInIcon aria-hidden="true" />
-						{tPage('linkedinLabel')}
-					</SocialPill>
-					<SocialPill href="mailto:example@email.com" target="_self">
-						<MailIcon aria-hidden="true" />
-						{tPage('contactLabel')}
-					</SocialPill>
-				</div>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('avatarsHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('avatarsDescription')}</p>
-				<div class="flex flex-wrap gap-8 items-end">
-					{
-						avatarSizes.map(size => (
-							<div class="flex flex-col items-center gap-2">
-								<Avatar
-									src="/profile/perfil.webp"
-									alt={tPage('profileAlt')}
-									{size}
-								/>
-								<span class="text-sm text-content-muted uppercase">{size}</span>
-							</div>
-						))
-					}
-				</div>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('shellHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('shellDescription')}</p>
-				<div class="flex flex-wrap items-end gap-x-10 gap-y-6">
-					<div class="flex flex-col items-start gap-2">
-						<BrandLogo
-							href={homeUrl}
-							accessibleLabel={tAccessibility('brandHomeLink')}
-						/>
-						<span class="text-sm text-content-muted uppercase">
-							{tPage('brandLogoResponsiveLabel')}
-						</span>
+			<div class="mt-6 grid gap-5">
+				<section class={panelClasses} data-showcase-panel="buttons">
+					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tPage('buttonsHeading')}
+					</h2>
+					<div class="mt-4 flex flex-wrap items-center gap-4">
+						<Button class="min-w-42">
+							<ArrowUpRightIcon aria-hidden="true" />
+							{tPage('primaryDefault')}
+						</Button>
+						<Button class="min-w-42 bg-button-primary-background-hover shadow-retro-xl">
+							<ArrowUpRightIcon aria-hidden="true" />
+							{tPage('primaryHover')}
+						</Button>
+						<Button variant="secondary" class="min-w-42">
+							<ArrowUpRightIcon aria-hidden="true" />
+							{tPage('secondaryDefault')}
+						</Button>
+						<Button
+							variant="secondary"
+							class="min-w-42 ring-2 ring-button-focus ring-offset-2 ring-offset-channel-background-canvas"
+						>
+							<ArrowUpRightIcon aria-hidden="true" />
+							{tPage('secondaryFocus')}
+						</Button>
+						<Button variant="secondary" disabled class="min-w-42">
+							<ArrowUpRightIcon aria-hidden="true" />
+							{tPage('secondaryDisabled')}
+						</Button>
 					</div>
-					<div class="flex flex-col items-start gap-2">
-						<BrandLogo
-							href={homeUrl}
-							variant="full"
-							accessibleLabel={tPage('brandLogoFullLabel')}
-						/>
-						<span class="text-sm text-content-muted uppercase">
-							{tPage('brandLogoFullLabel')}
-						</span>
+				</section>
+
+				<section class={panelClasses} data-showcase-panel="badges">
+					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tPage('badgesHeading')}
+					</h2>
+					<div class="mt-4 flex flex-wrap items-center gap-3">
+						{
+							badgeVariants.map(variant => (
+								<Badge variant={variant}>{tPage(badgeVariantLabels[variant])}</Badge>
+							))
+						}
 					</div>
-					<div class="flex flex-col items-start gap-2">
-						<BrandLogo
-							href={homeUrl}
-							variant="compact"
-							accessibleLabel={tPage('brandLogoCompactLabel')}
-						/>
-						<span class="text-sm text-content-muted uppercase">
-							{tPage('brandLogoCompactLabel')}
-						</span>
+				</section>
+
+				<section class={panelClasses} data-showcase-panel="tech-pills">
+					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tPage('techPillsHeading')}
+					</h2>
+					<ul class="mt-4 flex flex-wrap items-center gap-3" role="list">
+						{
+							showcasedTechnologies.map(({ name, icon }) => (
+								<li>
+									<TechPill label={name} icon={icon} size="sm" variant="stack" />
+								</li>
+							))
+						}
+					</ul>
+				</section>
+
+				<section class={panelClasses} data-showcase-panel="links">
+					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tPage('linksHeading')}
+					</h2>
+					<div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
+						<LinkInline href="#shell-components" icon={ArrowRightIcon} iconPosition="trailing">
+							{tPage('linkDefault')}
+						</LinkInline>
+						<LinkInline
+							href="#shell-components"
+							icon={ArrowRightIcon}
+							iconPosition="trailing"
+							class="underline decoration-2 underline-offset-3"
+						>
+							{tPage('linkHover')}
+						</LinkInline>
+						<LinkInline
+							href="#shell-components"
+							icon={ArrowRightIcon}
+							iconPosition="trailing"
+							class="underline decoration-2 underline-offset-3 outline-2 outline-offset-2 outline-button-focus"
+						>
+							{tPage('linkFocus')}
+						</LinkInline>
 					</div>
-				</div>
-			</section>
+				</section>
 
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('containersHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('containersDescription')}</p>
-				<SectionContainer class="bg-channel-surface-highlight p-8">
-					<h3 class="text-xl font-semibold mb-3 text-content-strong">
-						{tPage('containerTitle')}
-					</h3>
-					<p class="text-content">{tPage('containerBody')}</p>
-				</SectionContainer>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('titlesHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('titlesDescription')}</p>
-				<div class="space-y-6">
-					<TitleSection>{tPage('simpleTitle')}</TitleSection>
-					<TitleSection>
-						<GitHubIcon aria-hidden="true" />
-						{tPage('iconTitle')}
-					</TitleSection>
-					<TitleSection>
-						<CodeIcon aria-hidden="true" />
-						{tPage('featuredTitle')}
-					</TitleSection>
-					<div class="w-[340px]">
-						<TitleSection className="mb-0">{tPage('wrappingTitle')}</TitleSection>
+				<section class={panelClasses} data-showcase-panel="social-pills">
+					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tPage('socialHeading')}
+					</h2>
+					<div class="mt-4 flex flex-wrap items-center gap-4">
+						<SocialPill href="https://github.com" {newTabLabel}>
+							<GitHubIcon aria-hidden="true" />
+							{tPage('githubLabel')}
+						</SocialPill>
+						<SocialPill href="https://linkedin.com" {newTabLabel}>
+							<LinkedInIcon aria-hidden="true" />
+							{tPage('linkedinLabel')}
+						</SocialPill>
+						<SocialPill href="mailto:example@email.com" target="_self">
+							<MailIcon aria-hidden="true" />
+							{tPage('emailLabel')}
+						</SocialPill>
 					</div>
-				</div>
-			</section>
+				</section>
 
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('contentPanelsHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('contentPanelsDescription')}</p>
-				<div class="flex flex-wrap gap-6">
-					<ContentPanel
-						variant="default"
-						density="compact"
-						label={tPage('contentPanelStatusLabel')}
-						title={tPage('contentPanelTitle')}
-						class="showcase-panel-default"
-					>
-						{tPage('contentPanelBody')}
-					</ContentPanel>
-					<ContentPanel
-						variant="highlight"
-						density="compact"
-						label={tPage('contentPanelHighlightLabel')}
-						title={tPage('contentPanelTitle')}
-						class="showcase-panel-highlight"
-					>
-						{tPage('contentPanelBody')}
-					</ContentPanel>
-					<ContentPanel
-						variant="success"
-						density="standard"
-						label={tPage('contentPanelSuccessLabel')}
-						title={tPage('contentPanelTitle')}
-						class="showcase-panel-success"
-					>
-						{tPage('contentPanelBody')}
-					</ContentPanel>
-					<ContentPanel
-						variant="danger"
-						density="standard"
-						label={tPage('contentPanelDangerLabel')}
-						title={tPage('contentPanelTitle')}
-						class="showcase-panel-danger"
-					>
-						{tPage('contentPanelBody')}
-					</ContentPanel>
-				</div>
-			</section>
-
-			<section>
-				<h2
-					class="font-mono text-lg font-bold uppercase tracking-wide text-channel-accent-primary mb-4"
-				>
-					{tPage('editorialCardsHeading')}
-				</h2>
-				<p class="text-content-muted mb-4">{tPage('editorialCardsDescription')}</p>
-				<div class="flex flex-wrap items-start gap-6">
-					<EditorialCard
-						typeLabel={tPage('editorialCardBlogType')}
-						metaText={tPage('editorialCardMeta')}
-						tags={[tPage('typescriptLabel')]}
-						title={tPage('editorialCardTitle')}
-						description={tPage('editorialCardBody')}
-						ctaText={tPage('editorialCardCta')}
-						ctaHref="#"
-						class="showcase-card-blog"
-					/>
-					<EditorialCard
-						typeLabel={tPage('editorialCardDevlogType')}
-						metaText={tPage('editorialCardMeta')}
-						tags={[tPage('techPillShortLabel')]}
-						title={tPage('editorialCardTitle')}
-						description={tPage('editorialCardBody')}
-						ctaText={tPage('editorialCardCta')}
-						ctaHref="#"
-						headingLevel="h3"
-						class="showcase-card-devlog"
-					/>
-				</div>
-			</section>
+				<section class={panelClasses} data-showcase-panel="avatars">
+					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tPage('avatarsHeading')}
+					</h2>
+					<div class="mt-4 flex flex-wrap items-end gap-4 md:gap-6">
+						{
+							avatarSizes.map(size => (
+								<Avatar src="/profile/perfil.webp" alt={tPage('profileAlt')} {size} />
+							))
+						}
+					</div>
+				</section>
+			</div>
 		</div>
-	</div>
+	</section>
+
+	<section id="shell-components" class="mx-auto w-full max-w-7xl px-5 pt-10 md:px-8 md:pt-12">
+		<TitleSection className="uppercase">
+			<ArrowRightIcon class="text-channel-accent-primary" aria-hidden="true" />
+			{tPage('shellHeading')}
+		</TitleSection>
+
+		<div class="mt-6 flex flex-wrap items-center gap-x-16 gap-y-8">
+			<BrandLogo
+				href={homeUrl}
+				variant="full"
+				accessibleLabel={tPage('brandLogoFullLabel')}
+			/>
+			<BrandLogo
+				href={homeUrl}
+				variant="compact"
+				accessibleLabel={tPage('brandLogoCompactLabel')}
+			/>
+		</div>
+	</section>
 </div>
