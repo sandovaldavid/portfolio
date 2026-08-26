@@ -18,8 +18,8 @@ describe('Experience motion contract', () => {
 		expect(tab).toContain('transition-[opacity,transform]');
 		expect(tab).toContain('duration-300');
 		expect(tab).toContain('motion-reduce:transition-none');
-		expect(tab).toContain('group-hover:translate-x-1');
-		expect(tab).toContain('group-data-[active=true]:translate-x-1');
+		expect(tab).toContain('group-data-[active=true]:scale-y-100');
+		expect(tab).toContain('group-data-[active=true]:scale-x-100');
 		expect(experience).toContain(".experience-panel[data-active='true']");
 		expect(experience).toContain("data-motion='enter-forward'");
 		expect(experience).toContain("data-motion='exit-forward'");
@@ -30,11 +30,12 @@ describe('Experience motion contract', () => {
 		expect(experience).not.toContain('panel.animate(');
 	});
 
-	it('stretches the desktop/tablet selection indicator across the full tab height', () => {
+	it('stretches the desktop/tablet selection indicator across the full fixed-height tab', () => {
+		expect(tab).toContain('h-[76px] min-h-[76px]');
 		expect(tab).toContain('-top-0.5 -bottom-0.5 -left-0.5');
 		expect(tab).not.toContain('-top-0.5 bottom-1.5 -left-0.5');
-		expect(experience).toContain(".experience-tablist > [role='tab']");
-		expect(experience).toContain('flex: 1 1 0%');
+		expect(experience).not.toContain(".experience-tablist > [role='tab']");
+		expect(experience).not.toContain('flex: 1 1 0%');
 	});
 
 	it('reserves the tallest localized panel so tab changes do not shift page geometry', () => {
@@ -53,8 +54,10 @@ describe('Experience motion contract', () => {
 		expect(detail).toContain("isLastOdd && 'lg:col-span-2'");
 		expect(detail).toContain('data-experience-detail-footer');
 		expect(detail).toContain('visibleTechnologies = technologies.slice(0, 4)');
-		expect(tab).toContain('date: string');
-		expect(tab).toContain('isCurrent: boolean');
+		expect(detail).toContain("| 'date'");
+		expect(detail).toContain("| 'isCurrent'");
+		expect(tab).not.toContain('date: string');
+		expect(tab).not.toContain('isCurrent: boolean');
 	});
 
 	it('centralizes semantic technology icons for both Home and career detail pages', () => {
