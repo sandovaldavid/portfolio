@@ -6,66 +6,99 @@ import { TitleSection } from '@shared/ui';
 interface Props {
 	lang: Language;
 	profile: PortfolioProfileData;
+	portraitSrc: string;
+	portraitAlt: string;
 }
 
-const { lang, profile } = Astro.props;
+const { lang, profile, portraitSrc, portraitAlt } = Astro.props;
 const tPage = createScopedUiTranslator(lang, 'pages.about');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
+
+const summaryParts =
+	profile.summary.match(/.*?[.!?](?=\s|$)|.+$/g)?.map(part => part.trim()) ?? [profile.summary];
+const summaryLead = summaryParts[0] ?? profile.summary;
+const summarySupport = summaryParts.slice(1).join(' ');
 ---
 
-<div class="w-full px-5 md:px-8 lg:px-0">
-	<div class="mx-auto flex w-full max-w-7xl flex-col">
-		<header class="max-w-4xl" aria-labelledby="about-page-title">
+<div class="w-full">
+	<section
+		class="mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-10 px-5 pt-28 pb-16 md:gap-12 md:px-8 md:pb-20 lg:grid-cols-5 lg:gap-16 lg:pb-24"
+		aria-labelledby="about-page-title"
+	>
+		<div class="lg:col-span-3">
 			<p class="text-editorial-label uppercase text-channel-accent-primary">
-				{tAbout('profileRecord')}
+				{tAbout('heroKicker')}
 			</p>
+
 			<h1
 				id="about-page-title"
-				class="mt-2 text-page-title-mobile text-content-strong lg:text-page-title"
+				class="mt-4 text-page-title-mobile text-content-strong lg:text-page-title"
 			>
 				{tPage('introTitle')}
 			</h1>
-			<p
-				class="mt-6 max-w-3xl border-l-2 border-channel-accent-primary pl-5 text-body text-channel-content-default md:pl-6"
-			>
-				{profile.summary}
+
+			<p class="mt-6 max-w-3xl text-subheading text-channel-content-strong md:text-component-title">
+				{summaryLead}
 			</p>
-		</header>
 
-		<section class="pt-10 lg:pt-12" aria-label={tAbout('profileTitle')}>
-			<slot name="profile" />
-		</section>
+			{
+				summarySupport && (
+					<p class="mt-5 max-w-3xl text-body text-channel-content-default">
+						{summarySupport}
+					</p>
+				)
+			}
+		</div>
 
-		<section class="pt-14 lg:pt-16">
-			<div class="max-w-3xl">
-				<p class="mb-2 text-editorial-label uppercase text-channel-content-muted">
-					{tPage('biographySubtitle')}
-				</p>
-				<TitleSection className="mb-6">{tAbout('biographyTitle')}</TitleSection>
-				<div class="space-y-5">
-					{
-						profile.biography.map(paragraph => (
-							<p class="text-body text-channel-content-default">{paragraph}</p>
-						))
-					}
-				</div>
+		<figure class="mx-auto w-full max-w-xs md:max-w-sm lg:col-span-2 lg:justify-self-end">
+			<div class="border border-channel-edge-strong bg-channel-surface-default p-0.5">
+				<img
+					src={portraitSrc}
+					alt={portraitAlt}
+					width="768"
+					height="960"
+					loading="eager"
+					decoding="async"
+					fetchpriority="high"
+					class="aspect-4/5 w-full object-cover object-top"
+				/>
 			</div>
-		</section>
+		</figure>
+	</section>
 
-		<section class="pt-14 pb-2 lg:pt-16">
-			<div class="max-w-3xl">
-				<p class="mb-2 text-editorial-label uppercase text-channel-content-muted">
-					{tPage('focusSubtitle')}
-				</p>
-				<TitleSection className="mb-6">{tAbout('focusTitle')}</TitleSection>
-			</div>
+	<section class="mx-auto w-full max-w-7xl px-5 pb-16 md:px-8 md:pb-20 lg:pb-24">
+		<TitleSection align="center" className="mb-8 md:mb-10">
+			<span aria-hidden="true" class="text-channel-accent-primary">&gt;</span>
+			<span>{tAbout('biographyTitle')}</span>
+		</TitleSection>
 
-			<ul class="grid grid-cols-1 gap-x-10 md:grid-cols-2" role="list">
+		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
+			{
+				profile.biography.map((paragraph, index) => (
+					<div class="min-w-0">
+						<p class="mb-3 text-editorial-label-compact uppercase text-channel-accent-primary">
+							{tAbout('biographyLabel')} {String(index + 1).padStart(2, '0')}
+						</p>
+						<p class="text-body text-channel-content-default">{paragraph}</p>
+					</div>
+				))
+			}
+		</div>
+	</section>
+
+	<section class="w-full border-t border-channel-edge-subtle bg-channel-surface-highlight">
+		<div class="mx-auto w-full max-w-7xl px-5 py-10 md:px-8 md:py-12 lg:py-14">
+			<TitleSection align="center" className="mb-8 md:mb-10">
+				<span aria-hidden="true" class="text-channel-accent-primary">&gt;</span>
+				<span>{tAbout('focusTitle')}</span>
+			</TitleSection>
+
+			<ul class="grid grid-cols-1 gap-x-10 gap-y-6 md:grid-cols-2 lg:grid-cols-3" role="list">
 				{
 					profile.focusAreas.map((area, index) => (
-						<li class="flex gap-4 border-t border-channel-edge-subtle py-5">
+						<li class="flex min-w-0 gap-4">
 							<span
-								class="shrink-0 text-editorial-label-compact text-channel-accent-primary"
+								class="w-6 shrink-0 text-editorial-label-compact text-channel-accent-primary"
 								aria-hidden="true"
 							>
 								{String(index + 1).padStart(2, '0')}
@@ -75,6 +108,6 @@ const tAbout = createScopedUiTranslator(lang, 'sections.about');
 					))
 				}
 			</ul>
-		</section>
-	</div>
+		</div>
+	</section>
 </div>
