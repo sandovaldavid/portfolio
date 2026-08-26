@@ -161,13 +161,12 @@ test.describe('Components Showcase contract', () => {
 						page.getByRole('heading', { level: 2, name: shellHeading })
 					).toBeVisible();
 
-					// The page demonstrates only the two lockups present in the approved screen:
-					// full signature and compact mark. The global header is intentionally excluded.
+					// Both lockups share the same signature DOM for semantic consistency.
+					// The compact variant hides that signature through the BrandLogo contract.
 					const logos = page.locator('main').locator('.brand-logo-link');
 					await expect(logos).toHaveCount(2);
-					await expect(page.locator('main').locator('.brand-logo-signature')).toHaveCount(
-						1
-					);
+					await expect(logos.nth(0).locator('.brand-logo-signature')).toBeVisible();
+					await expect(logos.nth(1).locator('.brand-logo-signature')).toBeHidden();
 
 					await expectNoHorizontalOverflow(page);
 				});
