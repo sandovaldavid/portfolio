@@ -51,9 +51,9 @@ An explicit workspace-relative name can be supplied when useful:
 VALIDATION_LOG_FILE=validation-logs/repro.log bun run validate:local
 ```
 
-The wrapper uses `pipefail` with `tee`; writing the log must never convert a failing validation command into a pass. Generated validation logs are evidence artifacts and must not be committed.
+The wrapper validates that the log path remains inside the workspace, launches validation without a shell, mirrors child `stdout`/`stderr` to both the terminal and a Node file stream, and preserves the child exit code. Generated validation logs are evidence artifacts and must not be committed.
 
-Use `PLAYWRIGHT_WORKERS=<positive integer>` only when an explicit override is useful. Local DevContainer runs otherwise let Playwright choose its default concurrency. GitHub Actions retains its reviewed fixed worker policy independently.
+Use `PLAYWRIGHT_WORKERS=<positive integer>` only when an explicit override is useful. The wrapper validates and normalizes the value before passing it into the Dev Container. Local DevContainer runs otherwise let Playwright choose its default concurrency. GitHub Actions retains its reviewed fixed worker policy independently.
 
 Lighthouse is intentionally not part of `validate:local`: the maintained Lighthouse configuration uses temporary public report storage. Run Lighthouse explicitly when it is required.
 
@@ -110,6 +110,16 @@ bun run test:e2e:visual:docker
 Visual snapshots are an explicit gate: `visual.spec.ts` does not participate in normal smoke/desktop/extended runs unless `RUN_VISUAL_TESTS=true` is set by the dedicated visual command.
 
 The maintained baseline is canonical Chromium in the pinned Docker visual appliance. Firefox, WebKit and mobile projects validate behavior and compatibility rather than multiplying pixel snapshots whose rendering and viewport capabilities differ by engine/device. Do not update snapshots only to silence differences, and do not regenerate the baseline until the current redesigned UI has been reviewed and approved as the intended reference.
+
+When a deliberate redesign makes the maintained baseline obsolete, regenerate only the canonical Chromium snapshots in the pinned Docker visual appliance:
+
+```bash
+CI=true RUN_VISUAL_TESTS=true E2E_USE_PRODUCTION_PREVIEW=1 \
+  bash docker/docker-test.sh tests/e2e/visual.spec.ts \
+  --update-snapshots --project=chromium
+```
+
+Review every changed image before committing it. A baseline update records an approved visual decision; it is not a mechanism for making a failing visual test green. Legacy Firefox, WebKit and mobile snapshot files are not maintained baselines now that visual regression is capability-scoped to canonical Chromium and should be removed when the approved v2 baseline refresh is committed.
 
 The Docker visual command is authoritative for maintained snapshot comparison. Its Playwright image is version-aligned with the project and Dev Container, but remains a separate appliance only because visual regression requires a pinned rendering baseline. It is not the canonical general-purpose local test runtime.
 
