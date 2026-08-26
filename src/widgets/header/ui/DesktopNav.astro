@@ -1,8 +1,8 @@
 ---
+import AboutIcon from '@assets/icons/About.astro';
 import BriefcaseIcon from '@assets/icons/Briefcase.astro';
 import BrainIcon from '@assets/icons/Brain.astro';
 import CodeIcon from '@assets/icons/Code.astro';
-import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
 import ScrollTextIcon from '@assets/icons/ScrollText.astro';
 import BookOpenIcon from '@assets/icons/BookOpen.astro';
 import SystemIcon from '@assets/icons/System.astro';
@@ -21,26 +21,27 @@ interface Props {
 const { navItems, navLabel } = Astro.props;
 ---
 
-<nav
-	class="hidden lg:flex items-center justify-center gap-4 xl:gap-8 font-mono"
-	aria-label={navLabel}
->
+<!--
+	Desktop nav contract (Figma v2 Header): group gap 10px; item 145×40;
+	icon 16, content gap 6 and Navigation typography 14/20 tracking .35.
+-->
+<nav class="hidden lg:flex items-center justify-center gap-2.5" aria-label={navLabel}>
 	{
 		navItems.map(link => (
 			<a
-				class="relative flex items-center gap-1.5 px-2 py-2 text-sm font-bold uppercase tracking-wide transition text-content-strong hover:text-primary-500 dark:hover:text-primary-500 whitespace-nowrap"
+				class="relative flex h-10 w-36.25 items-center justify-center gap-1.5 px-3 text-navigation text-content-strong transition-colors duration-100 hover:text-channel-accent-primary-hover whitespace-nowrap focus-visible:outline-none focus-visible:text-channel-accent-primary"
 				aria-label={link.title}
 				data-section-id={link.label}
 				href={link.url}
 				data-astro-prefetch={link.prefetch ? 'hover' : undefined}
 			>
-				{link.icon === 'experience' && <BriefcaseIcon class="size-4" />}
-				{link.icon === 'research' && <BrainIcon class="size-4" />}
-				{link.icon === 'projects' && <CodeIcon class="size-4" />}
-				{link.icon === 'devlog' && <ScrollTextIcon class="size-4" />}
-				{link.icon === 'blog' && <BookOpenIcon class="size-4" />}
-				{link.icon === 'about-me' && <ProfileCheckIcon class="size-4" />}
-				{link.icon === 'technologies' && <SystemIcon class="size-4" />}
+				{link.icon === 'experience' && <BriefcaseIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'research' && <BrainIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'projects' && <CodeIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'devlog' && <ScrollTextIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'blog' && <BookOpenIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'about-me' && <AboutIcon class="size-4" aria-hidden="true" />}
+				{link.icon === 'technologies' && <SystemIcon class="size-4" aria-hidden="true" />}
 				<span>{link.title}</span>
 			</a>
 		))
@@ -48,6 +49,7 @@ const { navItems, navLabel } = Astro.props;
 </nav>
 
 <style>
+	/* Active/hover indicator is absolute so state never shifts geometry. */
 	nav a::after {
 		content: '';
 		position: absolute;
@@ -56,15 +58,18 @@ const { navItems, navLabel } = Astro.props;
 		width: 0;
 		height: 2px;
 		background-color: currentColor;
-		transition: all 0.3s ease;
+		transition: width 0.3s ease;
 		transform: translateX(-50%);
 	}
 
-	nav a:hover::after {
+	nav a:hover::after,
+	nav a.active::after {
 		width: calc(100% - 1rem);
 	}
 
-	nav a.active::after {
-		width: calc(100% - 1rem);
+	@media (prefers-reduced-motion: reduce) {
+		nav a::after {
+			transition: none;
+		}
 	}
 </style>

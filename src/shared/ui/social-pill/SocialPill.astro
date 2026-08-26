@@ -10,27 +10,48 @@ interface Props {
 const { href, target = '_blank', class: className, newTabLabel } = Astro.props;
 ---
 
+<!--
+	Social Pill contract (spec/03): border 2 strong edge.
+	Mobile h36 / px12 py6 / gap6 / icon16. Desktop h44 / px16 py8 / gap8 / icon20.
+	Label JetBrains Mono Bold 12.
+	Default highlight surface + 1.5px shadow; hover default surface + 4px;
+	active highlight surface + 1px. Geometry never changes across states.
+-->
 <a
 	{href}
 	{target}
 	rel={target === '_blank' ? 'noopener noreferrer' : undefined}
 	role="link"
 	class:list={[
-		'inline-flex items-center justify-center gap-x-2',
-		'py-1.5 px-3 md:py-2 md:px-4',
-		'text-xs md:text-sm font-semibold uppercase tracking-wider',
-		'bg-neutral-100 dark:bg-neutral-800 text-content-strong',
-		'border-2 border-black dark:border-white',
-		'rounded-none',
-		'transition-all duration-100',
-		'hover:-translate-x-[2px] hover:-translate-y-[2px]',
-		'hover:bg-neutral-200 dark:hover:bg-neutral-700',
-		'active:translate-x-[1px] active:translate-y-[1px]',
-		'shadow-retro-sm hover:shadow-retro-lg active:shadow-retro-xs',
-		'focus:outline-none focus-visible:outline-none',
+		'social-pill inline-flex items-center justify-center',
+		'h-9 px-3 py-1.5 gap-1.5 md:h-11 md:px-4 md:py-2 md:gap-2',
+		'font-mono text-xs font-bold leading-4',
+		'bg-channel-surface-highlight text-content-strong',
+		'border-2 border-edge-strong rounded-none',
+		'transition-[box-shadow,background-color] duration-100',
+		'hover:bg-channel-surface-default hover:shadow-retro-lg',
+		'active:bg-channel-surface-highlight active:shadow-retro-xs',
+		'shadow-retro-sm',
+		'focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas',
 		className,
 	]}
 >
 	<slot />
 	{target === '_blank' && newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 </a>
+
+<style>
+	/* Slot icons lock to the contract sizes: 16px mobile, 20px desktop. */
+	.social-pill :global(svg) {
+		width: 1rem;
+		height: 1rem;
+		flex-shrink: 0;
+	}
+
+	@media (min-width: 48rem) {
+		.social-pill :global(svg) {
+			width: 1.25rem;
+			height: 1.25rem;
+		}
+	}
+</style>

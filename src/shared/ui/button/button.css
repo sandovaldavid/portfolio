@@ -1,11 +1,18 @@
 @reference '../../../app/styles/global.css';
 
-/* Base button styles shared by all variants */
+/*
+ * Portfolio Retro button contract (spec/03 Button):
+ * height 44px, border 2px strong edge, padding 8px/16px, gap 8px,
+ * semantic Button Label typography, icon 16px.
+ * Shadow progression md (default) -> xl (hover) -> xs (active);
+ * geometry never changes across states.
+ */
 .btn-base {
 	@apply inline-flex items-center justify-center gap-2;
-	@apply px-4 py-2 text-sm font-bold uppercase tracking-wider;
+	@apply h-11 px-4 py-2;
+	@apply text-button-label;
 	@apply rounded-none border-2 border-button-border;
-	@apply transition-all duration-100;
+	@apply transition-[box-shadow,background-color,color] duration-100;
 	@apply focus:outline-none focus-visible:outline-none;
 	@apply focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2;
 	@apply focus-visible:ring-offset-channel-background-canvas;
@@ -13,24 +20,34 @@
 	box-shadow: var(--shadow-retro-md);
 }
 
-.btn-base:hover {
-	@apply -translate-x-[2px] -translate-y-[2px];
+/* Slot icons are locked to the 16px contract size. */
+.btn-base svg {
+	width: 1rem;
+	height: 1rem;
+	flex-shrink: 0;
+}
+
+.btn-base:not(:disabled):not(.btn-disabled):hover {
 	box-shadow: var(--shadow-retro-xl);
 }
 
-.btn-base:active {
-	@apply translate-x-[1px] translate-y-[1px];
+.btn-base:not(:disabled):not(.btn-disabled):active {
 	box-shadow: var(--shadow-retro-xs);
 }
 
-/* Primary variant */
 .btn-primary {
 	@apply bg-button-primary-background text-button-primary-content;
 	@apply hover:bg-button-primary-background-hover;
 }
 
-/* Secondary variant */
 .btn-secondary {
 	@apply bg-button-secondary-background text-button-secondary-content;
 	@apply hover:bg-button-secondary-background-hover;
+}
+
+.btn-base:disabled,
+.btn-base.btn-disabled {
+	@apply pointer-events-none cursor-not-allowed opacity-60;
+
+	box-shadow: none;
 }

@@ -4,12 +4,11 @@ import { describe, expect, it } from 'vitest';
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 describe('home section localization migration', () => {
-	it('uses focused granular catalogs in home widgets', () => {
+	it('uses focused granular catalogs in home widgets that own localized copy', () => {
 		const migratedFiles = [
 			'src/widgets/hero/ui/Hero.astro',
 			'src/widgets/about-me/ui/AboutMe.astro',
 			'src/widgets/research/ui/Research.astro',
-			'src/widgets/tech-stack/ui/TechStack.astro',
 		];
 
 		for (const file of migratedFiles) {
@@ -18,6 +17,10 @@ describe('home section localization migration', () => {
 			expect(source, file).not.toContain('const copy =');
 			expect(source, file).not.toContain('useTranslations(');
 		}
+
+		const techStack = readSource('src/widgets/tech-stack/ui/TechStack.astro');
+		expect(techStack).not.toContain('createScopedUiTranslator');
+		expect(techStack).not.toContain('useTranslations(');
 	});
 
 	it('registers mirrored focused section modules', () => {
@@ -49,7 +52,10 @@ describe('home section localization migration', () => {
 
 	it('keeps technical navigation identities separate from localized labels', () => {
 		const layout = readSource('src/app/layouts/Layout.astro');
-		expect(layout).toContain("tExperience('sectionTitle')");
+		const experience = readSource('src/widgets/experience/ui/Experience.astro');
+
+		expect(experience).toContain("createScopedUiTranslator(lang, 'sections.experience')");
+		expect(experience).toContain("tExperience('sectionTitle')");
 		expect(layout).toContain("tResearchSection('sectionTitle')");
 		expect(layout).toContain("tProjects('sectionTitle')");
 		expect(layout).toContain("tAbout('sectionTitle')");

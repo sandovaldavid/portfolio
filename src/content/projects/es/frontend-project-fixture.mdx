@@ -1,0 +1,111 @@
+---
+projectId: frontend-project-fixture
+locale: es
+title: Fixture de Producto Frontend
+description: 'Case study interno y exclusivo de desarrollo para revisar una composición de Project Detail orientada a UI con live demo, galería y arquitectura de estado cliente.'
+category: 'Fixture interno de Frontend'
+imageAlt: 'Vista previa del fixture de desarrollo frontend'
+caseStudy:
+    kicker: 'FIXTURE INTERNO · PRODUCTO FRONTEND'
+    status:
+        lifecycle: 'SOLO DESARROLLO'
+        source: 'CÓDIGO PÚBLICO DE PRUEBA'
+        demo: 'FIXTURE EN VIVO'
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection
+	eyebrow="FIXTURE DE DESARROLLO"
+	title="Un case study visual-first para un producto sólo frontend"
+>
+	Este **no es un proyecto real del portfolio**. Su composición prioriza superficie de producto,
+	responsive e interacción antes que los detalles internos de implementación.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="SUPERFICIE DE PRODUCTO"
+	title="Mostrar la interfaz antes de explicar la arquitectura"
+	surface="highlight"
+>
+	<ProjectGallery
+		label="Galería de interfaz del fixture frontend"
+		columns={2}
+		items={[
+			{
+				src: fixtureOverview,
+				alt: 'Vista general del fixture frontend',
+				caption: 'Placeholder de la superficie principal del producto.',
+			},
+			{
+				src: fixtureDetail,
+				alt: 'Detalle responsive del fixture frontend',
+				caption: 'Placeholder de interacción responsive.',
+			},
+		]}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="MODELO DE INTERACCIÓN"
+	title="El estado cliente permanece cerca de la UI"
+>
+	<MermaidDiagram
+		title="Flujo de estado del fixture frontend"
+		description="Las rutas renderizan vistas, las vistas consumen un feature store y el store coordina persistencia del navegador y APIs externas."
+		tones={{
+			Route: 'brand',
+			View: 'info',
+			Store: 'secondary',
+			Browser: 'warning',
+			API: 'success',
+		}}
+		chart={`flowchart TD
+      Route["Ruta"] --> View["Vista responsive"]
+      View --> Store["Feature store"]
+      Store --> Browser["Persistencia del navegador"]
+      Store --> API["API externa"]`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="DECISIONES UX"
+	title="La página puede comparar decisiones de producto lado a lado"
+>
+	<CaseStudyGrid columns={2}>
+		<CaseStudyCard label="RESPONSIVE" title="EL LAYOUT CAMBIA CON INTENCIÓN" tone="primary">
+			Desktop, tablet y mobile pueden explicarse como restricciones de interacción distintas
+			en lugar de simples escalados.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="ACCESIBILIDAD"
+			title="TECLADO Y MOTION SON PARTE DE LA UI"
+			tone="primary"
+		>
+			Focus visible, controles semánticos y reduced motion pertenecen junto con las capturas
+			visuales en una historia frontend-heavy.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="EVIDENCIA"
+	title="La evidencia visual puede dominar sin convertir la página en una galería"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="FIXTURE"
+			title="LIVE DEMO + SOURCE + GALERÍA RESPONSIVE"
+			tone="verified"
+		>
+			El shell expone source y live demo mientras el body da primer nivel a screenshots y
+			arquitectura de interacción.
+		</EvidenceBlock>
+		<EvidenceBlock label="LÍMITE" title="CONTENIDO SOLO DE DESARROLLO" tone="boundary">
+			Este fixture existe únicamente para comparar decisiones de composición orientadas a
+			frontend.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title desc">
+  <title id="title">Project Detail development fixture media panel</title>
+  <desc id="desc">Abstract UI screenshot used only by the internal fixture gallery.</desc>
+  <rect width="1200" height="750" fill="#0d1117"/>
+  <rect x="60" y="55" width="1080" height="640" fill="#151b24" stroke="#d6deeb" stroke-width="4"/>
+  <rect x="95" y="95" width="1010" height="55" fill="#0b2530" stroke="#00c8ff" stroke-width="3"/>
+  <rect x="95" y="185" width="300" height="445" fill="#111820" stroke="#52d6ff" stroke-width="3"/>
+  <rect x="430" y="185" width="675" height="205" fill="#142821" stroke="#42e0ad" stroke-width="3"/>
+  <rect x="430" y="425" width="320" height="205" fill="#2d2039" stroke="#c89cff" stroke-width="3"/>
+  <rect x="785" y="425" width="320" height="205" fill="#3d2d16" stroke="#f6b817" stroke-width="3"/>
+  <g fill="#e8edf4" font-family="monospace" font-weight="700">
+    <text x="125" y="132" font-size="24">FIXTURE UI / GALLERY ZOOM TARGET</text>
+    <text x="125" y="235" font-size="21">NAVIGATION</text>
+    <text x="460" y="235" font-size="21">PRIMARY CONTENT</text>
+    <text x="460" y="475" font-size="21">EVIDENCE</text>
+    <text x="815" y="475" font-size="21">MEDIA</text>
+  </g>
+</svg>

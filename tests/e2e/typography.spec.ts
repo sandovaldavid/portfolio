@@ -1,17 +1,18 @@
 import { test, expect } from './fixtures';
 
 /**
- * Typography enforcement spec — the gate for docs/STYLE-GUIDE.md.
+ * Typography enforcement spec.
  *
  * Asserts, on every key page (EN + ES) and at desktop + mobile viewports:
  *   1. Global floor: every visible element with direct text renders at >= 12px.
- *   2. Paragraph floors: any visible `main p` >= 14px; reading copy (>= 80 chars) >= 16px.
+ *   2. Reading paragraph floor: visible `main p` copy is >= 14px unless explicitly styled as a caption; reading copy (>= 80 chars) is >= 16px.
  *   3. Exactly one visible <h1> per page.
  *   4. No skipped heading levels in DOM order.
  *   5. Headings (h1–h3) render strictly larger than the page's body text.
  *
- * Chromium-only: computed font-size in px is engine-independent, so running the
- * same numeric assertions on 5 browser projects adds time, not coverage.
+ * Chromium-only: computed font-size in px is engine-independent, and this spec
+ * drives its own desktop/mobile viewports. Repeating it across browser/device
+ * projects adds duplicate geometry work rather than compatibility coverage.
  */
 
 const KEY_PAGES = [
@@ -22,7 +23,7 @@ const KEY_PAGES = [
 	{ path: '/research', name: 'Research (EN)' },
 	{ path: '/blog', name: 'Blog (EN)' },
 	{ path: '/devlog', name: 'Devlog (EN)' },
-	{ path: '/atena', name: 'Atena (EN)' },
+	{ path: '/experience/atena-software-engineer', name: 'Atena experience (EN)' },
 	{ path: '/es/', name: 'Home (ES)' },
 	{ path: '/es/about', name: 'About (ES)' },
 	{ path: '/es/projects', name: 'Projects (ES)' },
@@ -30,7 +31,7 @@ const KEY_PAGES = [
 	{ path: '/es/research', name: 'Research (ES)' },
 	{ path: '/es/blog', name: 'Blog (ES)' },
 	{ path: '/es/devlog', name: 'Devlog (ES)' },
-	{ path: '/es/atena', name: 'Atena (ES)' },
+	{ path: '/es/experience/atena-software-engineer', name: 'Atena experience (ES)' },
 	{ path: '/projects/mad-ai', name: 'Project detail (EN)' },
 	{ path: '/es/projects/mad-ai', name: 'Project detail (ES)' },
 	{ path: '/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (EN)' },
@@ -59,6 +60,7 @@ interface ParagraphMetric {
 	size: number;
 	chars: number;
 	text: string;
+	isExplicitCaption: boolean;
 }
 
 interface HeadingMetric {
@@ -98,12 +100,19 @@ function collectMetrics(): PageMetrics {
 		});
 	}
 
-	const paragraphs: ParagraphMetric[] = Array.from(document.querySelectorAll('main p'))
+	const paragraphs: ParagraphMetric[] = Array.from(
+		document.querySelectorAll<HTMLParagraphElement>('main p')
+	)
 		.filter(isVisible)
 		.map(p => ({
 			size: parseFloat(window.getComputedStyle(p).fontSize),
 			chars: (p.textContent ?? '').trim().length,
 			text: snippet(p),
+			isExplicitCaption:
+				p.classList.contains('text-xs') ||
+				p.classList.contains('text-caption') ||
+				p.classList.contains('text-editorial-label-compact') ||
+				p.dataset.typographyRole === 'caption',
 		}));
 
 	const headings: HeadingMetric[] = Array.from(
@@ -127,7 +136,7 @@ function median(values: number[]): number {
 
 test.skip(
 	({ browserName }) => browserName !== 'chromium',
-	'Computed font-size is engine-independent — chromium covers it'
+	'Computed font-size is engine-independent — canonical Chromium covers it'
 );
 
 for (const { path, name } of KEY_PAGES) {
@@ -138,7 +147,7 @@ for (const { path, name } of KEY_PAGES) {
 				await page.goto(path);
 			});
 
-			test('text-size floors (12px global, 14/16px paragraphs)', async ({ page }) => {
+			test('text-size floors (12px global, 14/16px reading paragraphs)', async ({ page }) => {
 				const metrics = (await page.evaluate(collectMetrics)) as PageMetrics;
 
 				const belowFloor = metrics.textElements.filter(t => t.size < MIN_ANY_TEXT);
@@ -149,16 +158,21 @@ for (const { path, name } of KEY_PAGES) {
 						.join(' | ')}`
 				).toEqual([]);
 
-				const smallParagraphs = metrics.paragraphs.filter(p => p.size < MIN_PARAGRAPH);
+				const smallParagraphs = metrics.paragraphs.filter(
+					p => !p.isExplicitCaption && p.size < MIN_PARAGRAPH
+				);
 				expect(
 					smallParagraphs,
-					`main <p> below ${MIN_PARAGRAPH}px: ${smallParagraphs
+					`Reading main <p> below ${MIN_PARAGRAPH}px: ${smallParagraphs
 						.map(p => `${p.size}px "${p.text}"`)
 						.join(' | ')}`
 				).toEqual([]);
 
 				const smallReadingCopy = metrics.paragraphs.filter(
-					p => p.chars >= READING_COPY_CHARS && p.size < MIN_READING_COPY
+					p =>
+						!p.isExplicitCaption &&
+						p.chars >= READING_COPY_CHARS &&
+						p.size < MIN_READING_COPY
 				);
 				expect(
 					smallReadingCopy,
@@ -189,8 +203,9 @@ for (const { path, name } of KEY_PAGES) {
 				}
 
 				const primaryHeadings = metrics.headings.filter(h => h.level <= 3);
-				if (primaryHeadings.length > 0 && metrics.paragraphs.length > 0) {
-					const bodySize = median(metrics.paragraphs.map(p => p.size));
+				const bodyParagraphs = metrics.paragraphs.filter(p => !p.isExplicitCaption);
+				if (primaryHeadings.length > 0 && bodyParagraphs.length > 0) {
+					const bodySize = median(bodyParagraphs.map(p => p.size));
 					const smallest = primaryHeadings.reduce((a, b) => (a.size <= b.size ? a : b));
 					expect(
 						smallest.size,

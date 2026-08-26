@@ -1,0 +1,40 @@
+---
+interface Props {
+	company: string;
+	role: string;
+	tabId: string;
+	panelId: string;
+	experienceId: string;
+	selected: boolean;
+	focusable: boolean;
+}
+
+const { company, role, tabId, panelId, experienceId, selected, focusable } = Astro.props;
+---
+
+<button
+	role="tab"
+	id={tabId}
+	aria-controls={panelId}
+	aria-selected={selected ? 'true' : 'false'}
+	tabindex={focusable ? 0 : -1}
+	data-experience-id={experienceId}
+	data-active={selected ? 'true' : 'false'}
+	class="group relative flex h-[76px] min-h-[76px] w-62.5 shrink-0 cursor-pointer flex-col justify-center gap-1 overflow-hidden border-2 border-transparent bg-channel-surface-default px-4 py-3 text-left transition-[background-color,border-color,box-shadow] duration-200 hover:bg-badge-brand-bg hover:shadow-retro-md focus-visible:border-channel-accent-primary focus-visible:bg-channel-surface-default focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg data-[active=true]:shadow-retro-md md:w-full md:px-5 lg:px-6"
+>
+	<span
+		data-experience-indicator="vertical"
+		class="absolute -top-0.5 -bottom-0.5 -left-0.5 hidden w-1 origin-top scale-y-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-y-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:block"
+		aria-hidden="true"></span>
+	<span
+		data-experience-indicator="horizontal"
+		class="absolute bottom-0.5 -left-0.5 right-7 h-1 origin-left scale-x-0 bg-channel-accent-primary opacity-0 transition-[opacity,transform] duration-300 ease-out group-data-[active=true]:scale-x-100 group-data-[active=true]:opacity-100 motion-reduce:transition-none md:hidden"
+		aria-hidden="true"></span>
+
+	<span
+		class="w-full min-w-0 truncate uppercase text-navigation text-content-strong transition-colors duration-200 group-data-[active=true]:text-badge-brand-text"
+	>
+		{company}
+	</span>
+	<span class="line-clamp-1 w-full uppercase text-caption text-content-muted">{role}</span>
+</button>

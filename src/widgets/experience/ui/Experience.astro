@@ -1,79 +1,74 @@
 ---
-import ArrowRightIcon from '@assets/icons/ArrowRight.astro';
+import ChevronRightIcon from '@assets/icons/ChevronRight.astro';
 import { getExperienceData } from '@entities/experience';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import ExperienceItem from './ExperienceItem.astro';
+import { TitleSection } from '@shared/ui';
+import ExperienceDetail from './ExperienceDetail.astro';
+import ExperienceTab from './ExperienceTab.astro';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
-
+const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const EXPERIENCE = await getExperienceData(lang);
 ---
 
-<section class="font-sans">
-	<div class="grid grid-cols-1 md:grid-cols-5 gap-8">
-		<!-- Left: Vertical Tabs -->
-		<div class="md:col-span-2">
+<section
+	id="experience"
+	class="w-full scroll-mt-18 overflow-x-clip bg-channel-surface-highlight"
+	aria-labelledby="experience-title"
+>
+	<div
+		data-experience-shell
+		class="mx-auto flex w-full max-w-320 flex-col justify-center gap-10 px-3.75 py-10 md:min-h-[calc(100svh-4.5rem)] md:gap-12 md:px-8 md:py-12 lg:gap-14 lg:px-0 lg:py-14"
+	>
+		<TitleSection align="center" className="w-full px-2.5 md:px-0">
+			<ChevronRightIcon
+				class="text-channel-accent-primary"
+				aria-hidden="true"
+				focusable="false"
+			/>
+			<span id="experience-title">{tExperience('sectionTitle')}</span>
+		</TitleSection>
+
+		<div
+			data-experience-stage
+			class="grid w-full min-w-0 grid-cols-1 items-stretch gap-6 md:grid-cols-[300px_446px] md:justify-center md:gap-6 lg:grid-cols-[400px_840px] lg:gap-10"
+		>
 			<div
 				id="experience-tablist"
 				role="tablist"
 				aria-label={tAccessibility('experienceTabs')}
-				class="flex md:flex-col gap-3 overflow-x-auto md:overflow-visible bg-surface border-2 border-edge-strong p-4 rounded-none shadow-retro-sm"
+				class="experience-tablist flex w-full min-w-0 items-stretch gap-2.5 overflow-x-auto md:flex-col md:overflow-visible md:border-y md:border-edge-subtle md:py-2"
 			>
 				{
 					EXPERIENCE.map((exp, idx) => (
-						<button
-							role="tab"
-							id={`exp-tab-${exp.experienceId}`}
-							aria-controls={`exp-panel-${exp.experienceId}`}
-							aria-selected={idx === 0 ? 'true' : 'false'}
-							tabindex={idx === 0 ? 0 : -1}
-							data-index={idx}
-							data-experience-id={exp.experienceId}
-							data-active={idx === 0 ? 'true' : 'false'}
-							class="group relative pl-4 md:pl-6 pr-4 py-3 rounded-none text-left whitespace-nowrap md:whitespace-normal border-2 border-transparent data-[active=true]:border-edge-strong data-[active=true]:bg-badge-brand-bg text-content-muted data-[active=true]:text-content-strong hover:text-content-strong transition-all duration-100 font-bold uppercase tracking-wider text-sm font-gaming-mono cursor-pointer"
-						>
-							{/* Active indicator bar */}
-							<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary-500 scale-y-0 group-data-[active=true]:scale-y-100 transition-transform duration-150 origin-center hidden md:block" />
-							<div class="absolute bottom-0 left-0 right-0 h-1 bg-primary-500 scale-x-0 group-data-[active=true]:scale-x-100 transition-transform duration-150 origin-center block md:hidden" />
-
-							<div class="flex flex-col">
-								<span class="font-bold flex items-center">
-									<span class="text-primary-500 mr-1.5 scale-0 group-data-[active=true]:scale-100 transition-transform duration-150 origin-left">
-										<ArrowRightIcon
-											class="size-3.5"
-											aria-hidden="true"
-											focusable="false"
-										/>
-									</span>
-									{exp.company ?? exp.title}
-								</span>
-								{exp.company && (
-									<span class="text-content-muted text-xs md:text-sm pl-4 group-data-[active=true]:pl-4 transition-all duration-150">
-										{exp.title}
-									</span>
-								)}
-							</div>
-						</button>
+						<ExperienceTab
+							company={exp.company}
+							role={exp.title}
+							selected={idx === 0}
+							focusable={idx === 0}
+							tabId={`exp-tab-${exp.experienceId}`}
+							panelId={`exp-panel-${exp.experienceId}`}
+							experienceId={exp.experienceId}
+						/>
 					))
 				}
 			</div>
-		</div>
 
-		<!-- Right: Detail Panel -->
-		<div class="md:col-span-3">
-			<div class="relative" style="display:grid;">
+			<div class="experience-panels grid w-full min-w-0">
 				{
 					EXPERIENCE.map((exp, idx) => (
 						<div
+							class="experience-panel col-start-1 row-start-1 min-w-0"
 							role="tabpanel"
 							id={`exp-panel-${exp.experienceId}`}
 							aria-labelledby={`exp-tab-${exp.experienceId}`}
-							class={`[grid-area:1/1] transition-opacity duration-300 ${idx === 0 ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-							data-active={idx === 0}
+							aria-hidden={idx === 0 ? 'false' : 'true'}
+							data-active={idx === 0 ? 'true' : 'false'}
+							data-motion="idle"
 							data-experience-id={exp.experienceId}
 						>
-							<ExperienceItem {...exp} />
+							<ExperienceDetail {...exp} />
 						</div>
 					))
 				}
@@ -81,75 +76,210 @@ const EXPERIENCE = await getExperienceData(lang);
 		</div>
 	</div>
 
+	<style>
+		.experience-tablist {
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+		}
+
+		.experience-tablist::-webkit-scrollbar {
+			display: none;
+		}
+
+		.experience-panel {
+			opacity: 0;
+			pointer-events: none;
+			transform: translateY(0.5rem);
+			visibility: hidden;
+			will-change: opacity, transform;
+			transition:
+				opacity 180ms ease-out,
+				transform 240ms cubic-bezier(0.22, 1, 0.36, 1),
+				visibility 0s linear 240ms;
+		}
+
+		.experience-panel[data-motion='enter-forward'] {
+			transform: translateX(0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-motion='enter-backward'] {
+			transform: translateX(-0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-motion='exit-forward'] {
+			transform: translateX(-0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-motion='exit-backward'] {
+			transform: translateX(0.75rem);
+			visibility: visible;
+		}
+
+		.experience-panel[data-active='true'] {
+			opacity: 1;
+			pointer-events: auto;
+			transform: translate(0, 0);
+			visibility: visible;
+			transition-delay: 0s;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-detail-header] {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 40ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(1) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 80ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(2) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 120ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(3) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 160ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-achievement]:nth-child(4) {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 200ms both;
+		}
+
+		.experience-panel[data-active='true'] [data-experience-detail-footer] {
+			animation: experience-detail-enter 260ms cubic-bezier(0.22, 1, 0.36, 1) 220ms both;
+		}
+
+		@keyframes experience-detail-enter {
+			from {
+				opacity: 0;
+				transform: translateY(0.4rem);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (prefers-reduced-motion: reduce) {
+			.experience-panel {
+				transition: none;
+			}
+
+			.experience-panel[data-active='true'] [data-experience-detail-header],
+			.experience-panel[data-active='true'] [data-experience-achievement],
+			.experience-panel[data-active='true'] [data-experience-detail-footer] {
+				animation: none;
+			}
+		}
+	</style>
+
 	<script>
-		// ARIA-compliant tabs. Bundled + astro:page-load so the tabs stay
-		// interactive after client-side navigation.
 		const setupExperienceTabs = () => {
 			const tablist = document.getElementById('experience-tablist');
 			if (!tablist || tablist.dataset.tabsReady === 'true') return;
 			tablist.dataset.tabsReady = 'true';
 
-			const tabs = Array.from(tablist.querySelectorAll<HTMLElement>('[role="tab"]'));
-			const panels = tabs
-				.map(tab => document.getElementById(tab.getAttribute('aria-controls') ?? ''))
-				.filter((panel): panel is HTMLElement => panel instanceof HTMLElement);
+			const tabs = Array.from(tablist.querySelectorAll<HTMLButtonElement>('[role="tab"]'));
+			const panels = tabs.map(tab =>
+				document.getElementById(tab.getAttribute('aria-controls') ?? '')
+			);
+			let motionResetTimer: number | undefined;
 
-			const updatePanelAnimations = (index: number) => {
-				panels.forEach((panel, i) => {
-					panel.dataset.active = String(i === index);
-				});
-			};
-
-			const activateTab = (index: number, opts = { focus: false }) => {
-				tabs.forEach((tab, i) => {
-					const selected = i === index;
+			const synchronizeSelection = (index: number) => {
+				tabs.forEach((tab, tabIndex) => {
+					const selected = tabIndex === index;
 					tab.setAttribute('aria-selected', String(selected));
 					tab.tabIndex = selected ? 0 : -1;
 					tab.dataset.active = String(selected);
-					const panel = panels[i];
-					if (panel) {
-						if (selected) {
-							panel.classList.remove('opacity-0', 'pointer-events-none');
-							panel.classList.add('opacity-100', 'pointer-events-auto');
-						} else {
-							panel.classList.remove('opacity-100', 'pointer-events-auto');
-							panel.classList.add('opacity-0', 'pointer-events-none');
-						}
-					}
+
+					const panel = panels[tabIndex];
+					if (!panel) return;
+					panel.dataset.active = String(selected);
+					panel.setAttribute('aria-hidden', String(!selected));
+					panel.inert = !selected;
 				});
-				updatePanelAnimations(index);
-				if (opts.focus) {
-					tabs[index]?.focus({ preventScroll: true });
-				}
 			};
 
-			tabs.forEach((tab, i) => {
-				tab.addEventListener('click', () => activateTab(i, { focus: false }));
-				tab.addEventListener('keydown', e => {
-					const key = e.key;
-					let next = i;
-					if (key === 'ArrowDown' || key === 'ArrowRight') next = (i + 1) % tabs.length;
-					else if (key === 'ArrowUp' || key === 'ArrowLeft')
-						next = (i - 1 + tabs.length) % tabs.length;
-					else if (key === 'Home') next = 0;
-					else if (key === 'End') next = tabs.length - 1;
-					else if (key === 'Enter' || key === ' ') activateTab(i, { focus: true });
-					if (
-						next !== i &&
-						['ArrowDown', 'ArrowRight', 'ArrowUp', 'ArrowLeft', 'Home', 'End'].includes(
-							key
-						)
-					) {
-						e.preventDefault();
-						tabs[next]?.focus({ preventScroll: true });
+			const activateTab = (index: number, focus = false) => {
+				const currentIndex = tabs.findIndex(
+					tab => tab.getAttribute('aria-selected') === 'true'
+				);
+				if (index < 0 || index >= tabs.length) return;
+
+				if (currentIndex === index) {
+					synchronizeSelection(index);
+					if (focus) tabs[index]?.focus({ preventScroll: true });
+					return;
+				}
+
+				const direction = currentIndex < index ? 'forward' : 'backward';
+				const currentPanel = currentIndex >= 0 ? panels[currentIndex] : null;
+				const nextPanel = panels[index];
+
+				if (motionResetTimer !== undefined) window.clearTimeout(motionResetTimer);
+
+				if (currentPanel) {
+					currentPanel.dataset.motion = `exit-${direction}`;
+					currentPanel.dataset.active = 'false';
+					currentPanel.setAttribute('aria-hidden', 'true');
+					currentPanel.inert = true;
+				}
+
+				tabs.forEach((tab, tabIndex) => {
+					const selected = tabIndex === index;
+					tab.setAttribute('aria-selected', String(selected));
+					tab.tabIndex = selected ? 0 : -1;
+					tab.dataset.active = String(selected);
+				});
+
+				if (nextPanel) {
+					nextPanel.dataset.motion = `enter-${direction}`;
+					nextPanel.dataset.active = 'false';
+					nextPanel.setAttribute('aria-hidden', 'false');
+					nextPanel.inert = false;
+					void nextPanel.offsetWidth;
+					nextPanel.dataset.active = 'true';
+				}
+
+				motionResetTimer = window.setTimeout(() => {
+					if (currentPanel) currentPanel.dataset.motion = 'idle';
+					if (nextPanel) nextPanel.dataset.motion = 'idle';
+					motionResetTimer = undefined;
+				}, 260);
+
+				if (focus) tabs[index]?.focus({ preventScroll: true });
+			};
+
+			tabs.forEach((tab, index) => {
+				tab.addEventListener('click', () => activateTab(index));
+				tab.addEventListener('keydown', event => {
+					let next: number;
+					if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+						next = (index + 1) % tabs.length;
+					} else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+						next = (index - 1 + tabs.length) % tabs.length;
+					} else if (event.key === 'Home') {
+						next = 0;
+					} else if (event.key === 'End') {
+						next = tabs.length - 1;
+					} else if (event.key === 'Enter' || event.key === ' ') {
+						event.preventDefault();
+						activateTab(index, true);
+						return;
+					} else {
+						return;
 					}
+
+					event.preventDefault();
+					tabs[next]?.focus({ preventScroll: true });
 				});
 			});
 
-			activateTab(0, { focus: false });
-			updatePanelAnimations(0);
+			synchronizeSelection(0);
 		};
 
+		setupExperienceTabs();
 		document.addEventListener('astro:page-load', setupExperienceTabs);
 	</script>
 </section>

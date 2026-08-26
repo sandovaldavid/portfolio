@@ -5,10 +5,7 @@ import { Font } from 'astro:assets';
 import { getPathByLocale, getRelativeLocaleUrl, pathHasLocale } from 'astro:i18n';
 import '@app/styles/global.css';
 import '@app/styles/print.css';
-import BriefCaseIcon from '@assets/icons/Briefcase.astro';
-import CodeIcon from '@assets/icons/Code.astro';
-import ProfileCheckIcon from '@assets/icons/ProfileCheck.astro';
-import BrainIcon from '@assets/icons/Brain.astro';
+import ChevronRightIcon from '@assets/icons/ChevronRight.astro';
 import { ContactSidebar } from '@widgets/contact-sidebar';
 import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
@@ -27,6 +24,7 @@ import {
 import { siteConfig } from '@shared/config/site.config';
 
 type PageType = 'website' | 'profile' | 'project' | 'blog' | 'devlog' | 'research';
+type ContentLayout = 'default' | 'flush';
 
 interface Props {
 	title: string;
@@ -40,6 +38,7 @@ interface Props {
 	breadcrumbLabel?: string;
 	keywords?: string;
 	localizedPaths?: LocalizedPathMap;
+	contentLayout?: ContentLayout;
 }
 
 const {
@@ -54,6 +53,7 @@ const {
 	breadcrumbLabel,
 	keywords = 'Software Engineer, Backend, .NET 8, Angular 19, TypeScript, Peru, Remote, Portfolio, Astro',
 	localizedPaths,
+	contentLayout = 'default',
 } = Astro.props;
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
@@ -78,7 +78,6 @@ const esUrl = esPath ? new URL(esPath, siteConfig.url).toString() : undefined;
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const tBreadcrumbs = createScopedUiTranslator(lang, 'breadcrumbs');
 const tMetadata = createScopedUiTranslator(lang, 'metadata');
-const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 const tResearchSection = createScopedUiTranslator(lang, 'sections.research');
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
@@ -92,6 +91,10 @@ const alternateOgLocale = lang === Language.ENGLISH ? 'es_PE' : 'en_US';
 const hasAlternateLocale = lang === Language.ENGLISH ? Boolean(esUrl) : Boolean(enUrl);
 const isArticlePage = pageType === 'blog' || pageType === 'devlog' || pageType === 'research';
 const ogType = isArticlePage ? 'article' : 'website';
+const pageContentClasses =
+	contentLayout === 'flush'
+		? 'w-full flex flex-col items-center'
+		: 'pt-28 pb-16 w-full flex flex-col items-center';
 
 const toIsoDate = (value: Date | string | undefined): string | undefined => {
 	if (!value) return undefined;
@@ -358,80 +361,93 @@ const structuredPageSchema =
 		<Analytics />
 	</head>
 
-	<body class="bg-background text-content flex flex-col min-h-screen">
+	<body class="flex min-h-screen flex-col" data-is-home={isHome ? 'true' : 'false'}>
 		<a
 			href="#main-content"
-			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-primary-500 focus:text-white dark:focus:text-black focus:font-bold focus:uppercase focus:tracking-wider focus:border-2 focus:border-black dark:focus:border-white focus:shadow-retro-lg focus:rounded-none focus:no-underline"
+			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:border-2 focus:border-button-border focus:bg-button-primary-background focus:px-4 focus:py-2 focus:text-button-label focus:text-button-primary-content focus:shadow-retro-lg focus:rounded-none focus:no-underline"
 		>
 			{tAccessibility('skipToContent')}
 		</a>
 		<div class="flex flex-col justify-center items-center w-full">
-			<Header />
+			<Header localizedPaths={resolvedLocalizedPaths} />
 			<main id="main-content" class="w-full min-h-screen flex flex-col items-center">
 				{
 					isHome ? (
-						<div class="pt-[4.5rem]">
-							<div class="flex flex-col justify-around md:max-h-[calc(100dvh-4.5rem)]">
-								<slot name="hero" />
-							</div>
-							<div class="flex flex-col">
-								<SectionContainer
-									id="experience"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<BriefCaseIcon class="size-12" />
-										{tExperience('sectionTitle')}
-									</TitleSection>
-									<slot name="experience" />
-								</SectionContainer>
-								<SectionContainer
-									id="projects"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<CodeIcon class="size-12" />
-										{tProjects('sectionTitle')}
-									</TitleSection>
-									<slot name="projects" />
-								</SectionContainer>
+						/*
+						 * Home is viewport-oriented from Tablet upward for Hero,
+						 * Experience, Projects, Research and About. Experience owns its
+						 * dedicated internal contract; Core Stack remains content-driven.
+						 */
+						<div class="w-full pt-18">
+							<slot name="hero" />
+							<slot name="experience" />
 
-								<SectionContainer
-									id="research"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<BrainIcon class="size-12" />
-										{tResearchSection('sectionTitle')}
-									</TitleSection>
-									<slot name="research" />
-								</SectionContainer>
+							<SectionContainer
+								id="projects"
+								layout="viewport"
+								surface="canvas"
+								class="py-12 md:py-16 gap-y-6"
+							>
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon
+										class="text-channel-accent-primary"
+										aria-hidden="true"
+									/>
+									{tProjects('sectionTitle')}
+								</TitleSection>
+								<slot name="projects" />
+							</SectionContainer>
 
-								<SectionContainer
-									id="about-me"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<ProfileCheckIcon class="size-12" />
-										{tAbout('sectionTitle')}
-									</TitleSection>
-									<slot name="about-me" />
-								</SectionContainer>
+							<SectionContainer
+								id="research"
+								layout="viewport"
+								surface="highlight"
+								class="py-12 md:py-16 gap-y-6"
+							>
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon
+										class="text-channel-accent-primary"
+										aria-hidden="true"
+									/>
+									{tResearchSection('sectionTitle')}
+								</TitleSection>
+								<slot name="research" />
+							</SectionContainer>
 
-								<SectionContainer
-									id="technologies"
-									class="min-h-[calc(100dvh-4.5rem)] py-12 md:py-16 gap-y-6"
-								>
-									<TitleSection className="mb-0">
-										<CodeIcon class="size-12" />
-										{tTechStack('sectionTitle')}
-									</TitleSection>
-									<TechStack />
-								</SectionContainer>
-							</div>
+							<SectionContainer
+								id="about-me"
+								layout="viewport"
+								surface="canvas"
+								class="py-12 md:py-16 gap-y-6"
+							>
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon
+										class="text-channel-accent-primary"
+										aria-hidden="true"
+									/>
+									{tAbout('sectionTitle')}
+								</TitleSection>
+								<slot name="about-me" />
+							</SectionContainer>
+
+							<SectionContainer
+								id="technologies"
+								layout="compact"
+								surface="highlight"
+								class="py-12 md:py-16 gap-y-6"
+							>
+								<TitleSection align="center" className="mb-0">
+									<ChevronRightIcon
+										class="text-channel-accent-primary"
+										aria-hidden="true"
+									/>
+									{tTechStack('sectionTitle')}
+								</TitleSection>
+								<TechStack />
+							</SectionContainer>
 						</div>
 					) : (
-						<div class="pt-28 pb-16 w-full flex flex-col items-center">
+						<div class={pageContentClasses}>
 							<slot />
 						</div>
 					)

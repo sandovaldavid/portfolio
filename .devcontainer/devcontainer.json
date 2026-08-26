@@ -79,7 +79,6 @@
 	"containerEnv": {
 		"DEVCONTAINER": "true",
 		"HOST_WORKSPACE_FOLDER": "${localWorkspaceFolder}",
-		"NODE_ENV": "development",
 		"PLAYWRIGHT_BROWSERS_PATH": "/ms-playwright",
 		"TERM": "xterm-256color",
 		"ZSH_HISTORY_FILE": "/commandhistory/.zsh_history"

@@ -15,13 +15,14 @@ import {
 } from './shared.mjs';
 
 const JSON_EXTENSIONS = new Set(['.json']);
+const MDX_EXTENSIONS = new Set(['.mdx']);
 const EDITORIAL_EXTENSIONS = new Set(['.md', '.mdx']);
 const STABLE_ID_PATTERN = /^[a-z0-9-]+$/;
 const STRUCTURED_COLLECTIONS = Object.freeze({
-	'portfolio-profile': 'profileId',
-	experience: 'experienceId',
-	research: 'researchId',
-	projects: 'projectId',
+	'portfolio-profile': { idField: 'profileId', extensions: JSON_EXTENSIONS },
+	experience: { idField: 'experienceId', extensions: MDX_EXTENSIONS },
+	research: { idField: 'researchId', extensions: MDX_EXTENSIONS },
+	projects: { idField: 'projectId', extensions: MDX_EXTENSIONS },
 });
 const EDITORIAL_COLLECTIONS = /** @type {readonly ('blog' | 'devlog')[]} */ (
 	Object.freeze(['blog', 'devlog'])
@@ -64,38 +65,52 @@ function validateLocaleDirectories(collectionRoot, repositoryRoot, issues) {
 }
 
 /**
+ * @param {string} filePath
+ * @param {string} file
+ * @param {{ file: string; message: string }[]} issues
+ * @returns {Record<string, unknown> | null}
+ */
+function readStructuredIdentity(filePath, file, issues) {
+	const extension = path.extname(filePath);
+	if (extension === '.mdx') {
+		return readFrontmatterScalars(filePath);
+	}
+
+	try {
+		const parsed = JSON.parse(readText(filePath));
+		if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+			throw new TypeError('root value must be an object');
+		}
+		return parsed;
+	} catch (error) {
+		issues.push({
+			file,
+			message: `invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
+		});
+		return null;
+	}
+}
+
+/**
  * @param {string} collection
- * @param {string} idField
+ * @param {{ idField: string; extensions: Set<string> }} config
  * @param {string} repositoryRoot
  * @param {{ file: string; message: string }[]} issues
  */
-function validateStructuredCollection(collection, idField, repositoryRoot, issues) {
+function validateStructuredCollection(collection, config, repositoryRoot, issues) {
 	const collectionRoot = path.join(repositoryRoot, 'src/content', collection);
 	validateLocaleDirectories(collectionRoot, repositoryRoot, issues);
 	/** @type {Record<string, Map<string, string>>} */
 	const idsByLocale = Object.fromEntries(SUPPORTED_LOCALES.map(locale => [locale, new Map()]));
 
-	for (const filePath of listFiles(collectionRoot, JSON_EXTENSIONS)) {
+	for (const filePath of listFiles(collectionRoot, config.extensions)) {
 		const relative = normalizePath(path.relative(collectionRoot, filePath));
 		const [locale] = relative.split('/');
 		const file = repositoryRelative(filePath, repositoryRoot);
 		if (!SUPPORTED_LOCALES.includes(locale)) continue;
 
-		/** @type {Record<string, unknown>} */
-		let data;
-		try {
-			const parsed = JSON.parse(readText(filePath));
-			if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
-				throw new TypeError('root value must be an object');
-			}
-			data = parsed;
-		} catch (error) {
-			issues.push({
-				file,
-				message: `invalid JSON: ${error instanceof Error ? error.message : String(error)}`,
-			});
-			continue;
-		}
+		const data = readStructuredIdentity(filePath, file, issues);
+		if (!data) continue;
 
 		if (data.locale !== locale) {
 			issues.push({
@@ -103,11 +118,11 @@ function validateStructuredCollection(collection, idField, repositoryRoot, issue
 				message: `locale field must be "${locale}" to match its directory, received ${JSON.stringify(data.locale)}`,
 			});
 		}
-		const stableId = data[idField];
+		const stableId = data[config.idField];
 		if (typeof stableId !== 'string' || !STABLE_ID_PATTERN.test(stableId)) {
 			issues.push({
 				file,
-				message: `${idField} must match ${STABLE_ID_PATTERN}, received ${JSON.stringify(stableId)}`,
+				message: `${config.idField} must match ${STABLE_ID_PATTERN}, received ${JSON.stringify(stableId)}`,
 			});
 			continue;
 		}
@@ -116,7 +131,7 @@ function validateStructuredCollection(collection, idField, repositoryRoot, issue
 		if (previousFile) {
 			issues.push({
 				file,
-				message: `duplicate ${idField} "${stableId}" for locale "${locale}"; first declared in ${previousFile}`,
+				message: `duplicate ${config.idField} "${stableId}" for locale "${locale}"; first declared in ${previousFile}`,
 			});
 		} else {
 			idsByLocale[locale].set(stableId, file);
@@ -131,7 +146,7 @@ function validateStructuredCollection(collection, idField, repositoryRoot, issue
 			if (!idsByLocale[locale].has(stableId)) {
 				issues.push({
 					file: normalizePath(`src/content/${collection}/${locale}`),
-					message: `missing ${locale} counterpart for ${idField} "${stableId}"`,
+					message: `missing ${locale} counterpart for ${config.idField} "${stableId}"`,
 				});
 			}
 		}
@@ -234,9 +249,9 @@ export function validateLocalizedContent({ rootDir = REPOSITORY_ROOT } = {}) {
 	let structuredIdentities = 0;
 	let editorialIdentities = 0;
 
-	for (const [collection, idField] of Object.entries(STRUCTURED_COLLECTIONS)) {
+	for (const [collection, config] of Object.entries(STRUCTURED_COLLECTIONS)) {
 		structuredIdentities +=
-			validateStructuredCollection(collection, idField, rootDir, issues) ?? 0;
+			validateStructuredCollection(collection, config, rootDir, issues) ?? 0;
 	}
 	for (const collection of EDITORIAL_COLLECTIONS) {
 		editorialIdentities += validateEditorialCollection(collection, rootDir, issues) ?? 0;

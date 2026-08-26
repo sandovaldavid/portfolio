@@ -30,10 +30,20 @@ export const SPANISH_FORBIDDEN_PHRASES = Object.freeze([
 	'Go back',
 ]);
 
+/** @type {Readonly<Record<string, string>>} */
+export const LEGACY_REDIRECT_ROUTES = Object.freeze({
+	'/atena': '/experience/atena-software-engineer',
+	'/es/atena': '/es/experience/atena-software-engineer',
+});
+
 export const REPRESENTATIVE_ROUTE_PAIRS = Object.freeze([
 	Object.freeze({ english: '/', spanish: '/es/' }),
 	Object.freeze({ english: '/about', spanish: '/es/about' }),
-	Object.freeze({ english: '/atena', spanish: '/es/atena' }),
+	Object.freeze({ english: '/experience', spanish: '/es/experience' }),
+	Object.freeze({
+		english: '/experience/atena-software-engineer',
+		spanish: '/es/experience/atena-software-engineer',
+	}),
 	Object.freeze({ english: '/components', spanish: '/es/components' }),
 	Object.freeze({ english: '/research', spanish: '/es/research' }),
 	Object.freeze({ english: '/skills', spanish: '/es/skills' }),

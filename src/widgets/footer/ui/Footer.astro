@@ -1,12 +1,13 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
+import { BackToTop } from '@features/back-to-top';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 import MailIcon from '@assets/icons/Mail.astro';
 import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import LinkHubIcon from '@assets/social-networks/LinkHub.astro';
-import CodeIcon from '@assets/icons/Code.astro';
+import { LinkButton } from '@shared/ui';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tFooter = createScopedUiTranslator(lang, 'footer');
@@ -15,6 +16,7 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 
 const currentYear = new Date().getFullYear();
 const newTabLabel = tAccessibility('externalLink');
+const emailHref = `mailto:${siteConfig.email}`;
 
 const socialLinks = [
 	{
@@ -30,8 +32,8 @@ const socialLinks = [
 		opensNewTab: true,
 	},
 	{
-		name: tFooter('email'),
-		href: `mailto:${siteConfig.email}`,
+		name: tFooter('emailDavid'),
+		href: emailHref,
 		icon: MailIcon,
 		opensNewTab: false,
 	},
@@ -44,62 +46,59 @@ const socialLinks = [
 ];
 ---
 
+<BackToTop />
+
+<!--
+	Portfolio / Footer CTA (Figma v2): full-width compact contact footer.
+	Desktop/Tablet base height 372px; Mobile 452px. Content may grow under
+	zoom/translation rather than clipping, so min-height is used at runtime.
+-->
 <footer
-	class="mt-28 px-4 sm:px-6 lg:px-8 pb-8 w-full border-t-2 border-edge-strong pt-20"
 	id="contact"
+	class="flex min-h-113 w-full flex-col items-center justify-between border-t-2 border-edge-strong bg-channel-background-canvas px-6 pt-10 pb-6 md:min-h-93"
 >
-	<div class="text-center space-y-4 mb-10 max-w-2xl mx-auto">
-		<h2
-			class="text-4xl sm:text-5xl md:text-6xl font-bold font-pixel-clean uppercase tracking-wider text-content-strong"
-		>
+	<div class="flex w-full max-w-225 flex-col items-center gap-4 text-center">
+		<h2 class="w-full max-w-85 text-section-title text-content-strong md:max-w-225">
 			{tFooter('title')}
 		</h2>
-		<p class="text-sm font-mono uppercase text-content-muted tracking-wide">
+
+		<p class="w-full max-w-82.5 text-secondary text-content-muted md:max-w-225">
 			{tFooter('subtitle')}
 		</p>
-		<div class="pt-4">
-			<a
-				href={`mailto:${siteConfig.email}`}
-				class="inline-flex items-center gap-2 px-8 py-4 bg-primary-500 text-white dark:text-black border-2 border-black dark:border-white font-mono text-sm font-bold uppercase tracking-wider shadow-[3px_3px_0px_var(--color-primary-500)] hover:-translate-x-[2px] hover:-translate-y-[2px] hover:shadow-[5px_5px_0px_var(--color-primary-500)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all duration-100"
-			>
-				<MailIcon class="w-5 h-5" aria-hidden="true" />
-				{tFooter('contact')}
-			</a>
-		</div>
+
+		<LinkButton href={emailHref} target="_self" variant="primary" class="w-60 md:w-50">
+			<MailIcon aria-hidden="true" />
+			{tFooter('contact')}
+		</LinkButton>
+
+		<ul class="flex items-center gap-4 pt-3" aria-label={tFooter('contact')}>
+			{
+				socialLinks.map(({ name, href, icon: Icon, opensNewTab }) => (
+					<li>
+						<a
+							href={href}
+							target={opensNewTab ? '_blank' : undefined}
+							rel={opensNewTab ? 'noopener noreferrer' : undefined}
+							title={name}
+							aria-label={opensNewTab ? `${name}, ${newTabLabel}` : name}
+							class="grid size-11 place-items-center overflow-hidden rounded-none border-2 border-edge-strong bg-channel-surface-default text-content-strong shadow-retro-sm transition-[box-shadow,background-color,color] duration-100 hover:bg-channel-surface-highlight hover:shadow-retro-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+						>
+							<Icon class="size-5" aria-hidden="true" />
+						</a>
+					</li>
+				))
+			}
+		</ul>
 	</div>
 
-	<div class="flex justify-center gap-4 sm:gap-5 mb-14 flex-wrap">
-		{
-			socialLinks.map(({ name, href, icon: Icon, opensNewTab }) => (
-				<a
-					href={href}
-					target={opensNewTab ? '_blank' : undefined}
-					rel={opensNewTab ? 'noopener noreferrer' : undefined}
-					title={name}
-					aria-label={opensNewTab ? `${name}, ${newTabLabel}` : name}
-					class="flex items-center justify-center p-3.5 bg-surface border-2 border-black dark:border-white text-content-strong shadow-[2.5px_2.5px_0px_var(--color-primary-500)] hover:-translate-x-[1.5px] hover:-translate-y-[1.5px] hover:shadow-[4px_4px_0px_var(--color-primary-500)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all duration-100"
-				>
-					<Icon class="w-6 h-6" aria-hidden="true" />
-				</a>
-			))
-		}
-	</div>
-
-	<div
-		class="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 sm:pt-8 px-4 sm:px-8 border-t border-neutral-300 dark:border-neutral-800 font-mono text-xs sm:text-sm text-content-muted text-center md:text-left"
-	>
-		<p>© {currentYear} {siteConfig.fullName}. {tFooter('rights')}.</p>
-		<p class="flex items-center gap-2">
-			{tFooter('builtWith')}
-			<CodeIcon class="w-4 h-4 text-primary-500" aria-hidden="true" />
-			<span class="text-content-muted">v2.0.0</span>
-			<span aria-hidden="true">·</span>
-			<a
-				href={getRelativeLocaleUrl(lang, 'devlog')}
-				class="underline decoration-dotted underline-offset-2 hover:text-primary-500 transition-colors"
-			>
-				{tNavigation('devlog')}
-			</a>
-		</p>
-	</div>
+	<p class="w-full max-w-82.5 text-center text-caption uppercase text-content-muted md:max-w-275">
+		© {currentYear}
+		{siteConfig.name} · {tFooter('builtWith')} · V2.0.0 ·
+		<a
+			href={getRelativeLocaleUrl(lang, 'devlog')}
+			class="transition-colors duration-100 hover:text-channel-accent-primary focus-visible:outline-none focus-visible:underline"
+		>
+			{tNavigation('devlog')}
+		</a>
+	</p>
 </footer>

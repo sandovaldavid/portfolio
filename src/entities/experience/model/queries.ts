@@ -6,20 +6,29 @@ import {
 	isExperienceId,
 	type ExperienceId,
 } from './metadata';
-import type { ExperienceContentEntry, ExperienceItem, ExperienceList } from './types';
+import type {
+	ExperienceContentEntry,
+	ExperienceDetail,
+	ExperienceItem,
+	ExperienceList,
+} from './types';
 
 interface LocalizedExperienceItem extends ExperienceItem {
 	locale: 'en' | 'es';
 }
 
 function toExperienceItem(entry: ExperienceContentEntry): LocalizedExperienceItem {
-	const { experienceId, locale, company, title, dateLabel, achievements } = entry.data;
+	const { experienceId, locale, company, title, dateLabel, summary, achievements } = entry.data;
 
 	if (!isExperienceId(experienceId)) {
 		throw new Error(`Missing language-neutral metadata for experience "${experienceId}".`);
 	}
 
 	const metadata = EXPERIENCE_METADATA[experienceId];
+	const domain = metadata.domain ? { domain: metadata.domain } : {};
+	const organization = metadata.organizationUrl
+		? { organizationUrl: metadata.organizationUrl }
+		: {};
 	const evidence = metadata.evidenceUrl ? { link: metadata.evidenceUrl } : {};
 
 	return {
@@ -27,21 +36,27 @@ function toExperienceItem(entry: ExperienceContentEntry): LocalizedExperienceIte
 		date: dateLabel,
 		title,
 		company,
+		summary,
 		description: [...achievements],
-		technologies: metadata.technologyIds.map(id => EXPERIENCE_TECHNOLOGIES[id]),
+		technologies: metadata.technologyIds.map(id => ({ ...EXPERIENCE_TECHNOLOGIES[id] })),
+		presentation: metadata.presentation,
 		startDate: metadata.startDate,
 		endDate: metadata.endDate,
 		isCurrent: metadata.isCurrent,
 		featured: metadata.featured,
 		locale,
+		...domain,
+		...organization,
 		...evidence,
 	};
 }
 
-export async function getExperienceData(lang: Language): Promise<ExperienceList> {
-	const entries = await getCollection('experience', ({ data }) => data.locale === lang);
-	const seen = new Set<string>();
+async function getLocalizedExperienceEntries(lang: Language): Promise<ExperienceContentEntry[]> {
+	return getCollection('experience', ({ data }) => data.locale === lang);
+}
 
+function buildExperienceList(entries: ExperienceContentEntry[], lang: Language): ExperienceList {
+	const seen = new Set<string>();
 	const experience = entries.map(entry => {
 		if (seen.has(entry.data.experienceId)) {
 			throw new Error(
@@ -74,4 +89,31 @@ export async function getExperienceData(lang: Language): Promise<ExperienceList>
 			EXPERIENCE_METADATA[right.experienceId].order -
 			EXPERIENCE_METADATA[left.experienceId].order
 	);
+}
+
+export async function getExperienceData(lang: Language): Promise<ExperienceList> {
+	const entries = await getLocalizedExperienceEntries(lang);
+	return buildExperienceList(entries, lang);
+}
+
+export async function getExperienceDetailBySlug(
+	lang: Language,
+	slug: string
+): Promise<ExperienceDetail | undefined> {
+	if (!isExperienceId(slug)) return undefined;
+
+	const entries = await getLocalizedExperienceEntries(lang);
+	const entry = entries.find(candidate => candidate.data.experienceId === slug);
+	if (!entry) return undefined;
+
+	const experience = buildExperienceList(entries, lang);
+	const currentIndex = experience.findIndex(item => item.experienceId === slug);
+	if (currentIndex < 0) return undefined;
+
+	return {
+		experience: experience[currentIndex],
+		entry,
+		previous: experience[currentIndex + 1],
+		next: experience[currentIndex - 1],
+	};
 }

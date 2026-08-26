@@ -1,0 +1,223 @@
+import { readFileSync } from 'node:fs';
+
+const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+const gitignore = readFileSync('.gitignore', 'utf8');
+const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
+const devcontainerDockerfile = readFileSync('.devcontainer/Dockerfile', 'utf8');
+const visualDockerfile = readFileSync('docker/Dockerfile.test', 'utf8');
+const dockerCompose = readFileSync('docker-compose.yml', 'utf8');
+const dockerTest = readFileSync('docker/docker-test.sh', 'utf8');
+const playwrightConfig = readFileSync('playwright.config.ts', 'utf8');
+const visualSpec = readFileSync('tests/e2e/visual.spec.ts', 'utf8');
+const playwrightRunner = readFileSync('scripts/run-playwright.mjs', 'utf8');
+const localValidation = readFileSync('scripts/run-local-validation.mjs', 'utf8');
+const localValidationInside = readFileSync('scripts/run-local-validation-inside.mjs', 'utf8');
+
+/** @type {string[]} */
+const failures = [];
+/**
+ * @param {unknown} condition
+ * @param {string} message
+ */
+const expect = (condition, message) => {
+	if (!condition) failures.push(message);
+};
+
+const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
+const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
+const dependencyInstallCall = "run('bun', ['install', '--frozen-lockfile'])";
+const qualityCheckCall = "run('bun', ['run', 'check'])";
+const dependencyInstallIndex = localValidationInside.indexOf(dependencyInstallCall);
+const qualityCheckIndex = localValidationInside.indexOf(qualityCheckCall);
+
+expect(Boolean(bunVersion), 'packageManager must pin Bun as bun@<version>.');
+expect(
+	/^\d+\.\d+\.\d+$/.test(playwrightVersion ?? ''),
+	'@playwright/test must use an exact version.'
+);
+expect(
+	packageJson.devDependencies?.['playwright-core'] === playwrightVersion,
+	'playwright-core must match @playwright/test.'
+);
+
+expect(
+	devcontainerDockerfile.includes(`ARG PLAYWRIGHT_VERSION=${playwrightVersion}`),
+	'DevContainer Playwright image must match the project Playwright version.'
+);
+expect(
+	devcontainerDockerfile.includes(`ARG BUN_VERSION=${bunVersion}`),
+	'DevContainer Bun version must match packageManager.'
+);
+expect(
+	visualDockerfile.includes(`ARG PLAYWRIGHT_VERSION=${playwrightVersion}`),
+	'Visual regression Playwright image must match the project Playwright version.'
+);
+expect(
+	visualDockerfile.includes(`ARG BUN_VERSION=${bunVersion}`),
+	'Visual regression Bun version must match packageManager.'
+);
+expect(
+	!devcontainerDockerfile.includes('Portfolio V1'),
+	'Active DevContainer metadata must use the canonical portfolio name, not Portfolio V1.'
+);
+
+expect(
+	devcontainer.containerEnv?.DEVCONTAINER === 'true' &&
+		devcontainer.containerEnv?.PLAYWRIGHT_BROWSERS_PATH === '/ms-playwright',
+	'DevContainer must identify itself and use the browsers bundled with the Playwright image.'
+);
+expect(
+	!Object.hasOwn(devcontainer.containerEnv ?? {}, 'NODE_ENV'),
+	'DevContainer must not force NODE_ENV globally; dev and production commands own their execution mode.'
+);
+expect(
+	Array.isArray(devcontainer.runArgs) && devcontainer.runArgs.includes('--ipc=host'),
+	'DevContainer must keep --ipc=host for Chromium stability.'
+);
+
+expect(
+	packageJson.scripts?.['validate:local'] === 'node scripts/run-local-validation.mjs',
+	'validate:local must delegate host orchestration to the Dev Containers wrapper.'
+);
+expect(
+	packageJson.scripts?.['validate:local:inside'] ===
+		'node scripts/run-local-validation-inside.mjs',
+	'validate:local:inside must use the guarded in-container runner.'
+);
+expect(
+	packageJson.scripts?.['test:local'] === 'bun run validate:local',
+	'test:local must not bypass the canonical containerized local gate.'
+);
+expect(
+	packageJson.scripts?.['check:devcontainer']?.includes('check-local-browser-validation.mjs'),
+	'check:devcontainer must include the local browser validation contract.'
+);
+expect(
+	packageJson.scripts?.['check:production-output'] ===
+		'node scripts/check-production-output.mjs' &&
+		packageJson.scripts?.['check:links']?.includes('bun run check:production-output'),
+	'Generated-output validation must reject development-only routes before locale route checks.'
+);
+
+expect(
+	localValidation.includes("process.env.DEVCONTAINER === 'true'") &&
+		localValidation.includes("const workspaceFolder = '.'") &&
+		localValidation.includes(
+			"spawnSync(devcontainer, ['up', '--workspace-folder', workspaceFolder]"
+		) &&
+		localValidation.includes("'exec'") &&
+		localValidation.includes("'--workspace-folder'") &&
+		localValidation.includes('PLAYWRIGHT_WORKERS='),
+	'Host validation must detect nested execution, up/exec the DevContainer from the repository cwd and propagate worker overrides.'
+);
+expect(
+	localValidation.includes('Complete local browser validation requires the Dev Containers CLI'),
+	'Host validation must fail closed when the Dev Containers CLI is unavailable.'
+);
+expect(
+	gitignore.includes('validation-logs/') &&
+		localValidation.includes('validation-logs/validate-local-') &&
+		localValidation.includes('VALIDATION_LOG_FILE') &&
+		localValidation.includes('workspace-relative file path') &&
+		localValidation.includes('createWriteStream') &&
+		localValidation.includes("stdio: ['inherit', 'pipe', 'pipe']") &&
+		localValidation.includes('logStream.write(chunk)') &&
+		localValidation.includes('waitForLoggedProcess') &&
+		!localValidation.includes("'bash', ['-c'") &&
+		!localValidation.includes('set -o pipefail') &&
+		!localValidation.includes('tee "$VALIDATION_LOG_FILE"'),
+	'Canonical local validation must persist the complete gate log without shell interpolation or masking failures.'
+);
+expect(
+	localValidation.includes('PLAYWRIGHT_WORKERS must be a positive integer') &&
+		localValidation.includes('Number.isInteger(parsedWorkerOverride)') &&
+		localValidation.includes('normalizedWorkerOverride = String(parsedWorkerOverride)') &&
+		localValidation.includes('relativeValidationLogPath'),
+	'Host validation must validate and normalize environment-derived worker and log-path inputs before process execution.'
+);
+expect(
+	localValidationInside.includes("process.env.DEVCONTAINER !== 'true'") &&
+		dependencyInstallIndex >= 0 &&
+		qualityCheckIndex > dependencyInstallIndex &&
+		localValidationInside.includes("NODE_ENV: 'production'") &&
+		localValidationInside.includes("run('bun', ['run', 'test:unit:ci'])") &&
+		localValidationInside.includes("run('bun', ['run', 'build'], productionEnvironment)") &&
+		localValidationInside.includes(
+			"run('bun', ['run', 'check:links'], productionEnvironment)"
+		) &&
+		localValidationInside.includes(
+			"run('bun', ['run', 'performance:check'], productionEnvironment)"
+		) &&
+		localValidationInside.includes("run('bun', ['run', 'test:e2e:extended']") &&
+		localValidationInside.includes("E2E_USE_PRODUCTION_PREVIEW: '1'"),
+	'In-container validation must sync frozen dependencies and force production mode before running the maintained quality, build, link, performance and full Playwright gates against the existing production build.'
+);
+
+expect(
+	playwrightRunner.includes(
+		'Local Playwright execution is restricted to the repository DevContainer'
+	) && playwrightRunner.includes("process.env.GITHUB_ACTIONS === 'true'"),
+	'Direct Playwright execution must fail closed locally while remaining available in GitHub Actions.'
+);
+expect(
+	playwrightConfig.includes('const isCi = Boolean(process.env.CI);') &&
+		playwrightConfig.includes(
+			"const isGitHubActions = process.env.GITHUB_ACTIONS === 'true';"
+		) &&
+		playwrightConfig.includes("process.env.E2E_USE_PRODUCTION_PREVIEW === '1'") &&
+		playwrightConfig.includes('PLAYWRIGHT_WORKERS must be a positive integer') &&
+		playwrightConfig.includes('workerOverride ?? (isGitHubActions ? 4 : undefined)') &&
+		playwrightConfig.includes('retries: isGitHubActions ? 2 : 0') &&
+		playwrightConfig.includes('forbidOnly: isCi'),
+	'Playwright must keep CI, GitHub Actions, worker overrides and production preview as separate policy signals.'
+);
+expect(
+	playwrightConfig.includes("open: 'never'"),
+	'Playwright HTML reporter must remain non-interactive so validation can return its exit status.'
+);
+expect(
+	playwrightConfig.includes('const canonicalChromiumOnlySpecs = [') &&
+		playwrightConfig.includes("'**/typography.spec.ts'") &&
+		playwrightConfig.includes("'**/content-components-geometry.spec.ts'") &&
+		playwrightConfig.includes('testIgnore: canonicalChromiumOnlySpecs'),
+	'Browser projects must not duplicate specs that already drive canonical responsive geometry and typography viewports themselves.'
+);
+expect(
+	playwrightConfig.includes('const playwrightPort = 4322;') &&
+		playwrightConfig.includes('reuseExistingServer: false'),
+	'Playwright production preview must stay isolated from the development server.'
+);
+
+expect(
+	packageJson.scripts?.['test:e2e:visual']?.startsWith('RUN_VISUAL_TESTS=true ') &&
+		packageJson.scripts?.['test:e2e:visual']?.includes('--project=chromium') &&
+		!packageJson.scripts?.['test:e2e:visual']?.includes('--project=firefox') &&
+		packageJson.scripts?.['test:e2e:visual:docker']?.includes('--project=chromium') &&
+		packageJson.scripts?.['test:snapshots']?.includes('--project=chromium') &&
+		visualSpec.includes("process.env.RUN_VISUAL_TESTS === 'true'"),
+	'Visual regression must remain an explicit canonical-Chromium baseline gate instead of running implicitly across the compatibility matrix.'
+);
+expect(
+	dockerCompose.includes(`PLAYWRIGHT_VERSION: '${playwrightVersion}'`) &&
+		dockerCompose.includes(`BUN_VERSION: '${bunVersion}'`) &&
+		dockerCompose.includes("GITHUB_ACTIONS: '${GITHUB_ACTIONS:-}'") &&
+		dockerCompose.includes("E2E_USE_PRODUCTION_PREVIEW: '${E2E_USE_PRODUCTION_PREVIEW:-1}'") &&
+		dockerCompose.includes("'4322:4322'"),
+	'Visual Docker Compose must pin the aligned toolchain, preserve the provider signal and expose the dedicated E2E preview port.'
+);
+expect(
+	dockerTest.includes('E2E_USE_PRODUCTION_PREVIEW') &&
+		dockerTest.includes('-e E2E_USE_PRODUCTION_PREVIEW') &&
+		dockerTest.includes('-e GITHUB_ACTIONS'),
+	'Visual Docker wrapper must explicitly select production preview and preserve GitHub-specific policy when present.'
+);
+
+if (failures.length) {
+	console.error('Local browser validation contract failed:');
+	for (const failure of failures) console.error(`- ${failure}`);
+	process.exit(1);
+}
+
+console.log(
+	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, DevContainer orchestration, persistent logs, production-mode isolation, production-output guard, capability-scoped matrix, non-interactive HTML reporting, isolated preview and visual image alignment.`
+);

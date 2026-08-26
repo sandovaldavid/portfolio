@@ -16,5 +16,6 @@
 	"terminalDialog": "Terminal CLI del portafolio",
 	"terminalInput": "Entrada de comandos de la terminal",
 	"closeTerminal": "Cerrar terminal",
-	"secretMode": "Modo secreto para desarrolladores"
+	"secretMode": "Modo secreto para desarrolladores",
+	"backToTop": "Volver al inicio"
 }

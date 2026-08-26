@@ -1,13 +1,10 @@
 ---
-import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
-import { getBlogPosts, getBlogSlug } from '@entities/blog';
+import { BlogList } from '@widgets/blog';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { BlogCard } from '@widgets/blog';
 
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tBlog = createScopedUiTranslator(lang, 'pages.blog');
-const posts = await getBlogPosts(lang);
 ---
 
 <Layout
@@ -16,34 +13,5 @@ const posts = await getBlogPosts(lang);
 	img_preview="/projects/portfolio.webp"
 	isHome={false}
 >
-	<div class="py-16 md:py-24">
-		<div class="mx-auto max-w-4xl">
-			<header class="mb-12">
-				<p
-					class="mb-2 text-editorial-label uppercase text-primary-500 dark:text-primary-400"
-				>
-					{tBlog('label')}
-				</p>
-				<h1 class="mb-4 text-3xl md:text-page-title">
-					{tBlog('heading')}
-				</h1>
-				<p class="max-w-2xl text-body text-content-muted">
-					{tBlog('subheading')}
-				</p>
-			</header>
-
-			<div class="space-y-6">
-				{
-					posts.map(post => (
-						<BlogCard
-							post={post}
-							label={tBlog('label')}
-							readMoreText={tBlog('readMore')}
-							readMoreLink={getRelativeLocaleUrl(lang, `blog/${getBlogSlug(post)}`)}
-						/>
-					))
-				}
-			</div>
-		</div>
-	</div>
+	<BlogList />
 </Layout>

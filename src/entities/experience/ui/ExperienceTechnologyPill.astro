@@ -1,0 +1,28 @@
+---
+import AngularIcon from '@assets/technologies/Angular.astro';
+import DotNetIcon from '@assets/technologies/DotNet.astro';
+import JavaIcon from '@assets/technologies/Java.astro';
+import MySQLIcon from '@assets/technologies/MySQL.astro';
+import ReactIcon from '@assets/technologies/React.astro';
+import TypeScriptIcon from '@assets/technologies/TypeScript.astro';
+import { TechPill } from '@shared/ui';
+import type { ExperienceTechnology } from '../model';
+
+interface Props {
+	technology: ExperienceTechnology;
+	size?: 'sm' | 'md';
+}
+
+const { technology, size = 'sm' } = Astro.props;
+const technologyIcons = {
+	dotnet: DotNetIcon,
+	angular: AngularIcon,
+	typescript: TypeScriptIcon,
+	java: JavaIcon,
+	react: ReactIcon,
+	mysql: MySQLIcon,
+};
+const Icon = technology.iconKey ? technologyIcons[technology.iconKey] : undefined;
+---
+
+<TechPill label={technology.label} icon={Icon} {size} variant="stack" />

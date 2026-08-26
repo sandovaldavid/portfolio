@@ -11,94 +11,23 @@ import type {
 export type ProjectContentEntry = CollectionEntry<'projects'>;
 export type ProjectContentData = ProjectContentEntry['data'];
 
-/**
- * Architecture evidence rendered by the project case-study widget.
- */
-export interface CaseStudyArchitecture {
-	/** Accessible caption explaining the diagram and its current scope */
-	caption: string;
-	/** Browser application and frontend responsibility */
-	client: string;
-	/** Identity provider and authentication boundary */
-	identity: string;
-	/** HTTP application and business-rule boundary */
-	api: string;
-	/** Implemented business modules owned by the API */
-	modules: string;
-	/** Durable data store and persistence responsibility */
-	database: string;
-	/** Supporting runtime processes */
-	processes: string;
-}
-
-/**
- * Repository or demo source used to substantiate a case-study claim.
- */
-export interface CaseStudySource {
-	sourceId: string;
-	label: string;
-	access: string;
-	href?: string;
-}
-
-/**
- * Optional evidence package for flagship case studies.
- */
-export interface CaseStudyEvidence {
-	statusLabel: string;
-	status: string;
-	statusDetail: string;
-	implementedLabel: string;
-	implemented: string[];
-	plannedLabel: string;
-	planned: string[];
-	architectureLabel: string;
-	architecture: CaseStudyArchitecture;
-	securityLabel: string;
-	security: string[];
-	testingLabel: string;
-	testing: string[];
-	deploymentLabel: string;
-	deployment: string[];
-	limitationsLabel: string;
-	limitations: string[];
-	sourcesLabel: string;
-	sources: CaseStudySource[];
-}
-
-/**
- * Recruiter-facing lifecycle, access and limitation summary required for every project.
- * Proportional evidence contract: unlike `CaseStudyEvidence`, this is mandatory and concise.
- */
+/** Concise localized status retained in content for narrative/evidence copy. */
 export interface CaseStudyStatus {
-	lifecycleLabel: string;
 	lifecycle: string;
-	sourceLabel: string;
 	source: string;
-	demoLabel: string;
 	demo: string;
-	limitationsLabel: string;
-	limitations: string[];
 }
 
 /**
- * Localized case-study content for a portfolio project.
+ * Shared frontmatter contract for every project detail.
+ * The unique narrative, evidence, diagrams and learnings live in the MDX body.
  */
 export interface CaseStudy {
-	problem: string;
-	approach: string;
-	tradeoffs: string;
-	outcome: string;
-	learnings: string[];
-	timeline: string;
-	role: string;
+	kicker: string;
 	status: CaseStudyStatus;
-	evidence?: CaseStudyEvidence;
 }
 
-/**
- * Localized project content joined with language-neutral technical metadata.
- */
+/** Localized project content joined with language-neutral technical metadata. */
 export interface ProjectItem {
 	projectId: ProjectId;
 	slug: string;
@@ -108,6 +37,7 @@ export interface ProjectItem {
 	imageAlt: string;
 	link?: string;
 	github?: string;
+	version?: string;
 	image: ImageMetadata;
 	tags: Technology[];
 	featured: boolean;
@@ -115,6 +45,12 @@ export interface ProjectItem {
 	sourceAccess: ProjectSourceAccess;
 	demoAccess: ProjectDemoAccess;
 	caseStudy: CaseStudy;
+}
+
+/** Detail-page payload keeps the renderable content entry separate from the entity DTO. */
+export interface ProjectDetail {
+	project: ProjectItem;
+	entry: ProjectContentEntry;
 }
 
 export type ProjectList = ProjectItem[];

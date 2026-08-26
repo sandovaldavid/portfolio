@@ -1,0 +1,105 @@
+---
+projectId: fullstack-project-fixture
+locale: es
+title: Fixture de Plataforma Full-Stack
+description: 'Case study interno y exclusivo de desarrollo para revisar una composición Project Detail dividida entre web, API, identidad, procesos background y persistencia.'
+category: 'Fixture interno Full-Stack'
+imageAlt: 'Vista previa del fixture de desarrollo full-stack'
+caseStudy:
+    kicker: 'FIXTURE INTERNO · PLATAFORMA FULL-STACK'
+    status:
+        lifecycle: 'SOLO DESARROLLO'
+        source: 'DOS REPOS PÚBLICOS DE PRUEBA'
+        demo: 'FIXTURE EN VIVO'
+---
+
+<CaseStudySection
+	eyebrow="FIXTURE DE DESARROLLO"
+	title="Un case study boundary-first para una plataforma full-stack"
+>
+	Este **no es un proyecto real del portfolio**. Demuestra un layout donde frontend y backend
+	tienen responsabilidades distintas y el diagrama de sistema explica primero quién posee cada
+	autoridad.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Identidad, presentación, reglas de API y estado durable tienen propietarios distintos"
+	surface="highlight"
+>
+	<MermaidDiagram
+		title="Arquitectura del fixture full-stack"
+		description="Una aplicación de navegador autentica mediante identidad, envía comandos durables a una API y recibe actualizaciones background mientras PostgreSQL conserva la fuente de verdad."
+		tones={{
+			Web: 'brand',
+			Identity: 'info',
+			API: 'success',
+			Worker: 'danger',
+			DB: 'warning',
+			Events: 'secondary',
+		}}
+		chart={`flowchart LR
+      Web["Aplicación web"] --> Identity["Proveedor de identidad"]
+      Web -->|comandos REST| API["API de aplicación"]
+      API --> DB["PostgreSQL"]
+      Worker["Worker background"] --> DB
+      API --> Events["Canal de eventos"]
+      Events -. actualizaciones incrementales .-> Web`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="DOS LADOS"
+	title="Decisiones frontend y backend pueden compararse sin duplicar la página"
+>
+	<CaseStudyGrid columns={2}>
+		<CaseStudyCard label="WEB" title="PRESENTACIÓN + INTENCIÓN CLIENTE" tone="primary">
+			El frontend posee navegación, interacción optimista y rendering, pero no redefine
+			autorización o reglas de negocio del servidor.
+		</CaseStudyCard>
+		<CaseStudyCard label="API" title="AUTORIDAD + REGLAS DURABLES" tone="primary">
+			El backend posee validación, autorización, transacciones y persistencia para poder
+			explicar ambas mitades como un solo límite de producto.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="FLUJO DE REQUEST"
+	title="Un diagrama enfocado puede explicar una transacción cross-stack"
+>
+	<MermaidDiagram
+		title="Flujo de comando del fixture full-stack"
+		description="La UI expresa intención, la API la valida, persistencia la confirma y el cliente recibe después una actualización incremental."
+		tones={{
+			UI: 'brand',
+			Command: 'info',
+			Domain: 'success',
+			DB: 'warning',
+			Update: 'secondary',
+		}}
+		chart={`flowchart TD
+      UI["Acción del usuario"] --> Command["Comando tipado"]
+      Command --> Domain["Validación de dominio"]
+      Domain --> DB["Escritura transaccional"]
+      DB --> Update["Actualización incremental"]
+      Update --> UI`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="EVIDENCIA"
+	title="Límites de repositorio y comportamiento desplegado pueden convivir"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock label="FIXTURE" title="DOS REPOSITORIOS · DOCS · LIVE DEMO" tone="verified">
+			La barra de recursos ejercita repos separados de web/API junto con documentación, live
+			demo y compartir.
+		</EvidenceBlock>
+		<EvidenceBlock label="LÍMITE" title="CONTENIDO SOLO DE DESARROLLO" tone="boundary">
+			El fixture demuestra composición únicamente; ninguna de sus afirmaciones técnicas es un
+			claim del portfolio.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

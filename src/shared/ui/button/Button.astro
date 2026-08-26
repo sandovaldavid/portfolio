@@ -4,22 +4,25 @@ import './button.css';
 interface Props {
 	variant?: 'primary' | 'secondary';
 	type?: 'button' | 'submit' | 'reset';
+	disabled?: boolean;
 	class?: string;
 	onclick?: string;
 }
 
-const { variant = 'primary', type = 'button', class: className, onclick } = Astro.props;
+const {
+	variant = 'primary',
+	type = 'button',
+	disabled = false,
+	class: className,
+	onclick,
+} = Astro.props;
 ---
 
 <button
 	{type}
 	{onclick}
-	class:list={[
-		'btn-base',
-		variant === 'primary' ? 'btn-primary' : 'btn-secondary',
-		'group',
-		className,
-	]}
+	{disabled}
+	class:list={['btn-base', variant === 'primary' ? 'btn-primary' : 'btn-secondary', className]}
 >
 	<slot />
 </button>

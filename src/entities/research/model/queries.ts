@@ -1,6 +1,6 @@
 import { getEntry } from 'astro:content';
 import { Language } from '@shared/config/i18n';
-import type { ResearchContent } from './types';
+import type { ResearchContent, ResearchContentEntry } from './types';
 
 const RESEARCH_ENTRY_ID: Record<Language, string> = {
 	[Language.ENGLISH]: 'en/oss-abandonment-bilstm',
@@ -9,7 +9,7 @@ const RESEARCH_ENTRY_ID: Record<Language, string> = {
 
 const RESEARCH_ID = 'oss-abandonment-bilstm';
 
-export async function getResearchContent(lang: Language): Promise<ResearchContent> {
+export async function getResearchEntry(lang: Language): Promise<ResearchContentEntry> {
 	const research = await getEntry('research', RESEARCH_ENTRY_ID[lang]);
 
 	if (!research) {
@@ -28,5 +28,9 @@ export async function getResearchContent(lang: Language): Promise<ResearchConten
 		);
 	}
 
-	return research.data;
+	return research;
+}
+
+export async function getResearchContent(lang: Language): Promise<ResearchContent> {
+	return (await getResearchEntry(lang)).data;
 }

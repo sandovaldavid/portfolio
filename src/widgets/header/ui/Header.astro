@@ -9,22 +9,37 @@
  * - DesktopNav: Center navigation (lg and above)
  * - MobileNav: Right section below lg
  *
- * ThemeToggle and LanguagePicker live in RecruiterHUD, not here.
+ * Shell contract (spec/03): height 72px, border-bottom 2px strong edge,
+ * Top (canvas background) vs Scrolled (--color-header-surface-scrolled +
+ * --shadow-header-scrolled) states; padding-x 16/24/32 at mobile/tablet/desktop.
+ * ThemeToggle and LanguagePicker are never standalone header controls: they
+ * live in RecruiterHUD on desktop and in MobileNav below lg.
  */
 
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { LinkButton } from '@shared/ui';
-import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { LinkButton, BrandLogo } from '@shared/ui';
+import {
+	createScopedUiTranslator,
+	getLanguageFromLocale,
+	type LocalizedPathMap,
+} from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
-import BrandLogo from './BrandLogo.astro';
 import DesktopNav from './DesktopNav.astro';
 import MobileNav from './MobileNav.astro';
 
+interface Props {
+	localizedPaths?: LocalizedPathMap;
+}
+
+const { localizedPaths } = Astro.props;
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tNavigation = createScopedUiTranslator(lang, 'navigation');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
+const tFooter = createScopedUiTranslator(lang, 'footer');
 const homeUrl = getRelativeLocaleUrl(lang, '');
 const homeSectionUrl = (section: string) => `${homeUrl}#${section}`;
+const resumeUrl = lang === 'en' ? siteConfig.resume.en : siteConfig.resume.es;
+const contactHref = `mailto:${siteConfig.email}`;
 
 // Recruiter-first order: current experience, then the strongest engineering
 // evidence (projects), with research as a secondary specialization. The Stack
@@ -72,9 +87,11 @@ const navItems = [
 ---
 
 <header
-	class="fixed top-0 left-0 right-0 z-40 navbar-header font-mono text-content-strong bg-surface border-b-2 border-edge-strong"
+	data-header
+	class="navbar-header fixed top-0 left-0 right-0 z-40 h-18 font-mono text-content-strong border-b-2 border-edge-strong"
 >
-	<div class="flex items-center justify-between px-4 py-4 md:px-8 max-w-7xl mx-auto w-full">
+	<!-- Shell contract (spec/03): 72px total incl. 2px strong edge; padding-x 16/24/32 mobile/tablet/desktop. -->
+	<div class="flex h-full items-center justify-between w-full px-4 md:px-6 lg:px-8">
 		<!-- Left: Brand Logo -->
 		<div class="shrink-0">
 			<BrandLogo href={homeUrl} accessibleLabel={tAccessibility('brandHomeLink')} />
@@ -88,11 +105,11 @@ const navItems = [
 		<!-- Right: Actions (Desktop) -->
 		<div class="hidden lg:flex items-center justify-end gap-4 shrink-0">
 			<LinkButton
-				href={lang === 'en' ? siteConfig.resume.en : siteConfig.resume.es}
+				href={resumeUrl}
 				target="_blank"
 				variant="primary"
-				class="font-mono text-xs uppercase tracking-wider px-3.5 py-1.5"
 				newTabLabel={tAccessibility('externalLink')}
+				class="min-w-47.5"
 			>
 				{tNavigation('resume')}
 			</LinkButton>
@@ -103,10 +120,14 @@ const navItems = [
 			<MobileNav
 				{navItems}
 				{lang}
+				{localizedPaths}
 				menuLabel={tAccessibility('mobileNavigation')}
 				openLabel={tAccessibility('openMenu')}
 				closeLabel={tAccessibility('closeMenu')}
 				resumeLabel={tNavigation('resume')}
+				resumeHref={resumeUrl}
+				contactLabel={tFooter('contact')}
+				{contactHref}
 				newTabLabel={tAccessibility('externalLink')}
 			/>
 		</div>
@@ -114,8 +135,28 @@ const navItems = [
 </header>
 
 <script>
-	// Active link highlighting with Intersection Observer
+	// Scrolled state (spec/03 Header): Top renders the canvas background;
+	// Scrolled swaps to --color-header-surface-scrolled plus its shadow.
+	// Detection is plain scroll-position based and view-transition safe: the
+	// document-level listener attaches once per session and resolves the live
+	// header on every event, so client navigations never duplicate listeners.
+	const updateHeaderScrolledState = () => {
+		const header = document.querySelector<HTMLElement>('header[data-header]');
+		header?.toggleAttribute('data-scrolled', window.scrollY > 4);
+	};
+
+	updateHeaderScrolledState();
+	document.addEventListener('scroll', updateHeaderScrolledState, { passive: true });
+	document.addEventListener('astro:page-load', updateHeaderScrolledState);
+
+	// Active link highlighting with IntersectionObserver. Exactly one observer
+	// exists at any time: it is disconnected and rebuilt after client-side
+	// navigation or visibility changes instead of stacking observers.
+	let spyObserver: IntersectionObserver | null = null;
+
 	const setupScrollSpy = () => {
+		spyObserver?.disconnect();
+
 		const sections = document.querySelectorAll('section[id]');
 		const navLinks = document.querySelectorAll<HTMLElement>('header nav a[data-section-id]');
 
@@ -124,11 +165,10 @@ const navItems = [
 				entries.forEach((entry: IntersectionObserverEntry) => {
 					if (entry.isIntersecting) {
 						navLinks.forEach(link => {
-							if (link.dataset.sectionId === entry.target.id) {
-								link.classList.add('active', 'text-channel-accent-primary');
-							} else {
-								link.classList.remove('active', 'text-channel-accent-primary');
-							}
+							link.classList.toggle(
+								'active',
+								link.dataset.sectionId === entry.target.id
+							);
 						});
 					}
 				});
@@ -140,41 +180,43 @@ const navItems = [
 		return observer;
 	};
 
-	let spyObserver = setupScrollSpy();
+	spyObserver = setupScrollSpy();
 
-	// Re-observe sections after client-side navigation
 	document.addEventListener('astro:page-load', () => {
-		spyObserver.disconnect();
 		spyObserver = setupScrollSpy();
 	});
 
-	// Handle visibility changes
 	document.addEventListener('visibilitychange', () => {
 		if (document.visibilityState === 'hidden') {
-			spyObserver.disconnect();
+			spyObserver?.disconnect();
 		} else {
-			setupScrollSpy();
+			spyObserver = setupScrollSpy();
 		}
 	});
 </script>
 
 <style>
+	/*
+	 * Top vs Scrolled (spec/03 Header). Both states come from semantic tokens:
+	 * Top = channel canvas background; Scrolled = header surface-scrolled token
+	 * plus its paired shadow. Geometry never changes across states.
+	 */
 	.navbar-header {
-		animation: navbar-shadow 1s linear both;
-		animation-timeline: scroll();
-		animation-range: 0 100px;
+		background-color: var(--channel-background-canvas);
+		transition:
+			background-color 160ms ease,
+			box-shadow 160ms ease;
 	}
 
-	@keyframes navbar-shadow {
-		0% {
-			background: transparent;
-			backdrop-filter: none;
-			box-shadow: none;
-		}
-		to {
-			background: var(--color-header-surface-scrolled);
-			backdrop-filter: blur(14px);
-			box-shadow: var(--shadow-header-scrolled);
+	.navbar-header[data-scrolled] {
+		background-color: var(--color-header-surface-scrolled);
+		backdrop-filter: blur(14px);
+		box-shadow: var(--shadow-header-scrolled);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.navbar-header {
+			transition: none;
 		}
 	}
 </style>

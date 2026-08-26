@@ -7,10 +7,12 @@ describe('home section catalog consumers', () => {
 		const research = createScopedUiTranslator(Language.ENGLISH, 'sections.research');
 		const techStack = createScopedUiTranslator(Language.ENGLISH, 'sections.techStack');
 
-		expect(hero('title')).toBe('Software Engineer building reliable web products');
+		expect(hero('title')).toBe(
+			'Building reliable web products with clear engineering decisions'
+		);
 		expect(hero('credential')).toContain('Remote from Peru');
-		expect(research('sectionTitle')).toBe('Research');
-		expect(techStack('frontendTitle')).toBe('Core frontend stack');
+		expect(research('sectionTitle')).toBe('RESEARCH');
+		expect(techStack('sectionTitle')).toBe('CORE STACK');
 	});
 
 	it('resolves Spanish hero and section copy', () => {
@@ -18,10 +20,12 @@ describe('home section catalog consumers', () => {
 		const research = createScopedUiTranslator(Language.SPANISH, 'sections.research');
 		const techStack = createScopedUiTranslator(Language.SPANISH, 'sections.techStack');
 
-		expect(hero('title')).toBe('Ingeniero de software que construye productos web confiables');
+		expect(hero('title')).toBe(
+			'Construyendo productos web confiables con decisiones de ingeniería claras'
+		);
 		expect(hero('banner')).toContain('DISPONIBLE');
-		expect(research('sectionTitle')).toBe('Investigación');
-		expect(techStack('frontendTitle')).toBe('Stack frontend principal');
+		expect(research('sectionTitle')).toBe('INVESTIGACIÓN');
+		expect(techStack('sectionTitle')).toBe('STACK PRINCIPAL');
 	});
 
 	it('reuses shared status and action labels', () => {

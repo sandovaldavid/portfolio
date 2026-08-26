@@ -12,6 +12,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+validation-logs/
 
 # environment variables
 .env
@@ -48,6 +49,7 @@ bundle-analysis/
 !src/assets/**/*.png
 !tests/e2e/**/*.png
 !public/og-image.png
+.playwright-cli/
 
 # playwright
 .auth/

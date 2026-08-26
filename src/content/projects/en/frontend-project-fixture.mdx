@@ -1,0 +1,107 @@
+---
+projectId: frontend-project-fixture
+locale: en
+title: Frontend Product Fixture
+description: 'Development-only frontend case study used to review a UI-heavy Project Detail composition with live demo, gallery and client-state architecture.'
+category: 'Internal Frontend Fixture'
+imageAlt: 'Development-only frontend Project Detail fixture preview'
+caseStudy:
+    kicker: 'INTERNAL FIXTURE · FRONTEND PRODUCT'
+    status:
+        lifecycle: 'DEVELOPMENT ONLY'
+        source: 'PUBLIC TEST SOURCE'
+        demo: 'LIVE FIXTURE'
+---
+
+import fixtureOverview from '@assets/projects/project-dev-fixture.svg';
+import fixtureDetail from '@assets/projects/project-dev-fixture-detail.svg';
+
+<CaseStudySection
+	eyebrow="DEVELOPMENT FIXTURE"
+	title="A visual-first case study for a frontend-only product"
+>
+	This is **not a real portfolio project**. Its composition prioritizes product surface,
+	responsive behavior and interaction evidence before implementation internals.
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="PRODUCT SURFACE"
+	title="Show the interface before explaining the architecture"
+	surface="highlight"
+>
+	<ProjectGallery
+		label="Frontend fixture interface gallery"
+		columns={2}
+		items={[
+			{
+				src: fixtureOverview,
+				alt: 'Frontend fixture overview',
+				caption: 'Primary product surface placeholder.',
+			},
+			{
+				src: fixtureDetail,
+				alt: 'Frontend fixture responsive detail',
+				caption: 'Responsive interaction placeholder.',
+			},
+		]}
+	/>
+</CaseStudySection>
+
+<CaseStudySection eyebrow="INTERACTION MODEL" title="Client state stays close to the UI">
+	<MermaidDiagram
+		title="Frontend fixture state flow"
+		description="Routes render views, views consume a feature store and the store coordinates browser persistence and external APIs."
+		tones={{
+			Route: 'brand',
+			View: 'info',
+			Store: 'secondary',
+			Browser: 'warning',
+			API: 'success',
+		}}
+		chart={`flowchart TD
+      Route["Route"] --> View["Responsive view"]
+      View --> Store["Feature store"]
+      Store --> Browser["Browser persistence"]
+      Store --> API["External API"]`}
+	/>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="UX DECISIONS"
+	title="The page can compare product decisions side by side"
+>
+	<CaseStudyGrid columns={2}>
+		<CaseStudyCard label="RESPONSIVE" title="LAYOUT CHANGES WITH INTENT" tone="primary">
+			Desktop, tablet and mobile can be discussed as different interaction constraints rather
+			than simple scaling.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="ACCESSIBILITY"
+			title="KEYBOARD AND MOTION ARE PART OF THE UI"
+			tone="primary"
+		>
+			Focus visibility, semantic controls and reduced-motion behavior belong next to visual
+			screenshots in a frontend-heavy story.
+		</CaseStudyCard>
+	</CaseStudyGrid>
+</CaseStudySection>
+
+<CaseStudySection
+	eyebrow="EVIDENCE"
+	title="Visual evidence can dominate without turning the page into a gallery"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="FIXTURE"
+			title="LIVE DEMO + SOURCE + RESPONSIVE GALLERY"
+			tone="verified"
+		>
+			The shell exposes source and live demo while the body gives screenshots and interaction
+			architecture first-class placement.
+		</EvidenceBlock>
+		<EvidenceBlock label="BOUNDARY" title="DEVELOPMENT-ONLY CONTENT" tone="boundary">
+			This layout fixture exists solely to compare frontend-oriented composition choices.
+		</EvidenceBlock>
+	</CaseStudyGrid>
+</CaseStudySection>

@@ -1,13 +1,18 @@
 ---
+import { Font } from 'astro:assets';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import ArrowLeft from '@assets/icons/ArrowLeft.astro';
-import Home from '@assets/icons/Home.astro';
-import QuoteLeft from '@assets/icons/QuoteLeft.astro';
-import QuoteRight from '@assets/icons/QuoteRight.astro';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import '@app/styles/global.css';
-
-import { SectionContainer, LinkButton, Button } from '@shared/ui';
-import { createScopedUiTranslator, getUiCatalogNamespace, Language } from '@shared/config/i18n';
+import { Footer } from '@widgets/footer';
+import { Header } from '@widgets/header';
+import { Button, LinkButton } from '@shared/ui';
+import {
+	createScopedUiTranslator,
+	getUiCatalogNamespace,
+	LANGUAGE_LABELS,
+	Language,
+} from '@shared/config/i18n';
+import { siteConfig } from '@shared/config/site.config';
 
 const defaultLang = Language.ENGLISH;
 const tErrors = createScopedUiTranslator(defaultLang, 'errors');
@@ -19,14 +24,39 @@ const localizedHomePaths = {
 	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, ''),
 	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, ''),
 };
+const localizedShell = {
+	[Language.ENGLISH]: {
+		navigation: getUiCatalogNamespace(Language.ENGLISH, 'navigation'),
+		footer: getUiCatalogNamespace(Language.ENGLISH, 'footer'),
+		accessibility: getUiCatalogNamespace(Language.ENGLISH, 'accessibility'),
+		paths: {
+			home: localizedHomePaths[Language.ENGLISH],
+			blog: getRelativeLocaleUrl(Language.ENGLISH, 'blog'),
+			devlog: getRelativeLocaleUrl(Language.ENGLISH, 'devlog'),
+		},
+		resume: siteConfig.resume.en,
+	},
+	[Language.SPANISH]: {
+		navigation: getUiCatalogNamespace(Language.SPANISH, 'navigation'),
+		footer: getUiCatalogNamespace(Language.SPANISH, 'footer'),
+		accessibility: getUiCatalogNamespace(Language.SPANISH, 'accessibility'),
+		paths: {
+			home: localizedHomePaths[Language.SPANISH],
+			blog: getRelativeLocaleUrl(Language.SPANISH, 'blog'),
+			devlog: getRelativeLocaleUrl(Language.SPANISH, 'devlog'),
+		},
+		resume: siteConfig.resume.es,
+	},
+};
 ---
 
 <!doctype html>
 <html lang={defaultLang}>
 	<head>
 		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<meta name="description" content={tErrors('notFoundDescription')} />
+		<meta name="robots" content="noindex, follow" />
 		<link
 			rel="icon"
 			type="image/svg+xml"
@@ -40,33 +70,49 @@ const localizedHomePaths = {
 			media="(prefers-color-scheme: dark)"
 		/>
 		<title>{tErrors('notFoundPageTitle')}</title>
+
+		<Font cssVariable="--font-pixel" />
+		<Font cssVariable="--font-pixel-clean" preload />
+		<Font cssVariable="--font-retro-tag" />
+		<Font cssVariable="--font-gaming-mono" />
+		<Font cssVariable="--font-mono" />
+
 		<script is:inline>
-			document.documentElement.classList.toggle(
-				'dark',
-				localStorage.theme === 'dark' ||
-					(!('theme' in localStorage) &&
-						window.matchMedia('(prefers-color-scheme: dark)').matches)
-			);
+			(function applyTheme() {
+				const saved = localStorage.getItem('theme') || 'dark';
+				const isDark =
+					saved === 'dark' ||
+					(saved === 'system' &&
+						window.matchMedia('(prefers-color-scheme: dark)').matches);
+				document.documentElement.classList.toggle('dark', isDark);
+			})();
 		</script>
 		<script
 			is:inline
 			data-localized-errors={JSON.stringify(localizedErrors)}
-			data-localized-home-paths={JSON.stringify(localizedHomePaths)}
+			data-localized-shell={JSON.stringify(localizedShell)}
+			data-language-labels={JSON.stringify(LANGUAGE_LABELS)}
+			data-site-name={siteConfig.name}
 		>
 			const localizationScript = document.currentScript;
 			const localizedErrors = JSON.parse(
 				localizationScript?.getAttribute('data-localized-errors') ?? '{}'
 			);
-			const localizedHomePaths = JSON.parse(
-				localizationScript?.getAttribute('data-localized-home-paths') ?? '{}'
+			const localizedShell = JSON.parse(
+				localizationScript?.getAttribute('data-localized-shell') ?? '{}'
 			);
+			const languageLabels = JSON.parse(
+				localizationScript?.getAttribute('data-language-labels') ?? '{}'
+			);
+			const siteName = localizationScript?.getAttribute('data-site-name') ?? 'David Sandoval';
 			const locale =
 				window.location.pathname === '/es' || window.location.pathname.startsWith('/es/')
 					? 'es'
 					: 'en';
 			const localizedCopy = localizedErrors[locale];
+			const shell = localizedShell[locale];
 
-			if (!localizedCopy || !localizedHomePaths[locale]) {
+			if (!localizedCopy || !shell) {
 				throw new Error(`Missing static 404 localization data for locale: ${locale}`);
 			}
 
@@ -76,6 +122,15 @@ const localizedHomePaths = {
 				.querySelector('meta[name="description"]')
 				?.setAttribute('content', localizedCopy.notFoundDescription);
 
+			const setOwnText = (element, value) => {
+				if (!element) return;
+				const textNode = Array.from(element.childNodes).find(
+					node => node.nodeType === Node.TEXT_NODE && node.textContent?.trim()
+				);
+				if (textNode) textNode.textContent = ` ${value} `;
+				else element.append(document.createTextNode(value));
+			};
+
 			const applyLocalizedNotFoundCopy = () => {
 				const textById = {
 					'not-found-title': localizedCopy.notFoundTitle,
@@ -84,14 +139,117 @@ const localizedHomePaths = {
 					'not-found-back-label': localizedCopy.backButton,
 					'not-found-quote': localizedCopy.notFoundQuote,
 				};
-
 				for (const [id, value] of Object.entries(textById)) {
 					const element = document.getElementById(id);
 					if (element) element.textContent = value;
 				}
+				document
+					.querySelector('#not-found-home-link a')
+					?.setAttribute('href', shell.paths.home);
 
-				const homeLink = document.querySelector('#not-found-home-link a');
-				homeLink?.setAttribute('href', localizedHomePaths[locale]);
+				const header = document.querySelector('header[data-header]');
+				const brandLink = header?.querySelector('.brand-logo-link');
+				brandLink?.setAttribute('href', shell.paths.home);
+				brandLink?.setAttribute('aria-label', shell.accessibility.brandHomeLink);
+
+				const navBySection = {
+					experience: shell.navigation.experience,
+					projects: shell.navigation.projects,
+					research: shell.navigation.research,
+					'about-me': shell.navigation.about,
+					blog: shell.navigation.blog,
+				};
+				header?.querySelectorAll('a[data-section-id]').forEach(link => {
+					const section = link.getAttribute('data-section-id');
+					const label = navBySection[section];
+					if (!label) return;
+					link.setAttribute('aria-label', label);
+					const labelElement = link.querySelector('span');
+					if (labelElement) labelElement.textContent = label;
+					link.setAttribute(
+						'href',
+						section === 'blog' ? shell.paths.blog : `${shell.paths.home}#${section}`
+					);
+				});
+
+				header?.querySelectorAll('a.btn-primary[target="_blank"]').forEach(link => {
+					link.setAttribute('href', shell.resume);
+					link.setAttribute(
+						'aria-label',
+						`${shell.navigation.resume}, ${shell.accessibility.externalLink}`
+					);
+					setOwnText(link, shell.navigation.resume);
+				});
+				const mobileContact = header?.querySelector('a.btn-secondary[href^="mailto:"]');
+				setOwnText(mobileContact, shell.footer.contact);
+
+				const menuButton = document.getElementById('mobile-menu-btn');
+				const closeButton = document.getElementById('mobile-menu-close');
+				menuButton?.setAttribute('aria-label', shell.accessibility.openMenu);
+				closeButton?.setAttribute('aria-label', shell.accessibility.closeMenu);
+				header?.querySelectorAll('nav[aria-label]').forEach(nav => {
+					nav.setAttribute(
+						'aria-label',
+						nav.closest('#mobile-menu')
+							? shell.accessibility.mobileNavigation
+							: shell.accessibility.mainNavigation
+					);
+				});
+
+				const languageGroup = header?.querySelector('[role="group"]');
+				languageGroup?.setAttribute('aria-label', shell.accessibility.chooseLanguage);
+				header?.querySelectorAll('[data-language-base-path]').forEach(link => {
+					const language = link.textContent?.trim().toLowerCase();
+					const languageShell = localizedShell[language];
+					if (!languageShell) return;
+					const isCurrent = language === locale;
+					link.setAttribute('href', languageShell.paths.home);
+					link.setAttribute('data-language-base-path', languageShell.paths.home);
+					link.toggleAttribute('aria-current', isCurrent);
+					link.setAttribute(
+						'aria-label',
+						isCurrent
+							? `${languageLabels[language]}, ${shell.accessibility.currentPage}`
+							: languageLabels[language]
+					);
+					link.classList.toggle('pointer-events-none', isCurrent);
+					link.classList.toggle('cursor-default', isCurrent);
+					link.classList.toggle('bg-button-primary-background', isCurrent);
+					link.classList.toggle('text-button-primary-content', isCurrent);
+					link.classList.toggle('bg-channel-surface-default', !isCurrent);
+					link.classList.toggle('text-content-strong', !isCurrent);
+				});
+
+				const footer = document.querySelector('footer');
+				const footerContent = footer?.querySelector(':scope > div');
+				const footerTitle = footerContent?.querySelector('h2');
+				const footerSubtitle = footerContent?.querySelector('p');
+				if (footerTitle) footerTitle.textContent = shell.footer.title;
+				if (footerSubtitle) footerSubtitle.textContent = shell.footer.subtitle;
+				const footerContact = footerContent?.querySelector(
+					'a.btn-primary[href^="mailto:"]'
+				);
+				setOwnText(footerContact, shell.footer.contact);
+
+				const footerCopyright = footer?.querySelector(':scope > p');
+				const footerDevlog = footerCopyright?.querySelector('a');
+				if (footerCopyright) {
+					setOwnText(
+						footerCopyright,
+						`© ${new Date().getFullYear()} ${siteName} · ${shell.footer.builtWith} · V2.0.0 ·`
+					);
+				}
+				if (footerDevlog) {
+					footerDevlog.textContent = shell.navigation.devlog;
+					footerDevlog.setAttribute('href', shell.paths.devlog);
+				}
+				const emailSocial = footerContent?.querySelector('ul a[href^="mailto:"]');
+				emailSocial?.setAttribute('title', shell.footer.emailDavid);
+				emailSocial?.setAttribute('aria-label', shell.footer.emailDavid);
+				const backToTop = document.querySelector(
+					'[aria-label="Back to top"], [aria-label="Volver arriba"]'
+				);
+				backToTop?.setAttribute('aria-label', shell.accessibility.backToTop);
 			};
 
 			if (document.readyState === 'loading') {
@@ -104,124 +262,78 @@ const localizedHomePaths = {
 		</script>
 	</head>
 
-	<body
-		class="min-h-screen flex items-center justify-center bg-channel-background-canvas text-channel-content-strong"
-	>
-		<main class="w-full px-4 py-16">
-			<SectionContainer>
-				<div class="text-center space-y-8">
-					<div class="relative">
-						<div
-							class="text-[clamp(8rem,20vw,16rem)] font-bold leading-none select-none"
-							aria-hidden="true"
-						>
-							<span
-								class="inline-block bg-linear-to-br from-channel-accent-primary-hover via-channel-accent-primary to-channel-accent-secondary bg-clip-text text-transparent"
-							>
-								404
-							</span>
-						</div>
+	<body class="min-h-screen bg-channel-background-canvas text-channel-content-strong">
+		<a
+			href="#main-content"
+			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:border-2 focus:border-button-border focus:bg-button-primary-background focus:px-4 focus:py-2 focus:text-button-label focus:text-button-primary-content focus:shadow-retro-lg focus:no-underline"
+		>
+			{getUiCatalogNamespace(defaultLang, 'accessibility').skipToContent}
+		</a>
 
-						<div
-							class="absolute inset-0 -z-10 blur-3xl opacity-10 dark:opacity-30"
-							aria-hidden="true"
-						>
-							<div
-								class="absolute top-1/4 left-1/4 w-32 h-32 md:w-48 md:h-48 bg-channel-accent-primary rounded-full animate-blob"
-							>
-							</div>
-							<div
-								class="absolute top-1/3 right-1/4 w-32 h-32 md:w-48 md:h-48 bg-channel-accent-primary-hover rounded-full animate-blob animation-delay-2000"
-							>
-							</div>
-							<div
-								class="absolute bottom-1/4 left-1/3 w-32 h-32 md:w-48 md:h-48 bg-channel-accent-secondary rounded-full animate-blob animation-delay-4000"
-							>
-							</div>
-						</div>
-					</div>
+		<div class="flex min-h-screen w-full flex-col">
+			<Header localizedPaths={localizedHomePaths} />
 
-					<div class="space-y-4">
-						<h1
-							id="not-found-title"
-							class="text-3xl md:text-4xl lg:text-5xl font-bold text-channel-content-strong"
-						>
-							{tErrors('notFoundTitle')}
-						</h1>
-						<p
-							id="not-found-message"
-							class="text-lg md:text-xl text-channel-content-default max-w-2xl mx-auto"
-						>
-							{tErrors('notFoundMessage')}
+			<main
+				id="main-content"
+				class="flex min-h-screen w-full items-center justify-center px-5 pt-28 pb-16 md:px-8"
+			>
+				<div class="mx-auto flex w-full max-w-3xl flex-col items-center text-center">
+					<p
+						class="font-pixel-clean text-8xl leading-none text-channel-accent-primary select-none md:text-9xl"
+						aria-hidden="true"
+					>
+						404
+					</p>
+
+					<h1
+						id="not-found-title"
+						class="mt-8 text-feature-title uppercase text-channel-content-strong md:text-section-title"
+					>
+						{tErrors('notFoundTitle')}
+					</h1>
+					<p
+						id="not-found-message"
+						class="mt-5 max-w-2xl text-body text-channel-content-default"
+					>
+						{tErrors('notFoundMessage')}
+					</p>
+
+					<div
+						class="mt-6 w-full max-w-2xl border border-channel-edge-subtle bg-channel-surface-default px-5 py-4 shadow-retro-sm"
+					>
+						<p class="text-code text-channel-content-default">
+							<span aria-hidden="true">“</span><span id="not-found-quote"
+								>{tErrors('notFoundQuote')}</span
+							><span aria-hidden="true">”</span>
 						</p>
 					</div>
 
-					<div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-						<div id="not-found-home-link">
-							<LinkButton href={localizedHomePaths[defaultLang]} target="_self">
-								<Home class="size-5" aria-hidden="true" />
+					<div
+						class="mt-6 flex w-full max-w-85 flex-col justify-center gap-4 sm:max-w-none sm:flex-row"
+					>
+						<div id="not-found-home-link" class="w-full sm:w-auto">
+							<LinkButton
+								href={localizedHomePaths[defaultLang]}
+								target="_self"
+								class="w-full sm:w-47.5"
+							>
+								<ArrowUpRightIcon aria-hidden="true" />
 								<span id="not-found-home-label">{tErrors('homeButton')}</span>
 							</LinkButton>
 						</div>
-						<Button variant="secondary" onclick="history.back()">
-							<ArrowLeft class="size-5" aria-hidden="true" />
+						<Button
+							variant="secondary"
+							onclick="history.back()"
+							class="w-full sm:w-47.5"
+						>
+							<ArrowUpRightIcon aria-hidden="true" />
 							<span id="not-found-back-label">{tErrors('backButton')}</span>
 						</Button>
 					</div>
-
-					<div class="pt-8">
-						<div class="flex items-start justify-center gap-2 max-w-2xl mx-auto">
-							<QuoteLeft
-								class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
-								aria-hidden="true"
-							/>
-							<p
-								id="not-found-quote"
-								class="text-base text-channel-content-default italic leading-relaxed"
-							>
-								{tErrors('notFoundQuote')}
-							</p>
-							<QuoteRight
-								class="size-5 shrink-0 text-channel-accent-primary opacity-60 mt-0.5"
-								aria-hidden="true"
-							/>
-						</div>
-					</div>
 				</div>
-			</SectionContainer>
-		</main>
+			</main>
+
+			<Footer />
+		</div>
 	</body>
 </html>
-
-<style>
-	@keyframes blob {
-		0%,
-		100% {
-			transform: translate(0, 0) scale(1);
-		}
-		33% {
-			transform: translate(30px, -50px) scale(1.1);
-		}
-		66% {
-			transform: translate(-20px, 20px) scale(0.9);
-		}
-	}
-
-	.animate-blob {
-		animation: blob 7s infinite;
-	}
-
-	.animation-delay-2000 {
-		animation-delay: 2s;
-	}
-
-	.animation-delay-4000 {
-		animation-delay: 4s;
-	}
-
-	@media (prefers-reduced-motion: reduce) {
-		.animate-blob {
-			animation: none;
-		}
-	}
-</style>

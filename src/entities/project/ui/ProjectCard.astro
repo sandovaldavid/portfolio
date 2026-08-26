@@ -1,55 +1,42 @@
 ---
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import LinkIcon from '@assets/icons/Link.astro';
-import BookIcon from '@assets/icons/BookOpen.astro';
-import { Badge, LinkButton, TechPill } from '@shared/ui';
-import type { ProjectItem, ProjectLifecycle, ProjectSourceAccess } from '../model';
 import { Image } from 'astro:assets';
+import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
+import GitHubIcon from '@assets/technologies/GitHub.astro';
+import { Badge, LinkButton, TechPill } from '@shared/ui';
+import type { ProjectItem, ProjectLifecycle } from '../model';
 
 interface Props {
 	project: ProjectItem;
-	codeButtonText: string;
-	previewButtonText: string;
-	cardTypeText: string;
-	lifecycleText: string;
-	sourceAccessText: string;
 	caseStudyText?: string;
 	caseStudyLink?: string;
+	sourceText?: string;
 	newTabLabel: string;
-	variant?: 'primary' | 'secondary';
+	lifecycleText: string;
+	variant?: 'primary' | 'secondary' | 'catalog';
 	priority?: boolean;
-	/** Heading level for the card title: 'h3' under a section h2 (home), 'h2' under a page h1 */
+	showSecondaryAction?: boolean;
 	headingLevel?: 'h2' | 'h3';
 }
 
 const {
 	project,
-	codeButtonText,
-	previewButtonText,
-	cardTypeText,
-	lifecycleText,
-	sourceAccessText,
 	caseStudyText,
 	caseStudyLink,
+	sourceText,
 	newTabLabel,
+	lifecycleText,
 	variant = 'secondary',
 	priority = false,
+	showSecondaryAction = true,
 	headingLevel = 'h3',
 } = Astro.props;
+
 const Heading = headingLevel;
-const {
-	image,
-	imageAlt,
-	title,
-	description,
-	tags,
-	link,
-	github,
-	category,
-	lifecycle,
-	sourceAccess,
-} = project;
+const { image, imageAlt, title, description, tags, github, category, lifecycle } = project;
 const isPrimary = variant === 'primary';
+const isCatalog = variant === 'catalog';
+const visibleTags = tags.slice(0, isCatalog ? 4 : 3);
+const repositoryName = github?.replace(/\/$/, '').split('/').filter(Boolean).at(-1) ?? sourceText;
 
 const LIFECYCLE_BADGE_VARIANT: Record<
 	ProjectLifecycle,
@@ -61,126 +48,130 @@ const LIFECYCLE_BADGE_VARIANT: Record<
 	archived: 'default',
 	deprecated: 'default',
 };
-const SOURCE_BADGE_VARIANT: Record<ProjectSourceAccess, 'success' | 'default'> = {
-	public: 'success',
-	private: 'default',
-};
+
+const cardHeight = isPrimary
+	? 'h-131.5 md:h-134.5 lg:h-116'
+	: isCatalog
+		? 'h-116.5 md:h-119.5 lg:h-110'
+		: 'h-116.5 md:h-119.5 lg:h-97.5';
+const mediaHeight = isPrimary
+	? 'h-47.5 lg:h-52.5'
+	: isCatalog
+		? 'h-32.5 lg:h-40'
+		: 'h-32.5 lg:h-34';
+const mediaWidth = isPrimary ? 800 : isCatalog ? 640 : 600;
+const mediaSourceHeight = isPrimary ? 500 : isCatalog ? 400 : 380;
 ---
 
-<article class="font-mono group h-full" style={`animation: var(--animate-fade-in);`}>
+<article class="h-full w-full">
 	<div
-		class={isPrimary
-			? 'relative h-full overflow-hidden rounded-none border-2 border-black dark:border-white bg-white/95 dark:bg-neutral-900/95 shadow-retro-lg transition-all duration-100 will-change-transform group-hover:-translate-x-[2px] group-hover:-translate-y-[2px] group-hover:shadow-retro-2xl'
-			: 'relative h-full overflow-hidden rounded-none border-2 border-black dark:border-white bg-white/95 dark:bg-neutral-900/95 shadow-retro-md transition-all duration-100 will-change-transform group-hover:-translate-x-[2px] group-hover:-translate-y-[2px] group-hover:shadow-retro-xl'}
+		class:list={[
+			'relative mx-auto flex w-full max-w-85 flex-col overflow-hidden border-2 border-edge-strong bg-channel-surface-default p-0.5 shadow-retro-md md:max-w-92.25',
+			isCatalog ? 'lg:max-w-148' : 'lg:max-w-140',
+			cardHeight,
+		]}
+		data-project-card-variant={variant}
 	>
-		<Image
-			src={image}
-			width={isPrimary ? 800 : 600}
-			height={isPrimary ? 500 : 380}
-			class="absolute inset-0 h-full w-full object-cover"
-			decoding={priority ? 'sync' : 'async'}
-			loading={priority ? 'eager' : 'lazy'}
-			fetchpriority={priority ? 'high' : 'auto'}
-			alt={imageAlt}
-		/>
-		<div
-			class="absolute inset-0 bg-linear-to-b from-transparent via-background/80 to-background"
-		>
-		</div>
-		<div
-			class="absolute inset-x-0 top-0 flex items-center gap-2 border-b-2 border-black dark:border-white bg-white/90 dark:bg-neutral-900 px-4 py-3"
-		>
-			<span class="size-3 border border-black dark:border-white bg-red-500" aria-hidden="true"
-			></span>
-			<span
-				class="size-3 border border-black dark:border-white bg-yellow-500"
-				aria-hidden="true"></span>
-			<span
-				class="size-3 border border-black dark:border-white bg-green-500"
-				aria-hidden="true"></span>
-			<span
-				class="ml-auto font-retro-tag text-xs uppercase tracking-wider text-content-muted font-bold"
-				>{cardTypeText}</span
+		<figure class:list={['relative w-full shrink-0 overflow-hidden', mediaHeight]}>
+			<div
+				class="absolute inset-x-0 top-0 z-10 flex h-7 items-center gap-1.5 bg-channel-portfolio-terminal-surface-raised px-3"
+				aria-hidden="true"
 			>
-		</div>
+				<span class="size-2 shrink-0 bg-channel-status-error"></span>
+				<span class="size-2 shrink-0 bg-channel-status-warning"></span>
+				<span class="size-2 shrink-0 bg-channel-status-success"></span>
+			</div>
+			<div
+				class="relative h-full w-full overflow-hidden bg-channel-portfolio-terminal-surface"
+			>
+				<Image
+					src={image}
+					width={mediaWidth}
+					height={mediaSourceHeight}
+					class="absolute inset-0 size-full object-cover"
+					decoding={priority ? 'sync' : 'async'}
+					loading={priority ? 'eager' : 'lazy'}
+					fetchpriority={priority ? 'high' : 'auto'}
+					alt={imageAlt}
+				/>
+			</div>
+		</figure>
 
 		<div
-			class={isPrimary
-				? 'relative flex h-full flex-col justify-end gap-3 p-6 md:p-8 min-h-[460px] pt-14'
-				: 'relative flex h-full flex-col justify-end gap-3 p-5 min-h-[320px] pt-14'}
+			class:list={[
+				'flex min-h-0 grow flex-col gap-2 px-3.5 py-2 lg:px-5',
+				isCatalog && 'lg:py-3',
+			]}
 		>
-			{
-				category && (
-					<p class="font-retro-tag text-sm font-bold uppercase tracking-wider text-primary-500 dark:text-primary-400">
-						{category}
-					</p>
-				)
-			}
-			<ul
-				class="flex flex-row flex-wrap gap-2"
-				aria-label={`${lifecycleText}, ${sourceAccessText}`}
-			>
-				<li>
+			<div class="flex min-h-0 grow flex-col gap-2 overflow-hidden">
+				<div class="flex items-start justify-between gap-2">
+					{
+						category && (
+							<p class="min-w-0 flex-1 text-editorial-label-compact uppercase text-channel-accent-primary">
+								{category}
+							</p>
+						)
+					}
 					<Badge variant={LIFECYCLE_BADGE_VARIANT[lifecycle]} size="sm">
 						{lifecycleText}
 					</Badge>
-				</li>
-				<li>
-					<Badge variant={SOURCE_BADGE_VARIANT[sourceAccess]} size="sm">
-						{sourceAccessText}
-					</Badge>
-				</li>
-			</ul>
-			<Heading
-				class={isPrimary
-					? 'text-content-strong text-3xl font-bold font-pixel-clean tracking-wide'
-					: 'text-content-strong text-2xl font-bold font-pixel-clean tracking-wide'}
+				</div>
+
+				<Heading class="line-clamp-2 text-component-title text-content-strong"
+					>{title}</Heading
+				>
+
+				<p
+					class:list={[
+						'line-clamp-3 text-body text-content-default',
+						isCatalog ? 'lg:line-clamp-3' : 'lg:line-clamp-2',
+					]}
+				>
+					{description}
+				</p>
+
+				{
+					visibleTags.length > 0 && (
+						<ul class="flex flex-row flex-wrap gap-x-2 gap-y-1.5 pt-1">
+							{visibleTags.map(tag => (
+								<li>
+									<TechPill
+										label={tag.name}
+										icon={tag.icon}
+										size="sm"
+										variant="card"
+									/>
+								</li>
+							))}
+						</ul>
+					)
+				}
+			</div>
+
+			<footer
+				class="mt-auto flex min-h-14 w-full shrink-0 flex-wrap items-end justify-between gap-2 pb-3"
 			>
-				{title}
-			</Heading>
-			<p class="text-base text-content leading-relaxed line-clamp-3">
-				{description}
-			</p>
-
-			<ul class="flex flex-row flex-wrap gap-2 pt-1">
-				{
-					tags.map(tag => (
-						<li>
-							<TechPill
-								label={tag.name}
-								icon={tag.icon}
-								size="sm"
-								variant="card"
-								class={tag.class}
-							/>
-						</li>
-					))
-				}
-			</ul>
-
-			<footer class="mt-3 flex flex-wrap items-center gap-3">
-				{
-					github && (
-						<LinkButton href={github} {newTabLabel}>
-							<GitHubIcon class="size-5" />
-							{codeButtonText}
-						</LinkButton>
-					)
-				}
-				{
-					link && (
-						<LinkButton href={link} {newTabLabel}>
-							<LinkIcon class="size-4" />
-							{previewButtonText}
-						</LinkButton>
-					)
-				}
 				{
 					caseStudyText && caseStudyLink && (
-						<LinkButton href={caseStudyLink} target="_self">
-							<BookIcon class="size-4" />
+						<LinkButton href={caseStudyLink} target="_self" class="w-fit shrink-0 px-3">
+							<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 							{caseStudyText}
 						</LinkButton>
+					)
+				}
+				{
+					github && showSecondaryAction && repositoryName && (
+						<div class="hidden shrink-0 md:block" data-project-card-repository>
+							<LinkButton
+								href={github}
+								{newTabLabel}
+								variant="secondary"
+								class="w-fit px-3"
+							>
+								<GitHubIcon class="size-4" aria-hidden="true" />
+								{repositoryName}
+							</LinkButton>
+						</div>
 					)
 				}
 			</footer>

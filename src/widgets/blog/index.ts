@@ -1,1 +1,1 @@
-export { BlogCard, BlogDetail } from './ui';
+export { BlogCard, BlogDetail, BlogList } from './ui';
