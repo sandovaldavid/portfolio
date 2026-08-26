@@ -253,7 +253,13 @@ test.describe('Project Card contract', () => {
 		expect(after?.width).toBe(before?.width);
 		expect(after?.height).toBe(before?.height);
 
-		const sourceButton = card.locator('[data-project-card-repository] a').first();
+		const sourceCard = page
+			.locator('article')
+			.filter({ has: page.locator('[data-project-card-variant="secondary"]') })
+			.filter({ has: page.locator('[data-project-card-repository]') })
+			.first();
+		await sourceCard.scrollIntoViewIfNeeded();
+		const sourceButton = sourceCard.locator('[data-project-card-repository] a').first();
 		await expect(sourceButton).toBeVisible();
 
 		await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
