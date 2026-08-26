@@ -1,17 +1,6 @@
 import type { Page } from '@playwright/test';
 import { expect, test } from './fixtures';
 
-/*
- * Focused regression for the final Figma v2 page plans:
- * - 404 geometry and localized button stack (plans/pages/404.md + spec/04):
- *   two 190x44 buttons in a row on desktop/tablet, stacked full-width 340x44
- *   with a 16px gap on mobile.
- * - Components Showcase contract sections incl. Brand Logo lockups
- *   (plans/pages/components-showcase.md + spec/04).
- * Every surface is probed at the three canonical viewports in light and dark
- * with zero horizontal overflow.
- */
-
 const VIEWPORTS = [
 	{ width: 1440, height: 900, label: 'desktop' },
 	{ width: 834, height: 1100, label: 'tablet' },
@@ -38,35 +27,38 @@ async function expectNoHorizontalOverflow(page: Page) {
 	expect(overflow).toBeLessThanOrEqual(0);
 }
 
-test.describe('404 localized button stack', () => {
+test.describe('404 localized fallback', () => {
 	for (const viewport of VIEWPORTS) {
 		for (const locale of ['en', 'es'] as const) {
 			for (const theme of THEMES) {
-				test(`404 ${locale} buttons follow the ${viewport.label} stack in ${theme}`, async ({
-					page,
-				}) => {
+				test(`404 ${locale} follows the ${viewport.label} contract in ${theme}`, async ({ page }) => {
 					await page.setViewportSize({ width: viewport.width, height: viewport.height });
 					await page.goto(locale === 'en' ? '/route-probe-404' : '/es/route-probe-404');
 					await setTheme(page, theme);
 
+					await expect(page.locator('header[data-header]')).toBeVisible();
+					await expect(page.locator('footer')).toBeVisible();
+					await expect(page.locator('html')).toHaveAttribute('lang', locale);
+					await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+						'content',
+						'noindex, follow'
+					);
+
 					const goBack = page.getByRole('button', { name: /go back|volver/i });
-					const returnHome = page.getByRole('link', {
-						name: /return to home|volver al inicio/i,
-					});
+					const goHome = page.getByRole('link', { name: /go to home|ir al inicio/i }).first();
 					await expect(goBack).toBeVisible();
-					await expect(returnHome).toBeVisible();
+					await expect(goHome).toBeVisible();
 
 					const backBox = (await goBack.boundingBox())!;
-					const homeBox = (await returnHome.boundingBox())!;
-
+					const homeBox = (await goHome.boundingBox())!;
 					expect(Math.round(backBox.height)).toBe(44);
 					expect(Math.round(homeBox.height)).toBe(44);
 
 					if (viewport.label === 'mobile') {
-						expect(backBox.y).toBeLessThan(homeBox.y);
-						expect(backBox.width).toBeGreaterThanOrEqual(330);
-						expect(backBox.width).toBeLessThanOrEqual(345);
-						const gap = homeBox.y - (backBox.y + backBox.height);
+						expect(homeBox.y).toBeLessThan(backBox.y);
+						expect(homeBox.width).toBeGreaterThanOrEqual(330);
+						expect(homeBox.width).toBeLessThanOrEqual(345);
+						const gap = backBox.y - (homeBox.y + homeBox.height);
 						expect(Math.round(gap)).toBe(16);
 					} else {
 						expect(Math.abs(backBox.y - homeBox.y)).toBeLessThan(2);
@@ -81,69 +73,37 @@ test.describe('404 localized button stack', () => {
 	}
 });
 
-test.describe('Components Showcase contract sections', () => {
+test.describe('Components Showcase contract', () => {
 	const contractSections = {
-		en: [
-			'Buttons',
-			'Badges',
-			'Tech pills',
-			'Links',
-			'Social pills',
-			'Avatars',
-			'Shell components',
-		],
-		es: [
-			'Botones',
-			'Badges',
-			'Tech pills',
-			'Enlaces',
-			'Social pills',
-			'Avatares',
-			'Componentes de shell',
-		],
+		en: ['Buttons', 'Badges', 'Tech pills', 'Links', 'Social pills', 'Avatars'],
+		es: ['Botones', 'Badges', 'Tech pills', 'Enlaces', 'Social pills', 'Avatares'],
 	} as const;
 
 	for (const viewport of VIEWPORTS) {
 		for (const locale of ['en', 'es'] as const) {
 			for (const theme of THEMES) {
-				test(`showcase ${locale} covers the contract list at ${viewport.label} in ${theme}`, async ({
-					page,
-				}) => {
+				test(`showcase ${locale} covers Shared UI at ${viewport.label} in ${theme}`, async ({ page }) => {
 					await page.setViewportSize({ width: viewport.width, height: viewport.height });
 					await page.goto(locale === 'en' ? '/components' : '/es/components');
 					await setTheme(page, theme);
 
-					const headings = await page
-						.locator('h2')
+					await expect(page.locator('[data-showcase-panel]')).toHaveCount(6);
+					const panelHeadings = await page
+						.locator('[data-showcase-panel] h2')
 						.evaluateAll(elements =>
-							elements.map(element =>
-								(element.textContent ?? '')
-									.replace(/\s+/g, ' ')
-									.trim()
-									.toLowerCase()
-							)
+							elements.map(element => (element.textContent ?? '').replace(/\s+/g, ' ').trim())
 						);
+					expect(panelHeadings).toEqual([...contractSections[locale]]);
 
-					let cursor = -1;
-					for (const expected of contractSections[locale]) {
-						const index = headings.indexOf(expected.toLowerCase(), cursor + 1);
-						expect(index, `missing section "${expected}"`).toBeGreaterThan(cursor);
-						cursor = index;
-					}
+					const shellHeading = locale === 'en' ? 'Shell components' : 'Componentes de shell';
+					await expect(page.getByRole('heading', { level: 2, name: shellHeading })).toBeVisible();
 
-					// Brand logo lockups render production markup with theme-synced assets.
-					// Scoped to main so the site header's own lockup stays out of the count.
+					// The page demonstrates only the two lockups present in the approved screen:
+					// full signature and compact mark. The global header is intentionally excluded.
 					const logos = page.locator('main').locator('.brand-logo-link');
-					await expect(logos).toHaveCount(3);
-					const signatures = page.locator('main').locator('.brand-logo-signature');
-					if (viewport.width >= 1024) {
-						// Responsive + pinned-full show the signature; pinned-compact hides it.
-						await expect(signatures.locator('visible=true')).toHaveCount(2);
-					} else {
-						await expect(signatures.locator('visible=true')).toHaveCount(1);
-					}
+					await expect(logos).toHaveCount(2);
+					await expect(page.locator('main').locator('.brand-logo-signature')).toHaveCount(1);
 
-					await expect(page.locator('.showcase-panel-default')).toBeVisible();
 					await expectNoHorizontalOverflow(page);
 				});
 			}
