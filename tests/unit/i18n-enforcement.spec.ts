@@ -108,6 +108,31 @@ describe('i18n repository enforcement', () => {
 		);
 	});
 
+	it('masks script and style blocks with browser-tolerated closing tags', () => {
+		const root = createFixture({
+			'src/pages/demo.astro': [
+				'<script>const message = "Not visible copy";</script >',
+				'<style>.example::after { content: "Not visible copy"; }</style data-extra>',
+				'<div>{message}</div>',
+			].join('\n'),
+		});
+
+		expect(() => validateHardcodedCopy({ rootDir: root })).not.toThrow();
+	});
+
+	it('still reports visible template text after a tolerant closing tag', () => {
+		const root = createFixture({
+			'src/pages/demo.astro': [
+				'<script>const message = "Not visible copy";</script >',
+				'<p>Download resume</p>',
+			].join('\n'),
+		});
+
+		expect(() => validateHardcodedCopy({ rootDir: root })).toThrowError(
+			/hardcoded visible text "Download resume"/
+		);
+	});
+
 	it('ignores language-neutral locale codes and decorative single-token identifiers', () => {
 		const root = createFixture({
 			'src/app/metadata.ts':
