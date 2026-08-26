@@ -83,6 +83,15 @@ for (const scenario of ROUTES) {
 				lineHeight: viewport.titleLineHeight,
 			});
 
+			// Mermaid renders lazily and can change the vertical geometry above the evidence grid.
+			// Stabilize that async composition before taking sequential column measurements.
+			await mermaidHost.scrollIntoViewIfNeeded();
+			await expect(mermaidHost).toHaveAttribute('data-mermaid-state', 'rendered', {
+				timeout: 15_000,
+			});
+			await expect(mermaidHost.locator('svg[data-diagram-svg]')).toBeVisible();
+			await evidence.scrollIntoViewIfNeeded();
+
 			const firstColumnBox = await evidenceColumns.nth(0).boundingBox();
 			const secondColumnBox = await evidenceColumns.nth(1).boundingBox();
 			expect(firstColumnBox).not.toBeNull();
@@ -102,11 +111,6 @@ for (const scenario of ROUTES) {
 			});
 			expect(featureColumnCount).toBe(viewport.featureColumns);
 
-			await mermaidHost.scrollIntoViewIfNeeded();
-			await expect(mermaidHost).toHaveAttribute('data-mermaid-state', 'rendered', {
-				timeout: 15_000,
-			});
-			await expect(mermaidHost.locator('svg[data-diagram-svg]')).toBeVisible();
 			expect(await mermaidHost.evaluate(element => getComputedStyle(element).overflowX)).toBe(
 				'auto'
 			);
