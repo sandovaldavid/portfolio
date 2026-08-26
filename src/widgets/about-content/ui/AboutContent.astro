@@ -36,12 +36,12 @@ const tAbout = createScopedUiTranslator(lang, 'sections.about');
 			<slot name="profile" />
 		</section>
 
-		<section class="pt-14 lg:pt-16" aria-labelledby="about-biography-title">
+		<section class="pt-14 lg:pt-16">
 			<div class="max-w-3xl">
 				<p class="mb-2 text-editorial-label uppercase text-channel-content-muted">
 					{tPage('biographySubtitle')}
 				</p>
-				<TitleSection id="about-biography-title">{tAbout('biographyTitle')}</TitleSection>
+				<TitleSection className="mb-6">{tAbout('biographyTitle')}</TitleSection>
 				<div class="space-y-5">
 					{
 						profile.biography.map(paragraph => (
@@ -52,20 +52,20 @@ const tAbout = createScopedUiTranslator(lang, 'sections.about');
 			</div>
 		</section>
 
-		<section class="pt-14 pb-2 lg:pt-16" aria-labelledby="about-focus-title">
+		<section class="pt-14 pb-2 lg:pt-16">
 			<div class="max-w-3xl">
 				<p class="mb-2 text-editorial-label uppercase text-channel-content-muted">
 					{tPage('focusSubtitle')}
 				</p>
-				<TitleSection id="about-focus-title">{tAbout('focusTitle')}</TitleSection>
+				<TitleSection className="mb-6">{tAbout('focusTitle')}</TitleSection>
 			</div>
 
-			<ul class="mt-2 grid grid-cols-1 gap-x-10 md:grid-cols-2" role="list">
+			<ul class="grid grid-cols-1 gap-x-10 md:grid-cols-2" role="list">
 				{
 					profile.focusAreas.map((area, index) => (
 						<li class="flex gap-4 border-t border-channel-edge-subtle py-5">
 							<span
-								class="shrink-0 font-mono text-caption text-channel-accent-primary"
+								class="shrink-0 text-editorial-label-compact text-channel-accent-primary"
 								aria-hidden="true"
 							>
 								{String(index + 1).padStart(2, '0')}
