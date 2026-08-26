@@ -11,8 +11,14 @@ const KEY_PAGES = [
 	{ path: '/es/projects', name: 'Projects ES' },
 	{ path: '/research', name: 'Research EN' },
 	{ path: '/es/research', name: 'Research ES' },
+	{ path: '/skills', name: 'Skills EN' },
+	{ path: '/es/skills', name: 'Skills ES' },
+	{ path: '/components', name: 'Components EN' },
+	{ path: '/es/components', name: 'Components ES' },
 	{ path: '/blog', name: 'Blog EN' },
 	{ path: '/es/blog', name: 'Blog ES' },
+	{ path: '/route-probe-404', name: '404 EN' },
+	{ path: '/es/route-probe-404', name: '404 ES' },
 ] as const;
 
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;
