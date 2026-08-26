@@ -39,8 +39,9 @@ const logStream = createWriteStream(validationLogPath, { flags: 'w' });
 
 /**
  * Mirror a spawned validation process to both the terminal and the evidence log.
+ * The child uses inherited stdin and piped stdout/stderr, so stdin is intentionally null.
  *
- * @param {import('node:child_process').ChildProcessWithoutNullStreams} child
+ * @param {import('node:child_process').ChildProcess} child
  * @param {string} label
  * @returns {Promise<number>}
  */
@@ -48,11 +49,11 @@ function waitForLoggedProcess(child, label) {
 	return new Promise(resolveRun => {
 		let spawnFailed = false;
 
-		child.stdout.on('data', chunk => {
+		child.stdout?.on('data', chunk => {
 			process.stdout.write(chunk);
 			logStream.write(chunk);
 		});
-		child.stderr.on('data', chunk => {
+		child.stderr?.on('data', chunk => {
 			process.stderr.write(chunk);
 			logStream.write(chunk);
 		});
