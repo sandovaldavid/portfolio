@@ -6,6 +6,7 @@ import LinkedInIcon from '@assets/social-networks/LinkedIn.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { siteConfig } from '@shared/config/site.config';
 import { CORE_STACK } from '@shared/config/technology';
 import {
 	Avatar,
@@ -27,6 +28,7 @@ const tPage = createScopedUiTranslator(lang, 'pages.components');
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const newTabLabel = tAccessibility('externalLink');
 const homeUrl = getRelativeLocaleUrl(lang, '');
+const emailHref = `mailto:${siteConfig.email}`;
 
 const avatarSizes = ['xs', 'sm', 'md', 'lg'] as const;
 const badgeVariants = [
@@ -48,8 +50,7 @@ const badgeVariantLabels = {
 	info: 'infoBadge',
 } as const;
 const showcasedTechnologies = [CORE_STACK[3], CORE_STACK[0], CORE_STACK[2], CORE_STACK[5]];
-const panelClasses =
-	'border border-channel-edge-subtle bg-channel-background-canvas p-4 md:p-5';
+const panelClasses = 'border border-channel-edge-subtle bg-channel-background-canvas p-4 md:p-5';
 ---
 
 <div class="w-full">
@@ -78,9 +79,9 @@ const panelClasses =
 
 			<div class="mt-6 grid gap-5">
 				<section class={panelClasses} data-showcase-panel="buttons">
-					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+					<h3 class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{tPage('buttonsHeading')}
-					</h2>
+					</h3>
 					<div class="mt-4 flex flex-wrap items-center gap-4">
 						<Button class="min-w-42">
 							<ArrowUpRightIcon aria-hidden="true" />
@@ -109,9 +110,9 @@ const panelClasses =
 				</section>
 
 				<section class={panelClasses} data-showcase-panel="badges">
-					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+					<h3 class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{tPage('badgesHeading')}
-					</h2>
+					</h3>
 					<div class="mt-4 flex flex-wrap items-center gap-3">
 						{
 							badgeVariants.map(variant => (
@@ -122,9 +123,9 @@ const panelClasses =
 				</section>
 
 				<section class={panelClasses} data-showcase-panel="tech-pills">
-					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+					<h3 class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{tPage('techPillsHeading')}
-					</h2>
+					</h3>
 					<ul class="mt-4 flex flex-wrap items-center gap-3" role="list">
 						{
 							showcasedTechnologies.map(({ name, icon }) => (
@@ -137,9 +138,9 @@ const panelClasses =
 				</section>
 
 				<section class={panelClasses} data-showcase-panel="links">
-					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+					<h3 class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{tPage('linksHeading')}
-					</h2>
+					</h3>
 					<div class="mt-4 flex flex-wrap items-center gap-x-6 gap-y-3">
 						<LinkInline href="#shell-components" icon={ArrowRightIcon} iconPosition="trailing">
 							{tPage('linkDefault')}
@@ -164,19 +165,19 @@ const panelClasses =
 				</section>
 
 				<section class={panelClasses} data-showcase-panel="social-pills">
-					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+					<h3 class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{tPage('socialHeading')}
-					</h2>
+					</h3>
 					<div class="mt-4 flex flex-wrap items-center gap-4">
-						<SocialPill href="https://github.com" {newTabLabel}>
+						<SocialPill href={siteConfig.social.github} {newTabLabel}>
 							<GitHubIcon aria-hidden="true" />
 							{tPage('githubLabel')}
 						</SocialPill>
-						<SocialPill href="https://linkedin.com" {newTabLabel}>
+						<SocialPill href={siteConfig.social.linkedin} {newTabLabel}>
 							<LinkedInIcon aria-hidden="true" />
 							{tPage('linkedinLabel')}
 						</SocialPill>
-						<SocialPill href="mailto:example@email.com" target="_self">
+						<SocialPill href={emailHref} target="_self">
 							<MailIcon aria-hidden="true" />
 							{tPage('emailLabel')}
 						</SocialPill>
@@ -184,9 +185,9 @@ const panelClasses =
 				</section>
 
 				<section class={panelClasses} data-showcase-panel="avatars">
-					<h2 class="text-editorial-label-compact uppercase text-channel-accent-primary">
+					<h3 class="text-editorial-label-compact uppercase text-channel-accent-primary">
 						{tPage('avatarsHeading')}
-					</h2>
+					</h3>
 					<div class="mt-4 flex flex-wrap items-end gap-4 md:gap-6">
 						{
 							avatarSizes.map(size => (
