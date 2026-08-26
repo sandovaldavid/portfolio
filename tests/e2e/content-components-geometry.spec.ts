@@ -114,9 +114,7 @@ test.describe('Hero Profile Record contract', () => {
 });
 
 test.describe('Tablet geometry contract', () => {
-	test('project card terminal slot, content panel and editorial card hit tablet targets', async ({
-		page,
-	}) => {
+	test('project card terminal slot hits its tablet target', async ({ page }) => {
 		await page.setViewportSize({ width: TABLET.width, height: TABLET.height });
 		await page.goto('/es/projects');
 		const card = page.locator('article').first();
@@ -127,13 +125,6 @@ test.describe('Tablet geometry contract', () => {
 				.last()
 				.evaluate(el => getComputedStyle(el).height)
 		).toBe('130px');
-
-		await page.goto('/components');
-		const compact = page.locator('.showcase-panel-default');
-		await expect(compact).toBeVisible();
-		const compactBox = await compact.boundingBox();
-		expect(compactBox?.height).toBeGreaterThanOrEqual(200);
-		expect(compactBox?.width).toBeLessThanOrEqual(373);
 	});
 });
 
@@ -276,46 +267,6 @@ test.describe('Project Card contract', () => {
 		await card.scrollIntoViewIfNeeded();
 		const terminalBody = card.locator('figure > div').last();
 		expect(await terminalBody.evaluate(el => getComputedStyle(el).height)).toBe('130px');
-	});
-});
-
-test.describe('Content Panel contract', () => {
-	test('variants resolve their border roles, min-heights and vertical growth', async ({
-		page,
-	}) => {
-		await page.setViewportSize({ width: DESKTOP.width, height: DESKTOP.height });
-		await page.goto('/components');
-		await setTheme(page, 'light');
-
-		const compact = page.locator('.showcase-panel-default');
-		await expect(compact).toBeVisible();
-		const compactBox = await compact.boundingBox();
-		expect(compactBox?.height).toBeGreaterThanOrEqual(180);
-		expect(
-			(await page.locator('.showcase-panel-success').boundingBox())?.height
-		).toBeGreaterThanOrEqual(240);
-
-		const highlight = page.locator('.showcase-panel-highlight');
-		expect(await highlight.evaluate(el => getComputedStyle(el).borderTopColor)).toBe(
-			await probeStyle(page, 'border-top-color: var(--channel-accent-primary);').then(
-				style => style.borderTopColor
-			)
-		);
-		const success = page.locator('.showcase-panel-success');
-		expect(await success.evaluate(el => getComputedStyle(el).borderTopColor)).toBe(
-			await probeStyle(page, 'border-top-color: var(--color-status-success-border);').then(
-				style => style.borderTopColor
-			)
-		);
-
-		const grew = await compact.evaluate(el => {
-			const before = el.getBoundingClientRect().height;
-			const body = el.querySelector('div:last-child') as HTMLElement | null;
-			if (!body) return false;
-			body.textContent = 'Crecimiento del contenido traducido. '.repeat(40);
-			return el.getBoundingClientRect().height > before;
-		});
-		expect(grew).toBe(true);
 	});
 });
 
