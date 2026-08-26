@@ -11,6 +11,7 @@ const validationLogFile =
 	process.env.VALIDATION_LOG_FILE?.trim() || `validation-logs/validate-local-${timestamp}.log`;
 const validationLogPath = resolve(repositoryRoot, validationLogFile);
 const relativeValidationLogPath = relative(repositoryRoot, validationLogPath);
+const workerOverride = process.env.PLAYWRIGHT_WORKERS?.trim();
 
 if (
 	!relativeValidationLogPath ||
@@ -22,6 +23,11 @@ if (
 	process.exit(1);
 }
 
+if (workerOverride && (!/^\d+$/.test(workerOverride) || Number(workerOverride) < 1)) {
+	console.error('[error] PLAYWRIGHT_WORKERS must be a positive integer.');
+	process.exit(1);
+}
+
 /**
  * @param {string} command
  * @param {string[]} args
@@ -30,7 +36,6 @@ if (
 function run(command, args, options = {}) {
 	const result = spawnSync(command, args, {
 		cwd: repositoryRoot,
-		env: process.env,
 		stdio: 'inherit',
 		...options,
 	});
@@ -59,7 +64,6 @@ function runLogged(command, args, options = {}) {
 	return new Promise(resolveRun => {
 		const child = spawn(command, args, {
 			cwd: repositoryRoot,
-			env: process.env,
 			stdio: ['inherit', 'pipe', 'pipe'],
 			...options,
 		});
@@ -109,8 +113,8 @@ run(devcontainer, ['up', '--workspace-folder', repositoryRoot]);
 
 /** @type {string[]} */
 const remoteEnvironment = [];
-if (process.env.PLAYWRIGHT_WORKERS) {
-	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${process.env.PLAYWRIGHT_WORKERS}`);
+if (workerOverride) {
+	remoteEnvironment.push(`PLAYWRIGHT_WORKERS=${workerOverride}`);
 }
 
 const status = await runLogged(devcontainer, [
