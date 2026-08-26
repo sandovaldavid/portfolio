@@ -73,6 +73,54 @@ test.describe('404 localized fallback', () => {
 	}
 });
 
+test.describe('Skills page contract', () => {
+	for (const viewport of VIEWPORTS) {
+		for (const locale of ['en', 'es'] as const) {
+			for (const theme of THEMES) {
+				test(`skills ${locale} follows the ${viewport.label} contract in ${theme}`, async ({ page }) => {
+					await page.setViewportSize({ width: viewport.width, height: viewport.height });
+					await page.goto(locale === 'en' ? '/skills' : '/es/skills');
+					await setTheme(page, theme);
+
+					await expect(
+						page.getByRole('heading', {
+							level: 1,
+							name: locale === 'en' ? 'Skills' : 'Habilidades',
+						})
+					).toBeVisible();
+
+					const coreStack = page.locator('[data-skills-core-stack]');
+					await expect(coreStack).toBeVisible();
+					await expect(coreStack.locator('.tech-pill')).toHaveCount(8);
+
+					const categories = page.locator('[data-skills-category]');
+					await expect(categories).toHaveCount(3);
+					await expect(page.locator('[data-skills-supporting]')).toBeVisible();
+
+					const categoryBoxes = await categories.evaluateAll(elements =>
+						elements.map(element => element.getBoundingClientRect()).map(rect => ({
+							x: rect.x,
+							y: rect.y,
+							width: rect.width,
+						}))
+					);
+
+					if (viewport.label === 'mobile') {
+						expect(categoryBoxes[0].y).toBeLessThan(categoryBoxes[1].y);
+						expect(categoryBoxes[1].y).toBeLessThan(categoryBoxes[2].y);
+					} else {
+						expect(Math.abs(categoryBoxes[0].y - categoryBoxes[1].y)).toBeLessThan(2);
+						expect(categoryBoxes[0].width).toBeGreaterThan(0);
+						expect(categoryBoxes[1].width).toBeGreaterThan(0);
+					}
+
+					await expectNoHorizontalOverflow(page);
+				});
+			}
+		}
+	}
+});
+
 test.describe('Components Showcase contract', () => {
 	const contractSections = {
 		en: ['Buttons', 'Badges', 'Tech pills', 'Links', 'Social pills', 'Avatars'],
