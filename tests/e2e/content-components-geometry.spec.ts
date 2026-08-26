@@ -224,21 +224,19 @@ test.describe('Experience Detail contract', () => {
 });
 
 test.describe('Project Card contract', () => {
-	test('terminal slot heights and hover shadow respect the secondary variant contract', async ({
-		page,
-	}) => {
+	test('media slot and hover shadow respect the secondary variant contract', async ({ page }) => {
 		await page.setViewportSize({ width: DESKTOP.width, height: DESKTOP.height });
-		await page.goto('/projects');
+		await page.goto('/');
 		await setTheme(page, 'light');
 
 		const card = page
 			.locator('article')
-			.filter({ has: page.locator('[data-project-card-repository]') })
+			.filter({ has: page.locator('[data-project-card-variant="secondary"]') })
 			.first();
 		await card.scrollIntoViewIfNeeded();
 
 		const terminalBody = card.locator('figure > div').last();
-		expect(await terminalBody.evaluate(el => getComputedStyle(el).height)).toBe('120px');
+		expect(await terminalBody.evaluate(el => getComputedStyle(el).height)).toBe('136px');
 		expect(await terminalBody.evaluate(el => getComputedStyle(el).backgroundColor)).toBe(
 			await probeBackground(page, '--color-terminal-surface')
 		);
@@ -262,8 +260,11 @@ test.describe('Project Card contract', () => {
 
 	test('mobile terminal slot meets the 130px secondary height', async ({ page }) => {
 		await page.setViewportSize({ width: MOBILE.width, height: MOBILE.height });
-		await page.goto('/es/projects');
-		const card = page.locator('article').first();
+		await page.goto('/');
+		const card = page
+			.locator('article')
+			.filter({ has: page.locator('[data-project-card-variant="secondary"]') })
+			.first();
 		await card.scrollIntoViewIfNeeded();
 		const terminalBody = card.locator('figure > div').last();
 		expect(await terminalBody.evaluate(el => getComputedStyle(el).height)).toBe('130px');
