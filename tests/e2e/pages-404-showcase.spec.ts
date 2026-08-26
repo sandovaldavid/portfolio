@@ -39,12 +39,17 @@ test.describe('404 localized fallback', () => {
 					await setTheme(page, theme);
 
 					await expect(page.locator('header[data-header]')).toBeVisible();
-					await expect(page.locator('footer')).toBeVisible();
+					const footer = page.locator('footer');
+					await expect(footer).toBeAttached();
 					await expect(page.locator('html')).toHaveAttribute('lang', locale);
 					await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
 						'content',
 						'noindex, follow'
 					);
+
+					const footerBox = await footer.boundingBox();
+					expect(footerBox).not.toBeNull();
+					expect(footerBox!.y).toBeGreaterThanOrEqual(viewport.height);
 
 					const goBack = page.getByRole('button', { name: /go back|volver/i });
 					const goHome = page
