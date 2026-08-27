@@ -40,7 +40,7 @@ caseStudy:
 <CaseStudySection eyebrow="CONTENT MODEL" title="The catalog is a build-time contract">
   The repository defines typed content collections for books, packs, exams, editorials, testimonies, offers, categories, FAQs and legal content. That keeps the public storefront static while still giving product records a schema instead of scattering commerce data through templates.
 
-Decap CMS configuration exists under `/admin` and maps authoring forms back to the JSON catalog. The checked-in CMS configuration currently targets a feature branch, so it represents an implemented authoring integration whose production publishing path still needs branch alignment.
+Decap CMS configuration under `/admin` maps authoring forms back to the JSON catalog. The integration exists as a content-authoring path, while the production publishing flow still needs to be consolidated before it becomes the default way to publish catalog changes.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="CLIENT STATE" title="Cart behavior is explicit and recoverable" surface="highlight">
@@ -85,7 +85,7 @@ Decap CMS configuration exists under `/admin` and maps authoring forms back to t
       A mostly static Astro site can keep interactive state narrow: cart behavior lives in targeted browser code while the catalog remains pre-rendered.
     </CaseStudyCard>
     <CaseStudyCard label="LEARNING 03" title="CONTENT AUTHORING IS ITS OWN ARCHITECTURAL CONCERN" tone="success">
-      A CMS can edit build-time content without turning the public application into a dynamic server, but branch and deployment ownership still need to be explicit.
+      A CMS can edit build-time content without turning the public application into a dynamic server, but publishing responsibility still needs a clear operational path.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
