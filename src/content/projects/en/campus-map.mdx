@@ -51,13 +51,13 @@ caseStudy:
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CURRENT STACK" title="The maintained implementation has moved beyond older dependency notes" surface="highlight">
+<CaseStudySection eyebrow="CURRENT STACK" title="Next.js 16, React 19 and Tailwind 4" surface="highlight">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="PACKAGE MANIFEST" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
-      The current `package.json` uses Next.js **16.0.10**, React **19.2.3** and Tailwind CSS **4.1.17**. Some older README sections still reference previous versions, so the maintained implementation should be read against the current manifest and route/service code.
+    <EvidenceBlock label="IMPLEMENTATION" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
+      The current application uses Next.js **16.0.10**, React **19.2.3** and Tailwind CSS **4.1.17**, with App Router route handlers, service-layer queries and administrative CRUD around the academic directory.
     </EvidenceBlock>
     <EvidenceBlock label="PRODUCT ROADMAP" title="INTERACTIVE MAPPING REMAINS FUTURE WORK" tone="boundary">
-      The project roadmap still describes interactive mapping and geospatial behavior as future work. The current product stops at a searchable, administrable directory until that navigation layer is implemented.
+      Interactive mapping and geospatial navigation remain future product work. The current product stops at a searchable, administrable directory until that navigation layer is implemented.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
@@ -65,7 +65,7 @@ caseStudy:
 <CaseStudySection eyebrow="TRADE-OFFS" title="A directory first, map later">
   Building the data model, search and content-management path first creates a reliable information layer that a future map can consume. It also avoids coupling the value of the project to GPS or geospatial UX before the underlying faculty and school records are dependable.
 
-Knex adds a small abstraction layer, but it gives the repository one query surface for its documented MySQL default and PostgreSQL-compatible configuration.
+Knex adds a small abstraction layer, but it gives the application one query surface for the default MySQL configuration and the supported PostgreSQL path.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LEARNINGS" title="What the project reinforced">
@@ -73,8 +73,8 @@ Knex adds a small abstraction layer, but it gives the repository one query surfa
     <CaseStudyCard label="LEARNING 01" title="SHIP THE RELIABLE INFORMATION LAYER FIRST" tone="success">
       The directory delivers useful discovery before the geospatial layer is ready, and gives future map interaction a structured data source to build on.
     </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 02" title="EXECUTABLE CONFIGURATION MUST STAY ALIGNED WITH DOCUMENTATION" tone="success">
-      Dependency upgrades can make architecture notes stale. Keeping manifests, routes and documentation synchronized reduces ambiguity about the maintained system.
+    <CaseStudyCard label="LEARNING 02" title="KEEP CONFIGURATION AND DOCUMENTATION ALIGNED" tone="success">
+      Dependency and architecture changes are easier to maintain when executable configuration, routes and documentation evolve together.
     </CaseStudyCard>
     <CaseStudyCard label="LEARNING 03" title="PORTABILITY NEEDS A REAL BOUNDARY" tone="success">
       Supporting more than one database is meaningful when queries flow through one adapter layer and both schema paths exist, not when portability is only a documentation claim.
