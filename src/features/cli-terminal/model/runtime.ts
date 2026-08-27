@@ -30,12 +30,8 @@ const COMMANDS = [
 	'github',
 	'contact',
 	'skills',
-	'matrix',
 	'open resume',
 	'clear',
-	'vim',
-	'nvim',
-	'sudo',
 	'exit',
 	':q',
 ] as const;
@@ -51,7 +47,6 @@ function escapeHtml(value: string): string {
 		.replace(/'/g, '&#039;');
 }
 
-// ponytail: single-pass regex replace; ceiling is simple flat key substitution, upgrade path is full template parser if nested syntax needed.
 function formatCopy(template: string, variables: Record<string, string> = {}): string {
 	return template.replace(/\{(\w+)\}/g, (match, name) => variables[name] ?? match);
 }
@@ -93,10 +88,6 @@ export function setupCliTerminal(): void {
 	const cliCloseElement = document.getElementById('cli-close-dot');
 	const shortcutsModalElement = document.getElementById('shortcuts-modal');
 	const shortcutsCloseElement = document.getElementById('shortcuts-close');
-	const easterEggOverlayElement = document.getElementById('easter-egg-overlay');
-	const eggLoadingElement = document.getElementById('egg-loading');
-	const eggStatsElement = document.getElementById('egg-stats');
-	const eggCloseElement = document.getElementById('egg-close');
 
 	if (
 		!(cliOverlayElement instanceof HTMLElement) ||
@@ -104,11 +95,7 @@ export function setupCliTerminal(): void {
 		!(cliInputElement instanceof HTMLInputElement) ||
 		!(cliCloseElement instanceof HTMLElement) ||
 		!(shortcutsModalElement instanceof HTMLElement) ||
-		!(shortcutsCloseElement instanceof HTMLElement) ||
-		!(easterEggOverlayElement instanceof HTMLElement) ||
-		!(eggLoadingElement instanceof HTMLElement) ||
-		!(eggStatsElement instanceof HTMLElement) ||
-		!(eggCloseElement instanceof HTMLElement)
+		!(shortcutsCloseElement instanceof HTMLElement)
 	) {
 		return;
 	}
@@ -119,10 +106,6 @@ export function setupCliTerminal(): void {
 	const cliClose = cliCloseElement;
 	const shortcutsModal = shortcutsModalElement;
 	const shortcutsClose = shortcutsCloseElement;
-	const easterEggOverlay = easterEggOverlayElement;
-	const eggLoading = eggLoadingElement;
-	const eggStats = eggStatsElement;
-	const eggClose = eggCloseElement;
 
 	const history: string[] = [];
 	let historyIndex = -1;
@@ -197,7 +180,7 @@ export function setupCliTerminal(): void {
 		cliBooted = true;
 		const lines: Array<[string, LineType]> = [
 			['╔══════════════════════════════════════════╗', 'info'],
-			['║  PORTFOLIO OS v2.0 — sandovaldavid.com  ║', 'info'],
+			['║  PORTFOLIO CLI — sandovaldavid.com      ║', 'info'],
 			[`║  ${localized('runtime.bootRole')}  ║`, 'info'],
 			['╚══════════════════════════════════════════╝', 'info'],
 		];
@@ -359,7 +342,6 @@ export function setupCliTerminal(): void {
 		printCommand('github', 'runtime.helpGithub');
 		printCommand('contact', 'runtime.helpContact');
 		printCommand('skills', 'runtime.helpSkills');
-		printCommand('matrix', 'runtime.helpMatrix');
 		printCommand('open resume', 'runtime.helpResume');
 		printCommand('clear', 'runtime.helpClear');
 		printCommand(':q / exit', 'runtime.helpExit');
@@ -492,53 +474,10 @@ export function setupCliTerminal(): void {
 		printBoxEnd();
 	}
 
-	function toggleMatrix(): void {
-		document.body.classList.toggle('matrix-mode');
-		printLine(localized('runtime.matrixToggled'), 'info');
-	}
-
 	function openResume(): void {
 		if (!resumeUrl) return;
 		printLine(localized('runtime.resumeOpening'), 'info');
 		window.open(resumeUrl, '_blank', 'noopener,noreferrer');
-	}
-
-	function revealEasterEgg(): void {
-		if (!easterEggOverlay.classList.contains('hidden')) return;
-		closeCli();
-		closeShortcuts();
-		easterEggOverlay.classList.remove('hidden');
-		easterEggOverlay.classList.add('flex');
-		eggLoading.replaceChildren();
-		eggStats.classList.add('hidden');
-		const loadingKeys = [
-			'easter.load1',
-			'easter.load2',
-			'easter.load3',
-			'easter.load4',
-			'easter.load5',
-			'easter.load6',
-			'easter.load7',
-			'easter.load8',
-			'easter.load9',
-		];
-		loadingKeys.forEach((key, index) => {
-			window.setTimeout(() => {
-				const line = document.createElement('div');
-				line.className = 'text-channel-portfolio-terminal-cyan';
-				line.textContent = `> ${getCopy(key)}`;
-				eggLoading.appendChild(line);
-				if (index === loadingKeys.length - 1) {
-					eggStats.classList.remove('hidden');
-					requestAnimationFrame(() => eggClose.focus());
-				}
-			}, index * 100);
-		});
-	}
-
-	function closeEasterEgg(): void {
-		easterEggOverlay.classList.add('hidden');
-		easterEggOverlay.classList.remove('flex');
 	}
 
 	async function executeCommand(rawCommand: string): Promise<void> {
@@ -564,17 +503,10 @@ export function setupCliTerminal(): void {
 		} else if (normalized === 'github') await printGitHub();
 		else if (normalized === 'contact') printContact();
 		else if (normalized === 'skills') printSkills();
-		else if (normalized === 'matrix') toggleMatrix();
 		else if (normalized === 'open resume') openResume();
 		else if (normalized.startsWith('open ')) {
 			printLine(localized('runtime.unknownTarget', { target: command.slice(5) }), 'error');
 			printLine(localized('runtime.tryResume'), 'muted');
-		} else if (normalized === 'vim' || normalized === 'nvim') {
-			printLine(localized('runtime.vimTaste'), 'info');
-			printLine(localized('runtime.vimMotions'), 'muted');
-		} else if (normalized.startsWith('sudo')) {
-			printLine(localized('runtime.sudoDenied'), 'error');
-			printLine(localized('runtime.sudoHint'), 'muted');
 		} else if (normalized === 'exit' || normalized === ':q') {
 			printLine(localized('runtime.goodbye'), 'muted');
 			window.setTimeout(closeCli, 150);
@@ -597,10 +529,6 @@ export function setupCliTerminal(): void {
 	}
 
 	function closeTopmostOverlay(): boolean {
-		if (!easterEggOverlay.classList.contains('hidden')) {
-			closeEasterEgg();
-			return true;
-		}
 		if (!shortcutsModal.classList.contains('hidden')) {
 			closeShortcuts();
 			return true;
@@ -617,7 +545,6 @@ export function setupCliTerminal(): void {
 
 	cliClose.addEventListener('click', closeCli, listenerOptions);
 	shortcutsClose.addEventListener('click', closeShortcuts, listenerOptions);
-	eggClose.addEventListener('click', closeEasterEgg, listenerOptions);
 
 	cliInput.addEventListener(
 		'keydown',
@@ -682,17 +609,13 @@ export function setupCliTerminal(): void {
 			if (event.key === 'G')
 				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
 
-			keyBuffer = `${keyBuffer}${event.key}`.slice(-5);
+			keyBuffer = `${keyBuffer}${event.key}`.slice(-2);
 			if (keyTimer !== null) window.clearTimeout(keyTimer);
 			keyTimer = window.setTimeout(() => {
 				keyBuffer = '';
 			}, 900);
 			if (keyBuffer.endsWith('gg')) {
 				window.scrollTo({ top: 0, behavior: 'smooth' });
-				keyBuffer = '';
-			}
-			if (keyBuffer.toLowerCase().endsWith('iddqd')) {
-				revealEasterEgg();
 				keyBuffer = '';
 			}
 		},
