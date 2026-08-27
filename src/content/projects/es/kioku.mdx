@@ -2,9 +2,9 @@
 projectId: kioku
 locale: es
 title: Kioku
-description: 'Un servidor MCP local-first en .NET 10 que conserva decisiones, specs, planes, bugs y handoffs de agentes como registros Markdown y YAML durables dentro de un vault de Obsidian.'
+description: 'Un servidor MCP local-first en .NET 10 que conserva decisiones, especificaciones, planes, errores y handoffs de sesión como registros persistentes en Markdown y YAML dentro de un vault de Obsidian.'
 category: 'Ingeniería Backend'
-imageAlt: 'Vista previa de la arquitectura MCP de Kioku y el handoff durable entre agentes'
+imageAlt: 'Vista previa de la arquitectura MCP de Kioku y la continuidad de contexto entre agentes'
 caseStudy:
     kicker: 'CASO DE ESTUDIO · INGENIERÍA BACKEND'
     status:
@@ -13,76 +13,76 @@ caseStudy:
         demo: 'SIN DEMO ALOJADA'
 ---
 
-<CaseStudySection eyebrow="SISTEMA ACTUAL" title="Una herramienta .NET publicada con un track separado de desarrollo activo">
-	Kioku se distribuye como un proyecto .NET público con artefactos de release, paquete NuGet y documentación operativa. La versión **3.1.2** es la última release etiquetada del servidor; `develop` puede avanzar mientras los cambios se validan antes de la siguiente publicación.
+<CaseStudySection eyebrow="SISTEMA ACTUAL" title="Versión estable 3.1.2 con desarrollo activo en curso">
+	Kioku se distribuye como un proyecto .NET público con artefactos de release, paquete NuGet y documentación operativa. La versión **3.1.2** es la versión estable etiquetada del servidor; el desarrollo continúa hacia publicaciones posteriores.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEMA" title="El contexto de un agente debe sobrevivir a la sesión que lo creó">
-  Los agentes de programación pueden tomar buenas decisiones y aun así perder el razonamiento cuando termina un proceso, terminal o conversación. El historial del proveedor no es un registro durable del proyecto y un handoff no debería obligar al siguiente agente a reconstruir la intención desde chats anteriores.
+  Los agentes de programación pueden tomar buenas decisiones y aun así perder el razonamiento cuando termina un proceso, terminal o conversación. El historial del proveedor no es un registro persistente del proyecto y un handoff no debería obligar al siguiente agente a reconstruir la intención desde chats anteriores.
 
-Kioku trata el vault como memoria durable del proyecto: specs, planes de implementación, decisiones, bugs, conocimiento y handoffs de sesión permanecen legibles como Markdown y YAML incluso cuando el servidor MCP o la interfaz de Obsidian no están ejecutándose.
+Kioku usa el vault como memoria persistente del proyecto: especificaciones, planes de implementación, decisiones, errores, conocimiento y handoffs de sesión siguen siendo legibles en Markdown y YAML incluso cuando el servidor MCP o la interfaz de Obsidian no están ejecutándose.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="SISTEMA" title="Límite MCP local-first" surface="highlight">
 	<MermaidDiagram
 		title="Límite de ejecución de Kioku"
-		description="Clientes MCP llegan a un servidor Kioku en .NET 10 mediante stdio local o Streamable HTTP autenticado. El servidor lee directamente el vault de Obsidian; el retrieval semántico y el bridge de Obsidian son integraciones opcionales."
+		description="Los clientes MCP se conectan a un servidor Kioku en .NET 10 mediante stdio local o Streamable HTTP autenticado. El servidor lee directamente el vault de Obsidian; la recuperación semántica y la integración con Obsidian son opcionales."
 		tones={{ Client: 'brand', Server: 'info', Vault: 'success', Retrieval: 'secondary', Ollama: 'warning', Bridge: 'danger' }}
 		chart={`flowchart LR
       Client["Clientes MCP\nClaude · Codex · OpenCode"] --> Server["Kioku.Mcp.Server\n.NET 10"]
       Server --> Vault["Vault de Obsidian\nMarkdown + YAML"]
-      Server --> Retrieval["Retrieval full-text + semántico"]
+      Server --> Retrieval["Búsqueda de texto + recuperación semántica"]
       Retrieval -. opcional .-> Ollama["Ollama local\nembeddings / generación"]
-      Server -. opcional .-> Bridge["Bridge de Obsidian\nintegración UI"]`}
+      Server -. opcional .-> Bridge["Integración con Obsidian\noperaciones de UI"]`}
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="DECISIONES DE INGENIERÍA" title="Mantener el almacenamiento legible y los límites del protocolo explícitos">
+<CaseStudySection eyebrow="DECISIONES DE INGENIERÍA" title="Almacenamiento legible y límites del protocolo explícitos">
   <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="DECISIÓN 01" title="MARKDOWN ES EL FORMATO DURABLE" tone="primary">
-      El vault continúa siendo comprensible y editable sin Kioku. La capa MCP coordina workflows; no se convierte en el único lugar desde el que puede recuperarse el conocimiento del proyecto.
+    <CaseStudyCard label="DECISIÓN 01" title="MARKDOWN ES EL FORMATO PERSISTENTE" tone="primary">
+      El vault continúa siendo comprensible y editable sin Kioku. La capa MCP coordina flujos de trabajo, pero no se convierte en el único lugar desde el que puede recuperarse el conocimiento del proyecto.
     </CaseStudyCard>
-    <CaseStudyCard label="DECISIÓN 02" title="CORE HEADLESS, UI OPCIONAL" tone="primary">
-      Notas, búsqueda, proyectos, sesiones, indexación y coordinación trabajan directamente contra el vault. Obsidian y su plugin complementario sólo son necesarios para operaciones específicas de UI y bridge.
+    <CaseStudyCard label="DECISIÓN 02" title="NÚCLEO HEADLESS, UI OPCIONAL" tone="primary">
+      Notas, búsqueda, proyectos, sesiones, indexación y coordinación trabajan directamente sobre el vault. Obsidian y su plugin complementario son opcionales para operaciones específicas de interfaz e integración.
     </CaseStudyCard>
     <CaseStudyCard label="DECISIÓN 03" title="EL ACCESO REMOTO NECESITA UN LÍMITE DE CONFIANZA EXPLÍCITO" tone="primary">
-      `stdio` local continúa como opción por defecto. Streamable HTTP escucha en loopback por defecto y exponerlo fuera de la máquina requiere autenticación salvo que se active conscientemente un override inseguro.
+      `stdio` local continúa como opción por defecto. Streamable HTTP escucha en loopback por defecto y exponerlo fuera de la máquina requiere autenticación salvo que se habilite explícitamente una excepción insegura.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="WORKFLOW" title="La intención de diseño se convierte en un artefacto recuperable" surface="highlight">
+<CaseStudySection eyebrow="FLUJO" title="La intención de diseño se convierte en un artefacto recuperable" surface="highlight">
 	<MermaidDiagram
-		title="Workflow de ingeniería durable"
-		description="Kioku separa requerimiento, plan de implementación y handoff de ejecución para que un agente nuevo pueda recuperar tanto la intención como el estado actual."
+		title="Flujo de ingeniería persistente"
+		description="Kioku separa el requerimiento, el plan de implementación y el handoff de ejecución para que un agente nuevo pueda recuperar tanto la intención como el estado actual."
 		tones={{ Request: 'brand', Spec: 'info', Plan: 'secondary', Session: 'warning', Handoff: 'success', Context: 'danger' }}
 		chart={`flowchart LR
       Request["Solicitud / issue"] --> Spec["SPEC de ingeniería"]
       Spec --> Plan["PLAN de implementación"]
       Plan --> Session["SESIÓN / ejecución"]
-      Session --> Handoff["Handoff durable"]
+      Session --> Handoff["Handoff persistente"]
       Handoff --> Context["Un agente nuevo recupera contexto"]`}
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="ESTADO DE RELEASE" title="Las releases estables y el desarrollo activo permanecen separados">
+<CaseStudySection eyebrow="ESTADO DE RELEASE" title="Una versión estable y una línea de desarrollo activa">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="ÚLTIMA RELEASE ETIQUETADA" title="3.1.2 · PAQUETE · CONTRATOS · DOCUMENTACIÓN OPERATIVA" tone="verified">
-      La release **3.1.2** publica artefactos del servidor y el proyecto enlaza el paquete NuGet `kioku-mcp-server`. El mismo codebase mantiene referencias MCP generadas, documentación de workflows de ingeniería, configuración, seguridad y pruebas automatizadas.
+    <EvidenceBlock label="VERSIÓN ESTABLE" title="3.1.2 · PAQUETE · CONTRATOS · DOCUMENTACIÓN OPERATIVA" tone="verified">
+      La release **3.1.2** publica artefactos del servidor y enlaza el paquete NuGet `kioku-mcp-server`. El proyecto también mantiene referencias MCP generadas, documentación del flujo de ingeniería, configuración, seguridad y pruebas automatizadas.
     </EvidenceBlock>
-    <EvidenceBlock label="DESARROLLO ACTIVO" title="DEVELOP PUEDE AVANZAR RESPECTO AL ÚLTIMO TAG" tone="boundary">
-      `develop` puede contener cambios validados que todavía no forman parte de la última release etiquetada. El comportamiento específico de release se describe contra **3.1.2**, mientras el trabajo posterior permanece en el track de desarrollo hasta ser promovido.
+    <EvidenceBlock label="DESARROLLO ACTIVO" title="EL TRABAJO CONTINÚA MÁS ALLÁ DE 3.1.2" tone="boundary">
+      El desarrollo activo puede incorporar cambios posteriores a la versión estable **3.1.2**. El comportamiento específico de una release permanece asociado a su versión etiquetada hasta que el trabajo posterior se promueve a una nueva publicación.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué cambió este proyecto en mi forma de construir" surface="highlight">
   <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="APRENDIZAJE 01" title="DURABILIDAD ANTES QUE HISTORIAL DEL PROVEEDOR" tone="success">
-      Registros de proyecto legibles por humanos sobreviven mejor los límites de sesión y proceso que depender del historial conversacional de un único proveedor de IA.
+    <CaseStudyCard label="APRENDIZAJE 01" title="PERSISTENCIA ANTES QUE HISTORIAL DEL PROVEEDOR" tone="success">
+      Los registros de proyecto legibles por personas sobreviven mejor los límites de sesión y proceso que depender del historial conversacional de un único proveedor de IA.
     </CaseStudyCard>
     <CaseStudyCard label="APRENDIZAJE 02" title="SPEC → PLAN → SESIÓN ES UN LÍMITE ÚTIL" tone="success">
-      Separar requerimientos, intención de implementación y estado de ejecución hace más probable que un agente nuevo continúe el trabajo correcto, no sólo el texto anterior.
+      Separar requerimientos, intención de implementación y estado de ejecución hace más probable que un agente nuevo continúe el trabajo correcto, no solo el texto anterior.
     </CaseStudyCard>
     <CaseStudyCard label="APRENDIZAJE 03" title="LOCAL-FIRST NO ELIMINA EL TRABAJO DE SEGURIDAD" tone="success">
       Cuando un protocolo local se vuelve accesible remotamente, autenticación, política de orígenes, confianza en proxies y límites del vault se convierten en decisiones de ingeniería de primer nivel.
