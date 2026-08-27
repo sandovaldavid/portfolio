@@ -13,18 +13,14 @@ caseStudy:
         demo: 'NO HOSTED DEMO'
 ---
 
-<CaseStudySection eyebrow="PUBLIC EVIDENCE" title="Inspect the project beyond this portfolio">
-	Kioku is useful as a portfolio project because its implementation, package, operational
-	documentation and release history are independently inspectable. The documentation site is the
-	best starting point for the public contract; the repository remains the implementation source of
-	truth.
+<CaseStudySection eyebrow="CURRENT SYSTEM" title="A released .NET tool with a separate active-development track">
+	Kioku is distributed as a public .NET project with release artifacts, a NuGet package and operational documentation. Version **3.1.2** is the latest tagged server release; `develop` can move ahead while changes are validated before the next release.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="Agent context should survive the session that created it">
   Coding agents can make good decisions and still lose the reasoning behind them when a process, terminal or conversation ends. Provider history is not a durable project record, and a handoff should not require the next agent to reconstruct intent from chat logs.
 
 Kioku treats the vault as durable project memory instead: specs, implementation plans, decisions, bugs, knowledge and session handoffs remain readable as Markdown and YAML even without the MCP server or Obsidian UI running.
-
 </CaseStudySection>
 
 <CaseStudySection eyebrow="SYSTEM" title="Local-first MCP boundary" surface="highlight">
@@ -53,34 +49,20 @@ Kioku treats the vault as durable project memory instead: specs, implementation 
     <CaseStudyCard label="DECISION 01" title="MARKDOWN IS THE DURABLE FORMAT" tone="primary">
       The vault remains understandable and editable without Kioku. The MCP layer coordinates workflows; it does not become the only place where project knowledge can be recovered.
     </CaseStudyCard>
-
     <CaseStudyCard label="DECISION 02" title="HEADLESS CORE, OPTIONAL UI" tone="primary">
       Core notes, search, projects, sessions, indexing and coordination work directly against the vault. Obsidian and its companion plugin are optional for UI and bridge-specific operations.
     </CaseStudyCard>
-
     <CaseStudyCard label="DECISION 03" title="REMOTE ACCESS REQUIRES AN EXPLICIT TRUST BOUNDARY" tone="primary">
       Local stdio stays the default. Streamable HTTP binds to loopback by default, and non-loopback exposure requires authentication unless an explicit unsafe override is chosen.
     </CaseStudyCard>
-
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="WORKFLOW"
-	title="Design intent becomes a recoverable project artifact"
-	surface="highlight"
->
+<CaseStudySection eyebrow="WORKFLOW" title="Design intent becomes a recoverable project artifact" surface="highlight">
 	<MermaidDiagram
 		title="Durable engineering workflow"
 		description="Kioku separates the requirement, implementation plan and execution handoff so a fresh agent can recover both intent and current state."
-		tones={{
-			Request: 'brand',
-			Spec: 'info',
-			Plan: 'secondary',
-			Session: 'warning',
-			Handoff: 'success',
-			Context: 'danger',
-		}}
+		tones={{ Request: 'brand', Spec: 'info', Plan: 'secondary', Session: 'warning', Handoff: 'success', Context: 'danger' }}
 		chart={`flowchart LR
       Request["Request / issue"] --> Spec["Engineering SPEC"]
       Spec --> Plan["Implementation PLAN"]
@@ -90,16 +72,14 @@ Kioku treats the vault as durable project memory instead: specs, implementation 
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today">
+<CaseStudySection eyebrow="RELEASE STATUS" title="Stable releases and active development stay distinct">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="VERIFIED IN PUBLIC REPOSITORY" title="RELEASE 3.1.2, PACKAGE, CONTRACTS AND OPERATIONAL DOCS" tone="verified">
-      The public repository identifies **3.1.2** as the latest tagged server release and links the `kioku-mcp-server` NuGet package. Generated MCP references, engineering-workflow documentation, configuration, security guidance and tests are directly inspectable.
+    <EvidenceBlock label="LATEST TAGGED RELEASE" title="3.1.2 · PACKAGE · CONTRACTS · OPERATIONAL DOCS" tone="verified">
+      Release **3.1.2** publishes server artifacts and the project links the `kioku-mcp-server` NuGet package. The same codebase maintains generated MCP references, engineering-workflow documentation, configuration, security guidance and automated tests.
     </EvidenceBlock>
-
-    <EvidenceBlock label="BOUNDARIES" title="DEVELOP CAN BE AHEAD OF THE LATEST TAG" tone="boundary">
-      The repository explicitly states that `develop` can contain verified but unreleased changes. This case study therefore distinguishes the latest tagged release from active development and does not claim external adoption, production workload or commercial impact.
+    <EvidenceBlock label="ACTIVE DEVELOPMENT" title="DEVELOP CAN MOVE AHEAD OF THE LATEST TAG" tone="boundary">
+      `develop` can contain validated changes that are not part of the latest tagged release yet. Release-specific behavior is described against **3.1.2**, while newer work remains explicitly part of the development track until promoted.
     </EvidenceBlock>
-
   </CaseStudyGrid>
 </CaseStudySection>
 
@@ -108,14 +88,11 @@ Kioku treats the vault as durable project memory instead: specs, implementation 
     <CaseStudyCard label="LEARNING 01" title="DURABILITY BEATS PROVIDER HISTORY" tone="success">
       Human-readable project records survive session and process boundaries better than depending on one AI provider's conversation history.
     </CaseStudyCard>
-
     <CaseStudyCard label="LEARNING 02" title="SPEC → PLAN → SESSION IS A USEFUL BOUNDARY" tone="success">
       Keeping requirements, implementation intent and execution state separate makes a fresh agent more likely to continue the right work instead of merely continuing text.
     </CaseStudyCard>
-
     <CaseStudyCard label="LEARNING 03" title="LOCAL-FIRST DOES NOT REMOVE SECURITY WORK" tone="success">
       The moment a local protocol becomes remotely reachable, authentication, origin policy, proxy trust and vault boundaries become first-class engineering concerns.
     </CaseStudyCard>
-
   </CaseStudyGrid>
 </CaseStudySection>
