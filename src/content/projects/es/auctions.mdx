@@ -2,9 +2,9 @@
 projectId: auctions
 locale: es
 title: Auctions
-description: 'Una aplicación de subastas renderizada en servidor con Django, listings autenticados, validación de pujas, watchlists, comentarios, categorías, cierre por propietario y una superficie administrativa de analítica.'
+description: 'Una aplicación Django renderizada en servidor que modela el ciclo completo de una subasta: publicaciones autenticadas, validación de pujas, seguimiento, comentarios, categorías, cierre por propietario y analítica administrativa.'
 category: 'Aplicación Web Django'
-imageAlt: 'Vista previa de listings, pujas y analítica administrativa de Auctions en Django'
+imageAlt: 'Vista previa de publicaciones, pujas y analítica administrativa de Auctions en Django'
 caseStudy:
     kicker: 'CASO DE ESTUDIO · WEB RENDERIZADA EN SERVIDOR'
     status:
@@ -14,40 +14,40 @@ caseStudy:
 ---
 
 <CaseStudySection
-	eyebrow="EVIDENCIA PÚBLICA"
-	title="El repositorio de código es la superficie verificable actual"
+	eyebrow="PRODUCTO ACTUAL"
+	title="Un flujo de subastas mantenido con renderizado en servidor"
 >
-	El repositorio contiene modelos, vistas, formularios, templates, analítica administrativa y
-	configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra
-	una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue
-	en vivo.
+	La aplicación combina modelos, formularios, vistas y templates de Django para publicaciones
+	autenticadas, pujas, listas de seguimiento, comentarios, categorías y cierre de subastas
+	controlado por el propietario. La analítica administrativa amplía el flujo principal con
+	métricas y reportes.
 </CaseStudySection>
 
 <CaseStudySection
 	eyebrow="PROBLEMA"
-	title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD"
+	title="Una subasta es un ciclo de vida, no solo una pantalla CRUD"
 >
-	Los listings necesitan propietario, precio inicial, estado activo/inactivo y ganador. Los
-	participantes necesitan pujar, seguir listings y comentar sin poder cerrar una subasta ajena. La
-	aplicación modela esas relaciones explícitamente y mantiene el workflow principal
-	server-rendered en lugar de introducir una SPA y API separadas para un monolito educativo.
+	Cada publicación necesita propietario, precio inicial, estado activo o cerrado y un ganador. Los
+	participantes necesitan pujar, seguir subastas y comentar sin poder cerrar una subasta ajena. La
+	aplicación modela esas relaciones de forma explícita y mantiene el flujo principal dentro de
+	Django, sin introducir una SPA y una API separadas para este monolito educativo.
 </CaseStudySection>
 
 <CaseStudySection
 	eyebrow="MODELO DE DOMINIO"
-	title="Listings coordinan pujas, comentarios, watchlists y cierre"
+	title="Las publicaciones coordinan pujas, comentarios, seguimiento y cierre"
 	surface="highlight"
 >
 	<MermaidDiagram
 		title="Relaciones de dominio de Auctions"
-		description="Un usuario Django posee listings y puede crear pujas, comentarios y entradas de watchlist. Los listings agrupan esos registros. Cuando el propietario cierra una subasta, la mayor puja registrada determina al ganador."
+		description="Un usuario Django posee publicaciones y puede crear pujas, comentarios y entradas de seguimiento. Cada publicación agrupa esos registros. Cuando el propietario cierra una subasta, la mayor puja registrada determina al ganador."
 		chart={`flowchart LR
       User["Usuario"] -->|posee| Listing["Listing\npuja inicial · puja actual · activo"]
       User --> Bid["Puja"]
       Bid --> Listing
       User --> Comment["Comentario"]
       Comment --> Listing
-      User --> Watchlist["Entrada watchlist"]
+      User --> Watchlist["Seguimiento"]
       Watchlist --> Listing
       Listing -->|propietario cierra| Close["Cerrar subasta"]
       Bid -->|mayor puja registrada| Close
@@ -55,95 +55,139 @@ caseStudy:
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="WORKFLOW" title="La mecánica principal vive cerca del modelo y las vistas">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="PUJAS" title="UNA NUEVA PUJA DEBE SUPERAR LA ACTUAL" tone="primary">
-      `Listing.place_bid` rechaza un valor menor o igual que la puja actual, actualiza `current_bid` y crea el registro `Bid` correspondiente.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="OWNERSHIP" title="SÓLO EL PROPIETARIO PUEDE CERRAR" tone="primary">
-      La vista de cierre verifica que el usuario autenticado sea propietario del listing. Luego selecciona la mayor puja registrada como ganador, marca el listing inactivo y persiste el resultado.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="DESCUBRIMIENTO" title="CATEGORÍAS Y WATCHLISTS SIGUEN SERVER-RENDERED" tone="primary">
-      Los listings activos están paginados, las categorías filtran en servidor y cada usuario autenticado puede alternar entradas de watchlist sin un store de estado frontend separado.
-    </CaseStudyCard>
-
-  </CaseStudyGrid>
+<CaseStudySection eyebrow="FLUJO" title="La mecánica principal vive cerca del modelo y las vistas">
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="PUJAS" title="UNA NUEVA PUJA DEBE SUPERAR LA ACTUAL" tone="primary">
+			`Listing.place_bid` rechaza un valor menor o igual que la puja actual, actualiza
+			`current_bid` y crea el registro `Bid` correspondiente.
+		</CaseStudyCard>
+		<CaseStudyCard label="PROPIEDAD" title="SOLO EL PROPIETARIO PUEDE CERRAR" tone="primary">
+			La vista de cierre verifica que el usuario autenticado sea propietario de la
+			publicación. Luego selecciona la mayor puja registrada como ganadora, marca la
+			publicación como inactiva y persiste el resultado.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="DESCUBRIMIENTO"
+			title="CATEGORÍAS Y SEGUIMIENTO PERMANECEN EN EL SERVIDOR"
+			tone="primary"
+		>
+			Las publicaciones activas están paginadas, las categorías filtran en servidor y cada
+			usuario autenticado puede agregar o quitar elementos de su lista de seguimiento sin un
+			store de estado frontend separado.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection
 	eyebrow="PERSISTENCIA"
-	title="SQLite local y PostgreSQL por entorno comparten el mismo modelo Django"
+	title="SQLite en local y PostgreSQL por entorno comparten el mismo modelo Django"
 	surface="highlight"
 >
-	El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración
-	`DATABASE_URL` mediante `dj-database-url` cuando existe. Las dependencias y settings también
-	incluyen Gunicorn, WhiteNoise y configuración de cookies/headers de seguridad para escenarios de
-	producción.
+	La configuración usa SQLite por defecto para desarrollo local y cambia a una conexión
+	`DATABASE_URL` mediante `dj-database-url` cuando está disponible. La configuración orientada a
+	despliegue también incorpora Gunicorn, WhiteNoise y ajustes de seguridad para cookies y headers.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="ANALÍTICA ADMINISTRATIVA" title="El código mantenido creció más allá del workflow original del curso">
+<CaseStudySection eyebrow="ANALÍTICA ADMINISTRATIVA" title="Los reportes administrativos amplían el flujo de subastas">
   <MermaidDiagram
     title="Ruta de analítica administrativa"
-    description="Las rutas administrativas consultan datos de subastas con Django ORM. AuctionAnalytics agrega listings, pujas, usuarios, comentarios y watchlists y prepara métricas y análisis orientados a Plotly para dashboard y reportes."
+    description="Las rutas administrativas consultan datos mediante Django ORM. AuctionAnalytics agrega publicaciones, pujas, usuarios, comentarios y listas de seguimiento, y prepara métricas y análisis para paneles y reportes con Plotly."
     chart={`flowchart LR
-      Admin["Rutas admin\ndashboard · analytics · reports"] --> ORM["Django ORM"]
-      ORM --> Data["Listings · pujas · usuarios\ncomentarios · watchlists"]
+      Admin["Rutas admin\npanel · analítica · reportes"] --> ORM["Django ORM"]
+      ORM --> Data["Publicaciones · pujas · usuarios\ncomentarios · seguimiento"]
       Data --> Analytics["AuctionAnalytics\npandas · NumPy · scikit-learn"]
       Analytics --> Charts["Métricas · series temporales\ncategorías · análisis de pujas"]
-      Charts --> Dashboard["Dashboard Plotly / export"]`}
+      Charts --> Dashboard["Panel Plotly / exportación"]`}
   />
 
-La configuración de URLs actual expone dashboard, analytics, reportes, exportación, listings y administración de usuarios, además de endpoints JSON de métricas/charts usados por el panel admin. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción protegida que devuelve datos insuficientes en vez de inventar un modelo cuando la muestra histórica es demasiado pequeña.
+La superficie administrativa incluye panel, analítica, reportes, exportación, gestión de publicaciones y usuarios, además de endpoints JSON para métricas y gráficos utilizados por la interfaz administrativa. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción que devuelve un resultado de datos insuficientes cuando la muestra histórica es demasiado pequeña.
 
 </CaseStudySection>
 
-<CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="VERIFICADO EN CÓDIGO" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
-      `requirements.txt` restringe Django al rango 5.1–5.2 e incluye soporte para PostgreSQL, Gunicorn y WhiteNoise. El código público expone directamente los modelos `User`, `Listing`, `Bid`, `Comment` y `Watchlist`, además de vistas para listings, pujas, categorías, comentarios y cierre de subastas.
-    </EvidenceBlock>
-
-    <EvidenceBlock label="TOOLING ADMIN VERIFICADO" title="MÓDULO DE ANALÍTICA CON PANDAS · PLOTLY · SCIKIT-LEARN" tone="verified">
-      El repositorio mantenido incluye las dependencias analíticas y un módulo `AuctionAnalytics` consumido por las rutas administrativas. Esto se presenta como evidencia de tooling de análisis, no como prueba de precisión productiva de modelos predictivos ni impacto comercial.
-    </EvidenceBlock>
-
-    <EvidenceBlock label="LÍMITE" title="SIN DEMO EN VIVO NI GARANTÍA DE CONCURRENCIA" tone="boundary">
-      El texto antiguo de demo alojada es un placeholder y no un despliegue verificable actual. La regla de puja realiza una secuencia lectura/verificación/actualización sin row locking explícito ni un límite transaccional en `place_bid`, por lo que este caso de estudio no llama concurrency-safe a la implementación actual.
-    </EvidenceBlock>
-
-    <EvidenceBlock label="LÍMITE" title="SIN CLAIM ACTUAL DE DRF O WEBSOCKETS" tone="boundary">
-      El historial de releases conserva experimentos con APIs y notificaciones realtime, pero los requirements, apps instaladas, wiring ASGI y URLs del `develop` actual no exponen DRF ni Django Channels como superficie activa. El estado ejecutable prevalece sobre wording histórico del changelog.
-    </EvidenceBlock>
-
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="LÍMITES ACTUALES"
+	title="Comportamiento implementado y siguientes restricciones de ingeniería"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="STACK DE APLICACIÓN"
+			title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM"
+			tone="verified"
+		>
+			La aplicación usa Django en el rango 5.1–5.2 con soporte para PostgreSQL, Gunicorn y
+			WhiteNoise. Los modelos `User`, `Listing`, `Bid`, `Comment` y `Watchlist` sostienen los
+			flujos de publicaciones, pujas, categorías, comentarios y cierre.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="ANALÍTICA ADMIN"
+			title="PANDAS · PLOTLY · SCIKIT-LEARN"
+			tone="verified"
+		>
+			Las rutas administrativas usan un módulo `AuctionAnalytics` y dependencias de analítica
+			para métricas y reportes. Su ruta de predicción maneja explícitamente los casos con
+			datos insuficientes en lugar de tratar una muestra pequeña como un modelo confiable.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="CONCURRENCIA"
+			title="VALIDAR LA PUJA NO GARANTIZA CONCURRENCIA"
+			tone="boundary"
+		>
+			La regla de puja usa una secuencia de lectura, validación y actualización sin bloqueo
+			explícito de filas ni una transacción que cubra toda la operación en `place_bid`.
+			Garantizar el orden correcto de pujas simultáneas requeriría una estrategia adicional de
+			transacciones y locking.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="SUPERFICIE ACTIVA"
+			title="LOS EXPERIMENTOS REST Y WEBSOCKET ESTÁN FUERA DEL FLUJO ACTUAL"
+			tone="boundary"
+		>
+			La aplicación mantenida se concentra hoy en vistas, formularios, templates y endpoints
+			administrativos de Django. DRF y Django Channels no forman parte del flujo de subastas
+			expuesto actualmente al usuario.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection
 	eyebrow="TRADE-OFFS"
-	title="Django server-rendered mantiene comprensible el workflow principal"
+	title="Django con renderizado en servidor mantiene comprensible el flujo principal"
 	surface="highlight"
 >
-	Templates, forms, sesiones y ORM proporcionan una sola aplicación desplegable y un recorrido
-	corto desde request hasta estado persistido. La capa de analítica administrativa añade
-	inspección operativa útil sin requerir un segundo frontend, mientras pujas realtime y garantías
-	fuertes ante escrituras concurrentes todavía necesitarían diseño adicional.
+	Templates, formularios, sesiones y ORM ofrecen una sola aplicación desplegable y un recorrido
+	corto desde la solicitud hasta el estado persistido. La analítica administrativa añade
+	inspección operativa sin requerir un segundo frontend, mientras pujas en tiempo real y garantías
+	fuertes ante escrituras concurrentes necesitarían diseño adicional.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué hizo concreto este proyecto">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="APRENDIZAJE 01" title="MODELA EL CICLO DE VIDA, NO SÓLO LAS TABLAS" tone="success">
-      Ownership del listing, estado activo y selección del ganador hacen explícita la transición de cierre en lugar de tratar la subasta como datos CRUD genéricos.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="APRENDIZAJE 02" title="VALIDACIÓN NO ES LO MISMO QUE CONTROL DE CONCURRENCIA" tone="success">
-      Verificar que una puja supere el valor actual es necesario, pero escrituras simultáneas requieren su propia estrategia transaccional y de locking si la aplicación debe garantizar orden bajo contención.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="APRENDIZAJE 03" title="HISTORIAL NO ES LO MISMO QUE WIRING ACTUAL" tone="success">
-      Un changelog puede preservar experimentos que el grafo de dependencias actual ya no expone. Un case study debe leer settings, rutas y manifests ejecutables antes de convertir funcionalidades históricas en claims presentes.
-    </CaseStudyCard>
-
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard
+			label="APRENDIZAJE 01"
+			title="MODELA EL CICLO DE VIDA, NO SOLO LAS TABLAS"
+			tone="success"
+		>
+			La propiedad de la publicación, el estado activo y la selección del ganador hacen
+			explícita la transición de cierre en lugar de tratar la subasta como datos CRUD
+			genéricos.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APRENDIZAJE 02"
+			title="VALIDACIÓN NO ES LO MISMO QUE CONTROL DE CONCURRENCIA"
+			tone="success"
+		>
+			Verificar que una puja supere el valor actual es necesario, pero las escrituras
+			simultáneas necesitan su propia estrategia transaccional y de bloqueo si la aplicación
+			debe garantizar orden bajo contención.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APRENDIZAJE 03"
+			title="MANTÉN LOS EXPERIMENTOS FUERA DEL CONTRATO ACTIVO"
+			tone="success"
+		>
+			Una API o un canal en tiempo real debería formar parte del límite del producto solo
+			cuando sus dependencias, integración y comportamiento operativo se mantengan como rutas
+			de primer nivel de la aplicación.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>

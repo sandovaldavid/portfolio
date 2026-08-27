@@ -3,21 +3,21 @@
 	"locale": "es",
 	"seo": {
 		"title": "Sobre David Sandoval — Ingeniero de Software",
-		"description": "Conoce a David Sandoval, ingeniero de software orientado a backend con experiencia frontend, que construye productos web confiables con .NET, Angular y TypeScript."
+		"description": "Conoce cómo David Sandoval aborda la ingeniería de software a través de sistemas backend, productos web, pruebas, developer tooling e investigación aplicada."
 	},
-	"summary": "Ingeniero de software orientado a backend con experiencia frontend, que construye productos web confiables con .NET, Angular y TypeScript. Conecto decisiones técnicas con el contexto de negocio y valido soluciones mediante pruebas y workflows reproducibles.",
+	"summary": "Ingeniero de software orientado a backend con experiencia frontend. Conecto decisiones técnicas con el contexto de negocio, construyo productos web mantenibles y valido los cambios mediante pruebas y workflows reproducibles.",
 	"biography": [
-		"Ingeniero de software orientado a backend con experiencia frontend, enfocado en construir productos web confiables con .NET, Angular y TypeScript. Valoro una arquitectura clara cuando reduce riesgos de entrega, no como un objetivo por sí misma.",
-		"Mi experiencia profesional incluye modernización de módulos frontend, contribución en APIs REST, mejoras en la entrega de bundles y apoyo en migraciones desde sistemas legacy. El portafolio documenta los proyectos y trade-offs que pueden compartirse públicamente.",
+		"Ingeniero de software orientado a backend con experiencia frontend en .NET, Angular y TypeScript. Valoro una arquitectura clara cuando reduce riesgos de entrega, no como un objetivo por sí misma.",
+		"Mi experiencia profesional incluye modernización de módulos frontend, contribución en APIs REST, mejoras en flujos de datos y reporting, ampliación de cobertura de regresión automatizada y apoyo en migraciones desde sistemas legacy. Documento decisiones, trade-offs y validación para que la ingeniería detrás del trabajo sea más fácil de comprender.",
 		"En paralelo al desarrollo de productos, investigo Mining Software Repositories y el uso de modelos BiLSTM para estudiar el abandono de proyectos OSS, actualmente en desarrollo para obtener mi título profesional. Esta investigación es una especialización secundaria que complementa mi trabajo en ingeniería de software."
 	],
 	"focusAreas": [
-		"APIs .NET y límites backend mantenibles",
-		"Angular y arquitectura frontend reactiva",
-		"TypeScript y rendimiento web",
+		"Sistemas backend mantenibles y límites de API",
+		"Arquitectura frontend reactiva",
+		"Desarrollo web con contratos tipados",
 		"Pruebas automatizadas y quality gates en CI",
 		"Ingeniería orientada a negocio y validación",
-		"Documentación y contribución open source"
+		"Developer tooling y documentación técnica"
 	],
 	"availabilityStatement": "Disponible para oportunidades remotas de ingeniería de software, incluyendo relocation internacional o posgrado como parte de mi crecimiento profesional.",
 	"location": "Perú (UTC-5)",

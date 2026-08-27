@@ -8,7 +8,7 @@ describe('home section catalog consumers', () => {
 		const techStack = createScopedUiTranslator(Language.ENGLISH, 'sections.techStack');
 
 		expect(hero('title')).toBe(
-			'Building reliable web products with clear engineering decisions'
+			'I build reliable web products with clear engineering decisions'
 		);
 		expect(hero('credential')).toContain('Remote from Peru');
 		expect(research('sectionTitle')).toBe('RESEARCH');
@@ -21,7 +21,7 @@ describe('home section catalog consumers', () => {
 		const techStack = createScopedUiTranslator(Language.SPANISH, 'sections.techStack');
 
 		expect(hero('title')).toBe(
-			'Construyendo productos web confiables con decisiones de ingeniería claras'
+			'Construyo productos web confiables con decisiones técnicas claras'
 		);
 		expect(hero('banner')).toContain('DISPONIBLE');
 		expect(research('sectionTitle')).toBe('INVESTIGACIÓN');
