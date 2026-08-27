@@ -19,7 +19,7 @@ test.describe('Kioku public backend case study', () => {
 			version: 'v3.1.2',
 			problem: 'Agent context should survive the session that created it',
 			system: 'Local-first MCP boundary',
-			evidence: 'What is verifiable today',
+			releaseStatus: 'A stable release and an active development line',
 			learnings: 'What this project changed in how I build',
 			resources: 'Project resources',
 			share: 'Share',
@@ -32,13 +32,13 @@ test.describe('Kioku public backend case study', () => {
 			version: 'v3.1.2',
 			problem: 'El contexto de un agente debe sobrevivir a la sesión que lo creó',
 			system: 'Límite MCP local-first',
-			evidence: 'Qué puede verificarse hoy',
+			releaseStatus: 'Una versión estable y una línea de desarrollo activa',
 			learnings: 'Qué cambió este proyecto en mi forma de construir',
 			resources: 'Recursos del proyecto',
 			share: 'Compartir',
 		},
 	] as const) {
-		test(`renders current bilingual evidence at ${locale.path}`, async ({ page }) => {
+		test(`renders current bilingual project facts at ${locale.path}`, async ({ page }) => {
 			await page.goto(locale.path);
 
 			const caseStudy = page.locator('[data-project-case-study="mdx"]');
@@ -50,7 +50,7 @@ test.describe('Kioku public backend case study', () => {
 			await expect(page.getByText(locale.version, { exact: true })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.problem })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.system })).toBeVisible();
-			await expect(page.getByRole('heading', { name: locale.evidence })).toBeVisible();
+			await expect(page.getByRole('heading', { name: locale.releaseStatus })).toBeVisible();
 			await expect(page.getByRole('heading', { name: locale.learnings })).toBeVisible();
 
 			const resources = page.getByRole('navigation', { name: locale.resources });
