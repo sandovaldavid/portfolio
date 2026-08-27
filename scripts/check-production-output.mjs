@@ -62,6 +62,7 @@ function routeArtifact(route, distDir) {
 
 /**
  * @param {string} directory
+ * @returns {string[]}
  */
 function collectHtmlFiles(directory) {
 	const files = [];
