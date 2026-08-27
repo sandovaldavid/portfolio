@@ -113,9 +113,7 @@ test.describe('Project access and status contract', () => {
 			})
 		).toBeVisible();
 		await expect(page.getByText('Django 5.2.3', { exact: true })).toBeVisible();
-		await expect(
-			page.getByText('Django REST Framework 3.16.0', { exact: true })
-		).toBeVisible();
+		await expect(page.getByText('Django REST Framework 3.16.0', { exact: true })).toBeVisible();
 		await expect(page.getByText('Django Channels', { exact: true })).toHaveCount(0);
 	});
 
