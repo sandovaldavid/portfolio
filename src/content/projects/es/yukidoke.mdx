@@ -2,21 +2,21 @@
 projectId: yukidoke
 locale: es
 title: Yukidoke
-description: 'Una plataforma de finanzas personales por hogar construida con Angular 22 y un monolito modular en .NET 10. La beta V1 activa mantiene identidad, autorización del hogar y autoridad financiera como límites separados.'
+description: 'Una plataforma de finanzas personales por hogar construida con Angular 22 y un monolito modular en .NET 10. La beta V1 mantiene identidad, autorización del hogar y reglas financieras como límites separados.'
 category: 'Software Empresarial'
 imageAlt: 'Vista previa de la arquitectura de la plataforma financiera familiar Yukidoke'
 caseStudy:
     kicker: 'CASO DE ESTUDIO · FINANZAS DEL HOGAR'
     status:
-        lifecycle: 'ACTIVO · BETA V1 / HARDENING CROSS-REPO'
+        lifecycle: 'ACTIVO · BETA V1 / ENDURECIMIENTO ENTRE REPOSITORIOS'
         source: 'CÓDIGO PRIVADO'
         demo: 'SIN DEMO PÚBLICA'
 ---
 
 <CaseStudySection eyebrow="PROBLEMA" title="El dinero compartido del hogar todavía contiene información privada">
-  Un producto de finanzas familiares debe representar obligaciones realmente compartidas sin convertir por defecto los registros financieros privados de cada miembro en datos visibles para todo el hogar. Tarjetas, deudas, ingresos, presupuestos y recomendaciones también necesitan una sola ruta autoritativa de cálculo, no fórmulas ligeramente distintas en cada cliente.
+  Un producto de finanzas familiares debe representar obligaciones realmente compartidas sin convertir por defecto los registros financieros privados de cada miembro en datos visibles para todo el hogar. Tarjetas, deudas, ingresos, presupuestos y recomendaciones también necesitan una única ruta de cálculo autoritativa, no fórmulas ligeramente distintas en cada cliente.
 
-Yukidoke trata por ello **autenticación**, **membresía del hogar** y **visibilidad por registro financiero** como límites independientes, no como un único check de “usuario autenticado”.
+Por eso Yukidoke trata **autenticación**, **membresía del hogar** y **visibilidad por registro financiero** como límites independientes, no como una sola verificación de “usuario autenticado”.
 
 </CaseStudySection>
 
@@ -27,7 +27,7 @@ Yukidoke trata por ello **autenticación**, **membresía del hogar** y **visibil
 >
 	<MermaidDiagram
 		title="Límite del sistema Yukidoke V1"
-		description="Angular controla interacción y estado transitorio del cliente. Keycloak establece identidad. La API .NET 10 controla autorización por hogar y reglas financieras, mientras PostgreSQL es el sistema de registro durable. Worker y migrator comparten el código del monolito modular."
+		description="Angular controla la interacción y el estado transitorio del cliente. Keycloak establece la identidad. La API .NET 10 controla la autorización por hogar y las reglas financieras, mientras PostgreSQL mantiene el estado duradero. Worker y Database Migrator comparten el código del monolito modular."
 		tones={{
 			Web: 'brand',
 			Keycloak: 'info',
@@ -52,58 +52,62 @@ Yukidoke trata por ello **autenticación**, **membresía del hogar** y **visibil
 
 <CaseStudySection eyebrow="ARQUITECTURA" title="Un monolito modular mantiene comprensibles las transacciones de V1">
   <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="LÍMITE 01" title="KEYCLOAK CONTROLA IDENTIDAD" tone="primary">
+    <CaseStudyCard label="LÍMITE 01" title="KEYCLOAK CONTROLA LA IDENTIDAD" tone="primary">
       El navegador es un cliente OIDC público que usa Authorization Code + PKCE. La identidad global se mantiene deliberadamente separada de la membresía del hogar y de los permisos financieros.
     </CaseStudyCard>
 
     <CaseStudyCard label="LÍMITE 02" title="LA API CONTROLA LAS REGLAS FINANCIERAS" tone="primary">
-      El cliente Angular expresa intención y renderiza estado. Permisos por hogar, comportamiento contable, cálculos de salud financiera y read models durables pertenecen a la API en lugar de duplicarse en el navegador.
+      El cliente Angular expresa intención y renderiza estado. Los permisos por hogar, el comportamiento contable, los cálculos de salud financiera y los modelos de lectura persistentes pertenecen a la API en lugar de duplicarse en el navegador.
     </CaseStudyCard>
 
-    <CaseStudyCard label="LÍMITE 03" title="POSTGRESQL CONTROLA EL ESTADO DURABLE" tone="primary">
-      Los módulos persisten mediante PostgreSQL con migraciones EF Core y concurrencia optimista. El Database Migrator es el proceso responsable de aplicar migraciones en lugar de permitir que cada proceso de aplicación cambie el esquema al iniciar.
+    <CaseStudyCard label="LÍMITE 03" title="POSTGRESQL CONTROLA EL ESTADO PERSISTENTE" tone="primary">
+      Los módulos persisten mediante PostgreSQL con migraciones EF Core y concurrencia optimista. Database Migrator aplica las migraciones de forma explícita en lugar de permitir que cada proceso cambie el esquema al iniciar.
     </CaseStudyCard>
 
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="FLUJO DE DATOS" title="REST recupera la verdad; realtime es incremental">
-  El repositorio web documenta clientes REST tipados, normalización de paginación y manejo de ProblemDetails. El estado de notificaciones está diseñado para recuperarse desde estado durable por REST y usar SignalR para actualizaciones incrementales, de modo que perder una conexión realtime no redefina la fuente de verdad.
+<CaseStudySection eyebrow="FLUJO DE DATOS" title="REST recupera la verdad; SignalR añade cambios incrementales">
+  El repositorio web documenta clientes REST tipados, normalización de paginación y manejo de ProblemDetails. El estado de notificaciones se recupera desde REST y usa SignalR para actualizaciones incrementales, de modo que perder una conexión en tiempo real no redefine la fuente de verdad.
 
-Esta diferencia importa en finanzas: un evento websocket puede mejorar la respuesta de la interfaz, pero no debería ser el único registro de que existe un balance, una notificación o una acción del hogar.
+Esta diferencia importa en finanzas: un evento por WebSocket puede mejorar la respuesta de la interfaz, pero no debería ser el único registro de que existe un balance, una notificación o una acción del hogar.
 
 </CaseStudySection>
 
 <CaseStudySection eyebrow="IMPLEMENTACIÓN ACTUAL" title="Qué demuestra hoy la beta V1" surface="highlight">
   <CaseStudyGrid columns={2}>
     <EvidenceBlock label="WEB" title="ANGULAR 22 · 0.9.0-RC.1" tone="verified">
-      El manifest web actual usa Angular 22 e identifica la versión **0.9.0-rc.1**. La documentación del repositorio describe contexto y capability guards por hogar, clientes API tipados, flujos de deudas/tarjetas/payoff, ingresos, consolidación de Planning, invitaciones y administración del hogar, localización EN/ES y un harness de navegador contra el stack real.
+      El proyecto web actual usa Angular 22 e identifica la versión **0.9.0-rc.1**. La documentación describe contexto y guards de capacidades por hogar, clientes API tipados, flujos de deudas, tarjetas y payoff, ingresos, consolidación de Planning, invitaciones y administración del hogar, localización EN/ES y pruebas de navegador contra el stack real.
     </EvidenceBlock>
 
     <EvidenceBlock label="API" title="MONOLITO MODULAR .NET 10" tone="verified">
-      `Directory.Build.props` apunta a **net10.0**. La documentación de API describe módulos Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications y Overview, persistencia PostgreSQL 16, autenticación Keycloak, procesos Worker y Database Migrator y rutas de integración con PostgreSQL/Keycloak reales.
+      `Directory.Build.props` apunta a **net10.0**. La API organiza Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications y Overview como módulos, con PostgreSQL 16, autenticación Keycloak, procesos Worker y Database Migrator, e integración real con PostgreSQL y Keycloak.
     </EvidenceBlock>
 
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PRIVACIDAD" title="La existencia de un recurso forma parte del modelo de autorización">
-  La documentación de la API permite explícitamente que endpoints con alcance por hogar oculten un recurso a quien no es miembro, en vez de revelar primero que existe y responder después con “forbidden”. Es un límite de privacidad más fuerte que una autorización genérica posterior a la resolución del identificador.
+  La API permite que endpoints con alcance por hogar oculten un recurso a quien no pertenece al hogar, en vez de revelar primero que existe y responder después con “forbidden”. Es un límite de privacidad más fuerte que una autorización genérica posterior a la resolución del identificador.
 
-El trabajo de hardening restante también se presenta como evidencia del producto, no como polish oculto: enforcement de privacidad, superficies de exportación/directorio, balances y settlements, aceptación final de autenticación y gates de preparación productiva sobre un stack limpio continúan activos.
+El trabajo de endurecimiento continúa en privacidad, exportaciones y directorio, balances y liquidaciones, aceptación final de autenticación y validación del stack limpio. Esas áreas concentran el trabajo pendiente de la beta antes de considerar datos financieros reales dentro del alcance.
 
 </CaseStudySection>
 
-<CaseStudySection eyebrow="LÍMITES" title="Qué no afirma este caso de estudio" surface="highlight">
+<CaseStudySection
+	eyebrow="LÍMITE ACTUAL"
+	title="V1 sigue en beta privada mientras continúa el endurecimiento productivo"
+	surface="highlight"
+>
 	<EvidenceBlock
-		label="LIMITACIONES DE ACCESO Y EVIDENCIA"
-		title="REPOSITORIOS PRIVADOS, SIN AFIRMACIÓN DE PRODUCCIÓN"
+		label="ESTADO DEL PRODUCTO"
+		title="BETA PRIVADA · ENDURECIMIENTO PRODUCTIVO EN CURSO"
 		tone="boundary"
 	>
-		Ambos repositorios de implementación son privados, por lo que un revisor público no puede
-		inspeccionar directamente su código, tests o historial de ADRs. No se presenta un despliegue
-		en vivo para reclutadores como seguro para datos financieros reales de hogares y este
-		portafolio no afirma adopción, ingresos ni escala de producción.
+		La implementación se mantiene en repositorios privados. El trabajo actual se concentra en
+		autorización, consistencia financiera, persistencia, exportaciones, privacidad y aceptación
+		sobre un stack limpio antes de considerar datos financieros reales del hogar dentro del
+		alcance.
 	</EvidenceBlock>
 </CaseStudySection>
 
@@ -113,12 +117,12 @@ El trabajo de hardening restante también se presenta como evidencia del product
       Identidad, membresía del hogar y visibilidad de un registro financiero específico necesitan reglas y pruebas independientes.
     </CaseStudyCard>
 
-    <CaseStudyCard label="APRENDIZAJE 02" title="REALTIME NO DEBERÍA CONTROLAR LA DURABILIDAD" tone="success">
-      SignalR es útil para actualizaciones incrementales; el estado recuperable por REST es una autoridad más segura cuando una conexión realtime se pierde o reconecta.
+    <CaseStudyCard label="APRENDIZAJE 02" title="SIGNALR NO DEBE SER LA FUENTE DE DURABILIDAD" tone="success">
+      SignalR es útil para actualizaciones incrementales; el estado recuperable por REST sigue siendo la autoridad cuando una conexión se pierde o reconecta.
     </CaseStudyCard>
 
     <CaseStudyCard label="APRENDIZAJE 03" title="UN MONOLITO MODULAR PUEDE SER UNA DECISIÓN DELIBERADA" tone="success">
-      Límites de dominio, ownership de migraciones y consistencia transaccional pueden ser explícitos sin pagar el costo operativo de servicios distribuidos antes de que V1 los necesite.
+      Los límites de dominio, la responsabilidad sobre migraciones y la consistencia transaccional pueden ser explícitos sin asumir el costo operativo de servicios distribuidos antes de que V1 los necesite.
     </CaseStudyCard>
 
   </CaseStudyGrid>

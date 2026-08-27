@@ -19,7 +19,7 @@ test.describe('Yukidoke flagship case study', () => {
 			system: 'Presentation is separated from financial authority',
 			implementation: 'What the V1 beta demonstrates today',
 			privacy: 'Resource existence is part of the authorization model',
-			boundary: 'What this case study does not claim',
+			boundary: 'V1 remains in private beta while production hardening continues',
 			learning: 'Engineering lessons from the household boundary',
 		},
 		{
@@ -30,11 +30,11 @@ test.describe('Yukidoke flagship case study', () => {
 			system: 'La presentación está separada de la autoridad financiera',
 			implementation: 'Qué demuestra hoy la beta V1',
 			privacy: 'La existencia de un recurso forma parte del modelo de autorización',
-			boundary: 'Qué no afirma este caso de estudio',
+			boundary: 'V1 sigue en beta privada mientras continúa el endurecimiento productivo',
 			learning: 'Lecciones de ingeniería del límite por hogar',
 		},
 	] as const) {
-		test(`renders evidence-aware bilingual MDX at ${locale.path}`, async ({ page }) => {
+		test(`renders current bilingual MDX at ${locale.path}`, async ({ page }) => {
 			await page.goto(locale.path);
 
 			await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();

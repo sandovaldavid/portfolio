@@ -3,21 +3,21 @@
 	"locale": "en",
 	"seo": {
 		"title": "About David Sandoval — Software Engineer",
-		"description": "Learn about David Sandoval, a backend-oriented Software Engineer with frontend experience who builds reliable web products with .NET, Angular and TypeScript."
+		"description": "Learn how David Sandoval approaches software engineering across backend systems, web products, testing, developer tooling and applied research."
 	},
-	"summary": "Backend-oriented Software Engineer with frontend experience, building reliable web products with .NET, Angular and TypeScript. I connect technical decisions with business context and validate solutions through testing and reproducible workflows.",
+	"summary": "Backend-oriented Software Engineer with frontend experience. I connect technical decisions with business context, build maintainable web products and validate changes through testing and reproducible workflows.",
 	"biography": [
-		"Backend-oriented Software Engineer with frontend experience, building reliable web products with .NET, Angular and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
-		"My professional work includes modernizing frontend modules, contributing to REST APIs, improving bundle delivery and supporting migrations from legacy systems. The public portfolio documents the projects and trade-offs that can be shared openly.",
+		"Backend-oriented Software Engineer with frontend experience across .NET, Angular and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
+		"My professional work includes modernizing frontend modules, contributing to REST APIs, improving data and reporting workflows, expanding automated regression coverage and supporting migrations from legacy systems. I document project decisions, trade-offs and validation so the engineering behind the work is easier to understand.",
 		"Alongside product engineering, I research Mining Software Repositories and the use of BiLSTM models to study OSS project abandonment, currently in progress toward my professional degree. This research is a secondary specialization that complements my software-engineering work."
 	],
 	"focusAreas": [
-		".NET APIs and maintainable backend boundaries",
-		"Angular and reactive frontend architecture",
-		"TypeScript and web performance",
+		"Maintainable backend systems and API boundaries",
+		"Reactive frontend architecture",
+		"Type-safe web application development",
 		"Automated testing and CI quality gates",
 		"Business-aware, validation-driven engineering",
-		"Open-source documentation and contribution"
+		"Developer tooling and technical documentation"
 	],
 	"availabilityStatement": "Open to remote software engineering opportunities, including international relocation or graduate study as part of ongoing career growth.",
 	"location": "Peru (UTC-5)",

@@ -72,14 +72,14 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Angular and reactive frontend architecture')).toBeVisible();
+		await expect(page.getByText('Reactive frontend architecture')).toBeVisible();
 
 		await page.goto('/es/about');
 		await expect(page).toHaveTitle('Sobre David Sandoval — Ingeniero de Software');
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Angular y arquitectura frontend reactiva')).toBeVisible();
+		await expect(page.getByText('Arquitectura frontend reactiva')).toBeVisible();
 	});
 
 	for (const scenario of [
@@ -153,7 +153,7 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			kicker: 'PROJECT CASE STUDY · ACADEMIC DIRECTORY',
 			detailSource: 'Public source',
 			detailLifecycle: 'Maintained',
-			evidenceHeading: 'The current repository defines the product boundary',
+			evidenceHeading: 'Next.js 16, React 19 and Tailwind 4',
 			forbidden: ['3 months', 'Solo Developer', 'BOSS FIGHT // CASE STUDY'],
 		},
 		{
@@ -166,7 +166,7 @@ test.describe('Pull request smoke and accessibility gates', () => {
 			kicker: 'CASO DE ESTUDIO · DIRECTORIO ACADÉMICO',
 			detailSource: 'Código público',
 			detailLifecycle: 'Mantenido',
-			evidenceHeading: 'El repositorio actual define el límite del producto',
+			evidenceHeading: 'Next.js 16, React 19 y Tailwind 4',
 			forbidden: ['3 meses', 'Desarrollador independiente', 'BOSS FIGHT // CASE STUDY'],
 		},
 	] as const) {

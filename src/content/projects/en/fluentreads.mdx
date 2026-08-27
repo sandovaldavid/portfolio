@@ -14,13 +14,12 @@ caseStudy:
 ---
 
 <CaseStudySection
-	eyebrow="PUBLIC EVIDENCE"
-	title="Source and hosted storefront are directly inspectable"
+	eyebrow="PRODUCT BOUNDARY"
+	title="The storefront keeps commerce responsibilities intentionally small"
 >
 	FluentReads deliberately avoids a traditional commerce backend. Product content is compiled into
-	static pages, cart state stays in the browser, and checkout hands the order summary to WhatsApp
-	rather than pretending to provide a payment processor or order-management system that the
-	repository does not contain.
+	static pages, cart state stays in the browser, and checkout hands the order summary to WhatsApp.
+	Payments and order fulfillment remain outside the application boundary.
 </CaseStudySection>
 
 <CaseStudySection
@@ -56,25 +55,30 @@ caseStudy:
 <CaseStudySection eyebrow="CONTENT MODEL" title="The catalog is a build-time contract">
   The repository defines typed content collections for books, packs, exams, editorials, testimonies, offers, categories, FAQs and legal content. That keeps the public storefront static while still giving product records a schema instead of scattering commerce data through templates.
 
-Decap CMS configuration exists under `/admin` and maps authoring forms back to the JSON catalog. The checked-in CMS configuration currently targets a feature branch, so this case study treats it as an implemented authoring integration rather than claiming that every production content change already flows through the CMS.
+Decap CMS configuration under `/admin` maps authoring forms back to the JSON catalog. The integration exists as a content-authoring path, while the production publishing flow still needs to be consolidated before it becomes the default way to publish catalog changes.
 
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CLIENT STATE" title="Cart behavior is explicit and recoverable" surface="highlight">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="STATE" title="LOCALSTORAGE OWNS THE CART" tone="primary">
-      `CartManager` initializes a browser-side `shoppingCart`, persists item quantities and restores the cart across page navigation without creating a server session.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="EVENTS" title="CARTUPDATED DECOUPLES UI REFRESH" tone="primary">
-      Add, remove, quantity and clear operations dispatch a `cartUpdated` custom event so interactive surfaces can react without centralizing the entire storefront in one client framework.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="CHECKOUT" title="WHATSAPP IS AN EXTERNAL HANDOFF" tone="primary">
-      The repository describes checkout as an order-summary handoff to WhatsApp. Payments remain outside this application, which keeps the implementation honest about what the site actually owns.
-    </CaseStudyCard>
-
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="CLIENT STATE"
+	title="Cart behavior is explicit and recoverable"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="STATE" title="LOCALSTORAGE OWNS THE CART" tone="primary">
+			`CartManager` initializes a browser-side `shoppingCart`, persists item quantities and
+			restores the cart across page navigation without creating a server session.
+		</CaseStudyCard>
+		<CaseStudyCard label="EVENTS" title="CARTUPDATED DECOUPLES UI REFRESH" tone="primary">
+			Add, remove, quantity and clear operations dispatch a `cartUpdated` custom event so
+			interactive surfaces can react without centralizing the entire storefront in one client
+			framework.
+		</CaseStudyCard>
+		<CaseStudyCard label="CHECKOUT" title="WHATSAPP IS AN EXTERNAL HANDOFF" tone="primary">
+			Checkout passes an order summary to WhatsApp. Payments remain outside this application,
+			keeping the storefront aligned with the real operational workflow.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection
@@ -83,21 +87,35 @@ Decap CMS configuration exists under `/admin` and maps authoring forms back to t
 >
 	The service worker caches same-origin GET responses and serves cached content first while
 	refreshing it in the background. When an HTML navigation fails offline, it can fall back to the
-	cached root page. This is a resilience layer around a static site, not a claim that checkout
-	itself works offline.
+	cached root page. This is a resilience layer around a static site; checkout still depends on the
+	external WhatsApp handoff.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="EVIDENCE" title="What is verifiable today" surface="highlight">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="VERIFIED IN CURRENT MANIFEST" title="ASTRO 7 · REACT 19 · TAILWIND 4 · BUN" tone="verified">
-      The current manifest uses Astro **7.0.6**, React **19.2.7**, Tailwind CSS **4.3.2**, TypeScript 6 and Bun 1.3.14. The repository also contains the content schema, cart manager, service worker and Decap CMS configuration described above.
-    </EvidenceBlock>
-
-    <EvidenceBlock label="BOUNDARY" title="NO DATABASE, AUTH OR ONLINE PAYMENT GATEWAY" tone="boundary">
-      The project documentation explicitly describes the storefront as static and serverless. This portfolio therefore makes no sales, customer-adoption, payment-processing or database-backed order claim and does not repeat older unverified Lighthouse score claims.
-    </EvidenceBlock>
-
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="CURRENT IMPLEMENTATION"
+	title="What the maintained storefront contains today"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="CURRENT STACK"
+			title="ASTRO 7 · REACT 19 · TAILWIND 4 · BUN"
+			tone="verified"
+		>
+			The current manifest uses Astro **7.0.6**, React **19.2.7**, Tailwind CSS **4.3.2**,
+			TypeScript 6 and Bun 1.3.14. The repository also contains the content schema, cart
+			manager, service worker and Decap CMS configuration described above.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="PRODUCT SCOPE"
+			title="NO DATABASE, AUTH OR ONLINE PAYMENT GATEWAY"
+			tone="boundary"
+		>
+			The storefront is static and serverless. It does not maintain user accounts, a
+			database-backed order ledger or an online payment processor; order completion continues
+			through the external WhatsApp and bank-transfer workflow.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection
@@ -106,23 +124,35 @@ Decap CMS configuration exists under `/admin` and maps authoring forms back to t
 >
 	A static storefront is inexpensive to host and simple to cache, but browser storage is not an
 	account system and WhatsApp checkout is not a transactional commerce backend. That trade-off is
-	acceptable only because the product boundary is intentionally small and the operational process
+	acceptable because the product boundary is intentionally small and the operational process
 	completes outside the site.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LEARNINGS" title="What this storefront reinforced">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="LEARNING 01" title="CHOOSE INFRASTRUCTURE FOR THE ACTUAL TRANSACTION" tone="success">
-      When fulfillment and payment happen outside the web application, introducing accounts and a database can add complexity without improving the real workflow.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="LEARNING 02" title="STATIC DOES NOT MEAN NON-INTERACTIVE" tone="success">
-      A mostly static Astro site can keep interactive state narrow: cart behavior lives in targeted browser code while the catalog remains pre-rendered.
-    </CaseStudyCard>
-
-    <CaseStudyCard label="LEARNING 03" title="CONTENT AUTHORING IS ITS OWN ARCHITECTURAL CONCERN" tone="success">
-      A CMS can edit build-time content without turning the public application into a dynamic server, but branch and deployment ownership still need to be explicit.
-    </CaseStudyCard>
-
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard
+			label="LEARNING 01"
+			title="CHOOSE INFRASTRUCTURE FOR THE ACTUAL TRANSACTION"
+			tone="success"
+		>
+			When fulfillment and payment happen outside the web application, introducing accounts
+			and a database can add complexity without improving the real workflow.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 02"
+			title="STATIC DOES NOT MEAN NON-INTERACTIVE"
+			tone="success"
+		>
+			A mostly static Astro site can keep interactive state narrow: cart behavior lives in
+			targeted browser code while the catalog remains pre-rendered.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 03"
+			title="CONTENT AUTHORING IS ITS OWN ARCHITECTURAL CONCERN"
+			tone="success"
+		>
+			A CMS can edit build-time content without turning the public application into a dynamic
+			server, but publishing responsibility still needs a clear operational path.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>

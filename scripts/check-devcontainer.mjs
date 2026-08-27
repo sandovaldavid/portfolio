@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
 const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
@@ -14,7 +14,6 @@ const configureGitSigningScript = readFileSync(
 const shellZsh = readFileSync('.devcontainer/config/shell.zsh', 'utf8');
 const shellBash = readFileSync('.devcontainer/config/shell.bash', 'utf8');
 const starshipConfig = readFileSync('.devcontainer/config/starship.toml', 'utf8');
-const gitConfigAtena = readFileSync('.devcontainer/config/gitconfig-atena', 'utf8');
 const dockerCompose = readFileSync('docker-compose.yml', 'utf8');
 const dockerTestScript = readFileSync('docker/docker-test.sh', 'utf8');
 const runPlaywrightScript = readFileSync('scripts/run-playwright.mjs', 'utf8');
@@ -323,12 +322,18 @@ expect(
 	'the portable Starship configuration must retain the personalized Git, Bun and container modules.'
 );
 expect(
+	!existsSync('.devcontainer/config/gitconfig-atena') &&
+		!existsSync('.devcontainer/config/gitconfig-personal'),
+	'the project Dev Container must not bundle personal or corporate Git identity profiles.'
+);
+expect(
 	configureGitSigningScript.includes('namespaces="git"') &&
 		configureGitSigningScript.includes('ssh-add -L') &&
-		configureGitSigningScript.includes('gitconfig-atena') &&
-		gitConfigAtena.includes('david.sandoval@atena.la') &&
-		gitConfigAtena.includes('signingKey = key::ssh-ed25519'),
-	'the container must configure Git signing through the forwarded SSH agent without copying private keys.'
+		configureGitSigningScript.includes('git config --get user.email') &&
+		configureGitSigningScript.includes('git config --get user.signingKey') &&
+		configureGitSigningScript.includes('current_entry') &&
+		!configureGitSigningScript.includes('gitconfig-atena'),
+	'the container must consume the effective Git identity and forwarded SSH agent without owning identity profiles.'
 );
 
 expect(

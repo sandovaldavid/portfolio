@@ -1,4 +1,4 @@
-import { existsSync } from 'node:fs';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import path from 'node:path';
 import { isDirectExecution, REPOSITORY_ROOT, runValidationCli } from './i18n/shared.mjs';
 
@@ -14,6 +14,43 @@ export const FORBIDDEN_PRODUCTION_ROUTES = Object.freeze([
 	'/es/projects/ml-ai-project-fixture',
 ]);
 
+export const FORBIDDEN_PUBLIC_COPY_PATTERNS = Object.freeze([
+	/public reviewer/i,
+	/recruiter can inspect/i,
+	/recruiter-facing live deployment/i,
+	/recruiter curious/i,
+	/developer secrets/i,
+	/imposter syndrome/i,
+	/matrix rain/i,
+	/boss-fight/i,
+	/big-tech content/i,
+	/explicit evidence boundaries/i,
+	/visual polish/i,
+	/not a claim/i,
+	/owner-verifiable context/i,
+	/independently inspectable public evidence/i,
+	/this portfolio (?:therefore )?(?:does not|makes no)/i,
+	/portfolio copy should/i,
+	/a case study should/i,
+	/revisor público no puede/i,
+	/reclutador puede inspeccionar/i,
+	/despliegue en vivo para reclutadores/i,
+	/reclutador curioso/i,
+	/secretos del desarrollador/i,
+	/síndrome del impostor/i,
+	/lluvia matrix/i,
+	/temática boss-fight/i,
+	/contenido ['’]?big-tech['’]?/i,
+	/límites explícitos de evidencia/i,
+	/pulido visual como evidencia/i,
+	/no una afirmación/i,
+	/contexto verificable por el propietario/i,
+	/evidencia pública inspeccionable/i,
+	/el portafolio (?:por ello )?no (?:afirma|expone)/i,
+	/el copy del portafolio debe/i,
+	/un caso de estudio debe/i,
+]);
+
 /**
  * @param {string} route
  * @param {string} distDir
@@ -21,6 +58,20 @@ export const FORBIDDEN_PRODUCTION_ROUTES = Object.freeze([
 function routeArtifact(route, distDir) {
 	const relative = route.replace(/^\//, '');
 	return path.join(distDir, relative, 'index.html');
+}
+
+/**
+ * @param {string} directory
+ * @returns {string[]}
+ */
+function collectHtmlFiles(directory) {
+	const files = [];
+	for (const entry of readdirSync(directory, { withFileTypes: true })) {
+		const fullPath = path.join(directory, entry.name);
+		if (entry.isDirectory()) files.push(...collectHtmlFiles(fullPath));
+		else if (entry.isFile() && entry.name.endsWith('.html')) files.push(fullPath);
+	}
+	return files;
 }
 
 /**
@@ -45,7 +96,23 @@ export function validateProductionOutput({
 		);
 	}
 
-	return `${FORBIDDEN_PRODUCTION_ROUTES.length} development-only route contract(s) excluded from production output.`;
+	const copyLeaks = [];
+	for (const htmlPath of collectHtmlFiles(distDir)) {
+		const html = readFileSync(htmlPath, 'utf8');
+		for (const pattern of FORBIDDEN_PUBLIC_COPY_PATTERNS) {
+			if (pattern.test(html)) {
+				copyLeaks.push(`${path.relative(distDir, htmlPath)} :: ${pattern}`);
+			}
+		}
+	}
+
+	if (copyLeaks.length > 0) {
+		throw new Error(
+			`[production-output] ${copyLeaks.length} internal editorial phrase(s) leaked into public HTML:\n${copyLeaks.map(item => `- ${item}`).join('\n')}`
+		);
+	}
+
+	return `${FORBIDDEN_PRODUCTION_ROUTES.length} development-only route contract(s) and ${FORBIDDEN_PUBLIC_COPY_PATTERNS.length} public-copy guardrail(s) validated.`;
 }
 
 if (isDirectExecution(import.meta.url)) {

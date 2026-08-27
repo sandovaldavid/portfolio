@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('Recruiter evidence, access and status contract', () => {
+test.describe('Project access and status contract', () => {
 	test('homepage featured cards expose lifecycle and only actionable public source evidence', async ({
 		page,
 	}) => {
@@ -75,14 +75,14 @@ test.describe('Recruiter evidence, access and status contract', () => {
 			lifecycle: 'Maintained',
 			sourceAccess: 'Public source',
 			source: 'https://github.com/sandovaldavid/unp-campus-map',
-			boundary: 'THE INTERACTIVE MAP IS NOT PRESENTED AS SHIPPED',
+			boundary: 'INTERACTIVE MAPPING REMAINS FUTURE WORK',
 		},
 		{
 			path: '/es/projects/campus-map',
 			lifecycle: 'Mantenido',
 			sourceAccess: 'Código público',
 			source: 'https://github.com/sandovaldavid/unp-campus-map',
-			boundary: 'EL MAPA INTERACTIVO NO SE PRESENTA COMO ENTREGADO',
+			boundary: 'EL MAPA INTERACTIVO CONTINÚA COMO TRABAJO FUTURO',
 		},
 	] as const) {
 		test(`${locale.path} exposes source while keeping unavailable demo out of the action bar`, async ({
@@ -109,13 +109,11 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		).toBeVisible();
 		await expect(
 			page.getByRole('heading', {
-				name: 'The private API uses a pragmatic modular Django architecture',
+				name: 'The API uses a pragmatic modular Django architecture',
 			})
 		).toBeVisible();
-		await expect(page.getByText('Django 5.2.3', { exact: false })).toBeVisible();
-		await expect(
-			page.getByText('Django REST Framework 3.16.0', { exact: false })
-		).toBeVisible();
+		await expect(page.getByText('Django 5.2.3', { exact: true })).toBeVisible();
+		await expect(page.getByText('Django REST Framework 3.16.0', { exact: true })).toBeVisible();
 		await expect(page.getByText('Django Channels', { exact: true })).toHaveCount(0);
 	});
 
@@ -148,7 +146,7 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		await expect(page.locator('a[href*="herokuapp.com"]')).toHaveCount(0);
 		await expect(
 			page.getByRole('heading', {
-				name: 'The maintained codebase grew beyond the original course workflow',
+				name: 'Implemented behavior and the next engineering constraints',
 			})
 		).toBeVisible();
 
@@ -165,10 +163,12 @@ test.describe('Recruiter evidence, access and status contract', () => {
 		);
 
 		await expect(
-			page.getByRole('heading', { name: 'NO LIVE DEMO OR CONCURRENCY GUARANTEE' })
+			page.getByRole('heading', { name: 'BID VALIDATION IS NOT A CONCURRENCY GUARANTEE' })
 		).toBeVisible();
 		await expect(
-			page.getByRole('heading', { name: 'NO CURRENT DRF OR WEBSOCKET CLAIM' })
+			page.getByRole('heading', {
+				name: 'REST API AND WEBSOCKET EXPERIMENTS ARE OUTSIDE THE CURRENT FLOW',
+			})
 		).toBeVisible();
 	});
 });

@@ -9,7 +9,7 @@ caseStudy:
     kicker: 'PROJECT CASE STUDY · HOUSEHOLD FINANCE'
     status:
         lifecycle: 'ACTIVE · V1 BETA / CROSS-REPO HARDENING'
-        source: 'PRIVATE SOURCE'
+        source: 'PRIVATE CODEBASE'
         demo: 'NO PUBLIC DEMO'
 ---
 
@@ -90,24 +90,24 @@ This distinction matters in finance: a websocket event can improve responsivenes
 <CaseStudySection eyebrow="PRIVACY" title="Resource existence is part of the authorization model">
   The API documentation explicitly allows household-scoped endpoints to conceal a resource from non-members rather than revealing that it exists. That is a stronger privacy boundary than simply returning “forbidden” after exposing an identifier.
 
-The remaining hardening work is also treated as product evidence, not hidden polish: privacy enforcement, exports/directory surfaces, balances and settlements, final authentication acceptance and clean-stack production-readiness gates remain active work.
+Hardening remains active around privacy enforcement, export and directory surfaces, balances and settlements, final authentication acceptance and clean-stack production gates. These areas define the remaining beta work before real household financial data is considered in scope.
 
 </CaseStudySection>
 
 <CaseStudySection
-	eyebrow="BOUNDARIES"
-	title="What this case study does not claim"
+	eyebrow="CURRENT BOUNDARY"
+	title="V1 remains in private beta while production hardening continues"
 	surface="highlight"
 >
 	<EvidenceBlock
-		label="ACCESS AND EVIDENCE LIMITATIONS"
-		title="PRIVATE REPOSITORIES, NO PRODUCTION CLAIM"
+		label="PRODUCT STATUS"
+		title="PRIVATE BETA · PRODUCTION HARDENING IN PROGRESS"
 		tone="boundary"
 	>
-		Both implementation repositories are private, so a public reviewer cannot inspect their
-		source, tests or ADR history directly. There is no recruiter-facing live deployment
-		presented as safe for real household financial data, and this portfolio makes no claim about
-		adoption, revenue or production scale.
+		The implementation is maintained in private repositories. Current engineering work
+		concentrates on authorization, financial consistency, persistence, export and privacy
+		surfaces, and clean-stack acceptance before real household financial data is considered in
+		scope.
 	</EvidenceBlock>
 </CaseStudySection>
 
