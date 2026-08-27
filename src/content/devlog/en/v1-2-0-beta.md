@@ -1,7 +1,7 @@
 ---
 translationKey: v1-2-0-beta
 title: 'v1.2.0-beta — Sprint 2: i18n & SEO'
-summary: 'Bilingual English/Spanish support, hero section internationalization, FSD refactor, hreflang tags, and axe-core accessibility scans.'
+summary: 'Bilingual English/Spanish support, hero internationalization, FSD refactor, hreflang tags and axe-core accessibility scans.'
 pubDate: 2026-06-21
 version: '1.2.0-beta'
 tags: ['sprint']
@@ -14,10 +14,10 @@ Major milestone: full internationalization and structural refactor.
 ## Completed
 
 - **P1-1**: Migrated to Astro 6 Fonts API for automatic font loading
-- **P1-5**: Internationalized hero section (EN/ES)
-- **P1-4**: Translated all 'big-tech' content (experience, projects, about)
-- **P2-1/2/3/4**: FSD migration: path aliases (@/ @app/ @widgets/ etc.), PascalCase components, widget slice extraction, hreflang for SEO
-- **P1-3**: Automated axe-core accessibility scans with serious/critical gate
+- **P1-5**: Internationalized the hero section (EN/ES)
+- **P1-4**: Added English/Spanish versions of the main professional content across experience, projects and About
+- **P2-1/2/3/4**: FSD migration: path aliases (@/ @app/ @widgets/ etc.), PascalCase components, widget slice extraction and hreflang for SEO
+- **P1-3**: Automated axe-core accessibility scans with a serious/critical gate
 
 ## Infrastructure
 
