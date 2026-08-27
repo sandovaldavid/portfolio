@@ -29,6 +29,9 @@ jobs:
       - name: Format tracked files
         run: bun run format
 
+      - name: Keep helper workflow out of formatter commit
+        run: git restore .github/workflows/temporary-format-pr.yml
+
       - name: Commit formatter output
         run: |
           if git diff --quiet; then
