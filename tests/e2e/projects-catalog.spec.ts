@@ -177,7 +177,7 @@ test('Projects Catalog keeps EN and ES intro and index copy localized without du
 		})
 	).toBeVisible();
 	await expect(page.getByText('Proyectos publicados', { exact: true })).toBeVisible();
-	await expect(page.getByRole('heading', { level: 1, name: /Engineering work shaped/i })).toHaveCount(
-		0
-	);
+	await expect(
+		page.getByRole('heading', { level: 1, name: /Engineering work shaped/i })
+	).toHaveCount(0);
 });
