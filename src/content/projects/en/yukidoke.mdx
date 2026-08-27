@@ -90,21 +90,21 @@ This distinction matters in finance: a websocket event can improve responsivenes
 <CaseStudySection eyebrow="PRIVACY" title="Resource existence is part of the authorization model">
   The API documentation explicitly allows household-scoped endpoints to conceal a resource from non-members rather than revealing that it exists. That is a stronger privacy boundary than simply returning “forbidden” after exposing an identifier.
 
-Hardening remains active around privacy enforcement, export and directory surfaces, balances and settlements, final authentication acceptance and production-readiness gates on a clean stack. Those areas define the current beta boundary rather than being presented as finished production behavior.
+Hardening remains active around privacy enforcement, export and directory surfaces, balances and settlements, final authentication acceptance and clean-stack production gates. These areas define the remaining beta work before real household financial data is considered in scope.
 
 </CaseStudySection>
 
 <CaseStudySection
 	eyebrow="CURRENT BOUNDARY"
-	title="The V1 beta is not presented as a production finance service"
+	title="V1 remains in private beta while production hardening continues"
 	surface="highlight"
 >
 	<EvidenceBlock
 		label="PRODUCT STATUS"
-		title="PRIVATE CODEBASE · NO PUBLIC FINANCIAL DEPLOYMENT"
+		title="PRIVATE BETA · PRODUCTION HARDENING IN PROGRESS"
 		tone="boundary"
 	>
-		The implementation is maintained in private repositories and the current V1 beta is not offered as a public service for real household financial data. The engineering story therefore focuses on the implemented authorization, financial and persistence boundaries while production hardening remains in progress.
+		The implementation is maintained in private repositories. Current engineering work concentrates on authorization, financial consistency, persistence, export and privacy surfaces, and clean-stack acceptance before real household financial data is considered in scope.
 	</EvidenceBlock>
 </CaseStudySection>
 
