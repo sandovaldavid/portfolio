@@ -13,31 +13,15 @@ caseStudy:
         demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection
-	eyebrow="EVIDENCIA PÚBLICA"
-	title="El repositorio actual define el límite del producto"
->
-	El repositorio es un proyecto open-source independiente y no un producto oficial de la
-	Universidad Nacional de Piura. Su superficie ejecutable actual es un directorio académico con
-	búsqueda y administración de contenido; el mapa geoespacial interactivo descrito en la dirección
-	de producto más antigua continúa como roadmap y no como capacidad entregada.
+<CaseStudySection eyebrow="PRODUCTO ACTUAL" title="Un directorio académico consultable, con el mapping geoespacial todavía en roadmap">
+	UNP Campus Map es un proyecto open-source independiente, no un producto oficial de la Universidad Nacional de Piura. Su superficie mantenida es un directorio de facultades y escuelas con búsqueda y administración de contenido. La navegación geoespacial interactiva permanece como trabajo futuro y no como capacidad entregada.
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="PROBLEMA"
-	title="La información del campus es más útil cuando está estructurada y se puede buscar"
->
-	Nombres de facultades, escuelas, referencias de pabellón y enlaces oficiales son más utilizables
-	cuando viven en un directorio consultable en lugar de redescubrirse en páginas o documentos
-	separados. La implementación se centra por ello en **descubrimiento de facultades y escuelas**
-	sin afirmar un sistema de navegación interactivo que el código actual no entrega.
+<CaseStudySection eyebrow="PROBLEMA" title="La información del campus es más útil cuando está estructurada y se puede buscar">
+	Nombres de facultades, escuelas, referencias de pabellón y enlaces oficiales son más utilizables cuando viven en un directorio consultable en lugar de redescubrirse en páginas o documentos separados. La implementación actual se concentra por ello en **descubrimiento de facultades y escuelas** antes de añadir interacción específica de mapa.
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="SISTEMA"
-	title="Next.js controla tanto el directorio público como su superficie administrativa"
-	surface="highlight"
->
+<CaseStudySection eyebrow="SISTEMA" title="Next.js controla tanto el directorio público como su superficie administrativa" surface="highlight">
 	<MermaidDiagram
 		title="Arquitectura actual de UNP Campus Map"
 		description="Superficies públicas y administrativas del App Router llegan a código API y de servicios. Un servicio de facultades consulta mediante Knex, que puede usar la configuración MySQL por defecto o PostgreSQL. Cloudinary almacena media administrada."
@@ -53,56 +37,47 @@ caseStudy:
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="IMPLEMENTACIÓN" title="Qué soporta realmente el código">
+<CaseStudySection eyebrow="IMPLEMENTACIÓN" title="Qué soporta hoy el código">
   <CaseStudyGrid columns={3}>
     <CaseStudyCard label="DESCUBRIMIENTO" title="FACULTADES + ESCUELAS" tone="primary">
       La capa de servicios selecciona facultades, cuenta escuelas relacionadas y busca por nombre de facultad, descripción y nombre de escuela. Los registros de escuela exponen pabellón y sitio web oficial.
     </CaseStudyCard>
-
     <CaseStudyCard label="CONTENIDO" title="CRUD ADMINISTRATIVO" tone="primary">
       El árbol actual del App Router incluye un área administrativa y `facultyService` implementa create, update y delete sobre el mismo límite de persistencia utilizado por las lecturas públicas.
     </CaseStudyCard>
-
     <CaseStudyCard label="MEDIA + DATOS" title="CLOUDINARY + KNEX" tone="primary">
-      La media se separa mediante Cloudinary. El acceso a datos se centraliza detrás de Knex y el repositorio incluye esquemas tanto para MySQL como PostgreSQL, en lugar de acoplar cada consulta a un único driver.
+      La media se separa mediante Cloudinary. El acceso a datos se centraliza detrás de Knex y el repositorio incluye rutas de esquema tanto para MySQL como PostgreSQL, en lugar de acoplar cada consulta a un único driver.
     </CaseStudyCard>
-
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="DRIFT DE VERSIONES" title="Los manifests ejecutables tienen prioridad sobre tablas README desactualizadas" surface="highlight">
+<CaseStudySection eyebrow="STACK ACTUAL" title="La implementación mantenida avanzó respecto a notas antiguas de dependencias" surface="highlight">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="VERIFICADO EN PACKAGE MANIFEST" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
-      El `package.json` actual usa Next.js **16.0.10**, React **19.2.3** y Tailwind CSS **4.1.17**. Secciones anteriores del README todavía mencionan Next.js 14 y MySQL 8, por lo que esas tablas antiguas no se utilizan como fuente de verdad técnica del portafolio.
+    <EvidenceBlock label="PACKAGE MANIFEST" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
+      El `package.json` actual usa Next.js **16.0.10**, React **19.2.3** y Tailwind CSS **4.1.17**. Algunas secciones antiguas del README todavía hacen referencia a versiones previas, por lo que la implementación mantenida debe leerse contra el manifest actual y el código de rutas/servicios.
     </EvidenceBlock>
-
-    <EvidenceBlock label="LÍMITE" title="EL MAPA INTERACTIVO NO SE PRESENTA COMO ENTREGADO" tone="boundary">
-      El roadmap del repositorio todavía describe el mapping interactivo y comportamiento geoespacial como trabajo futuro. Este caso de estudio **no** repite por ello los claims anteriores del portafolio sobre un motor de geolocalización, marcadores de mapa en vivo ni reducciones medidas del tiempo de orientación en campus.
+    <EvidenceBlock label="ROADMAP DEL PRODUCTO" title="EL MAPA INTERACTIVO CONTINÚA COMO TRABAJO FUTURO" tone="boundary">
+      El roadmap sigue describiendo mapping interactivo y comportamiento geoespacial como trabajo futuro. El producto actual se detiene en un directorio consultable y administrable hasta que esa capa de navegación sea implementada.
     </EvidenceBlock>
-
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="TRADE-OFFS" title="Primero el directorio, luego el mapa">
-  Construir primero el modelo de datos, búsqueda y administración de contenido crea una capa de información verificable que un futuro mapa puede consumir. También evita acoplar el valor del proyecto a GPS o UX geoespacial antes de que los registros de facultades y escuelas sean confiables.
+  Construir primero el modelo de datos, búsqueda y administración de contenido crea una capa de información confiable que un futuro mapa puede consumir. También evita acoplar el valor del proyecto a GPS o UX geoespacial antes de que los registros de facultades y escuelas sean confiables.
 
 Knex añade una pequeña capa de abstracción, pero entrega una superficie de consultas común para el MySQL configurado por defecto y la configuración compatible con PostgreSQL documentada por el repositorio.
-
 </CaseStudySection>
 
-<CaseStudySection eyebrow="APRENDIZAJES" title="Qué cambió al auditar el repositorio">
+<CaseStudySection eyebrow="APRENDIZAJES" title="Qué reforzó este proyecto">
   <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="APRENDIZAJE 01" title="EL NOMBRE DEL PRODUCTO PUEDE IR MÁS RÁPIDO QUE LA IMPLEMENTACIÓN" tone="success">
-      Un “Campus Map” puede ser hoy un buen directorio sin fingir que el mapa ya existe. El copy del portafolio debe reflejar el límite entregado, no la aspiración del nombre.
+    <CaseStudyCard label="APRENDIZAJE 01" title="ENTREGA PRIMERO LA CAPA DE INFORMACIÓN CONFIABLE" tone="success">
+      El directorio aporta descubrimiento útil antes de que la capa geoespacial esté lista y entrega a un futuro mapa una fuente de datos estructurada sobre la cual construir.
     </CaseStudyCard>
-
-    <CaseStudyCard label="APRENDIZAJE 02" title="CONFIGURACIÓN EJECUTABLE ANTES QUE DOCUMENTACIÓN ANTIGUA" tone="success">
-      Manifests, árboles de rutas y servicios son mejor evidencia de versiones y capacidades actuales cuando la prosa no ha seguido el ritmo de las actualizaciones de dependencias.
+    <CaseStudyCard label="APRENDIZAJE 02" title="CONFIGURACIÓN EJECUTABLE Y DOCUMENTACIÓN DEBEN PERMANECER ALINEADAS" tone="success">
+      Las actualizaciones de dependencias pueden volver obsoletas las notas de arquitectura. Mantener sincronizados manifests, rutas y documentación reduce ambigüedad sobre el sistema mantenido.
     </CaseStudyCard>
-
     <CaseStudyCard label="APRENDIZAJE 03" title="PORTABILIDAD NECESITA UN LÍMITE REAL" tone="success">
-      Soportar más de una base de datos es más creíble cuando las consultas pasan por una sola capa adaptadora y existen ambos esquemas, no cuando la portabilidad sólo aparece en un README.
+      Soportar más de una base de datos es significativo cuando las consultas pasan por una sola capa adaptadora y existen ambas rutas de esquema, no cuando la portabilidad sólo aparece en documentación.
     </CaseStudyCard>
-
   </CaseStudyGrid>
 </CaseStudySection>
