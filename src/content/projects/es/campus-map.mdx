@@ -2,29 +2,29 @@
 projectId: campus-map
 locale: es
 title: UNP Campus Map
-description: 'Un directorio académico open-source e independiente para facultades y escuelas de la Universidad Nacional de Piura, construido con Next.js 16 App Router, búsqueda respaldada por base de datos, CRUD administrativo y media en Cloudinary.'
+description: 'Un directorio académico independiente y de código abierto para facultades y escuelas de la Universidad Nacional de Piura, construido con Next.js 16 App Router, búsqueda respaldada por base de datos, CRUD administrativo y contenido multimedia en Cloudinary.'
 category: 'Desarrollo Full-Stack'
 imageAlt: 'Vista previa del directorio académico de facultades y escuelas UNP Campus Map'
 caseStudy:
     kicker: 'CASO DE ESTUDIO · DIRECTORIO ACADÉMICO'
     status:
-        lifecycle: 'MANTENIDO · CODEBASE NEXT.JS 16'
+        lifecycle: 'MANTENIDO · NEXT.JS 16'
         source: 'CÓDIGO PÚBLICO'
         demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection eyebrow="PRODUCTO ACTUAL" title="Un directorio académico consultable, con el mapping geoespacial todavía en roadmap">
-	UNP Campus Map es un proyecto open-source independiente, no un producto oficial de la Universidad Nacional de Piura. Su superficie mantenida es un directorio de facultades y escuelas con búsqueda y administración de contenido. La navegación geoespacial interactiva permanece como trabajo futuro y no como capacidad entregada.
+<CaseStudySection eyebrow="PRODUCTO ACTUAL" title="Un directorio académico consultable, con el mapa geoespacial todavía en roadmap">
+	UNP Campus Map es un proyecto independiente y de código abierto, no un producto oficial de la Universidad Nacional de Piura. Su superficie mantenida es un directorio de facultades y escuelas con búsqueda y administración de contenido. La navegación geoespacial interactiva permanece como trabajo futuro.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEMA" title="La información del campus es más útil cuando está estructurada y se puede buscar">
-	Nombres de facultades, escuelas, referencias de pabellón y enlaces oficiales son más utilizables cuando viven en un directorio consultable en lugar de redescubrirse en páginas o documentos separados. La implementación actual se concentra por ello en **descubrimiento de facultades y escuelas** antes de añadir interacción específica de mapa.
+	Nombres de facultades, escuelas, referencias de pabellón y enlaces oficiales son más fáciles de usar cuando viven en un directorio consultable en lugar de redescubrirse en páginas o documentos separados. Por eso la implementación actual se concentra en **descubrimiento de facultades y escuelas** antes de añadir interacción específica de mapa.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Next.js controla tanto el directorio público como su superficie administrativa" surface="highlight">
+<CaseStudySection eyebrow="SISTEMA" title="Next.js controla el directorio público y la administración de contenido" surface="highlight">
 	<MermaidDiagram
 		title="Arquitectura actual de UNP Campus Map"
-		description="Superficies públicas y administrativas del App Router llegan a código API y de servicios. Un servicio de facultades consulta mediante Knex, que puede usar la configuración MySQL por defecto o PostgreSQL. Cloudinary almacena media administrada."
+		description="Las superficies públicas y administrativas del App Router llegan a handlers de API y servicios. Un servicio de facultades consulta mediante Knex, que puede usar MySQL por defecto o PostgreSQL. Cloudinary almacena el contenido multimedia."
 		chart={`flowchart LR
       Public["Directorio público\nfacultades · escuelas · búsqueda"] --> Next["Next.js 16 App Router"]
       Admin["UI administrativa\nCRUD de facultades"] --> Next
@@ -33,51 +33,51 @@ caseStudy:
       Service --> Knex["Adaptador Knex"]
       Knex --> MySQL["MySQL\nconfiguración por defecto"]
       Knex -. soportado .-> Postgres["PostgreSQL"]
-      Next --> Cloudinary["Cloudinary\nmedia administrada"]`}
+      Next --> Cloudinary["Cloudinary\ncontenido multimedia"]`}
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="IMPLEMENTACIÓN" title="Qué soporta hoy el código">
+<CaseStudySection eyebrow="IMPLEMENTACIÓN" title="Qué soporta hoy la aplicación">
   <CaseStudyGrid columns={3}>
     <CaseStudyCard label="DESCUBRIMIENTO" title="FACULTADES + ESCUELAS" tone="primary">
-      La capa de servicios selecciona facultades, cuenta escuelas relacionadas y busca por nombre de facultad, descripción y nombre de escuela. Los registros de escuela exponen pabellón y sitio web oficial.
+      La capa de servicios obtiene facultades, cuenta escuelas relacionadas y busca por nombre de facultad, descripción y nombre de escuela. Los registros de escuela exponen pabellón y sitio web oficial.
     </CaseStudyCard>
     <CaseStudyCard label="CONTENIDO" title="CRUD ADMINISTRATIVO" tone="primary">
-      El árbol actual del App Router incluye un área administrativa y `facultyService` implementa create, update y delete sobre el mismo límite de persistencia utilizado por las lecturas públicas.
+      El App Router incluye un área administrativa y `facultyService` implementa create, update y delete sobre el mismo límite de persistencia utilizado por las lecturas públicas.
     </CaseStudyCard>
-    <CaseStudyCard label="MEDIA + DATOS" title="CLOUDINARY + KNEX" tone="primary">
-      La media se separa mediante Cloudinary. El acceso a datos se centraliza detrás de Knex y el repositorio incluye rutas de esquema tanto para MySQL como PostgreSQL, en lugar de acoplar cada consulta a un único driver.
+    <CaseStudyCard label="MULTIMEDIA + DATOS" title="CLOUDINARY + KNEX" tone="primary">
+      Cloudinary separa el manejo de contenido multimedia. El acceso a datos se centraliza detrás de Knex y existen rutas de esquema tanto para MySQL como para PostgreSQL, evitando acoplar cada consulta a un único driver.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="STACK ACTUAL" title="La implementación mantenida avanzó respecto a notas antiguas de dependencias" surface="highlight">
+<CaseStudySection eyebrow="STACK ACTUAL" title="Next.js 16, React 19 y Tailwind 4" surface="highlight">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="PACKAGE MANIFEST" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
-      El `package.json` actual usa Next.js **16.0.10**, React **19.2.3** y Tailwind CSS **4.1.17**. Algunas secciones antiguas del README todavía hacen referencia a versiones previas, por lo que la implementación mantenida debe leerse contra el manifest actual y el código de rutas/servicios.
+    <EvidenceBlock label="IMPLEMENTACIÓN" title="NEXT.JS 16 · REACT 19 · TAILWIND 4" tone="verified">
+      La aplicación actual usa Next.js **16.0.10**, React **19.2.3** y Tailwind CSS **4.1.17**, con Route Handlers, consultas en la capa de servicios y CRUD administrativo alrededor del directorio académico.
     </EvidenceBlock>
     <EvidenceBlock label="ROADMAP DEL PRODUCTO" title="EL MAPA INTERACTIVO CONTINÚA COMO TRABAJO FUTURO" tone="boundary">
-      El roadmap sigue describiendo mapping interactivo y comportamiento geoespacial como trabajo futuro. El producto actual se detiene en un directorio consultable y administrable hasta que esa capa de navegación sea implementada.
+      El mapa interactivo y la navegación geoespacial siguen como trabajo futuro. El producto actual se concentra en un directorio consultable y administrable hasta implementar esa capa de navegación.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="TRADE-OFFS" title="Primero el directorio, luego el mapa">
-  Construir primero el modelo de datos, búsqueda y administración de contenido crea una capa de información confiable que un futuro mapa puede consumir. También evita acoplar el valor del proyecto a GPS o UX geoespacial antes de que los registros de facultades y escuelas sean confiables.
+  Construir primero el modelo de datos, la búsqueda y la administración de contenido crea una capa de información confiable que un futuro mapa puede consumir. También evita acoplar el valor del proyecto a GPS o UX geoespacial antes de que los registros de facultades y escuelas sean confiables.
 
-Knex añade una pequeña capa de abstracción, pero entrega una superficie de consultas común para el MySQL configurado por defecto y la configuración compatible con PostgreSQL documentada por el repositorio.
+Knex añade una capa de abstracción pequeña, pero ofrece una única superficie de consultas para MySQL y la ruta soportada de PostgreSQL.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué reforzó este proyecto">
   <CaseStudyGrid columns={3}>
     <CaseStudyCard label="APRENDIZAJE 01" title="ENTREGA PRIMERO LA CAPA DE INFORMACIÓN CONFIABLE" tone="success">
-      El directorio aporta descubrimiento útil antes de que la capa geoespacial esté lista y entrega a un futuro mapa una fuente de datos estructurada sobre la cual construir.
+      El directorio aporta descubrimiento útil antes de que la capa geoespacial esté lista y da a un futuro mapa una fuente de datos estructurada sobre la cual construir.
     </CaseStudyCard>
-    <CaseStudyCard label="APRENDIZAJE 02" title="CONFIGURACIÓN EJECUTABLE Y DOCUMENTACIÓN DEBEN PERMANECER ALINEADAS" tone="success">
-      Las actualizaciones de dependencias pueden volver obsoletas las notas de arquitectura. Mantener sincronizados manifests, rutas y documentación reduce ambigüedad sobre el sistema mantenido.
+    <CaseStudyCard label="APRENDIZAJE 02" title="MANTÉN CONFIGURACIÓN Y DOCUMENTACIÓN ALINEADAS" tone="success">
+      Los cambios de dependencias y arquitectura son más fáciles de mantener cuando configuración ejecutable, rutas y documentación evolucionan juntas.
     </CaseStudyCard>
-    <CaseStudyCard label="APRENDIZAJE 03" title="PORTABILIDAD NECESITA UN LÍMITE REAL" tone="success">
-      Soportar más de una base de datos es significativo cuando las consultas pasan por una sola capa adaptadora y existen ambas rutas de esquema, no cuando la portabilidad sólo aparece en documentación.
+    <CaseStudyCard label="APRENDIZAJE 03" title="LA PORTABILIDAD NECESITA UN LÍMITE REAL" tone="success">
+      Soportar más de una base de datos es significativo cuando las consultas pasan por una sola capa adaptadora y existen ambas rutas de esquema, no cuando la portabilidad solo aparece en documentación.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
