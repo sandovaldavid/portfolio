@@ -51,7 +51,7 @@ const {
 	publishedTime,
 	modifiedTime,
 	breadcrumbLabel,
-	keywords = 'Software Engineer, Backend, .NET 8, Angular 19, TypeScript, Peru, Remote, Portfolio, Astro',
+	keywords = 'David Sandoval, Software Engineer, backend engineering, web architecture, automated testing, developer tooling, applied AI, .NET, Angular, TypeScript, Peru, remote',
 	localizedPaths,
 	contentLayout = 'default',
 } = Astro.props;
@@ -151,10 +151,10 @@ const websiteId = `${siteConfig.url}/#website`;
 const personEntity = {
 	'@type': 'Person',
 	'@id': personId,
-	name: siteConfig.fullName,
+	name: siteConfig.name,
 	givenName: 'Juan David',
 	familyName: 'Sandoval Salvador',
-	alternateName: siteConfig.handle,
+	alternateName: [siteConfig.fullName, siteConfig.handle],
 	description: tMetadata('personDescription'),
 	url: siteConfig.url,
 	image: `${siteConfig.url}/profile/perfil.webp`,
@@ -164,16 +164,16 @@ const personEntity = {
 	address: { '@type': 'PostalAddress', addressCountry: 'PE' },
 	email: siteConfig.email,
 	knowsAbout: [
-		'.NET 8',
+		'Software Engineering',
+		'Backend Engineering',
+		'Web Architecture',
+		'Automated Testing',
+		'Developer Tooling',
+		'Applied AI',
+		'.NET',
 		'C#',
 		'Angular',
 		'TypeScript',
-		'BiLSTM',
-		'Machine Learning',
-		'Python',
-		'Django',
-		'Docker',
-		'PostgreSQL',
 	],
 };
 const personSchema = {
@@ -266,7 +266,7 @@ const structuredPageSchema =
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-		<meta name="apple-mobile-web-app-title" content="DevSandoval" />
+		<meta name="apple-mobile-web-app-title" content={siteConfig.name} />
 
 		<meta property="og:type" content={ogType} />
 		<meta property="og:title" content={title} />
