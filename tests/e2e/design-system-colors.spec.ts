@@ -141,7 +141,7 @@ test.describe('Portfolio Retro color token contract', () => {
 
 		await input.fill('help');
 		await input.press('Enter');
-		await expect(page.locator('#cli-output')).toContainText('Portfolio OS');
+		await expect(page.locator('#cli-output')).toContainText('Portfolio CLI');
 		await expectNoBlockingAxeViolations(page);
 	});
 
