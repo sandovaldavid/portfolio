@@ -55,28 +55,28 @@ caseStudy:
 </CaseStudySection>
 
 <CaseStudySection eyebrow="BACKEND" title="The API uses a pragmatic modular Django architecture" surface="highlight">
-  The backend dependency manifest pins **Django 5.2.3** and **Django REST Framework 3.16.0**, with JWT/cryptography support, PostgreSQL through `psycopg2`, filtering, OpenAPI tooling and Celery. Its architecture documentation describes a hybrid modular approach combining a service layer, domain-centric Django models and ports/adapters rather than forcing a framework-neutral domain that duplicates the ORM.
+  The backend uses **Django 5.2.3** and **Django REST Framework 3.16.0**, with JWT/cryptography support, PostgreSQL through `psycopg2`, filtering, OpenAPI tooling and Celery. Its architecture combines a service layer, domain-centric Django models and ports/adapters rather than forcing a framework-neutral domain that duplicates the ORM.
 
-The API is maintained in a private repository, so its implementation remains a separate delivery boundary from the open-source client. The client-facing story therefore concentrates on the REST contract and the responsibilities assigned to each side of that boundary.
+The API is maintained in a private repository, making the REST contract the explicit boundary between the open client and backend implementation. Presentation and interaction remain client responsibilities; application orchestration and persistence stay behind the API.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="REPORTING" title="The client owns visualization and export concerns">
-	The Angular manifest includes ECharts, jsPDF and PapaParse. Keeping charting and export libraries in the client lets reporting surfaces transform API responses into interactive visualizations and downloadable representations without pushing presentation concerns back into the REST service.
+	The Angular client includes ECharts, jsPDF and PapaParse. Keeping charting and export libraries in the client lets reporting surfaces transform API responses into interactive visualizations and downloadable representations without pushing presentation concerns back into the REST service.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CURRENT IMPLEMENTATION" title="What each repository owns today">
+<CaseStudySection eyebrow="CURRENT IMPLEMENTATION" title="Responsibilities remain explicit across client and API">
   <CaseStudyGrid columns={2}>
     <EvidenceBlock label="CLIENT" title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4" tone="verified">
-      The Angular client uses Angular 20, Angular SSR, Express 5, RxJS and Tailwind CSS 4. Its codebase separates `domain`, `application`, `infrastructure` and `presentation`, with guarded routes and concrete HTTP repository implementations.
+      The Angular client uses Angular 20, Angular SSR, Express 5, RxJS and Tailwind CSS 4. Its code separates `domain`, `application`, `infrastructure` and `presentation`, with guarded routes and concrete HTTP repository implementations.
     </EvidenceBlock>
     <EvidenceBlock label="API" title="DJANGO 5.2 · DRF 3.16 · JWT · POSTGRESQL · CELERY" tone="verified">
-      The companion API uses Django 5.2.3 and DRF 3.16 with JWT/cryptography, PostgreSQL support and Celery. It remains a private service maintained separately from the open-source client.
+      The companion API uses Django 5.2.3 and DRF 3.16 with JWT/cryptography, PostgreSQL support and Celery. It remains a private service maintained separately from the public client.
     </EvidenceBlock>
-    <EvidenceBlock label="ACTIVE BOUNDARY" title="NO DJANGO CHANNELS / WEBSOCKET PATH IN THE CURRENT API" tone="boundary">
-      The current backend requirements do not include Django Channels, so realtime WebSocket behavior is not part of the maintained API boundary described here.
+    <EvidenceBlock label="ACTIVE BOUNDARY" title="REQUEST/RESPONSE REST IS THE CURRENT TRANSPORT" tone="boundary">
+      The maintained backend does not include Django Channels, so WebSocket behavior is outside the current system flow. Client and API integration is centered on the REST contract.
     </EvidenceBlock>
-    <EvidenceBlock label="LIFECYCLE" title="NO PUBLIC PRODUCTION DEPLOYMENT IS PRESENTED" tone="boundary">
-      The project is presented through its maintained code and architecture. A public production service, adoption metrics and customer-impact outcomes are not part of the current product surface.
+    <EvidenceBlock label="DELIVERY BOUNDARY" title="CLIENT AND API CAN EVOLVE INDEPENDENTLY" tone="boundary">
+      The split keeps presentation and backend delivery concerns separate. Changes on either side need to preserve the shared REST contract rather than requiring both repositories to share implementation details.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
