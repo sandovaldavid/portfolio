@@ -71,7 +71,7 @@ for (const viewport of VIEWPORTS) {
 		const cards = projectGrid.locator('article > div');
 		const title = page.getByRole('heading', {
 			level: 1,
-			name: 'Projects built with evidence, scope and trade-offs.',
+			name: 'Engineering work shaped by real constraints.',
 		});
 
 		await expect(introShell).toBeVisible();
@@ -120,15 +120,13 @@ for (const viewport of VIEWPORTS) {
 	});
 }
 
-test('Projects Catalog surfaces a recruiter-oriented portfolio index and repository-aware actions', async ({
-	page,
-}) => {
+test('Projects Catalog surfaces a project index and repository-aware actions', async ({ page }) => {
 	await page.setViewportSize({ width: 1440, height: 900 });
 	await page.goto('/projects');
 
 	const snapshot = page.locator('[data-projects-catalog-snapshot]');
 	await expect(snapshot.getByText('Published projects', { exact: true })).toBeVisible();
-	await expect(snapshot.getByText('Inspectable source', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('Source available', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('Active builds', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('Most used technologies', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('06', { exact: true })).toBeVisible();
@@ -165,7 +163,7 @@ test('Projects Catalog keeps EN and ES intro and index copy localized without du
 	await expect(
 		page.getByRole('heading', {
 			level: 1,
-			name: 'Projects built with evidence, scope and trade-offs.',
+			name: 'Engineering work shaped by real constraints.',
 		})
 	).toBeVisible();
 	await expect(page.getByText('Published projects', { exact: true })).toBeVisible();
@@ -175,9 +173,11 @@ test('Projects Catalog keeps EN and ES intro and index copy localized without du
 	await expect(
 		page.getByRole('heading', {
 			level: 1,
-			name: 'Proyectos construidos con evidencia, alcance y trade-offs.',
+			name: 'Proyectos donde las decisiones técnicas importan.',
 		})
 	).toBeVisible();
 	await expect(page.getByText('Proyectos publicados', { exact: true })).toBeVisible();
-	await expect(page.getByRole('heading', { level: 1, name: /Projects built/i })).toHaveCount(0);
+	await expect(
+		page.getByRole('heading', { level: 1, name: /Engineering work shaped/i })
+	).toHaveCount(0);
 });

@@ -60,7 +60,7 @@ for (const viewport of VIEWPORTS) {
 		const firstSectionInner = firstSection.locator(':scope > div');
 		const title = page.getByRole('heading', { level: 1, name: 'Kioku' });
 		const sectionTitle = page.getByRole('heading', {
-			name: 'Inspect the project beyond this portfolio',
+			name: 'Stable 3.1.2 release with active development continuing',
 		});
 
 		await expect(caseStudy).toBeVisible();

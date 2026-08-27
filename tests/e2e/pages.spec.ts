@@ -45,12 +45,12 @@ const internalRouteExpectations = [
 	{ path: '/about', heading: 'David Sandoval' },
 	{
 		path: '/projects',
-		heading: 'Projects built with evidence, scope and trade-offs.',
+		heading: 'Engineering work shaped by real constraints.',
 	},
 	{ path: '/es/about', heading: 'David Sandoval' },
 	{
 		path: '/es/projects',
-		heading: 'Proyectos construidos con evidencia, alcance y trade-offs.',
+		heading: 'Proyectos donde las decisiones técnicas importan.',
 	},
 ];
 
