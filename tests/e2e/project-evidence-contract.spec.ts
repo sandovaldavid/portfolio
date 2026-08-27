@@ -112,9 +112,9 @@ test.describe('Project access and status contract', () => {
 				name: 'The API uses a pragmatic modular Django architecture',
 			})
 		).toBeVisible();
-		await expect(page.getByText('Django 5.2.3', { exact: false })).toBeVisible();
+		await expect(page.getByText('Django 5.2.3', { exact: true })).toBeVisible();
 		await expect(
-			page.getByText('Django REST Framework 3.16.0', { exact: false })
+			page.getByText('Django REST Framework 3.16.0', { exact: true })
 		).toBeVisible();
 		await expect(page.getByText('Django Channels', { exact: true })).toHaveCount(0);
 	});
