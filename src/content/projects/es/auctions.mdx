@@ -13,31 +13,15 @@ caseStudy:
         demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection
-	eyebrow="EVIDENCIA PÚBLICA"
-	title="El repositorio de código es la superficie verificable actual"
->
-	El repositorio contiene modelos, vistas, formularios, templates, analítica administrativa y
-	configuración de despliegue Django para el flujo de subastas. Un README antiguo todavía muestra
-	una URL placeholder de Heroku, pero el portfolio no presenta ese placeholder como un despliegue
-	en vivo.
+<CaseStudySection eyebrow="PRODUCTO ACTUAL" title="Un workflow de subastas server-rendered mantenido">
+	La aplicación combina modelos, formularios, vistas y templates Django para listings autenticados, pujas, watchlists, comentarios, categorías y cierre de subastas controlado por el propietario. La analítica administrativa amplía el workflow original, mientras el repositorio no expone actualmente una demo alojada en vivo.
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="PROBLEMA"
-	title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD"
->
-	Los listings necesitan propietario, precio inicial, estado activo/inactivo y ganador. Los
-	participantes necesitan pujar, seguir listings y comentar sin poder cerrar una subasta ajena. La
-	aplicación modela esas relaciones explícitamente y mantiene el workflow principal
-	server-rendered en lugar de introducir una SPA y API separadas para un monolito educativo.
+<CaseStudySection eyebrow="PROBLEMA" title="Una subasta es un ciclo de vida, no sólo una pantalla CRUD">
+	Los listings necesitan propietario, precio inicial, estado activo/inactivo y ganador. Los participantes necesitan pujar, seguir listings y comentar sin poder cerrar una subasta ajena. La aplicación modela esas relaciones explícitamente y mantiene el workflow principal server-rendered en lugar de introducir una SPA y API separadas para un monolito educativo.
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="MODELO DE DOMINIO"
-	title="Listings coordinan pujas, comentarios, watchlists y cierre"
-	surface="highlight"
->
+<CaseStudySection eyebrow="MODELO DE DOMINIO" title="Listings coordinan pujas, comentarios, watchlists y cierre" surface="highlight">
 	<MermaidDiagram
 		title="Relaciones de dominio de Auctions"
 		description="Un usuario Django posee listings y puede crear pujas, comentarios y entradas de watchlist. Los listings agrupan esos registros. Cuando el propietario cierra una subasta, la mayor puja registrada determina al ganador."
@@ -60,27 +44,17 @@ caseStudy:
     <CaseStudyCard label="PUJAS" title="UNA NUEVA PUJA DEBE SUPERAR LA ACTUAL" tone="primary">
       `Listing.place_bid` rechaza un valor menor o igual que la puja actual, actualiza `current_bid` y crea el registro `Bid` correspondiente.
     </CaseStudyCard>
-
     <CaseStudyCard label="OWNERSHIP" title="SÓLO EL PROPIETARIO PUEDE CERRAR" tone="primary">
       La vista de cierre verifica que el usuario autenticado sea propietario del listing. Luego selecciona la mayor puja registrada como ganador, marca el listing inactivo y persiste el resultado.
     </CaseStudyCard>
-
     <CaseStudyCard label="DESCUBRIMIENTO" title="CATEGORÍAS Y WATCHLISTS SIGUEN SERVER-RENDERED" tone="primary">
       Los listings activos están paginados, las categorías filtran en servidor y cada usuario autenticado puede alternar entradas de watchlist sin un store de estado frontend separado.
     </CaseStudyCard>
-
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="PERSISTENCIA"
-	title="SQLite local y PostgreSQL por entorno comparten el mismo modelo Django"
-	surface="highlight"
->
-	El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración
-	`DATABASE_URL` mediante `dj-database-url` cuando existe. Las dependencias y settings también
-	incluyen Gunicorn, WhiteNoise y configuración de cookies/headers de seguridad para escenarios de
-	producción.
+<CaseStudySection eyebrow="PERSISTENCIA" title="SQLite local y PostgreSQL por entorno comparten el mismo modelo Django" surface="highlight">
+	El módulo de settings usa SQLite por defecto para desarrollo local y cambia a una configuración `DATABASE_URL` mediante `dj-database-url` cuando existe. La configuración orientada a despliegue también incluye Gunicorn, WhiteNoise y ajustes de cookies/headers de seguridad.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ANALÍTICA ADMINISTRATIVA" title="El código mantenido creció más allá del workflow original del curso">
@@ -95,40 +69,28 @@ caseStudy:
       Charts --> Dashboard["Dashboard Plotly / export"]`}
   />
 
-La configuración de URLs actual expone dashboard, analytics, reportes, exportación, listings y administración de usuarios, además de endpoints JSON de métricas/charts usados por el panel admin. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción protegida que devuelve datos insuficientes en vez de inventar un modelo cuando la muestra histórica es demasiado pequeña.
-
+La configuración de URLs actual expone dashboard, analytics, reportes, exportación, listings y administración de usuarios, además de endpoints JSON de métricas/charts usados por el panel admin. `AuctionAnalytics` calcula métricas del sistema, series temporales, análisis por categoría y comportamiento de usuarios, distribuciones de pujas y una ruta de predicción protegida que devuelve datos insuficientes cuando la muestra histórica es demasiado pequeña.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="EVIDENCIA" title="Qué es verificable hoy">
+<CaseStudySection eyebrow="LÍMITES ACTUALES" title="Qué garantiza la implementación mantenida y qué todavía requiere diseño">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="VERIFICADO EN CÓDIGO" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
-      `requirements.txt` restringe Django al rango 5.1–5.2 e incluye soporte para PostgreSQL, Gunicorn y WhiteNoise. El código público expone directamente los modelos `User`, `Listing`, `Bid`, `Comment` y `Watchlist`, además de vistas para listings, pujas, categorías, comentarios y cierre de subastas.
+    <EvidenceBlock label="STACK DE APLICACIÓN" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
+      `requirements.txt` restringe Django al rango 5.1–5.2 e incluye soporte para PostgreSQL, Gunicorn y WhiteNoise. El código contiene los modelos `User`, `Listing`, `Bid`, `Comment` y `Watchlist` junto con los workflows de listings, pujas, categorías, comentarios y cierre.
     </EvidenceBlock>
-
-    <EvidenceBlock label="TOOLING ADMIN VERIFICADO" title="MÓDULO DE ANALÍTICA CON PANDAS · PLOTLY · SCIKIT-LEARN" tone="verified">
-      El repositorio mantenido incluye las dependencias analíticas y un módulo `AuctionAnalytics` consumido por las rutas administrativas. Esto se presenta como evidencia de tooling de análisis, no como prueba de precisión productiva de modelos predictivos ni impacto comercial.
+    <EvidenceBlock label="TOOLING ADMIN" title="ANALÍTICA CON PANDAS · PLOTLY · SCIKIT-LEARN" tone="verified">
+      El codebase mantenido incluye dependencias analíticas y un módulo `AuctionAnalytics` usado por rutas administrativas. Su ruta de predicción maneja explícitamente datos insuficientes en lugar de tratar una muestra pequeña como un modelo confiable.
     </EvidenceBlock>
-
-    <EvidenceBlock label="LÍMITE" title="SIN DEMO EN VIVO NI GARANTÍA DE CONCURRENCIA" tone="boundary">
-      El texto antiguo de demo alojada es un placeholder y no un despliegue verificable actual. La regla de puja realiza una secuencia lectura/verificación/actualización sin row locking explícito ni un límite transaccional en `place_bid`, por lo que este caso de estudio no llama concurrency-safe a la implementación actual.
+    <EvidenceBlock label="CONCURRENCIA" title="VALIDAR LA PUJA NO GARANTIZA CONCURRENCIA" tone="boundary">
+      La regla de puja usa una secuencia lectura/verificación/actualización sin row locking explícito ni límite transaccional en `place_bid`. Garantías fuertes para pujas simultáneas requerirían una estrategia adicional de transacciones y locking.
     </EvidenceBlock>
-
-    <EvidenceBlock label="LÍMITE" title="SIN CLAIM ACTUAL DE DRF O WEBSOCKETS" tone="boundary">
-      El historial de releases conserva experimentos con APIs y notificaciones realtime, pero los requirements, apps instaladas, wiring ASGI y URLs del `develop` actual no exponen DRF ni Django Channels como superficie activa. El estado ejecutable prevalece sobre wording histórico del changelog.
+    <EvidenceBlock label="SUPERFICIE ACTIVA" title="DRF Y WEBSOCKETS NO ESTÁN CONECTADOS ACTUALMENTE" tone="boundary">
+      Notas históricas de release incluyen experimentos con APIs y realtime, pero el grafo de dependencias, apps instaladas, wiring ASGI y URLs de `develop` no exponen DRF ni Django Channels como parte de la superficie activa de la aplicación.
     </EvidenceBlock>
-
   </CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="TRADE-OFFS"
-	title="Django server-rendered mantiene comprensible el workflow principal"
-	surface="highlight"
->
-	Templates, forms, sesiones y ORM proporcionan una sola aplicación desplegable y un recorrido
-	corto desde request hasta estado persistido. La capa de analítica administrativa añade
-	inspección operativa útil sin requerir un segundo frontend, mientras pujas realtime y garantías
-	fuertes ante escrituras concurrentes todavía necesitarían diseño adicional.
+<CaseStudySection eyebrow="TRADE-OFFS" title="Django server-rendered mantiene comprensible el workflow principal" surface="highlight">
+	Templates, forms, sesiones y ORM proporcionan una sola aplicación desplegable y un recorrido corto desde request hasta estado persistido. La capa de analítica administrativa añade inspección operativa sin requerir un segundo frontend, mientras pujas realtime y garantías fuertes ante escrituras concurrentes necesitarían diseño adicional.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué hizo concreto este proyecto">
@@ -136,14 +98,11 @@ La configuración de URLs actual expone dashboard, analytics, reportes, exportac
     <CaseStudyCard label="APRENDIZAJE 01" title="MODELA EL CICLO DE VIDA, NO SÓLO LAS TABLAS" tone="success">
       Ownership del listing, estado activo y selección del ganador hacen explícita la transición de cierre en lugar de tratar la subasta como datos CRUD genéricos.
     </CaseStudyCard>
-
     <CaseStudyCard label="APRENDIZAJE 02" title="VALIDACIÓN NO ES LO MISMO QUE CONTROL DE CONCURRENCIA" tone="success">
       Verificar que una puja supere el valor actual es necesario, pero escrituras simultáneas requieren su propia estrategia transaccional y de locking si la aplicación debe garantizar orden bajo contención.
     </CaseStudyCard>
-
-    <CaseStudyCard label="APRENDIZAJE 03" title="HISTORIAL NO ES LO MISMO QUE WIRING ACTUAL" tone="success">
-      Un changelog puede preservar experimentos que el grafo de dependencias actual ya no expone. Un case study debe leer settings, rutas y manifests ejecutables antes de convertir funcionalidades históricas en claims presentes.
+    <CaseStudyCard label="APRENDIZAJE 03" title="LA CONFIGURACIÓN MANTENIDA DEBE COINCIDIR CON LAS CAPACIDADES DOCUMENTADAS" tone="success">
+      Los experimentos pueden sobrevivir a las dependencias que los habilitaron. Mantener alineados release notes, wiring activo y documentación evita que capacidades retiradas sigan formando parte del límite percibido del sistema.
     </CaseStudyCard>
-
   </CaseStudyGrid>
 </CaseStudySection>
