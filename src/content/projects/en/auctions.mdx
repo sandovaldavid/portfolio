@@ -14,7 +14,7 @@ caseStudy:
 ---
 
 <CaseStudySection eyebrow="CURRENT PRODUCT" title="A maintained server-rendered auction workflow">
-	The application combines Django models, forms, views and templates for authenticated listings, bids, watchlists, comments, categories and owner-controlled auction closing. Administrative analytics extend the original workflow, while the repository does not currently expose a live hosted demo.
+	The application combines Django models, forms, views and templates for authenticated listings, bids, watchlists, comments, categories and owner-controlled auction closing. Administrative analytics extend the core workflow with metrics and reporting.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="An auction is a lifecycle, not only a CRUD screen">
@@ -57,7 +57,7 @@ caseStudy:
 	The settings module uses SQLite by default for local development and switches to a `DATABASE_URL` configuration through `dj-database-url` when one is provided. Deployment-oriented configuration also includes Gunicorn, WhiteNoise and secure cookie/header settings.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="ADMIN ANALYTICS" title="The maintained codebase grew beyond the original course workflow">
+<CaseStudySection eyebrow="ADMIN ANALYTICS" title="Administrative reporting extends the auction workflow">
   <MermaidDiagram
     title="Administrative analytics path"
     description="Administrative routes query auction data through Django ORM. AuctionAnalytics aggregates listings, bids, users, comments and watchlists, then prepares metrics and Plotly-oriented analysis for dashboard and reporting views."
@@ -69,22 +69,22 @@ caseStudy:
       Charts --> Dashboard["Plotly dashboard / export"]`}
   />
 
-The current URL configuration exposes administrative dashboard, analytics, reports, export, listings and user-management routes plus JSON metrics/chart endpoints used by the admin UI. `AuctionAnalytics` computes system metrics, time series, category and user-behavior analysis, bid distributions and a guarded prediction path that returns an insufficient-data result when the historical sample is too small.
+The administrative surface includes dashboard, analytics, reports, export, listing and user-management routes plus JSON metrics/chart endpoints used by the admin UI. `AuctionAnalytics` computes system metrics, time series, category and user-behavior analysis, bid distributions and a guarded prediction path that returns an insufficient-data result when the historical sample is too small.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CURRENT BOUNDARIES" title="What the maintained implementation guarantees — and what still needs design">
+<CaseStudySection eyebrow="CURRENT BOUNDARIES" title="Implemented behavior and the next engineering constraints">
   <CaseStudyGrid columns={2}>
     <EvidenceBlock label="APPLICATION STACK" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
-      `requirements.txt` constrains Django to the 5.1–5.2 range and includes PostgreSQL, Gunicorn and WhiteNoise support. The code contains the `User`, `Listing`, `Bid`, `Comment` and `Watchlist` models together with the listing, bidding, category, comment and closing workflows.
+      The application uses Django in the 5.1–5.2 range with PostgreSQL, Gunicorn and WhiteNoise support. `User`, `Listing`, `Bid`, `Comment` and `Watchlist` models support listing, bidding, category, comment and closing workflows.
     </EvidenceBlock>
     <EvidenceBlock label="ADMIN TOOLING" title="PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS" tone="verified">
-      The maintained codebase includes analytics dependencies and an `AuctionAnalytics` module used by administrative routes. Its prediction path explicitly handles insufficient data instead of treating a small sample as a reliable model.
+      Administrative routes use an `AuctionAnalytics` module and analytics dependencies for metrics and reporting. Its prediction path explicitly handles insufficient data instead of treating a small sample as a reliable model.
     </EvidenceBlock>
     <EvidenceBlock label="CONCURRENCY" title="BID VALIDATION IS NOT A CONCURRENCY GUARANTEE" tone="boundary">
       The bid rule uses a read/check/update sequence without explicit row locking or a transaction boundary in `place_bid`. Strong guarantees for simultaneous bids would require an additional transactional and locking strategy.
     </EvidenceBlock>
-    <EvidenceBlock label="ACTIVE SURFACE" title="DRF AND WEBSOCKETS ARE NOT CURRENTLY WIRED" tone="boundary">
-      Historical release notes include API and realtime experiments, but the maintained `develop` dependency graph, installed apps, ASGI wiring and URLs do not expose DRF or Django Channels as part of the active application surface.
+    <EvidenceBlock label="ACTIVE SURFACE" title="REST API AND WEBSOCKET EXPERIMENTS ARE OUTSIDE THE CURRENT FLOW" tone="boundary">
+      The maintained application currently centers on Django views, forms, templates and administrative endpoints. DRF and Django Channels are not part of the active user-facing auction flow.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
@@ -101,8 +101,8 @@ The current URL configuration exposes administrative dashboard, analytics, repor
     <CaseStudyCard label="LEARNING 02" title="VALIDATION IS NOT THE SAME AS CONCURRENCY CONTROL" tone="success">
       Checking that a bid exceeds the current value is necessary, but simultaneous writes need their own transaction and locking strategy if the application must guarantee ordering under contention.
     </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 03" title="MAINTAINED CONFIGURATION MUST MATCH DOCUMENTED CAPABILITIES" tone="success">
-      Experiments can outlive the dependencies that enabled them. Keeping release notes, active wiring and documentation aligned prevents retired capabilities from remaining part of the perceived system boundary.
+    <CaseStudyCard label="LEARNING 03" title="KEEP EXPERIMENTAL CAPABILITIES OUTSIDE THE ACTIVE CONTRACT" tone="success">
+      API or realtime experiments should become part of the product boundary only when their dependencies, wiring and operational behavior are maintained as first-class application paths.
     </CaseStudyCard>
   </CaseStudyGrid>
 </CaseStudySection>
