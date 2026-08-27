@@ -13,15 +13,31 @@ caseStudy:
         demo: 'NO PUBLIC DEMO'
 ---
 
-<CaseStudySection eyebrow="SYSTEM BOUNDARY" title="A public Angular client and a separately maintained private API">
-	MAD AI is split across two repositories. The Angular client contains the SSR entry point, routed administrative UI, explicit client-side layers and HTTP adapters. A separate Django REST service owns backend application and persistence concerns. The repositories can evolve independently while meeting at the REST contract.
+<CaseStudySection
+	eyebrow="SYSTEM BOUNDARY"
+	title="A public Angular client and a separately maintained private API"
+>
+	MAD AI is split across two repositories. The Angular client contains the SSR entry point, routed
+	administrative UI, explicit client-side layers and HTTP adapters. A separate Django REST service
+	owns backend application and persistence concerns. The repositories can evolve independently
+	while meeting at the REST contract.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEM" title="Administrative workflows accumulate cross-cutting concerns quickly">
-	Authentication, guarded navigation, user administration, roles, notifications and reporting all need shared application behavior without turning routed components into transport clients. The project separates those concerns at both ends: an Angular client with explicit layers and a Django REST service with its own application/domain/infrastructure boundaries.
+<CaseStudySection
+	eyebrow="PROBLEM"
+	title="Administrative workflows accumulate cross-cutting concerns quickly"
+>
+	Authentication, guarded navigation, user administration, roles, notifications and reporting all
+	need shared application behavior without turning routed components into transport clients. The
+	project separates those concerns at both ends: an Angular client with explicit layers and a
+	Django REST service with its own application/domain/infrastructure boundaries.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SYSTEM" title="Two repositories, two independent architectural boundaries" surface="highlight">
+<CaseStudySection
+	eyebrow="SYSTEM"
+	title="Two repositories, two independent architectural boundaries"
+	surface="highlight"
+>
 	<MermaidDiagram
 		title="MAD AI current system boundary"
 		description="The Angular 20 client renders through browser or SSR and calls a separately maintained Django 5.2 REST API. The backend uses DRF/JWT-oriented adapters and PostgreSQL support; Celery is present for asynchronous work."
@@ -38,59 +54,125 @@ caseStudy:
 </CaseStudySection>
 
 <CaseStudySection eyebrow="FRONTEND" title="Layer names correspond to real Angular boundaries">
-  <CaseStudyGrid columns={2}>
-    <CaseStudyCard label="DOMAIN" title="CONTRACTS BEFORE TRANSPORT" tone="primary">
-      Domain entities and repository abstractions define what authentication, users, roles and notifications need without embedding endpoint details into routed components.
-    </CaseStudyCard>
-    <CaseStudyCard label="APPLICATION" title="USE CASES COORDINATE INTENT" tone="primary">
-      Application code sits between presentation and infrastructure so UI flows express actions through use cases instead of binding every component directly to HTTP mechanics.
-    </CaseStudyCard>
-    <CaseStudyCard label="INFRASTRUCTURE" title="HTTP REPOSITORIES ADAPT THE API" tone="primary">
-      Concrete implementations for authentication, notifications, roles and users own DTO/API interaction behind repository contracts. Environment configuration points those adapters to `/api/v1`.
-    </CaseStudyCard>
-    <CaseStudyCard label="PRESENTATION" title="ROUTES DEFINE PUBLIC AND SECURED AREAS" tone="primary">
-      Authentication routes use their own layout, while dashboard and user-management surfaces sit behind `AuthGuard` inside the secured shell. Angular SSR and Express provide the server-rendered entry path.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={2}>
+		<CaseStudyCard label="DOMAIN" title="CONTRACTS BEFORE TRANSPORT" tone="primary">
+			Domain entities and repository abstractions define what authentication, users, roles and
+			notifications need without embedding endpoint details into routed components.
+		</CaseStudyCard>
+		<CaseStudyCard label="APPLICATION" title="USE CASES COORDINATE INTENT" tone="primary">
+			Application code sits between presentation and infrastructure so UI flows express
+			actions through use cases instead of binding every component directly to HTTP mechanics.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="INFRASTRUCTURE"
+			title="HTTP REPOSITORIES ADAPT THE API"
+			tone="primary"
+		>
+			Concrete implementations for authentication, notifications, roles and users own DTO/API
+			interaction behind repository contracts. Environment configuration points those adapters
+			to `/api/v1`.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="PRESENTATION"
+			title="ROUTES DEFINE PUBLIC AND SECURED AREAS"
+			tone="primary"
+		>
+			Authentication routes use their own layout, while dashboard and user-management surfaces
+			sit behind `AuthGuard` inside the secured shell. Angular SSR and Express provide the
+			server-rendered entry path.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="BACKEND" title="The API uses a pragmatic modular Django architecture" surface="highlight">
   The backend uses **Django 5.2.3** and **Django REST Framework 3.16.0**, with JWT/cryptography support, PostgreSQL through `psycopg2`, filtering, OpenAPI tooling and Celery. Its architecture combines a service layer, domain-centric Django models and ports/adapters rather than forcing a framework-neutral domain that duplicates the ORM.
 
 The API is maintained in a private repository, making the REST contract the explicit boundary between the open client and backend implementation. Presentation and interaction remain client responsibilities; application orchestration and persistence stay behind the API.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="REPORTING" title="The client owns visualization and export concerns">
-	The Angular client includes ECharts, jsPDF and PapaParse. Keeping charting and export libraries in the client lets reporting surfaces transform API responses into interactive visualizations and downloadable representations without pushing presentation concerns back into the REST service.
+	The Angular client includes ECharts, jsPDF and PapaParse. Keeping charting and export libraries
+	in the client lets reporting surfaces transform API responses into interactive visualizations
+	and downloadable representations without pushing presentation concerns back into the REST
+	service.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CURRENT IMPLEMENTATION" title="Responsibilities remain explicit across client and API">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="CLIENT" title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4" tone="verified">
-      The Angular client uses Angular 20, Angular SSR, Express 5, RxJS and Tailwind CSS 4. Its code separates `domain`, `application`, `infrastructure` and `presentation`, with guarded routes and concrete HTTP repository implementations.
-    </EvidenceBlock>
-    <EvidenceBlock label="API" title="DJANGO 5.2 · DRF 3.16 · JWT · POSTGRESQL · CELERY" tone="verified">
-      The companion API uses Django 5.2.3 and DRF 3.16 with JWT/cryptography, PostgreSQL support and Celery. It remains a private service maintained separately from the public client.
-    </EvidenceBlock>
-    <EvidenceBlock label="ACTIVE BOUNDARY" title="REQUEST/RESPONSE REST IS THE CURRENT TRANSPORT" tone="boundary">
-      The maintained backend does not include Django Channels, so WebSocket behavior is outside the current system flow. Client and API integration is centered on the REST contract.
-    </EvidenceBlock>
-    <EvidenceBlock label="DELIVERY BOUNDARY" title="CLIENT AND API CAN EVOLVE INDEPENDENTLY" tone="boundary">
-      The split keeps presentation and backend delivery concerns separate. Changes on either side need to preserve the shared REST contract rather than requiring both repositories to share implementation details.
-    </EvidenceBlock>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="CURRENT IMPLEMENTATION"
+	title="Responsibilities remain explicit across client and API"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="CLIENT"
+			title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4"
+			tone="verified"
+		>
+			The Angular client uses Angular 20, Angular SSR, Express 5, RxJS and Tailwind CSS 4. Its
+			code separates `domain`, `application`, `infrastructure` and `presentation`, with
+			guarded routes and concrete HTTP repository implementations.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="API"
+			title="DJANGO 5.2 · DRF 3.16 · JWT · POSTGRESQL · CELERY"
+			tone="verified"
+		>
+			The companion API uses Django 5.2.3 and DRF 3.16 with JWT/cryptography, PostgreSQL
+			support and Celery. It remains a private service maintained separately from the public
+			client.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="ACTIVE BOUNDARY"
+			title="REQUEST/RESPONSE REST IS THE CURRENT TRANSPORT"
+			tone="boundary"
+		>
+			The maintained backend does not include Django Channels, so WebSocket behavior is
+			outside the current system flow. Client and API integration is centered on the REST
+			contract.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="DELIVERY BOUNDARY"
+			title="CLIENT AND API CAN EVOLVE INDEPENDENTLY"
+			tone="boundary"
+		>
+			The split keeps presentation and backend delivery concerns separate. Changes on either
+			side need to preserve the shared REST contract rather than requiring both repositories
+			to share implementation details.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="LEARNINGS" title="What the two-repository design reinforced" surface="highlight">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="LEARNING 01" title="CLIENT ARCHITECTURE CAN HAVE REAL BOUNDARIES" tone="success">
-      A frontend can separate domain intent from HTTP adapters instead of treating every component as a wrapper around an endpoint.
-    </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 02" title="FRAMEWORK-PRAGMATIC CLEAN BOUNDARIES CAN BE STRONG" tone="success">
-      Django models can remain rich domain entities while services and repository ports protect orchestration and external adapters; clean architecture does not require fighting the framework.
-    </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 03" title="REPOSITORY BOUNDARIES SHOULD MATCH SYSTEM BOUNDARIES" tone="success">
-      Keeping client contracts separate from backend implementation details reduces coupling between repositories and makes ownership of presentation, transport and persistence responsibilities clearer.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="LEARNINGS"
+	title="What the two-repository design reinforced"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard
+			label="LEARNING 01"
+			title="CLIENT ARCHITECTURE CAN HAVE REAL BOUNDARIES"
+			tone="success"
+		>
+			A frontend can separate domain intent from HTTP adapters instead of treating every
+			component as a wrapper around an endpoint.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 02"
+			title="FRAMEWORK-PRAGMATIC CLEAN BOUNDARIES CAN BE STRONG"
+			tone="success"
+		>
+			Django models can remain rich domain entities while services and repository ports
+			protect orchestration and external adapters; clean architecture does not require
+			fighting the framework.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 03"
+			title="REPOSITORY BOUNDARIES SHOULD MATCH SYSTEM BOUNDARIES"
+			tone="success"
+		>
+			Keeping client contracts separate from backend implementation details reduces coupling
+			between repositories and makes ownership of presentation, transport and persistence
+			responsibilities clearer.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>

@@ -13,14 +13,20 @@ caseStudy:
         demo: 'NO HOSTED DEMO'
 ---
 
-<CaseStudySection eyebrow="CURRENT SYSTEM" title="Stable 3.1.2 release with active development continuing">
-	Kioku is distributed as a public .NET project with release artifacts, a NuGet package and operational documentation. Version **3.1.2** is the current stable tagged server release, while ongoing work continues toward later releases.
+<CaseStudySection
+	eyebrow="CURRENT SYSTEM"
+	title="Stable 3.1.2 release with active development continuing"
+>
+	Kioku is distributed as a public .NET project with release artifacts, a NuGet package and
+	operational documentation. Version **3.1.2** is the current stable tagged server release, while
+	ongoing work continues toward later releases.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="Agent context should survive the session that created it">
   Coding agents can make good decisions and still lose the reasoning behind them when a process, terminal or conversation ends. Provider history is not a durable project record, and a handoff should not require the next agent to reconstruct intent from chat logs.
 
 Kioku treats the vault as durable project memory instead: specs, implementation plans, decisions, bugs, knowledge and session handoffs remain readable as Markdown and YAML even without the MCP server or Obsidian UI running.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="SYSTEM" title="Local-first MCP boundary" surface="highlight">
@@ -44,25 +50,48 @@ Kioku treats the vault as durable project memory instead: specs, implementation 
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="ENGINEERING DECISIONS" title="Keep storage human-readable and protocol boundaries explicit">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="DECISION 01" title="MARKDOWN IS THE DURABLE FORMAT" tone="primary">
-      The vault remains understandable and editable without Kioku. The MCP layer coordinates workflows; it does not become the only place where project knowledge can be recovered.
-    </CaseStudyCard>
-    <CaseStudyCard label="DECISION 02" title="HEADLESS CORE, OPTIONAL UI" tone="primary">
-      Core notes, search, projects, sessions, indexing and coordination work directly against the vault. Obsidian and its companion plugin are optional for UI and bridge-specific operations.
-    </CaseStudyCard>
-    <CaseStudyCard label="DECISION 03" title="REMOTE ACCESS REQUIRES AN EXPLICIT TRUST BOUNDARY" tone="primary">
-      Local stdio stays the default. Streamable HTTP binds to loopback by default, and non-loopback exposure requires authentication unless an explicit unsafe override is chosen.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="ENGINEERING DECISIONS"
+	title="Keep storage human-readable and protocol boundaries explicit"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="DECISION 01" title="MARKDOWN IS THE DURABLE FORMAT" tone="primary">
+			The vault remains understandable and editable without Kioku. The MCP layer coordinates
+			workflows; it does not become the only place where project knowledge can be recovered.
+		</CaseStudyCard>
+		<CaseStudyCard label="DECISION 02" title="HEADLESS CORE, OPTIONAL UI" tone="primary">
+			Core notes, search, projects, sessions, indexing and coordination work directly against
+			the vault. Obsidian and its companion plugin are optional for UI and bridge-specific
+			operations.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="DECISION 03"
+			title="REMOTE ACCESS REQUIRES AN EXPLICIT TRUST BOUNDARY"
+			tone="primary"
+		>
+			Local stdio stays the default. Streamable HTTP binds to loopback by default, and
+			non-loopback exposure requires authentication unless an explicit unsafe override is
+			chosen.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="WORKFLOW" title="Design intent becomes a recoverable project artifact" surface="highlight">
+<CaseStudySection
+	eyebrow="WORKFLOW"
+	title="Design intent becomes a recoverable project artifact"
+	surface="highlight"
+>
 	<MermaidDiagram
 		title="Durable engineering workflow"
 		description="Kioku separates the requirement, implementation plan and execution handoff so a fresh agent can recover both intent and current state."
-		tones={{ Request: 'brand', Spec: 'info', Plan: 'secondary', Session: 'warning', Handoff: 'success', Context: 'danger' }}
+		tones={{
+			Request: 'brand',
+			Spec: 'info',
+			Plan: 'secondary',
+			Session: 'warning',
+			Handoff: 'success',
+			Context: 'danger',
+		}}
 		chart={`flowchart LR
       Request["Request / issue"] --> Spec["Engineering SPEC"]
       Spec --> Plan["Implementation PLAN"]
@@ -73,26 +102,54 @@ Kioku treats the vault as durable project memory instead: specs, implementation 
 </CaseStudySection>
 
 <CaseStudySection eyebrow="RELEASE STATUS" title="A stable release and an active development line">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="STABLE RELEASE" title="3.1.2 · PACKAGE · CONTRACTS · OPERATIONAL DOCS" tone="verified">
-      Release **3.1.2** publishes server artifacts and the project links the `kioku-mcp-server` NuGet package. The project also maintains generated MCP references, engineering-workflow documentation, configuration, security guidance and automated tests.
-    </EvidenceBlock>
-    <EvidenceBlock label="ACTIVE DEVELOPMENT" title="NEW WORK CONTINUES BEYOND 3.1.2" tone="boundary">
-      Ongoing development can introduce changes after the stable **3.1.2** release. Release-specific behavior stays tied to the tagged version until newer work is promoted into a subsequent release.
-    </EvidenceBlock>
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="STABLE RELEASE"
+			title="3.1.2 · PACKAGE · CONTRACTS · OPERATIONAL DOCS"
+			tone="verified"
+		>
+			Release **3.1.2** publishes server artifacts and the project links the
+			`kioku-mcp-server` NuGet package. The project also maintains generated MCP references,
+			engineering-workflow documentation, configuration, security guidance and automated
+			tests.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="ACTIVE DEVELOPMENT"
+			title="NEW WORK CONTINUES BEYOND 3.1.2"
+			tone="boundary"
+		>
+			Ongoing development can introduce changes after the stable **3.1.2** release.
+			Release-specific behavior stays tied to the tagged version until newer work is promoted
+			into a subsequent release.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="LEARNINGS" title="What this project changed in how I build" surface="highlight">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="LEARNING 01" title="DURABILITY BEATS PROVIDER HISTORY" tone="success">
-      Human-readable project records survive session and process boundaries better than depending on one AI provider's conversation history.
-    </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 02" title="SPEC → PLAN → SESSION IS A USEFUL BOUNDARY" tone="success">
-      Keeping requirements, implementation intent and execution state separate makes a fresh agent more likely to continue the right work instead of merely continuing text.
-    </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 03" title="LOCAL-FIRST DOES NOT REMOVE SECURITY WORK" tone="success">
-      The moment a local protocol becomes remotely reachable, authentication, origin policy, proxy trust and vault boundaries become first-class engineering concerns.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="LEARNINGS"
+	title="What this project changed in how I build"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="LEARNING 01" title="DURABILITY BEATS PROVIDER HISTORY" tone="success">
+			Human-readable project records survive session and process boundaries better than
+			depending on one AI provider's conversation history.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 02"
+			title="SPEC → PLAN → SESSION IS A USEFUL BOUNDARY"
+			tone="success"
+		>
+			Keeping requirements, implementation intent and execution state separate makes a fresh
+			agent more likely to continue the right work instead of merely continuing text.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 03"
+			title="LOCAL-FIRST DOES NOT REMOVE SECURITY WORK"
+			tone="success"
+		>
+			The moment a local protocol becomes remotely reachable, authentication, origin policy,
+			proxy trust and vault boundaries become first-class engineering concerns.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>

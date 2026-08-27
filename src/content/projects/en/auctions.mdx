@@ -14,14 +14,23 @@ caseStudy:
 ---
 
 <CaseStudySection eyebrow="CURRENT PRODUCT" title="A maintained server-rendered auction workflow">
-	The application combines Django models, forms, views and templates for authenticated listings, bids, watchlists, comments, categories and owner-controlled auction closing. Administrative analytics extend the core workflow with metrics and reporting.
+	The application combines Django models, forms, views and templates for authenticated listings,
+	bids, watchlists, comments, categories and owner-controlled auction closing. Administrative
+	analytics extend the core workflow with metrics and reporting.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="An auction is a lifecycle, not only a CRUD screen">
-	Listings need an owner, a starting price, active/inactive state and a winner. Participants need to place bids, follow listings and comment without being able to close someone else's auction. The application models those relationships explicitly and keeps the core workflow server-rendered rather than introducing a separate SPA and API for an educational monolith.
+	Listings need an owner, a starting price, active/inactive state and a winner. Participants need
+	to place bids, follow listings and comment without being able to close someone else's auction.
+	The application models those relationships explicitly and keeps the core workflow
+	server-rendered rather than introducing a separate SPA and API for an educational monolith.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="DOMAIN MODEL" title="Listings coordinate bids, comments, watchlists and closing" surface="highlight">
+<CaseStudySection
+	eyebrow="DOMAIN MODEL"
+	title="Listings coordinate bids, comments, watchlists and closing"
+	surface="highlight"
+>
 	<MermaidDiagram
 		title="Auctions domain relationships"
 		description="A Django user owns listings and can place bids, comments and watchlist entries. Listings collect those related records. When the owner closes an auction, the current highest recorded bid determines the winner."
@@ -40,21 +49,34 @@ caseStudy:
 </CaseStudySection>
 
 <CaseStudySection eyebrow="WORKFLOW" title="Core auction mechanics live near the model and views">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="BIDDING" title="A NEW BID MUST EXCEED THE CURRENT BID" tone="primary">
-      `Listing.place_bid` rejects a value that is less than or equal to the current bid, updates `current_bid` and creates the corresponding `Bid` record.
-    </CaseStudyCard>
-    <CaseStudyCard label="OWNERSHIP" title="ONLY THE LISTING OWNER CAN CLOSE" tone="primary">
-      The close view checks that the authenticated caller owns the listing. It then selects the highest recorded bid as winner, marks the listing inactive and persists the result.
-    </CaseStudyCard>
-    <CaseStudyCard label="DISCOVERY" title="CATEGORIES AND WATCHLISTS STAY SERVER-RENDERED" tone="primary">
-      Active listings are paginated, category pages filter server-side and each authenticated user can toggle watchlist entries without a separate frontend state store.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="BIDDING" title="A NEW BID MUST EXCEED THE CURRENT BID" tone="primary">
+			`Listing.place_bid` rejects a value that is less than or equal to the current bid,
+			updates `current_bid` and creates the corresponding `Bid` record.
+		</CaseStudyCard>
+		<CaseStudyCard label="OWNERSHIP" title="ONLY THE LISTING OWNER CAN CLOSE" tone="primary">
+			The close view checks that the authenticated caller owns the listing. It then selects
+			the highest recorded bid as winner, marks the listing inactive and persists the result.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="DISCOVERY"
+			title="CATEGORIES AND WATCHLISTS STAY SERVER-RENDERED"
+			tone="primary"
+		>
+			Active listings are paginated, category pages filter server-side and each authenticated
+			user can toggle watchlist entries without a separate frontend state store.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PERSISTENCE" title="Local SQLite and environment-driven PostgreSQL share one Django model" surface="highlight">
-	The settings module uses SQLite by default for local development and switches to a `DATABASE_URL` configuration through `dj-database-url` when one is provided. Deployment-oriented configuration also includes Gunicorn, WhiteNoise and secure cookie/header settings.
+<CaseStudySection
+	eyebrow="PERSISTENCE"
+	title="Local SQLite and environment-driven PostgreSQL share one Django model"
+	surface="highlight"
+>
+	The settings module uses SQLite by default for local development and switches to a
+	`DATABASE_URL` configuration through `dj-database-url` when one is provided. Deployment-oriented
+	configuration also includes Gunicorn, WhiteNoise and secure cookie/header settings.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="ADMIN ANALYTICS" title="Administrative reporting extends the auction workflow">
@@ -70,39 +92,91 @@ caseStudy:
   />
 
 The administrative surface includes dashboard, analytics, reports, export, listing and user-management routes plus JSON metrics/chart endpoints used by the admin UI. `AuctionAnalytics` computes system metrics, time series, category and user-behavior analysis, bid distributions and a guarded prediction path that returns an insufficient-data result when the historical sample is too small.
+
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CURRENT BOUNDARIES" title="Implemented behavior and the next engineering constraints">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="APPLICATION STACK" title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM" tone="verified">
-      The application uses Django in the 5.1–5.2 range with PostgreSQL, Gunicorn and WhiteNoise support. `User`, `Listing`, `Bid`, `Comment` and `Watchlist` models support listing, bidding, category, comment and closing workflows.
-    </EvidenceBlock>
-    <EvidenceBlock label="ADMIN TOOLING" title="PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS" tone="verified">
-      Administrative routes use an `AuctionAnalytics` module and analytics dependencies for metrics and reporting. Its prediction path explicitly handles insufficient data instead of treating a small sample as a reliable model.
-    </EvidenceBlock>
-    <EvidenceBlock label="CONCURRENCY" title="BID VALIDATION IS NOT A CONCURRENCY GUARANTEE" tone="boundary">
-      The bid rule uses a read/check/update sequence without explicit row locking or a transaction boundary in `place_bid`. Strong guarantees for simultaneous bids would require an additional transactional and locking strategy.
-    </EvidenceBlock>
-    <EvidenceBlock label="ACTIVE SURFACE" title="REST API AND WEBSOCKET EXPERIMENTS ARE OUTSIDE THE CURRENT FLOW" tone="boundary">
-      The maintained application currently centers on Django views, forms, templates and administrative endpoints. DRF and Django Channels are not part of the active user-facing auction flow.
-    </EvidenceBlock>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="CURRENT BOUNDARIES"
+	title="Implemented behavior and the next engineering constraints"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="APPLICATION STACK"
+			title="DJANGO 5.1–5.2 · AUTH · FORMS · ORM"
+			tone="verified"
+		>
+			The application uses Django in the 5.1–5.2 range with PostgreSQL, Gunicorn and
+			WhiteNoise support. `User`, `Listing`, `Bid`, `Comment` and `Watchlist` models support
+			listing, bidding, category, comment and closing workflows.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="ADMIN TOOLING"
+			title="PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS"
+			tone="verified"
+		>
+			Administrative routes use an `AuctionAnalytics` module and analytics dependencies for
+			metrics and reporting. Its prediction path explicitly handles insufficient data instead
+			of treating a small sample as a reliable model.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="CONCURRENCY"
+			title="BID VALIDATION IS NOT A CONCURRENCY GUARANTEE"
+			tone="boundary"
+		>
+			The bid rule uses a read/check/update sequence without explicit row locking or a
+			transaction boundary in `place_bid`. Strong guarantees for simultaneous bids would
+			require an additional transactional and locking strategy.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="ACTIVE SURFACE"
+			title="REST API AND WEBSOCKET EXPERIMENTS ARE OUTSIDE THE CURRENT FLOW"
+			tone="boundary"
+		>
+			The maintained application currently centers on Django views, forms, templates and
+			administrative endpoints. DRF and Django Channels are not part of the active user-facing
+			auction flow.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Server-rendered Django keeps the core workflow understandable" surface="highlight">
-	Django templates, forms, sessions and ORM provide one deployable application and a short path from request to persisted state. The admin analytics layer adds operational inspection without requiring a second frontend, while richer real-time bidding and stronger concurrent-bid guarantees would require additional design.
+<CaseStudySection
+	eyebrow="TRADE-OFFS"
+	title="Server-rendered Django keeps the core workflow understandable"
+	surface="highlight"
+>
+	Django templates, forms, sessions and ORM provide one deployable application and a short path
+	from request to persisted state. The admin analytics layer adds operational inspection without
+	requiring a second frontend, while richer real-time bidding and stronger concurrent-bid
+	guarantees would require additional design.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="LEARNINGS" title="What this project made concrete">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="LEARNING 01" title="MODEL THE LIFECYCLE, NOT ONLY THE TABLES" tone="success">
-      Listing ownership, active state and winner selection make the closing transition explicit instead of treating an auction as generic CRUD data.
-    </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 02" title="VALIDATION IS NOT THE SAME AS CONCURRENCY CONTROL" tone="success">
-      Checking that a bid exceeds the current value is necessary, but simultaneous writes need their own transaction and locking strategy if the application must guarantee ordering under contention.
-    </CaseStudyCard>
-    <CaseStudyCard label="LEARNING 03" title="KEEP EXPERIMENTAL CAPABILITIES OUTSIDE THE ACTIVE CONTRACT" tone="success">
-      API or realtime experiments should become part of the product boundary only when their dependencies, wiring and operational behavior are maintained as first-class application paths.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard
+			label="LEARNING 01"
+			title="MODEL THE LIFECYCLE, NOT ONLY THE TABLES"
+			tone="success"
+		>
+			Listing ownership, active state and winner selection make the closing transition
+			explicit instead of treating an auction as generic CRUD data.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 02"
+			title="VALIDATION IS NOT THE SAME AS CONCURRENCY CONTROL"
+			tone="success"
+		>
+			Checking that a bid exceeds the current value is necessary, but simultaneous writes need
+			their own transaction and locking strategy if the application must guarantee ordering
+			under contention.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="LEARNING 03"
+			title="KEEP EXPERIMENTAL CAPABILITIES OUTSIDE THE ACTIVE CONTRACT"
+			tone="success"
+		>
+			API or realtime experiments should become part of the product boundary only when their
+			dependencies, wiring and operational behavior are maintained as first-class application
+			paths.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>

@@ -13,15 +13,31 @@ caseStudy:
         demo: 'DEMO EN VIVO'
 ---
 
-<CaseStudySection eyebrow="LÍMITE DEL PRODUCTO" title="La tienda mantiene acotadas sus responsabilidades comerciales">
-	FluentReads evita deliberadamente un backend de comercio tradicional. El contenido de productos se compila en páginas estáticas, el carrito permanece en el navegador y el cierre del pedido envía el resumen a WhatsApp. Los pagos y la entrega quedan fuera del límite de la aplicación.
+<CaseStudySection
+	eyebrow="LÍMITE DEL PRODUCTO"
+	title="La tienda mantiene acotadas sus responsabilidades comerciales"
+>
+	FluentReads evita deliberadamente un backend de comercio tradicional. El contenido de productos
+	se compila en páginas estáticas, el carrito permanece en el navegador y el cierre del pedido
+	envía el resumen a WhatsApp. Los pagos y la entrega quedan fuera del límite de la aplicación.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="Un catálogo pequeño no necesita automáticamente un backend transaccional">
-	Vender un conjunto enfocado de libros digitales, recursos para exámenes y paquetes de estudio necesita buena navegación, detalle de producto, estado del carrito y una ruta clara para contactar al vendedor. No necesariamente justifica autenticación, sesiones de compra respaldadas por base de datos o una pasarela de pagos cuando el proceso comercial ya termina mediante comunicación directa y transferencia bancaria.
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="Un catálogo pequeño no necesita automáticamente un backend transaccional"
+>
+	Vender un conjunto enfocado de libros digitales, recursos para exámenes y paquetes de estudio
+	necesita buena navegación, detalle de producto, estado del carrito y una ruta clara para
+	contactar al vendedor. No necesariamente justifica autenticación, sesiones de compra respaldadas
+	por base de datos o una pasarela de pagos cuando el proceso comercial ya termina mediante
+	comunicación directa y transferencia bancaria.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Contenido estático, estado del navegador y cierre externo permanecen separados" surface="highlight">
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Contenido estático, estado del navegador y cierre externo permanecen separados"
+	surface="highlight"
+>
 	<MermaidDiagram
 		title="Límite de comercio estático de FluentReads"
 		description="Los datos del catálogo se validan durante el build y Astro genera el sitio. El código interactivo administra el carrito en localStorage y emite eventos cartUpdated. El cierre del pedido sale hacia WhatsApp y un service worker agrega caché same-origin."
@@ -41,51 +57,113 @@ caseStudy:
   El repositorio define Content Collections tipadas para libros, paquetes, exámenes, editoriales, testimonios, ofertas, categorías, FAQs y contenido legal. Esto mantiene la tienda pública estática y, al mismo tiempo, da un esquema explícito a los registros de producto.
 
 La configuración de Decap CMS bajo `/admin` conecta formularios de edición con el catálogo JSON. La integración ya existe como ruta de autoría, mientras el flujo de publicación productiva todavía debe consolidarse antes de convertirse en el mecanismo principal para publicar cambios del catálogo.
+
 </CaseStudySection>
 
-<CaseStudySection eyebrow="ESTADO DEL CLIENTE" title="El comportamiento del carrito es explícito y recuperable" surface="highlight">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="ESTADO" title="LOCALSTORAGE MANTIENE EL CARRITO" tone="primary">
-      `CartManager` inicializa un `shoppingCart` en el navegador, persiste cantidades y restaura el carrito entre navegaciones sin crear una sesión de servidor.
-    </CaseStudyCard>
-    <CaseStudyCard label="EVENTOS" title="CARTUPDATED DESACOPLA LA ACTUALIZACIÓN DE LA UI" tone="primary">
-      Las operaciones de agregar, eliminar, cambiar cantidad y limpiar emiten un evento `cartUpdated`, permitiendo que las superficies interactivas reaccionen sin convertir toda la tienda en una única aplicación cliente.
-    </CaseStudyCard>
-    <CaseStudyCard label="CIERRE DEL PEDIDO" title="WHATSAPP ES EL SIGUIENTE PASO DEL PROCESO" tone="primary">
-      El sitio envía un resumen del pedido a WhatsApp. Los pagos permanecen fuera de la aplicación, manteniendo la solución alineada con el proceso operativo real.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="ESTADO DEL CLIENTE"
+	title="El comportamiento del carrito es explícito y recuperable"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard label="ESTADO" title="LOCALSTORAGE MANTIENE EL CARRITO" tone="primary">
+			`CartManager` inicializa un `shoppingCart` en el navegador, persiste cantidades y
+			restaura el carrito entre navegaciones sin crear una sesión de servidor.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="EVENTOS"
+			title="CARTUPDATED DESACOPLA LA ACTUALIZACIÓN DE LA UI"
+			tone="primary"
+		>
+			Las operaciones de agregar, eliminar, cambiar cantidad y limpiar emiten un evento
+			`cartUpdated`, permitiendo que las superficies interactivas reaccionen sin convertir
+			toda la tienda en una única aplicación cliente.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="CIERRE DEL PEDIDO"
+			title="WHATSAPP ES EL SIGUIENTE PASO DEL PROCESO"
+			tone="primary"
+		>
+			El sitio envía un resumen del pedido a WhatsApp. Los pagos permanecen fuera de la
+			aplicación, manteniendo la solución alineada con el proceso operativo real.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="COMPORTAMIENTO OFFLINE" title="Un service worker pequeño mejora la navegación repetida">
-	El service worker almacena respuestas GET same-origin y puede servir contenido desde caché mientras actualiza en segundo plano. Si una navegación HTML falla sin conexión, puede usar la raíz almacenada como fallback. Es una capa de resiliencia alrededor de un sitio estático; el cierre del pedido todavía depende de WhatsApp.
+<CaseStudySection
+	eyebrow="COMPORTAMIENTO OFFLINE"
+	title="Un service worker pequeño mejora la navegación repetida"
+>
+	El service worker almacena respuestas GET same-origin y puede servir contenido desde caché
+	mientras actualiza en segundo plano. Si una navegación HTML falla sin conexión, puede usar la
+	raíz almacenada como fallback. Es una capa de resiliencia alrededor de un sitio estático; el
+	cierre del pedido todavía depende de WhatsApp.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="IMPLEMENTACIÓN ACTUAL" title="Qué contiene hoy la tienda" surface="highlight">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="STACK ACTUAL" title="ASTRO 7 · REACT 19 · TAILWIND 4 · BUN" tone="verified">
-      El manifest actual usa Astro **7.0.6**, React **19.2.7**, Tailwind CSS **4.3.2**, TypeScript 6 y Bun 1.3.14. El repositorio también contiene el esquema de contenido, `CartManager`, service worker y configuración de Decap CMS descritos arriba.
-    </EvidenceBlock>
-    <EvidenceBlock label="ALCANCE DEL PRODUCTO" title="SIN BASE DE DATOS, AUTENTICACIÓN NI PASARELA DE PAGO ONLINE" tone="boundary">
-      La tienda es estática y serverless. No mantiene cuentas de usuario, un registro de pedidos respaldado por base de datos ni un procesador de pagos online; el pedido se completa mediante WhatsApp y transferencia bancaria.
-    </EvidenceBlock>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="IMPLEMENTACIÓN ACTUAL"
+	title="Qué contiene hoy la tienda"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="STACK ACTUAL"
+			title="ASTRO 7 · REACT 19 · TAILWIND 4 · BUN"
+			tone="verified"
+		>
+			El manifest actual usa Astro **7.0.6**, React **19.2.7**, Tailwind CSS **4.3.2**,
+			TypeScript 6 y Bun 1.3.14. El repositorio también contiene el esquema de contenido,
+			`CartManager`, service worker y configuración de Decap CMS descritos arriba.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="ALCANCE DEL PRODUCTO"
+			title="SIN BASE DE DATOS, AUTENTICACIÓN NI PASARELA DE PAGO ONLINE"
+			tone="boundary"
+		>
+			La tienda es estática y serverless. No mantiene cuentas de usuario, un registro de
+			pedidos respaldado por base de datos ni un procesador de pagos online; el pedido se
+			completa mediante WhatsApp y transferencia bancaria.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="TRADE-OFFS" title="Static-first reduce infraestructura pero mueve responsabilidad al navegador">
-	Una tienda estática es económica de alojar y sencilla de cachear, pero el almacenamiento del navegador no sustituye un sistema de cuentas y WhatsApp no sustituye un backend transaccional. Ese trade-off funciona porque el límite del producto es intencionalmente pequeño y el proceso operativo termina fuera del sitio.
+<CaseStudySection
+	eyebrow="TRADE-OFFS"
+	title="Static-first reduce infraestructura pero mueve responsabilidad al navegador"
+>
+	Una tienda estática es económica de alojar y sencilla de cachear, pero el almacenamiento del
+	navegador no sustituye un sistema de cuentas y WhatsApp no sustituye un backend transaccional.
+	Ese trade-off funciona porque el límite del producto es intencionalmente pequeño y el proceso
+	operativo termina fuera del sitio.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="APRENDIZAJES" title="Qué reforzó este proyecto">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="APRENDIZAJE 01" title="ELIGE INFRAESTRUCTURA PARA LA TRANSACCIÓN REAL" tone="success">
-      Cuando la entrega y el pago ocurren fuera de la aplicación web, introducir cuentas y una base de datos puede añadir complejidad sin mejorar el proceso real.
-    </CaseStudyCard>
-    <CaseStudyCard label="APRENDIZAJE 02" title="ESTÁTICO NO SIGNIFICA NO INTERACTIVO" tone="success">
-      Un sitio mayormente estático en Astro puede mantener la interactividad acotada: el carrito vive en código de navegador específico mientras el catálogo permanece pre-renderizado.
-    </CaseStudyCard>
-    <CaseStudyCard label="APRENDIZAJE 03" title="LA AUTORÍA DE CONTENIDO ES UNA DECISIÓN ARQUITECTÓNICA" tone="success">
-      Un CMS puede editar contenido de build sin convertir la aplicación pública en un servidor dinámico, pero la responsabilidad de publicación necesita un flujo operativo claro.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard
+			label="APRENDIZAJE 01"
+			title="ELIGE INFRAESTRUCTURA PARA LA TRANSACCIÓN REAL"
+			tone="success"
+		>
+			Cuando la entrega y el pago ocurren fuera de la aplicación web, introducir cuentas y una
+			base de datos puede añadir complejidad sin mejorar el proceso real.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APRENDIZAJE 02"
+			title="ESTÁTICO NO SIGNIFICA NO INTERACTIVO"
+			tone="success"
+		>
+			Un sitio mayormente estático en Astro puede mantener la interactividad acotada: el
+			carrito vive en código de navegador específico mientras el catálogo permanece
+			pre-renderizado.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APRENDIZAJE 03"
+			title="LA AUTORÍA DE CONTENIDO ES UNA DECISIÓN ARQUITECTÓNICA"
+			tone="success"
+		>
+			Un CMS puede editar contenido de build sin convertir la aplicación pública en un
+			servidor dinámico, pero la responsabilidad de publicación necesita un flujo operativo
+			claro.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>

@@ -13,15 +13,32 @@ caseStudy:
         demo: 'SIN DEMO PÚBLICA'
 ---
 
-<CaseStudySection eyebrow="LÍMITE DEL SISTEMA" title="Un cliente Angular público y una API privada mantenida por separado">
-	MAD AI está dividido en dos repositorios. El cliente Angular contiene la entrada SSR, la interfaz administrativa por rutas, capas explícitas y adaptadores HTTP. Un servicio Django REST separado concentra la aplicación y persistencia del backend. Ambos repositorios pueden evolucionar de forma independiente y se conectan mediante el contrato REST.
+<CaseStudySection
+	eyebrow="LÍMITE DEL SISTEMA"
+	title="Un cliente Angular público y una API privada mantenida por separado"
+>
+	MAD AI está dividido en dos repositorios. El cliente Angular contiene la entrada SSR, la
+	interfaz administrativa por rutas, capas explícitas y adaptadores HTTP. Un servicio Django REST
+	separado concentra la aplicación y persistencia del backend. Ambos repositorios pueden
+	evolucionar de forma independiente y se conectan mediante el contrato REST.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="PROBLEMA" title="Los flujos administrativos acumulan responsabilidades transversales rápidamente">
-	Autenticación, navegación protegida, administración de usuarios, roles, notificaciones y reportes necesitan comportamiento compartido sin convertir los componentes de interfaz en clientes HTTP directos. El proyecto separa esas responsabilidades en ambos extremos: un cliente Angular con capas explícitas y un servicio Django REST con sus propios límites de aplicación, dominio e infraestructura.
+<CaseStudySection
+	eyebrow="PROBLEMA"
+	title="Los flujos administrativos acumulan responsabilidades transversales rápidamente"
+>
+	Autenticación, navegación protegida, administración de usuarios, roles, notificaciones y
+	reportes necesitan comportamiento compartido sin convertir los componentes de interfaz en
+	clientes HTTP directos. El proyecto separa esas responsabilidades en ambos extremos: un cliente
+	Angular con capas explícitas y un servicio Django REST con sus propios límites de aplicación,
+	dominio e infraestructura.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="SISTEMA" title="Dos repositorios, dos límites arquitectónicos independientes" surface="highlight">
+<CaseStudySection
+	eyebrow="SISTEMA"
+	title="Dos repositorios, dos límites arquitectónicos independientes"
+	surface="highlight"
+>
 	<MermaidDiagram
 		title="Límite actual del sistema MAD AI"
 		description="El cliente Angular 20 renderiza en navegador o mediante SSR y consume una API REST Django 5.2 mantenida por separado. El backend usa DRF/JWT, soporte PostgreSQL y Celery para trabajo asíncrono."
@@ -37,60 +54,133 @@ caseStudy:
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="FRONTEND" title="Las capas corresponden a límites reales dentro de Angular">
-  <CaseStudyGrid columns={2}>
-    <CaseStudyCard label="DOMINIO" title="CONTRATOS ANTES QUE TRANSPORTE" tone="primary">
-      Las entidades y abstracciones de repositorio definen lo que autenticación, usuarios, roles y notificaciones necesitan sin incrustar detalles de endpoints en los componentes de las rutas.
-    </CaseStudyCard>
-    <CaseStudyCard label="APLICACIÓN" title="LOS CASOS DE USO COORDINAN LA INTENCIÓN" tone="primary">
-      La capa de aplicación queda entre presentación e infraestructura para que los flujos de UI expresen acciones mediante casos de uso en vez de acoplar cada componente a la mecánica HTTP.
-    </CaseStudyCard>
-    <CaseStudyCard label="INFRAESTRUCTURA" title="LOS REPOSITORIOS HTTP ADAPTAN LA API" tone="primary">
-      Las implementaciones concretas de autenticación, notificaciones, roles y usuarios encapsulan DTOs e interacción con la API detrás de contratos de repositorio. La configuración de entorno dirige esos adaptadores a `/api/v1`.
-    </CaseStudyCard>
-    <CaseStudyCard label="PRESENTACIÓN" title="LAS RUTAS SEPARAN ÁREAS PÚBLICAS Y PROTEGIDAS" tone="primary">
-      Las rutas de autenticación usan su propio layout; el panel y la administración de usuarios viven detrás de `AuthGuard` dentro de la interfaz protegida. Angular SSR y Express proporcionan la entrada renderizada en servidor.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="FRONTEND"
+	title="Las capas corresponden a límites reales dentro de Angular"
+>
+	<CaseStudyGrid columns={2}>
+		<CaseStudyCard label="DOMINIO" title="CONTRATOS ANTES QUE TRANSPORTE" tone="primary">
+			Las entidades y abstracciones de repositorio definen lo que autenticación, usuarios,
+			roles y notificaciones necesitan sin incrustar detalles de endpoints en los componentes
+			de las rutas.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APLICACIÓN"
+			title="LOS CASOS DE USO COORDINAN LA INTENCIÓN"
+			tone="primary"
+		>
+			La capa de aplicación queda entre presentación e infraestructura para que los flujos de
+			UI expresen acciones mediante casos de uso en vez de acoplar cada componente a la
+			mecánica HTTP.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="INFRAESTRUCTURA"
+			title="LOS REPOSITORIOS HTTP ADAPTAN LA API"
+			tone="primary"
+		>
+			Las implementaciones concretas de autenticación, notificaciones, roles y usuarios
+			encapsulan DTOs e interacción con la API detrás de contratos de repositorio. La
+			configuración de entorno dirige esos adaptadores a `/api/v1`.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="PRESENTACIÓN"
+			title="LAS RUTAS SEPARAN ÁREAS PÚBLICAS Y PROTEGIDAS"
+			tone="primary"
+		>
+			Las rutas de autenticación usan su propio layout; el panel y la administración de
+			usuarios viven detrás de `AuthGuard` dentro de la interfaz protegida. Angular SSR y
+			Express proporcionan la entrada renderizada en servidor.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="BACKEND" title="La API usa una arquitectura Django modular y pragmática" surface="highlight">
   El backend usa **Django 5.2.3** y **Django REST Framework 3.16.0**, con JWT/cryptography, PostgreSQL mediante `psycopg2`, filtrado, herramientas OpenAPI y Celery. Su arquitectura combina una capa de servicios, modelos Django centrados en dominio y ports/adapters sin forzar un dominio independiente del framework que duplique el ORM.
 
 La API se mantiene en un repositorio privado, por lo que el contrato REST funciona como límite explícito entre el cliente público y la implementación backend. Presentación e interacción permanecen del lado del cliente; la orquestación de aplicación y la persistencia quedan detrás de la API.
+
 </CaseStudySection>
 
 <CaseStudySection eyebrow="REPORTES" title="El cliente concentra visualización y exportación">
-	El cliente Angular incluye ECharts, jsPDF y PapaParse. Mantener gráficos y exportación en el cliente permite transformar respuestas de la API en visualizaciones interactivas y archivos descargables sin trasladar responsabilidades de presentación al servicio REST.
+	El cliente Angular incluye ECharts, jsPDF y PapaParse. Mantener gráficos y exportación en el
+	cliente permite transformar respuestas de la API en visualizaciones interactivas y archivos
+	descargables sin trasladar responsabilidades de presentación al servicio REST.
 </CaseStudySection>
 
-<CaseStudySection eyebrow="IMPLEMENTACIÓN ACTUAL" title="Las responsabilidades permanecen explícitas entre cliente y API">
-  <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="CLIENTE" title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4" tone="verified">
-      El cliente usa Angular 20, Angular SSR, Express 5, RxJS y Tailwind CSS 4. El código separa `domain`, `application`, `infrastructure` y `presentation`, con rutas protegidas e implementaciones concretas de repositorios HTTP.
-    </EvidenceBlock>
-    <EvidenceBlock label="API" title="DJANGO 5.2 · DRF 3.16 · JWT · POSTGRESQL · CELERY" tone="verified">
-      La API usa Django 5.2.3 y DRF 3.16 con JWT/cryptography, soporte PostgreSQL y Celery. Sigue siendo un servicio privado mantenido por separado del cliente público.
-    </EvidenceBlock>
-    <EvidenceBlock label="LÍMITE ACTIVO" title="REST REQUEST/RESPONSE ES EL TRANSPORTE ACTUAL" tone="boundary">
-      El backend mantenido no incluye Django Channels, por lo que WebSocket queda fuera del flujo actual del sistema. La integración entre cliente y API se concentra en el contrato REST.
-    </EvidenceBlock>
-    <EvidenceBlock label="LÍMITE DE ENTREGA" title="CLIENTE Y API PUEDEN EVOLUCIONAR POR SEPARADO" tone="boundary">
-      La división mantiene separadas las responsabilidades de presentación y backend. Los cambios en cualquiera de los dos lados deben preservar el contrato REST compartido sin obligar a ambos repositorios a compartir detalles de implementación.
-    </EvidenceBlock>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="IMPLEMENTACIÓN ACTUAL"
+	title="Las responsabilidades permanecen explícitas entre cliente y API"
+>
+	<CaseStudyGrid columns={2}>
+		<EvidenceBlock
+			label="CLIENTE"
+			title="ANGULAR 20 · SSR · EXPRESS 5 · TAILWIND 4"
+			tone="verified"
+		>
+			El cliente usa Angular 20, Angular SSR, Express 5, RxJS y Tailwind CSS 4. El código
+			separa `domain`, `application`, `infrastructure` y `presentation`, con rutas protegidas
+			e implementaciones concretas de repositorios HTTP.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="API"
+			title="DJANGO 5.2 · DRF 3.16 · JWT · POSTGRESQL · CELERY"
+			tone="verified"
+		>
+			La API usa Django 5.2.3 y DRF 3.16 con JWT/cryptography, soporte PostgreSQL y Celery.
+			Sigue siendo un servicio privado mantenido por separado del cliente público.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="LÍMITE ACTIVO"
+			title="REST REQUEST/RESPONSE ES EL TRANSPORTE ACTUAL"
+			tone="boundary"
+		>
+			El backend mantenido no incluye Django Channels, por lo que WebSocket queda fuera del
+			flujo actual del sistema. La integración entre cliente y API se concentra en el contrato
+			REST.
+		</EvidenceBlock>
+		<EvidenceBlock
+			label="LÍMITE DE ENTREGA"
+			title="CLIENTE Y API PUEDEN EVOLUCIONAR POR SEPARADO"
+			tone="boundary"
+		>
+			La división mantiene separadas las responsabilidades de presentación y backend. Los
+			cambios en cualquiera de los dos lados deben preservar el contrato REST compartido sin
+			obligar a ambos repositorios a compartir detalles de implementación.
+		</EvidenceBlock>
+	</CaseStudyGrid>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="APRENDIZAJES" title="Qué reforzó el diseño en dos repositorios" surface="highlight">
-  <CaseStudyGrid columns={3}>
-    <CaseStudyCard label="APRENDIZAJE 01" title="LA ARQUITECTURA DEL CLIENTE TAMBIÉN PUEDE TENER LÍMITES REALES" tone="success">
-      Un frontend puede separar intención de dominio de adaptadores HTTP en lugar de tratar cada componente como un wrapper directo de un endpoint.
-    </CaseStudyCard>
-    <CaseStudyCard label="APRENDIZAJE 02" title="LOS LÍMITES LIMPIOS PUEDEN SER PRAGMÁTICOS CON EL FRAMEWORK" tone="success">
-      Los modelos Django pueden seguir siendo entidades de dominio ricas mientras servicios y puertos de repositorio protegen orquestación y adaptadores externos; Clean Architecture no exige pelear contra el framework.
-    </CaseStudyCard>
-    <CaseStudyCard label="APRENDIZAJE 03" title="LOS LÍMITES DE REPOSITORIO DEBEN REFLEJAR LOS DEL SISTEMA" tone="success">
-      Mantener los contratos del cliente separados de los detalles de implementación backend reduce el acoplamiento y aclara las responsabilidades de presentación, transporte y persistencia.
-    </CaseStudyCard>
-  </CaseStudyGrid>
+<CaseStudySection
+	eyebrow="APRENDIZAJES"
+	title="Qué reforzó el diseño en dos repositorios"
+	surface="highlight"
+>
+	<CaseStudyGrid columns={3}>
+		<CaseStudyCard
+			label="APRENDIZAJE 01"
+			title="LA ARQUITECTURA DEL CLIENTE TAMBIÉN PUEDE TENER LÍMITES REALES"
+			tone="success"
+		>
+			Un frontend puede separar intención de dominio de adaptadores HTTP en lugar de tratar
+			cada componente como un wrapper directo de un endpoint.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APRENDIZAJE 02"
+			title="LOS LÍMITES LIMPIOS PUEDEN SER PRAGMÁTICOS CON EL FRAMEWORK"
+			tone="success"
+		>
+			Los modelos Django pueden seguir siendo entidades de dominio ricas mientras servicios y
+			puertos de repositorio protegen orquestación y adaptadores externos; Clean Architecture
+			no exige pelear contra el framework.
+		</CaseStudyCard>
+		<CaseStudyCard
+			label="APRENDIZAJE 03"
+			title="LOS LÍMITES DE REPOSITORIO DEBEN REFLEJAR LOS DEL SISTEMA"
+			tone="success"
+		>
+			Mantener los contratos del cliente separados de los detalles de implementación backend
+			reduce el acoplamiento y aclara las responsabilidades de presentación, transporte y
+			persistencia.
+		</CaseStudyCard>
+	</CaseStudyGrid>
 </CaseStudySection>
