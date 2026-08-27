@@ -9,7 +9,7 @@ caseStudy:
     kicker: 'PROJECT CASE STUDY · HOUSEHOLD FINANCE'
     status:
         lifecycle: 'ACTIVE · V1 BETA / CROSS-REPO HARDENING'
-        source: 'PRIVATE SOURCE'
+        source: 'PRIVATE CODEBASE'
         demo: 'NO PUBLIC DEMO'
 ---
 
@@ -90,24 +90,21 @@ This distinction matters in finance: a websocket event can improve responsivenes
 <CaseStudySection eyebrow="PRIVACY" title="Resource existence is part of the authorization model">
   The API documentation explicitly allows household-scoped endpoints to conceal a resource from non-members rather than revealing that it exists. That is a stronger privacy boundary than simply returning “forbidden” after exposing an identifier.
 
-The remaining hardening work is also treated as product evidence, not hidden polish: privacy enforcement, exports/directory surfaces, balances and settlements, final authentication acceptance and clean-stack production-readiness gates remain active work.
+Hardening remains active around privacy enforcement, export and directory surfaces, balances and settlements, final authentication acceptance and production-readiness gates on a clean stack. Those areas define the current beta boundary rather than being presented as finished production behavior.
 
 </CaseStudySection>
 
 <CaseStudySection
-	eyebrow="BOUNDARIES"
-	title="What this case study does not claim"
+	eyebrow="CURRENT BOUNDARY"
+	title="The V1 beta is not presented as a production finance service"
 	surface="highlight"
 >
 	<EvidenceBlock
-		label="ACCESS AND EVIDENCE LIMITATIONS"
-		title="PRIVATE REPOSITORIES, NO PRODUCTION CLAIM"
+		label="PRODUCT STATUS"
+		title="PRIVATE CODEBASE · NO PUBLIC FINANCIAL DEPLOYMENT"
 		tone="boundary"
 	>
-		Both implementation repositories are private, so a public reviewer cannot inspect their
-		source, tests or ADR history directly. There is no recruiter-facing live deployment
-		presented as safe for real household financial data, and this portfolio makes no claim about
-		adoption, revenue or production scale.
+		The implementation is maintained in private repositories and the current V1 beta is not offered as a public service for real household financial data. The engineering story therefore focuses on the implemented authorization, financial and persistence boundaries while production hardening remains in progress.
 	</EvidenceBlock>
 </CaseStudySection>
 
