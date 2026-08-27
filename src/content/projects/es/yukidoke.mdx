@@ -9,7 +9,7 @@ caseStudy:
     kicker: 'CASO DE ESTUDIO · FINANZAS DEL HOGAR'
     status:
         lifecycle: 'ACTIVO · BETA V1 / HARDENING CROSS-REPO'
-        source: 'CÓDIGO PRIVADO'
+        source: 'CODEBASE PRIVADO'
         demo: 'SIN DEMO PÚBLICA'
 ---
 
@@ -90,20 +90,13 @@ Esta diferencia importa en finanzas: un evento websocket puede mejorar la respue
 <CaseStudySection eyebrow="PRIVACIDAD" title="La existencia de un recurso forma parte del modelo de autorización">
   La documentación de la API permite explícitamente que endpoints con alcance por hogar oculten un recurso a quien no es miembro, en vez de revelar primero que existe y responder después con “forbidden”. Es un límite de privacidad más fuerte que una autorización genérica posterior a la resolución del identificador.
 
-El trabajo de hardening restante también se presenta como evidencia del producto, no como polish oculto: enforcement de privacidad, superficies de exportación/directorio, balances y settlements, aceptación final de autenticación y gates de preparación productiva sobre un stack limpio continúan activos.
+El hardening continúa en enforcement de privacidad, superficies de exportación y directorio, balances y settlements, aceptación final de autenticación y gates de preparación productiva sobre un stack limpio. Esas áreas definen el límite actual de la beta y no se presentan como comportamiento productivo terminado.
 
 </CaseStudySection>
 
-<CaseStudySection eyebrow="LÍMITES" title="Qué no afirma este caso de estudio" surface="highlight">
-	<EvidenceBlock
-		label="LIMITACIONES DE ACCESO Y EVIDENCIA"
-		title="REPOSITORIOS PRIVADOS, SIN AFIRMACIÓN DE PRODUCCIÓN"
-		tone="boundary"
-	>
-		Ambos repositorios de implementación son privados, por lo que un revisor público no puede
-		inspeccionar directamente su código, tests o historial de ADRs. No se presenta un despliegue
-		en vivo para reclutadores como seguro para datos financieros reales de hogares y este
-		portafolio no afirma adopción, ingresos ni escala de producción.
+<CaseStudySection eyebrow="LÍMITE ACTUAL" title="La beta V1 no se presenta como un servicio financiero productivo" surface="highlight">
+	<EvidenceBlock label="ESTADO DEL PRODUCTO" title="CODEBASE PRIVADO · SIN DESPLIEGUE FINANCIERO PÚBLICO" tone="boundary">
+		La implementación se mantiene en repositorios privados y la beta V1 actual no se ofrece como servicio público para datos financieros reales de hogares. La historia de ingeniería se concentra en los límites implementados de autorización, reglas financieras y persistencia mientras el hardening productivo continúa en progreso.
 	</EvidenceBlock>
 </CaseStudySection>
 
