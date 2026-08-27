@@ -2,8 +2,8 @@
 	"notFoundPageTitle": "404 - Page not found | David Sandoval",
 	"notFoundDescription": "The page you are looking for does not exist or has been moved.",
 	"notFoundTitle": "Page not found",
-	"notFoundMessage": "Looks like you've gotten lost in the code. The page you're looking for doesn't exist or has been moved to another location.",
+	"notFoundMessage": "The page you are looking for is unavailable or has moved. Use the navigation to return to the portfolio or explore another section.",
 	"homeButton": "Go to home",
 	"backButton": "Go back",
-	"notFoundQuote": "In an infinite multiverse, this page exists... just not in this one."
+	"notFoundQuote": "You can continue with the portfolio, projects, writing or contact information."
 }
