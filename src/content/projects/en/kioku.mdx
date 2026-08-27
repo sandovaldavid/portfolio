@@ -13,8 +13,8 @@ caseStudy:
         demo: 'NO HOSTED DEMO'
 ---
 
-<CaseStudySection eyebrow="CURRENT SYSTEM" title="A released .NET tool with a separate active-development track">
-	Kioku is distributed as a public .NET project with release artifacts, a NuGet package and operational documentation. Version **3.1.2** is the latest tagged server release; `develop` can move ahead while changes are validated before the next release.
+<CaseStudySection eyebrow="CURRENT SYSTEM" title="Stable 3.1.2 release with active development continuing">
+	Kioku is distributed as a public .NET project with release artifacts, a NuGet package and operational documentation. Version **3.1.2** is the current stable tagged server release, while ongoing work continues toward later releases.
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PROBLEM" title="Agent context should survive the session that created it">
@@ -72,13 +72,13 @@ Kioku treats the vault as durable project memory instead: specs, implementation 
 	/>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="RELEASE STATUS" title="Stable releases and active development stay distinct">
+<CaseStudySection eyebrow="RELEASE STATUS" title="A stable release and an active development line">
   <CaseStudyGrid columns={2}>
-    <EvidenceBlock label="LATEST TAGGED RELEASE" title="3.1.2 · PACKAGE · CONTRACTS · OPERATIONAL DOCS" tone="verified">
-      Release **3.1.2** publishes server artifacts and the project links the `kioku-mcp-server` NuGet package. The same codebase maintains generated MCP references, engineering-workflow documentation, configuration, security guidance and automated tests.
+    <EvidenceBlock label="STABLE RELEASE" title="3.1.2 · PACKAGE · CONTRACTS · OPERATIONAL DOCS" tone="verified">
+      Release **3.1.2** publishes server artifacts and the project links the `kioku-mcp-server` NuGet package. The project also maintains generated MCP references, engineering-workflow documentation, configuration, security guidance and automated tests.
     </EvidenceBlock>
-    <EvidenceBlock label="ACTIVE DEVELOPMENT" title="DEVELOP CAN MOVE AHEAD OF THE LATEST TAG" tone="boundary">
-      `develop` can contain validated changes that are not part of the latest tagged release yet. Release-specific behavior is described against **3.1.2**, while newer work remains explicitly part of the development track until promoted.
+    <EvidenceBlock label="ACTIVE DEVELOPMENT" title="NEW WORK CONTINUES BEYOND 3.1.2" tone="boundary">
+      Ongoing development can introduce changes after the stable **3.1.2** release. Release-specific behavior stays tied to the tagged version until newer work is promoted into a subsequent release.
     </EvidenceBlock>
   </CaseStudyGrid>
 </CaseStudySection>
