@@ -49,7 +49,10 @@ const { enabled = true } = Astro.props;
 		const getTraversalEndY = (section: HTMLElement) =>
 			Math.min(
 				getMaxScrollY(),
-				Math.max(getTargetY(section), section.offsetTop + section.offsetHeight - window.innerHeight)
+				Math.max(
+					getTargetY(section),
+					section.offsetTop + section.offsetHeight - window.innerHeight
+				)
 			);
 
 		const getPositionedSections = () =>
@@ -73,7 +76,8 @@ const { enabled = true } = Astro.props;
 		const shouldPreserveDocumentTraversal = (direction: 1 | -1) => {
 			const section = getSectionAtScrollPosition();
 			if (!section) return false;
-			if (section.offsetHeight <= getUsableViewportHeight() + POSITION_TOLERANCE) return false;
+			if (section.offsetHeight <= getUsableViewportHeight() + POSITION_TOLERANCE)
+				return false;
 
 			const currentY = window.scrollY;
 			const startY = getTargetY(section);
@@ -83,10 +87,7 @@ const { enabled = true } = Astro.props;
 			// inside the section's own overflow range. This intentionally leaves the
 			// compact Home tail (for example Core Stack between About and Contact) on
 			// the existing directional section-navigation contract.
-			if (
-				currentY < startY - POSITION_TOLERANCE ||
-				currentY > endY + POSITION_TOLERANCE
-			) {
+			if (currentY < startY - POSITION_TOLERANCE || currentY > endY + POSITION_TOLERANCE) {
 				return false;
 			}
 
