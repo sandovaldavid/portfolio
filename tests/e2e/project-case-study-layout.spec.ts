@@ -66,8 +66,12 @@ for (const viewport of VIEWPORTS) {
 
 		await expect(caseStudy).toBeVisible();
 		expect(Math.round((await heroShell.boundingBox())!.width)).toBe(viewport.shellWidth);
-		expect(Math.round((await firstSectionInner.boundingBox())!.width)).toBe(viewport.shellWidth);
-		expect(Math.round((await firstSectionContent.boundingBox())!.width)).toBe(viewport.shellWidth);
+		expect(Math.round((await firstSectionInner.boundingBox())!.width)).toBe(
+			viewport.shellWidth
+		);
+		expect(Math.round((await firstSectionContent.boundingBox())!.width)).toBe(
+			viewport.shellWidth
+		);
 		await expect(firstSectionContent).toHaveAttribute('data-case-study-width', 'wide');
 		expect(Math.round((await heroShell.boundingBox())!.y)).toBe(viewport.heroShellY);
 		expect(Math.round((await firstSection.boundingBox())!.width)).toBe(viewport.width);
@@ -220,7 +224,10 @@ for (const [route, title] of PROJECT_ROUTES) {
 
 		const defaultSections = page.locator('[data-case-study-section-content]');
 		for (let index = 0; index < (await defaultSections.count()); index += 1) {
-			await expect(defaultSections.nth(index)).toHaveAttribute('data-case-study-width', 'wide');
+			await expect(defaultSections.nth(index)).toHaveAttribute(
+				'data-case-study-width',
+				'wide'
+			);
 		}
 
 		const diagrams = page.locator('[data-mermaid-host]');
