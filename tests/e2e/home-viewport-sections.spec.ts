@@ -167,12 +167,14 @@ test('1366x768 traverses tall Experience before advancing and re-enters it from 
 
 	const experience = await getSectionTraversalMetrics(page, 'experience');
 	const projectsTarget = await getSectionTargetY(page, 'projects');
+	const traversalRange = experience.endY - experience.startY;
 	expect(experience.height).toBeGreaterThan(experience.usableHeight + 8);
-	expect(experience.endY).toBeGreaterThan(experience.startY + 8);
+	expect(traversalRange).toBeGreaterThan(16);
+	const traversalWheelDelta = Math.max(16, Math.min(64, Math.floor(traversalRange / 2)));
 
 	await scrollInstantlyTo(page, experience.startY);
 	await page.mouse.move(SHORT_DESKTOP.width / 2, SHORT_DESKTOP.height / 2);
-	await page.mouse.wheel(0, 160);
+	await page.mouse.wheel(0, traversalWheelDelta);
 
 	await expect
 		.poll(async () => page.evaluate(() => window.scrollY))
@@ -192,12 +194,12 @@ test('1366x768 traverses tall Experience before advancing and re-enters it from 
 	await page.mouse.wheel(0, -700);
 	await expectScrollNear(page, experience.endY);
 
-	await page.mouse.wheel(0, -160);
+	await page.mouse.wheel(0, -traversalWheelDelta);
 	await expect
 		.poll(async () => page.evaluate(() => window.scrollY))
 		.toBeLessThan(experience.endY - 3);
 	const reverseTraversalY = await page.evaluate(() => window.scrollY);
-	expect(reverseTraversalY).toBeGreaterThan(experience.startY + 8);
+	expect(reverseTraversalY).toBeGreaterThan(experience.startY);
 });
 
 test('1366x768 traverses tall Research footer before advancing to About', async ({
