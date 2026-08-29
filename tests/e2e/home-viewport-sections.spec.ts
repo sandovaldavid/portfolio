@@ -3,6 +3,9 @@ import { expect, test } from './fixtures';
 
 const HEADER_HEIGHT = 72;
 const DESKTOP = { width: 1440, height: 900 };
+const SHORT_DESKTOP = { width: 1366, height: 768 };
+const SHORTER_DESKTOP = { width: 1280, height: 720 };
+const COMPACT_LANDSCAPE = { width: 1024, height: 768 };
 const TABLET = { width: 834, height: 1100 };
 
 async function getSectionTargetY(page: Page, id: string) {
@@ -10,6 +13,24 @@ async function getSectionTargetY(page: Page, id: string) {
 		const section = element as HTMLElement;
 		const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 		return Math.min(maxScrollY, Math.max(0, section.offsetTop - headerHeight));
+	}, HEADER_HEIGHT);
+}
+
+async function getSectionTraversalMetrics(page: Page, id: string) {
+	return page.locator(`#${id}`).evaluate((element, headerHeight) => {
+		const section = element as HTMLElement;
+		const maxScrollY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+		const startY = Math.min(maxScrollY, Math.max(0, section.offsetTop - headerHeight));
+		const endY = Math.min(
+			maxScrollY,
+			Math.max(startY, section.offsetTop + section.offsetHeight - window.innerHeight)
+		);
+		return {
+			startY,
+			endY,
+			height: section.offsetHeight,
+			usableHeight: Math.max(0, window.innerHeight - headerHeight),
+		};
 	}, HEADER_HEIGHT);
 }
 
@@ -32,6 +53,14 @@ async function expectScrollNear(page: Page, targetY: number) {
 			timeout: 3000,
 		})
 		.toBeLessThanOrEqual(3);
+}
+
+async function expectWithinViewport(page: Page, selector: string) {
+	const box = await page.locator(selector).boundingBox();
+	expect(box).not.toBeNull();
+	const viewportHeight = await page.evaluate(() => document.documentElement.clientHeight);
+	expect(box!.y).toBeGreaterThanOrEqual(HEADER_HEIGHT - 1);
+	expect(box!.y + box!.height).toBeLessThanOrEqual(viewportHeight + 1);
 }
 
 for (const [label, viewport] of [
@@ -127,6 +156,116 @@ test('desktop vertical wheel over the horizontal Experience tab rail still advan
 
 	await expectScrollNear(page, projectsTarget);
 });
+
+test('1366x768 traverses tall Experience before advancing and re-enters it from the bottom', async ({
+	page,
+	isMobile,
+}) => {
+	test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
+	await page.setViewportSize(SHORT_DESKTOP);
+	await page.goto('/');
+
+	const experience = await getSectionTraversalMetrics(page, 'experience');
+	const projectsTarget = await getSectionTargetY(page, 'projects');
+	expect(experience.height).toBeGreaterThan(experience.usableHeight + 8);
+	expect(experience.endY).toBeGreaterThan(experience.startY + 8);
+
+	await scrollInstantlyTo(page, experience.startY);
+	await page.mouse.move(SHORT_DESKTOP.width / 2, SHORT_DESKTOP.height / 2);
+	await page.mouse.wheel(0, 160);
+
+	await expect
+		.poll(async () => page.evaluate(() => window.scrollY))
+		.toBeGreaterThan(experience.startY + 3);
+	const traversedY = await page.evaluate(() => window.scrollY);
+	expect(traversedY).toBeLessThan(projectsTarget - 8);
+
+	await scrollInstantlyTo(page, experience.endY);
+	await expectWithinViewport(
+		page,
+		'#experience [role="tabpanel"][aria-hidden="false"] [data-experience-detail-footer]'
+	);
+	await page.mouse.wheel(0, 700);
+	await expectScrollNear(page, projectsTarget);
+
+	await page.waitForTimeout(160);
+	await page.mouse.wheel(0, -700);
+	await expectScrollNear(page, experience.endY);
+
+	await page.mouse.wheel(0, -160);
+	await expect
+		.poll(async () => page.evaluate(() => window.scrollY))
+		.toBeLessThan(experience.endY - 3);
+	const reverseTraversalY = await page.evaluate(() => window.scrollY);
+	expect(reverseTraversalY).toBeGreaterThan(experience.startY + 8);
+});
+
+test('1366x768 traverses tall Research footer before advancing to About', async ({
+	page,
+	isMobile,
+}) => {
+	test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
+	await page.setViewportSize(SHORT_DESKTOP);
+	await page.goto('/');
+
+	const research = await getSectionTraversalMetrics(page, 'research');
+	const aboutTarget = await getSectionTargetY(page, 'about-me');
+	expect(research.height).toBeGreaterThan(research.usableHeight + 8);
+	expect(research.endY).toBeGreaterThan(research.startY + 8);
+
+	await scrollInstantlyTo(page, research.startY);
+	await page.mouse.move(SHORT_DESKTOP.width / 2, SHORT_DESKTOP.height / 2);
+	await page.mouse.wheel(0, 160);
+
+	await expect
+		.poll(async () => page.evaluate(() => window.scrollY))
+		.toBeGreaterThan(research.startY + 3);
+	const traversedY = await page.evaluate(() => window.scrollY);
+	expect(traversedY).toBeLessThan(aboutTarget - 8);
+
+	await scrollInstantlyTo(page, research.endY);
+	await expectWithinViewport(page, '#research [data-research-home-footer]');
+	await page.mouse.wheel(0, 700);
+	await expectScrollNear(page, aboutTarget);
+});
+
+for (const [label, viewport] of [
+	['1280x720', SHORTER_DESKTOP],
+	['1024x768', COMPACT_LANDSCAPE],
+] as const) {
+	test(`${label} keeps tall Home sections content-driven and horizontally contained`, async ({
+		page,
+		isMobile,
+	}) => {
+		test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
+		await page.setViewportSize(viewport);
+		await page.goto('/');
+
+		const overflow = await page.evaluate(() => ({
+			clientWidth: document.documentElement.clientWidth,
+			scrollWidth: document.documentElement.scrollWidth,
+		}));
+		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+
+		for (const [id, nextId] of [
+			['experience', 'projects'],
+			['research', 'about-me'],
+		] as const) {
+			const metrics = await getSectionTraversalMetrics(page, id);
+			if (metrics.endY <= metrics.startY + 8) continue;
+
+			const nextTarget = await getSectionTargetY(page, nextId);
+			await scrollInstantlyTo(page, metrics.startY);
+			await page.mouse.move(viewport.width / 2, viewport.height / 2);
+			await page.mouse.wheel(0, 120);
+
+			await expect
+				.poll(async () => page.evaluate(() => window.scrollY))
+				.toBeGreaterThan(metrics.startY + 3);
+			expect(await page.evaluate(() => window.scrollY)).toBeLessThan(nextTarget - 8);
+		}
+	});
+}
 
 test('desktop closing flow moves Research to About Me to Footer and reverses in order', async ({
 	page,
