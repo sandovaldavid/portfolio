@@ -159,10 +159,10 @@ const { enabled = true } = Astro.props;
 			settleFrame = window.requestAnimationFrame(tick);
 		};
 
-		const scrollToSection = (section: HTMLElement) => {
+		const scrollToSection = (section: HTMLElement, direction: 1 | -1) => {
 			stopNavigationTracking();
 			isNavigating = true;
-			navigationTargetY = getTargetY(section);
+			navigationTargetY = direction < 0 ? getTraversalEndY(section) : getTargetY(section);
 			navigationStartedAt = performance.now();
 			lastWheelAt = navigationStartedAt;
 
@@ -203,7 +203,7 @@ const { enabled = true } = Astro.props;
 			if (!targetSection) return;
 
 			event.preventDefault();
-			scrollToSection(targetSection);
+			scrollToSection(targetSection, direction);
 		};
 
 		window.addEventListener('wheel', onWheel, { passive: false });
