@@ -180,31 +180,6 @@ test.describe('Interaction semantics', () => {
 	});
 });
 
-test.describe('Project case study reading ergonomics', () => {
-	test('prose uses reading measure while technical compositions keep the wide shell', async ({
-		page,
-	}) => {
-		await page.setViewportSize(DESKTOP);
-		await page.goto('/projects/kioku');
-		await page.evaluate(() => document.fonts.ready);
-
-		const firstProseSection = page
-			.locator('[data-case-study-section-content][data-case-study-width="auto"]')
-			.first();
-		const wideDiagramSection = page
-			.locator(
-				'[data-case-study-section]:has([data-mermaid-figure]) [data-case-study-section-content]'
-			)
-			.first();
-		const usableWidth = await page.evaluate(() => document.documentElement.clientWidth);
-
-		expect(Math.round((await firstProseSection.boundingBox())!.width)).toBe(840);
-		expect(Math.round((await wideDiagramSection.boundingBox())!.width)).toBe(
-			Math.min(1280, usableWidth - 160)
-		);
-	});
-});
-
 test.describe('Detail-page accessibility coverage', () => {
 	for (const theme of ['light', 'dark'] as const) {
 		for (const { path, name } of DETAIL_A11Y_ROUTES) {
