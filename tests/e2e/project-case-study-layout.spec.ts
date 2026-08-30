@@ -58,6 +58,7 @@ for (const viewport of VIEWPORTS) {
 		const heroShell = page.locator('[data-case-study-hero-shell]');
 		const firstSection = page.locator('[data-case-study-section]').first();
 		const firstSectionInner = firstSection.locator(':scope > div');
+		const firstSectionContent = firstSection.locator('[data-case-study-section-content]');
 		const title = page.getByRole('heading', { level: 1, name: 'Kioku' });
 		const sectionTitle = page.getByRole('heading', {
 			name: 'Stable 3.1.2 release with active development continuing',
@@ -65,9 +66,13 @@ for (const viewport of VIEWPORTS) {
 
 		await expect(caseStudy).toBeVisible();
 		expect(Math.round((await heroShell.boundingBox())!.width)).toBe(viewport.shellWidth);
-		expect(Math.round((await firstSectionInner.boundingBox())!.width)).toBeLessThanOrEqual(
+		expect(Math.round((await firstSectionInner.boundingBox())!.width)).toBe(
 			viewport.shellWidth
 		);
+		expect(Math.round((await firstSectionContent.boundingBox())!.width)).toBe(
+			viewport.shellWidth
+		);
+		await expect(firstSectionContent).toHaveAttribute('data-case-study-width', 'wide');
 		expect(Math.round((await heroShell.boundingBox())!.y)).toBe(viewport.heroShellY);
 		expect(Math.round((await firstSection.boundingBox())!.width)).toBe(viewport.width);
 
@@ -88,6 +93,53 @@ for (const viewport of VIEWPORTS) {
 			fontSize: viewport.sectionTitleSize,
 			lineHeight: viewport.sectionTitleLineHeight,
 		});
+
+		const overflow = await page.evaluate(() => ({
+			clientWidth: document.documentElement.clientWidth,
+			scrollWidth: document.documentElement.scrollWidth,
+		}));
+		expect(overflow.scrollWidth).toBeLessThanOrEqual(overflow.clientWidth);
+	});
+}
+
+for (const viewport of [
+	{ name: 'desktop', width: 1440, height: 1000 },
+	{ name: 'laptop', width: 1366, height: 768 },
+	{ name: 'compact', width: 1024, height: 768 },
+	{ name: 'tablet', width: 834, height: 1112 },
+	{ name: 'mobile', width: 390, height: 844 },
+] as const) {
+	test(`Kioku ${viewport.name} text, grid and Mermaid sections share the page shell`, async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: viewport.width, height: viewport.height });
+		await page.goto('/projects/kioku');
+
+		const heroShell = page.locator('[data-case-study-hero-shell]');
+		const textContent = page
+			.locator('[data-case-study-section]')
+			.first()
+			.locator('[data-case-study-section-content]');
+		const gridContent = page
+			.locator('[data-case-study-section]:has([data-case-study-grid])')
+			.first()
+			.locator('[data-case-study-section-content]');
+		const mermaidContent = page
+			.locator('[data-case-study-section]:has([data-mermaid-figure])')
+			.first()
+			.locator('[data-case-study-section-content]');
+
+		for (const content of [textContent, gridContent, mermaidContent]) {
+			await expect(content).toBeVisible();
+			await expect(content).toHaveAttribute('data-case-study-width', 'wide');
+		}
+
+		const heroBox = (await heroShell.boundingBox())!;
+		for (const content of [textContent, gridContent, mermaidContent]) {
+			const box = (await content.boundingBox())!;
+			expect(Math.round(box.x)).toBe(Math.round(heroBox.x));
+			expect(Math.round(box.width)).toBe(Math.round(heroBox.width));
+		}
 
 		const overflow = await page.evaluate(() => ({
 			clientWidth: document.documentElement.clientWidth,
@@ -169,6 +221,14 @@ for (const [route, title] of PROJECT_ROUTES) {
 		await expect(page.locator('[data-project-case-study="mdx"]')).toBeVisible();
 		await expect(page.getByRole('heading', { level: 1, name: title })).toBeVisible();
 		expect(await page.locator('[data-case-study-section]').count()).toBeGreaterThanOrEqual(5);
+
+		const defaultSections = page.locator('[data-case-study-section-content]');
+		for (let index = 0; index < (await defaultSections.count()); index += 1) {
+			await expect(defaultSections.nth(index)).toHaveAttribute(
+				'data-case-study-width',
+				'wide'
+			);
+		}
 
 		const diagrams = page.locator('[data-mermaid-host]');
 		expect(await diagrams.count()).toBeGreaterThanOrEqual(1);
