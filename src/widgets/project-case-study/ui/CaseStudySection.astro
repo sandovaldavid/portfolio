@@ -3,11 +3,11 @@ interface Props {
 	eyebrow?: string;
 	title: string;
 	surface?: 'canvas' | 'highlight';
-	width?: 'auto' | 'wide' | 'reading';
+	width?: 'wide' | 'reading';
 	id?: string;
 }
 
-const { eyebrow, title, surface = 'canvas', width = 'auto', id } = Astro.props;
+const { eyebrow, title, surface = 'canvas', width = 'wide', id } = Astro.props;
 ---
 
 <section
@@ -47,12 +47,6 @@ const { eyebrow, title, surface = 'canvas', width = 'auto', id } = Astro.props;
 </section>
 
 <style is:global>
-	[data-case-study-width='auto']:not(
-		:has([data-case-study-grid], [data-mermaid-figure], [data-project-gallery])
-	) {
-		max-width: 52.5rem;
-	}
-
 	.case-study-copy p + p,
 	.case-study-copy p + ul,
 	.case-study-copy p + ol,
