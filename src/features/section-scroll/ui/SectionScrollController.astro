@@ -45,6 +45,56 @@ const { enabled = true } = Astro.props;
 			Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
 		const getTargetY = (section: HTMLElement) =>
 			Math.min(getMaxScrollY(), Math.max(0, section.offsetTop - HEADER_HEIGHT));
+		const getUsableViewportHeight = () => Math.max(0, window.innerHeight - HEADER_HEIGHT);
+		const getTraversalEndY = (section: HTMLElement) =>
+			Math.min(
+				getMaxScrollY(),
+				Math.max(
+					getTargetY(section),
+					section.offsetTop + section.offsetHeight - window.innerHeight
+				)
+			);
+
+		const getPositionedSections = () =>
+			sections.map(section => ({
+				section,
+				y: getTargetY(section),
+			}));
+
+		const getSectionAtScrollPosition = () => {
+			const currentY = window.scrollY;
+			const positionedSections = getPositionedSections();
+
+			return (
+				[...positionedSections]
+					.reverse()
+					.find(({ y }) => y <= currentY + POSITION_TOLERANCE)?.section ??
+				positionedSections[0]?.section
+			);
+		};
+
+		const shouldPreserveDocumentTraversal = (direction: 1 | -1) => {
+			const section = getSectionAtScrollPosition();
+			if (!section) return false;
+			if (section.offsetHeight <= getUsableViewportHeight() + POSITION_TOLERANCE)
+				return false;
+
+			const currentY = window.scrollY;
+			const startY = getTargetY(section);
+			const endY = getTraversalEndY(section);
+
+			// Only preserve native document traversal while the viewport is actually
+			// inside the section's own overflow range. This intentionally leaves the
+			// compact Home tail (for example Core Stack between About and Contact) on
+			// the existing directional section-navigation contract.
+			if (currentY < startY - POSITION_TOLERANCE || currentY > endY + POSITION_TOLERANCE) {
+				return false;
+			}
+
+			return direction > 0
+				? currentY < endY - POSITION_TOLERANCE
+				: currentY > startY + POSITION_TOLERANCE;
+		};
 
 		const elementCanScrollVertically = (start: HTMLElement, deltaY: number) => {
 			let element: HTMLElement | null = start;
@@ -75,10 +125,7 @@ const { enabled = true } = Astro.props;
 
 		const findDirectionalTarget = (direction: 1 | -1) => {
 			const currentY = window.scrollY;
-			const positionedSections = sections.map(section => ({
-				section,
-				y: getTargetY(section),
-			}));
+			const positionedSections = getPositionedSections();
 
 			if (direction > 0) {
 				return positionedSections.find(({ y }) => y > currentY + POSITION_TOLERANCE)
@@ -113,10 +160,10 @@ const { enabled = true } = Astro.props;
 			settleFrame = window.requestAnimationFrame(tick);
 		};
 
-		const scrollToSection = (section: HTMLElement) => {
+		const scrollToSection = (section: HTMLElement, direction: 1 | -1) => {
 			stopNavigationTracking();
 			isNavigating = true;
-			navigationTargetY = getTargetY(section);
+			navigationTargetY = direction < 0 ? getTraversalEndY(section) : getTargetY(section);
 			navigationStartedAt = performance.now();
 			lastWheelAt = navigationStartedAt;
 
@@ -132,13 +179,22 @@ const { enabled = true } = Astro.props;
 			const target = event.target instanceof HTMLElement ? event.target : null;
 			if (target && elementCanScrollVertically(target, event.deltaY)) return;
 
+			const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1;
+
 			if (isNavigating) {
+				const reachedTarget = Math.abs(window.scrollY - navigationTargetY) <= 2;
+				if (reachedTarget && shouldPreserveDocumentTraversal(direction)) {
+					stopNavigationTracking();
+					return;
+				}
+
 				lastWheelAt = performance.now();
 				event.preventDefault();
 				return;
 			}
 
-			const direction: 1 | -1 = event.deltaY > 0 ? 1 : -1;
+			if (shouldPreserveDocumentTraversal(direction)) return;
+
 			const targetSection = findDirectionalTarget(direction);
 
 			// Core Stack stays content-driven rather than becoming a viewport snap target.
@@ -148,7 +204,7 @@ const { enabled = true } = Astro.props;
 			if (!targetSection) return;
 
 			event.preventDefault();
-			scrollToSection(targetSection);
+			scrollToSection(targetSection, direction);
 		};
 
 		window.addEventListener('wheel', onWheel, { passive: false });

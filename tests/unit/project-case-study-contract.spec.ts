@@ -48,11 +48,16 @@ describe('Project Case Study MDX contract', () => {
 		);
 	});
 
-	it('anchors reading-width sections to the same left grid instead of centering them independently', () => {
+	it('uses the full page shell by default and keeps reading width explicit', () => {
 		expect(section).toContain('mx-auto w-full max-w-320');
+		expect(section).toContain("width?: 'wide' | 'reading'");
+		expect(section).toContain("width = 'wide'");
 		expect(section).toContain("width === 'reading' ? 'max-w-210' : 'w-full'");
 		expect(section).toContain('data-case-study-section-content');
-		expect(section).not.toContain("width === 'reading' ? 'max-w-210' : 'max-w-320'");
+		expect(section).toContain('data-case-study-width={width}');
+		expect(section).not.toContain("'auto'");
+		expect(section).not.toContain(':has(');
+		expect(section).not.toContain('52.5rem');
 	});
 
 	it('keeps project-specific composition in MDX while resources remain shell-owned', () => {
