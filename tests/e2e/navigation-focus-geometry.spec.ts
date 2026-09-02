@@ -12,14 +12,14 @@ test.describe('navigation lockup focus geometry', () => {
 
 		const geometry = await brandLink.evaluate(element => {
 			const mark = element.querySelector<HTMLElement>('[data-brand-logo]');
-			const signature = element.querySelector<HTMLElement>('.brand-logo-signature');
-			if (!mark || !signature) {
+			const name = element.querySelector<HTMLElement>('.brand-logo-name');
+			if (!mark || !name) {
 				throw new Error('Navigation lockup geometry is incomplete.');
 			}
 
 			const linkRect = element.getBoundingClientRect();
 			const markRect = mark.getBoundingClientRect();
-			const signatureRect = signature.getBoundingClientRect();
+			const nameRect = name.getBoundingClientRect();
 			const style = getComputedStyle(element);
 			const linkCenter = linkRect.top + linkRect.height / 2;
 
@@ -28,11 +28,9 @@ test.describe('navigation lockup focus geometry', () => {
 				outlineWidth: style.outlineWidth,
 				outlineOffset: style.outlineOffset,
 				leftInset: markRect.left - linkRect.left,
-				rightInset: linkRect.right - signatureRect.right,
+				rightInset: linkRect.right - nameRect.right,
 				markCenterDelta: Math.abs(markRect.top + markRect.height / 2 - linkCenter),
-				signatureCenterDelta: Math.abs(
-					signatureRect.top + signatureRect.height / 2 - linkCenter
-				),
+				nameCenterDelta: Math.abs(nameRect.top + nameRect.height / 2 - linkCenter),
 			};
 		});
 
@@ -43,6 +41,6 @@ test.describe('navigation lockup focus geometry', () => {
 		expect(geometry.rightInset).toBeGreaterThanOrEqual(7.5);
 		expect(Math.abs(geometry.leftInset - geometry.rightInset)).toBeLessThanOrEqual(1);
 		expect(geometry.markCenterDelta).toBeLessThanOrEqual(1);
-		expect(geometry.signatureCenterDelta).toBeLessThanOrEqual(1);
+		expect(geometry.nameCenterDelta).toBeLessThanOrEqual(1);
 	});
 });

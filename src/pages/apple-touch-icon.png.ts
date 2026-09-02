@@ -1,11 +1,11 @@
 import type { APIRoute } from 'astro';
 
-import { renderProjectMark } from '@shared/lib/brand';
+import { renderAppIcon } from '@shared/lib/brand';
 
 export const prerender = true;
 
 export const GET: APIRoute = async () =>
-	new Response(await renderProjectMark('light', 180), {
+	new Response(await renderAppIcon('light', 180), {
 		headers: {
 			'Cache-Control': 'public, max-age=31536000, immutable',
 			'Content-Type': 'image/png',
