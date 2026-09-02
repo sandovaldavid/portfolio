@@ -1,4 +1,6 @@
 ---
+import { siteConfig } from '@shared/config/site.config';
+
 interface Props {
 	href?: string;
 	accessibleLabel: string;
@@ -53,7 +55,7 @@ const nameVisibility =
 			nameVisibility,
 		]}
 	>
-		David Sandoval
+		{siteConfig.name}
 	</span>
 </a>
 
