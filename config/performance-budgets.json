@@ -73,7 +73,7 @@
 				"javascriptParsedBytes": 36864,
 				"javascriptTransferBytes": 12288,
 				"cssTransferBytes": 22528,
-				"largestImageBytes": 1024,
+				"largestImageBytes": 2048,
 				"fontPreloadCount": 1,
 				"requestCount": 7
 			}
@@ -84,7 +84,7 @@
 				"javascriptParsedBytes": 36864,
 				"javascriptTransferBytes": 12288,
 				"cssTransferBytes": 22528,
-				"largestImageBytes": 1024,
+				"largestImageBytes": 2048,
 				"fontPreloadCount": 1,
 				"requestCount": 7
 			}
