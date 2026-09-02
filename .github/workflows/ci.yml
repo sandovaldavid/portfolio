@@ -3,9 +3,6 @@ name: Continuous Integration
 on:
     pull_request:
         branches: [develop, main]
-        paths-ignore:
-            - 'docs/**'
-            - '.vscode/**'
 
 permissions:
     contents: read
