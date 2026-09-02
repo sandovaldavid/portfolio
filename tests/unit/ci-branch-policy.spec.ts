@@ -35,6 +35,11 @@ describe('develop integration and main promotion policy', () => {
 		expect(previewWorkflow).toContain('branches: [develop, main]');
 	});
 
+	it('keeps required pull-request workflows reportable for every changed-file shape', () => {
+		expect(ciWorkflow).not.toContain('paths-ignore:');
+		expect(previewWorkflow).not.toContain('paths-ignore:');
+	});
+
 	it('targets ordinary Dependabot version updates at develop', () => {
 		for (const ecosystem of ['bun', 'github-actions']) {
 			const block = dependabotBlock(ecosystem);

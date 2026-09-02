@@ -4,9 +4,6 @@ on:
     pull_request:
         branches: [develop, main]
         types: [opened, synchronize, reopened]
-        paths-ignore:
-            - 'docs/**'
-            - '.vscode/**'
     push:
         branches: [develop]
 
