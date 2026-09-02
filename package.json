@@ -61,14 +61,14 @@
 		"bundle:visualize": "ANALYZE_BUNDLE=true bun run build && bun run bundle:analyze"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "7.0.7",
+		"@astrojs/mdx": "7.0.8",
 		"@astrojs/rss": "^4.0.19",
 		"@astrojs/sitemap": "^3.7.3",
 		"@tailwindcss/vite": "^4.3.3",
 		"@vercel/analytics": "^2.0.1",
-		"astro": "^7.2.4",
-		"mermaid": "11.16.1",
-		"sharp": "^0.34.4",
+		"astro": "^7.2.9",
+		"mermaid": "11.17.2",
+		"sharp": "^0.35.4",
 		"tailwindcss": "^4.3.3"
 	},
 	"devDependencies": {
@@ -81,7 +81,7 @@
 		"@playwright/test": "1.62.1",
 		"playwright-core": "1.62.1",
 		"@tailwindcss/typography": "^0.5.20",
-		"@types/node": "^26.2.0",
+		"@types/node": "^26.4.0",
 		"@typescript-eslint/eslint-plugin": "^8.67.0",
 		"@typescript-eslint/parser": "^8.67.0",
 		"@vitest/coverage-v8": "^4.1.11",
