@@ -293,13 +293,18 @@ test.describe('navigation brand lockup', () => {
 				nameAnimation: nameStyle?.animationName,
 				nameTransition: nameStyle?.transitionDuration,
 				underlineTransition: underlineStyle?.transitionDuration,
-				hasInlineStyle: element.hasAttribute('style') || Boolean(name?.hasAttribute('style')),
+				hasInlineStyle:
+					element.hasAttribute('style') || Boolean(name?.hasAttribute('style')),
 			};
 		});
 
 		expect(motion.linkAnimation).toBe('none');
 		expect(motion.nameAnimation).toBe('none');
-		for (const duration of [motion.linkTransition, motion.nameTransition, motion.underlineTransition]) {
+		for (const duration of [
+			motion.linkTransition,
+			motion.nameTransition,
+			motion.underlineTransition,
+		]) {
 			const seconds = parseTransitionDurations(duration);
 			expect(seconds.length).toBeGreaterThan(0);
 			expect(Math.max(...seconds)).toBeLessThanOrEqual(0.00001);
