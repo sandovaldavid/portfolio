@@ -5,7 +5,7 @@ const brandAssets = [
 	['/favicon.light.svg', 'image/svg+xml'],
 	['/favicon.dark.svg', 'image/svg+xml'],
 	['/apple-touch-icon.png', 'image/png'],
-	['/og-image.png', 'image/png'],
+	['/og-meta.png', 'image/png'],
 	['/brand/favicon-16-light.svg', 'image/svg+xml'],
 	['/brand/favicon-16-dark.svg', 'image/svg+xml'],
 	['/brand/favicon-32-light.svg', 'image/svg+xml'],
@@ -14,12 +14,8 @@ const brandAssets = [
 	['/brand/favicon-64-dark.svg', 'image/svg+xml'],
 	['/brand/logo-primary-light.svg', 'image/svg+xml'],
 	['/brand/logo-primary-dark.svg', 'image/svg+xml'],
-	['/brand/project-mark-light.svg', 'image/svg+xml'],
-	['/brand/project-mark-dark.svg', 'image/svg+xml'],
 	['/brand/icon-192.png', 'image/png'],
 	['/brand/icon-512.png', 'image/png'],
-	['/brand/watermark-light.svg', 'image/svg+xml'],
-	['/brand/watermark-dark.svg', 'image/svg+xml'],
 ] as const;
 
 const navigationLocales = [
@@ -44,7 +40,7 @@ function parseTransitionDurations(value: string | undefined): number[] {
 }
 
 test.describe('brand identity assets and typography', () => {
-	test('serves the complete light and dark asset matrix', async ({ request }) => {
+	test('serves the canonical Logo v2 light and dark asset matrix', async ({ request }) => {
 		for (const [path, contentType] of brandAssets) {
 			const response = await request.get(path);
 			expect(response.ok(), path).toBe(true);
@@ -66,16 +62,18 @@ test.describe('brand identity assets and typography', () => {
 			).toHaveAttribute('href', '/favicon.dark.svg');
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/og-image.png'
+				'https://sandovaldavid.com/og-meta.png'
 			);
 			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/og-image.png'
+				'https://sandovaldavid.com/og-meta.png'
 			);
 		}
 	});
 
-	test('manifest references the approved default project mark exports', async ({ request }) => {
+	test('manifest references Logo v2 app-icon exports, not the retired project mark', async ({
+		request,
+	}) => {
 		const response = await request.get('/site.webmanifest');
 		expect(response.ok()).toBe(true);
 		const manifest = (await response.json()) as {
@@ -92,6 +90,7 @@ test.describe('brand identity assets and typography', () => {
 				expect.objectContaining({ src: '/brand/icon-512.png', sizes: '512x512' }),
 			])
 		);
+		expect(manifest.icons.some(icon => icon.src.includes('project-mark'))).toBe(false);
 	});
 
 	test('hero display font survives a full reload without falling back', async ({ page }) => {
@@ -121,24 +120,24 @@ test.describe('brand identity assets and typography', () => {
 
 test.describe('navigation brand lockup', () => {
 	for (const locale of navigationLocales) {
-		test(`${locale.path} exposes the localized home signature`, async ({ page }) => {
+		test(`${locale.path} exposes the localized home identity`, async ({ page }) => {
 			await page.setViewportSize({ width: 1280, height: 800 });
 			await installTheme(page, 'dark');
 			await page.goto(locale.path);
 
 			const brandLink = page.locator('header a.brand-logo-link');
-			const signature = brandLink.locator('.brand-logo-signature');
+			const name = brandLink.locator('.brand-logo-name');
 			const mark = brandLink.locator('[data-brand-logo]');
 
 			await expect(brandLink).toBeVisible();
 			await expect(brandLink).toHaveAttribute('aria-label', locale.accessibleName);
 			await expect(brandLink).toHaveCSS('height', '44px');
-			await expect(signature).toBeVisible();
-			await expect(signature).toHaveText('<sandovaldavid/>');
+			await expect(name).toBeVisible();
+			await expect(name).toHaveText('David Sandoval');
 			await expect(mark).toHaveAttribute('src', '/brand/logo-primary-dark.svg');
 			await expect(mark).toHaveAttribute('data-brand-mode', 'dark');
 
-			const typography = await signature.evaluate(element => {
+			const typography = await name.evaluate(element => {
 				const style = getComputedStyle(element);
 				return {
 					fontFamily: style.fontFamily,
@@ -164,13 +163,13 @@ test.describe('navigation brand lockup', () => {
 
 			const header = page.locator('header').first();
 			const brandLink = header.locator('a.brand-logo-link');
-			const signature = brandLink.locator('.brand-logo-signature');
+			const name = brandLink.locator('.brand-logo-name');
 			const mark = brandLink.locator('[data-brand-logo]');
 
 			await expect(mark).toHaveAttribute('src', `/brand/logo-primary-${theme}.svg`);
 			await expect(mark).toHaveAttribute('data-brand-mode', theme);
 
-			const defaultState = await signature.evaluate(element => ({
+			const defaultState = await name.evaluate(element => ({
 				color: getComputedStyle(element).color,
 				underlineTransform: getComputedStyle(element, '::after').transform,
 			}));
@@ -181,7 +180,7 @@ test.describe('navigation brand lockup', () => {
 
 			await brandLink.hover();
 			await page.waitForTimeout(200);
-			const hoverState = await signature.evaluate(element => ({
+			const hoverState = await name.evaluate(element => ({
 				color: getComputedStyle(element).color,
 				underlineTransform: getComputedStyle(element, '::after').transform,
 			}));
@@ -213,12 +212,10 @@ test.describe('navigation brand lockup', () => {
 	}
 
 	for (const viewport of [
-		{ width: 390, signatureVisible: false, mobileMenuVisible: true },
-		// spec/03 Header: tablet/mobile use the compact icon-only lockup, so the
-		// signature is desktop-only (lg and above).
-		{ width: 768, signatureVisible: false, mobileMenuVisible: true },
-		{ width: 1024, signatureVisible: true, mobileMenuVisible: false },
-		{ width: 1440, signatureVisible: true, mobileMenuVisible: false },
+		{ width: 390, nameVisible: false, mobileMenuVisible: true },
+		{ width: 768, nameVisible: false, mobileMenuVisible: true },
+		{ width: 1024, nameVisible: true, mobileMenuVisible: false },
+		{ width: 1440, nameVisible: true, mobileMenuVisible: false },
 	] as const) {
 		test(`stays collision-free at ${viewport.width}px`, async ({ page }) => {
 			await page.setViewportSize({ width: viewport.width, height: 844 });
@@ -226,15 +223,12 @@ test.describe('navigation brand lockup', () => {
 			await page.goto('/');
 
 			const brandLink = page.locator('header a.brand-logo-link');
-			const signature = brandLink.locator('.brand-logo-signature');
+			const name = brandLink.locator('.brand-logo-name');
 			const mobileMenu = page.locator('#mobile-menu-btn');
 			const desktopNav = page.locator('header nav[aria-label="Main navigation"]');
 
-			if (viewport.signatureVisible) {
-				await expect(signature).toBeVisible();
-			} else {
-				await expect(signature).toBeHidden();
-			}
+			if (viewport.nameVisible) await expect(name).toBeVisible();
+			else await expect(name).toBeHidden();
 
 			if (viewport.mobileMenuVisible) {
 				await expect(mobileMenu).toBeVisible();
@@ -266,7 +260,7 @@ test.describe('navigation brand lockup', () => {
 			await installTheme(page, theme);
 			await page.goto('/');
 			const header = page.locator('header').first();
-			await expect(header.locator('.brand-logo-signature')).toBeHidden();
+			await expect(header.locator('.brand-logo-name')).toBeHidden();
 			await expect(header.locator('[data-brand-logo]')).toHaveAttribute(
 				'src',
 				`/brand/logo-primary-${theme}.svg`
@@ -289,26 +283,26 @@ test.describe('navigation brand lockup', () => {
 		const brandLink = page.locator('header a.brand-logo-link');
 		await brandLink.hover();
 		const motion = await brandLink.evaluate(element => {
-			const signature = element.querySelector<HTMLElement>('.brand-logo-signature');
+			const name = element.querySelector<HTMLElement>('.brand-logo-name');
 			const linkStyle = getComputedStyle(element);
-			const signatureStyle = signature ? getComputedStyle(signature) : null;
-			const underlineStyle = signature ? getComputedStyle(signature, '::after') : null;
+			const nameStyle = name ? getComputedStyle(name) : null;
+			const underlineStyle = name ? getComputedStyle(name, '::after') : null;
 			return {
 				linkAnimation: linkStyle.animationName,
 				linkTransition: linkStyle.transitionDuration,
-				signatureAnimation: signatureStyle?.animationName,
-				signatureTransition: signatureStyle?.transitionDuration,
+				nameAnimation: nameStyle?.animationName,
+				nameTransition: nameStyle?.transitionDuration,
 				underlineTransition: underlineStyle?.transitionDuration,
 				hasInlineStyle:
-					element.hasAttribute('style') || Boolean(signature?.hasAttribute('style')),
+					element.hasAttribute('style') || Boolean(name?.hasAttribute('style')),
 			};
 		});
 
 		expect(motion.linkAnimation).toBe('none');
-		expect(motion.signatureAnimation).toBe('none');
+		expect(motion.nameAnimation).toBe('none');
 		for (const duration of [
 			motion.linkTransition,
-			motion.signatureTransition,
+			motion.nameTransition,
 			motion.underlineTransition,
 		]) {
 			const seconds = parseTransitionDurations(duration);

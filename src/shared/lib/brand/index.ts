@@ -1,1 +1,1 @@
-export { renderProjectMark, type BrandMode } from './render-brand-image';
+export { renderAppIcon, type BrandMode } from './render-brand-image';
