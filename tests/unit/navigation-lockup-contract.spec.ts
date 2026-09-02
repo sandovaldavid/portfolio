@@ -4,12 +4,17 @@ import { describe, expect, it } from 'vitest';
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 describe('navigation lockup contract', () => {
-	it('uses the approved assets and removes the legacy terminal animation', () => {
+	it('uses Logo v2 with David Sandoval as the verbal identifier', () => {
 		const source = readSource('src/shared/ui/brand-logo/BrandLogo.astro');
+		const lightLogo = readSource('public/brand/logo-primary-light.svg');
+		const darkLogo = readSource('public/brand/logo-primary-dark.svg');
 
 		expect(source).toContain('src="/brand/logo-primary-dark.svg"');
 		expect(source).toContain('`/brand/logo-primary-${mode}.svg`');
-		expect(source).toContain('&lt;sandovaldavid/&gt;');
+		expect(source).toContain('David Sandoval');
+		expect(source).toContain('brand-logo-name');
+		expect(source).not.toContain('&lt;sandovaldavid/&gt;');
+		expect(source).not.toContain('brand-logo-signature');
 		expect(source).toContain('font-gaming-mono');
 		expect(source).toContain('text-base');
 		expect(source).toContain('leading-[22px]');
@@ -22,6 +27,12 @@ describe('navigation lockup contract', () => {
 		expect(source).toContain('MutationObserver');
 		expect(source).toContain("setAttribute('src', source)");
 		expect(source).not.toContain('sm:w-[210px]');
+
+		for (const logo of [lightLogo, darkLogo]) {
+			expect(logo).toContain('M265.3 50.9');
+			expect(logo).not.toContain('<circle');
+			expect(logo).not.toContain('M190 170L104 256L190 342');
+		}
 
 		for (const forbidden of [
 			'prompt-symbol',

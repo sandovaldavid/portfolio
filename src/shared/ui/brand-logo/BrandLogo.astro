@@ -3,9 +3,9 @@ interface Props {
 	href?: string;
 	accessibleLabel: string;
 	/**
-	 * Lockup presentation. `responsive` (default) keeps the shell contract:
-	 * compact icon-only below lg, full lockup at lg+. `full`/`compact` pin a
-	 * single state for QA surfaces like the Components Showcase.
+	 * Lockup presentation. `responsive` (default) keeps the Figma Header contract:
+	 * compact icon-only below lg, full personal lockup at lg+. `full`/`compact`
+	 * pin a single state for QA surfaces like the Components Showcase.
 	 */
 	variant?: 'responsive' | 'full' | 'compact';
 	class?: string;
@@ -15,7 +15,7 @@ const { href = '/', accessibleLabel, variant = 'responsive', class: className = 
 
 const widthClass =
 	variant === 'full' ? 'w-[250px]' : variant === 'compact' ? 'w-12' : 'w-12 lg:w-[250px]';
-const signatureVisibility =
+const nameVisibility =
 	variant === 'full'
 		? 'inline-block'
 		: variant === 'compact'
@@ -24,9 +24,9 @@ const signatureVisibility =
 ---
 
 <!--
-	Navigation lockup (spec/03 Header + ADR-0008): dedicated navigation link,
-	restrained interaction. Desktop (lg+) full lockup 250x44 px8 py6; tablet/mobile
-	compact 48x44 icon-only. Fixed widths keep focus-geometry insets symmetric.
+	Portfolio / Brand Logo: Logo v2 is the supporting mark and “David Sandoval”
+	is the verbal identifier. Figma keeps a 250x44 full lockup at lg+ and a
+	48x44 icon-only lockup on tablet/mobile. Fixed widths preserve focus geometry.
 -->
 <a
 	{href}
@@ -49,12 +49,11 @@ const signatureVisibility =
 	/>
 	<span
 		class:list={[
-			'brand-logo-signature font-gaming-mono text-base leading-[22px] tracking-[1px]',
-			signatureVisibility,
+			'brand-logo-name font-gaming-mono text-base leading-[22px] tracking-[1px]',
+			nameVisibility,
 		]}
-		aria-hidden="true"
 	>
-		&lt;sandovaldavid/&gt;
+		David Sandoval
 	</span>
 </a>
 
@@ -96,12 +95,12 @@ const signatureVisibility =
 			outline-color 160ms ease;
 	}
 
-	.brand-logo-signature {
+	.brand-logo-name {
 		position: relative;
 		transition: color 160ms ease;
 	}
 
-	.brand-logo-signature::after {
+	.brand-logo-name::after {
 		content: '';
 		position: absolute;
 		left: 0;
@@ -119,8 +118,8 @@ const signatureVisibility =
 		color: var(--channel-accent-primary);
 	}
 
-	.brand-logo-link:hover .brand-logo-signature::after,
-	.brand-logo-link:focus-visible .brand-logo-signature::after {
+	.brand-logo-link:hover .brand-logo-name::after,
+	.brand-logo-link:focus-visible .brand-logo-name::after {
 		transform: scaleX(1);
 	}
 
@@ -130,8 +129,8 @@ const signatureVisibility =
 
 	@media (prefers-reduced-motion: reduce) {
 		.brand-logo-link,
-		.brand-logo-signature,
-		.brand-logo-signature::after {
+		.brand-logo-name,
+		.brand-logo-name::after {
 			transition: none;
 		}
 	}
