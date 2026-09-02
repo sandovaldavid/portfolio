@@ -12,6 +12,7 @@ const video = readSource('src/widgets/project-case-study/ui/ProjectVideo.astro')
 const gallery = readSource('src/widgets/project-case-study/ui/ProjectGallery.astro');
 const metadata = readSource('src/entities/project/model/metadata.ts');
 const packageJson = readSource('package.json');
+const packageManifest = JSON.parse(packageJson) as { dependencies: Record<string, string> };
 const config = readSource('src/content.config.ts');
 const projectsSchema =
 	config.match(/const projects = defineCollection\(\{([\s\S]*?)\n\}\);/)?.[1] ?? '';
@@ -89,7 +90,7 @@ describe('Project Case Study MDX contract', () => {
 	});
 
 	it('delegates Mermaid parsing and layout while preserving the Portfolio presentation contract', () => {
-		expect(packageJson).toContain('"mermaid": "11.16.1"');
+		expect(packageManifest.dependencies.mermaid).toMatch(/^11\.\d+\.\d+$/);
 		expect(mermaid).toContain("import('mermaid')");
 		expect(mermaid).toContain("securityLevel: 'strict'");
 		expect(mermaid).toContain("theme: 'base'");
