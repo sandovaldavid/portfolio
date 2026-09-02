@@ -8,6 +8,7 @@ const codeqlWorkflow = readSource('.github/workflows/codeql.yml');
 const previewWorkflow = readSource('.github/workflows/deploy-preview.yml');
 const mainQualityWorkflow = readSource('.github/workflows/main-quality.yml');
 const productionWorkflow = readSource('.github/workflows/deploy-production.yml');
+const dependabotConfig = readSource('.github/dependabot.yml');
 const deliveryPolicy = readSource('docs/DELIVERY.md');
 const protectionPolicy = readSource('.github/BRANCH_PROTECTION.md');
 
@@ -19,11 +20,29 @@ const requiredChecks = [
 	'Analyze Security',
 ] as const;
 
+const dependabotBlock = (ecosystem: string): string => {
+	const marker = `- package-ecosystem: '${ecosystem}'`;
+	const start = dependabotConfig.indexOf(marker);
+	const next = dependabotConfig.indexOf('\n    - package-ecosystem:', start + marker.length);
+
+	return start === -1 ? '' : dependabotConfig.slice(start, next === -1 ? undefined : next);
+};
+
 describe('develop integration and main promotion policy', () => {
 	it('runs pull-request quality, security and preview workflows for both bases', () => {
 		expect(ciWorkflow).toContain('branches: [develop, main]');
 		expect(codeqlWorkflow).toMatch(/pull_request:\n\s+branches: \[develop, main\]/);
 		expect(previewWorkflow).toContain('branches: [develop, main]');
+	});
+
+	it('targets ordinary Dependabot version updates at develop', () => {
+		for (const ecosystem of ['bun', 'github-actions']) {
+			const block = dependabotBlock(ecosystem);
+			expect(block, ecosystem).not.toBe('');
+			expect(block, ecosystem).toContain("target-branch: 'develop'");
+		}
+
+		expect(dependabotConfig).not.toContain("applies-to: 'security-updates'");
 	});
 
 	it('does not restrict pull requests into main by source branch', () => {
