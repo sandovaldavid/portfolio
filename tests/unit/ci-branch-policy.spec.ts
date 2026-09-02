@@ -20,10 +20,13 @@ const requiredChecks = [
 	'Analyze Security',
 ] as const;
 
-const dependabotBlock = (ecosystem: string): string =>
-	dependabotConfig.match(
-		new RegExp(`- package-ecosystem: '${ecosystem}'([\\s\\S]*?)(?=\\n    - package-ecosystem:|$)`)
-	)?.[1] ?? '';
+const dependabotBlock = (ecosystem: string): string => {
+	const marker = `- package-ecosystem: '${ecosystem}'`;
+	const start = dependabotConfig.indexOf(marker);
+	const next = dependabotConfig.indexOf('\n    - package-ecosystem:', start + marker.length);
+
+	return start === -1 ? '' : dependabotConfig.slice(start, next === -1 ? undefined : next);
+};
 
 describe('develop integration and main promotion policy', () => {
 	it('runs pull-request quality, security and preview workflows for both bases', () => {
