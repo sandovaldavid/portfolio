@@ -1,8 +1,11 @@
 version: 2
 updates:
-    # Bun dependencies managed through package.json and bun.lock
+    # Bun dependencies managed through package.json and bun.lock.
+    # Version updates integrate through develop. With target-branch set,
+    # Dependabot security updates remain default-branch managed by GitHub.
     - package-ecosystem: 'bun'
       directory: '/'
+      target-branch: 'develop'
       schedule:
           interval: 'weekly'
           day: 'monday'
@@ -18,10 +21,6 @@ updates:
       open-pull-requests-limit: 5
       rebase-strategy: 'auto'
       groups:
-          security-updates:
-              applies-to: 'security-updates'
-              patterns:
-                  - '*'
           minor-patch-updates:
               update-types:
                   - 'minor'
@@ -30,9 +29,10 @@ updates:
               update-types:
                   - 'major'
 
-    # GitHub Actions dependencies
+    # GitHub Actions version updates follow the same integration branch.
     - package-ecosystem: 'github-actions'
       directory: '/'
+      target-branch: 'develop'
       schedule:
           interval: 'weekly'
           day: 'monday'
