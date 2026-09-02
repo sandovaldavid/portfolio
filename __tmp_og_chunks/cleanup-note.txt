@@ -1,1 +1,0 @@
-This directory is temporary transfer state and will be removed from the final tree.
