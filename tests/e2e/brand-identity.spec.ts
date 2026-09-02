@@ -5,7 +5,7 @@ const brandAssets = [
 	['/favicon.light.svg', 'image/svg+xml'],
 	['/favicon.dark.svg', 'image/svg+xml'],
 	['/apple-touch-icon.png', 'image/png'],
-	['/og-image.png', 'image/png'],
+	['/og-meta.png', 'image/png'],
 	['/brand/favicon-16-light.svg', 'image/svg+xml'],
 	['/brand/favicon-16-dark.svg', 'image/svg+xml'],
 	['/brand/favicon-32-light.svg', 'image/svg+xml'],
@@ -62,11 +62,11 @@ test.describe('brand identity assets and typography', () => {
 			).toHaveAttribute('href', '/favicon.dark.svg');
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/og-image.png'
+				'https://sandovaldavid.com/og-meta.png'
 			);
 			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/og-image.png'
+				'https://sandovaldavid.com/og-meta.png'
 			);
 		}
 	});
