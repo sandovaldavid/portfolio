@@ -173,12 +173,12 @@ test.describe('Components Showcase contract', () => {
 						page.getByRole('heading', { level: 2, name: shellHeading })
 					).toBeVisible();
 
-					// Both lockups share the same signature DOM for semantic consistency.
-					// The compact variant hides that signature through the BrandLogo contract.
+					// Both lockups share the same name DOM for semantic consistency.
+					// The compact variant hides that name through the BrandLogo contract.
 					const logos = page.locator('main').locator('.brand-logo-link');
 					await expect(logos).toHaveCount(2);
-					await expect(logos.nth(0).locator('.brand-logo-signature')).toBeVisible();
-					await expect(logos.nth(1).locator('.brand-logo-signature')).toBeHidden();
+					await expect(logos.nth(0).locator('.brand-logo-name')).toBeVisible();
+					await expect(logos.nth(1).locator('.brand-logo-name')).toBeHidden();
 
 					await expectNoHorizontalOverflow(page);
 				});
