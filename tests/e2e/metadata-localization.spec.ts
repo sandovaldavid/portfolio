@@ -152,7 +152,10 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 
 		await page.goto('/es/research');
 		expect(await hasJsonLd(page, 'ScholarlyArticle')).toBe(false);
-		await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
+		await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+			'content',
+			'website'
+		);
 		const researchBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
 		expect(JSON.stringify(researchBreadcrumbs)).toContain('Investigación');
 
