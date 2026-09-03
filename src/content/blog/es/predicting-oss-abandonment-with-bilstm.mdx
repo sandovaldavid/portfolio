@@ -1,50 +1,37 @@
 ---
 translationKey: predicting-oss-abandonment-with-bilstm
-title: 'Prediciendo el Abandono de Proyectos OSS Con BiLSTM: Notas de Mi Tesis'
-description: 'Notas iniciales sobre el uso de redes Bidirectional LSTM para predecir cuándo un repositorio open-source está en riesgo de abandono, a partir de series temporales de commits e issues.'
+title: 'Predicción de Abandono OSS con BiLSTM: Notas de una Dirección Anterior de Tesis'
+description: 'Notas históricas de una dirección anterior de tesis que exploraba modelos BiLSTM para predecir abandono OSS. La línea de investigación actual cambió posteriormente.'
 pubDate: 2026-06-18
+updatedDate: 2026-09-03
 tags: ['investigacion', 'machine-learning', 'oss']
 ---
 
+> **Actualización de investigación — septiembre de 2026:** Este artículo documenta una dirección anterior de tesis. Mi investigación actual se trasladó a la remediación de dependencias vulnerables en software de código abierto, y la pregunta y el método todavía se están refinando. Consulta la [página de investigación actual](/es/research).
+
 ## El problema
 
-Los repositorios open-source mueren en silencio. Un proyecto que se veía saludable hace un
-año puede terminar sin mantenedor, sin PRs mergeados, y con una pila creciente de issues de
-seguridad sin atender — y para cuando eso es evidente, otros proyectos ya construyeron
-dependencias sobre él. Mi tesis plantea una pregunta más acotada: ¿podemos predecir el
-riesgo de abandono de forma temprana, directamente desde la serie temporal de actividad de
-un repositorio?
+Los repositorios open-source pueden perder mantenimiento activo de forma gradual. Un proyecto que se veía saludable un año atrás puede terminar con menos contribuciones, resolución más lenta de issues y mayor riesgo de mantenimiento para quienes dependen de él. En ese momento, esta dirección de investigación planteaba una pregunta más acotada: ¿podía predecirse el riesgo de abandono a partir de la serie temporal de actividad de un repositorio?
 
 ## Por qué BiLSTM
 
-La frecuencia de commits, la tasa de resolución de issues y la rotación de contribuidores
-son señales secuenciales — lo que pasó en el mes _t_ depende de lo que pasó en los meses
-anteriores, y el abandono rara vez ocurre en un solo paso. Una **Bidirectional LSTM** lee
-esa secuencia en ambas direcciones, lo cual importa aquí: las señales de alerta temprana
-(un mantenedor que deja de responder, PRs acumulándose sin revisión) se ponderan mejor
-cuando el modelo tiene contexto tanto de antes como de después de un punto dado en los
-datos de entrenamiento.
+La frecuencia de commits, la resolución de issues y los cambios en contribuidores son señales secuenciales. La dirección anterior exploraba si una **Bidirectional LSTM** podía aprovechar esa estructura temporal mejor que modelos basados en snapshots agregados.
+
+Era una hipótesis de modelado para la dirección anterior, no un resultado que yo hubiera establecido.
 
 ## Datos y features
 
-Usando GH Archive como fuente, extraigo series temporales mensuales por repositorio:
+La ruta de datos propuesta utilizaba fuentes de actividad de GitHub para construir series temporales por repositorio, por ejemplo:
 
-- Cantidad de commits y committers únicos
-- Tasas de apertura/cierre de issues
-- Latencia de merge de PRs
-- Un proxy aproximado de "bus factor" a partir de la concentración de contribuidores
+- Actividad de commits y contribuidores únicos
+- Comportamiento de apertura y cierre de issues
+- Actividad de pull requests
+- Proxies de concentración de contribuidores
 
-Los repositorios se etiquetan como abandonados/activos usando heurísticas de umbral de
-actividad sobre la fecha del último commit y la antigüedad de issues abiertos — el mismo
-tipo de señal que los mantenedores ya usan informalmente, solo que hecha explícita.
+El plan era etiquetar repositorios mediante heurísticas de abandono basadas en actividad y comprobar después si la estructura secuencial aportaba señal útil.
 
 ## Comparación con baselines
 
-La BiLSTM se compara contra Regresión Logística y Random Forest sobre las mismas features,
-evaluando con F1 en la clase de abandono (desbalanceada) y AUC-ROC para ranking de riesgo.
-El objetivo no es solo "si el deep learning gana" — es si la estructura _secuencial_ que
-puede explotar la BiLSTM realmente aporta señal sobre modelos que solo ven snapshots
-agregados.
+La comparación propuesta incluía modelos de machine learning más simples junto a la BiLSTM y métricas adecuadas para un problema de clasificación desbalanceado. El objetivo era comprobar si el modelado secuencial agregaba valor, no asumir que deep learning debía ganar.
 
-La metodología completa y los resultados actuales están en la [página de investigación](/es/research) —
-este post tendrá una continuación cuando el entrenamiento converja sobre el dataset completo.
+Esta dirección fue reemplazada posteriormente al refinar el problema de tesis. La [página de investigación actual](/es/research) refleja el trabajo activo y sus límites de evidencia actuales.

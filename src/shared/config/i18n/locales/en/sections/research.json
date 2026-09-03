@@ -1,22 +1,22 @@
 {
 	"sectionTitle": "RESEARCH",
 	"institution": "National University of Piura",
-	"label": "Bachelor thesis",
-	"title": "Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks",
-	"summary": "Applying Bidirectional LSTM neural networks to detect OSS repository abandonment risk from GitHub activity time series and benchmarking the results against traditional machine-learning baselines.",
-	"hypothesisLabel": "HYPOTHESIS",
-	"hypothesisTitle": "BILSTM VS. ML BASELINES",
-	"pipelineTitle": "PIPELINE",
+	"label": "Undergraduate thesis",
+	"title": "Investigating vulnerable-dependency remediation in open source software",
+	"summary": "I’m validating whether historical upstream-maintenance signals add useful information about remediation time after accounting for vulnerability, remediation and consumer-project context.",
+	"hypothesisLabel": "RESEARCH DIRECTION",
+	"hypothesisTitle": "DO UPSTREAM MAINTENANCE SIGNALS ADD USEFUL PREDICTIVE VALUE?",
+	"pipelineTitle": "CURRENT RESEARCH FLOW",
 	"pipeline": {
-		"githubApi": "GITHUB API",
-		"raw": "RAW ACTIVITY",
-		"features": "FEATURES",
-		"sequences": "SEQUENCES",
-		"bilstm": "BILSTM",
-		"classifier": "CLASSIFIER"
+		"literature": "LITERATURE",
+		"openData": "OPEN NPM DATA",
+		"outcome": "OUTCOME RECONSTRUCTION",
+		"signals": "HISTORICAL SIGNALS",
+		"comparison": "INCREMENTAL COMPARISON",
+		"refinement": "REFINE OR REJECT"
 	},
-	"signalsLabel": "SIGNALS MODELED",
-	"techStackLabel": "TECH STACK",
-	"methodologyHint": "Full methodology, architecture and pipeline are available on the research page.",
+	"signalsLabel": "EVIDENCE UNDER STUDY",
+	"techStackLabel": "RESEARCH AREAS",
+	"methodologyHint": "The question and method are still being refined through literature and data-feasibility checks.",
 	"viewFull": "View research"
 }

@@ -72,26 +72,31 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Reactive frontend architecture')).toBeVisible();
+		await expect(page.getByText('Backend correctness and service boundaries')).toBeVisible();
 
 		await page.goto('/es/about');
 		await expect(page).toHaveTitle('Sobre David Sandoval — Ingeniero de Software');
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Arquitectura frontend reactiva')).toBeVisible();
+		await expect(
+			page.getByText('Comportamiento correcto en backend y límites entre servicios')
+		).toBeVisible();
 	});
 
 	for (const scenario of [
 		{
 			route: '/research',
-			title: 'Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks',
-			statusCopy: 'Results will be published upon thesis completion.',
+			title: 'Investigating Vulnerable-Dependency Remediation in Open Source Software',
+			statusCopy:
+				'The thesis direction is still being refined through literature and data-feasibility work.',
 		},
 		{
 			route: '/es/research',
-			title: 'Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuronales BiLSTM',
-			statusCopy: 'Los resultados se publicarán al completar la tesis.',
+			title:
+				'Investigando la Remediación de Dependencias Vulnerables en Software de Código Abierto',
+			statusCopy:
+				'La dirección de tesis todavía se está refinando mediante revisión de literatura y trabajo de factibilidad de datos.',
 		},
 	] as const) {
 		test(`${scenario.route} renders localized research MDX composition`, async ({ page }) => {

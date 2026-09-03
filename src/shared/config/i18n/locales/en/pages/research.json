@@ -1,5 +1,5 @@
 {
-	"pageTitle": "Research — BiLSTM OSS Abandonment | David Sandoval",
-	"pageDescription": "Thesis research: predicting OSS repository abandonment using BiLSTM neural networks, Mining Software Repositories, deep learning and GitHub activity data.",
+	"pageTitle": "Research — Vulnerable-Dependency Remediation | David Sandoval",
+	"pageDescription": "Undergraduate thesis research in progress on whether upstream maintenance history adds useful information about vulnerable-dependency remediation time in open-source software.",
 	"keywordsLabel": "Keywords"
 }

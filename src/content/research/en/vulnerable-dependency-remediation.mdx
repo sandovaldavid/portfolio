@@ -1,0 +1,112 @@
+---
+researchId: vulnerable-dependency-remediation
+locale: en
+label: Undergraduate Thesis
+title: Investigating Vulnerable-Dependency Remediation in Open Source Software
+status: in-progress
+institution: National University of Piura
+featuredSignals:
+    - Vulnerability and remediation context
+    - Consumer remediation history
+    - Upstream maintenance history
+    - Time-to-remediation observations
+keywords:
+    - Software Supply Chain
+    - Vulnerability Remediation
+    - Open Source Software
+    - Mining Software Repositories
+    - Time-to-Event Data
+    - npm
+---
+
+<ResearchSection eyebrow="Current problem" title="REMEDIATION IS MORE THAN SEVERITY">
+
+A vulnerable dependency can be known, severe and still difficult to remediate in a real software project. A fix has to exist, the consumer has to be able to adopt it, and the surrounding maintenance history may affect how quickly that remediation becomes practical.
+
+I am studying that decision space rather than treating vulnerability severity as the whole problem.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Research direction" title="DO UPSTREAM MAINTENANCE SIGNALS ADD USEFUL INFORMATION?">
+
+The direction I am validating is whether historical upstream-maintenance signals add useful predictive information about vulnerable-dependency remediation time **after** accounting for vulnerability, remediation and consumer-project context.
+
+The question is intentionally falsifiable: if upstream history does not add stable value beyond those controls, I do not want to force a more complex model to preserve the idea.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Current method" title="LITERATURE FIRST, THEN DATA FEASIBILITY">
+
+The work is currently focused on literature validation and an open-data feasibility path. The initial pilot is bounded to npm and treats time-to-remediation as a candidate time-to-event outcome where unresolved observations may be censored.
+
+No model family is selected yet. I want the data, outcome definition and competing literature to be defensible before choosing the modeling technique.
+
+</ResearchSection>
+
+<MermaidDiagram
+	title="Current research flow"
+	description="The research moves from literature and open-data feasibility to outcome reconstruction, historical signals, incremental comparison and refinement of the thesis formulation."
+	tones={{ Literature: 'info', Data: 'brand', Outcome: 'success', Signals: 'secondary', Compare: 'warning', Refine: 'danger' }}
+	chart={`flowchart LR
+    Literature["Literature + competitor mapping"] --> Data["Open npm data feasibility"]
+    Data --> Outcome["Remediation outcome reconstruction"]
+    Outcome --> Signals["Historical maintenance signals"]
+    Signals --> Compare["Incremental comparison"]
+    Compare --> Refine["Refine or reject the direction"]`}
+/>
+
+<ResearchEvidenceLayout>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Evidence under study" variant="feature-grid">
+
+- Vulnerability and available-remediation context
+- Consumer-project remediation history
+- Upstream dependency-maintenance history
+- Public timestamps needed to reconstruct remediation time
+- Coverage and censoring of unresolved observations
+- Stability outside the period used to fit a model
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Initial scope">
+
+The feasibility baseline uses **open data** and starts with the **npm ecosystem**. The goal is to find out whether the outcome and historical signals can be reconstructed reproducibly before expanding scope or committing to a model family.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Current status" variant="status">
+
+The thesis direction is still being refined through literature and data-feasibility work. I am treating the current formulation as something to test, not as a conclusion that has to survive.
+
+</ResearchSection>
+
+</ResearchEvidenceColumn>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Decision boundaries" variant="technical-list">
+
+- **Research question:** active direction, not frozen wording
+- **Outcome:** candidate time-to-remediation with censored observations
+- **Model:** deliberately not preselected
+- **Data:** open-data baseline before broader scope
+- **Comparison:** test whether upstream history adds value beyond simpler context
+- **Validation:** prefer stable out-of-time evidence over an impressive in-sample result
+
+</ResearchSection>
+
+<EvaluationCriteria
+	title="Evidence checks"
+	items={[
+		{ label: 'DATA', detail: 'Can remediation opportunities be reconstructed with enough coverage and timestamp quality?' },
+		{ label: 'TIME', detail: 'Do the candidate remediation clocks behave consistently enough to support a defensible outcome?' },
+		{ label: 'SIGNAL', detail: 'Are consumer and upstream maintenance signals observable without temporal leakage?' },
+		{ label: 'VALUE', detail: 'Does upstream maintenance history add stable information beyond simpler context?' },
+	]}
+/>
+
+</ResearchEvidenceColumn>
+
+</ResearchEvidenceLayout>

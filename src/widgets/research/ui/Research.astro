@@ -1,8 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import PythonIcon from '@assets/technologies/Python.astro';
 import { getResearchContent } from '@entities/research';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
@@ -11,19 +9,19 @@ const lang = getLanguageFromLocale(Astro.currentLocale);
 const tResearch = createScopedUiTranslator(lang, 'sections.research');
 const tCommon = createScopedUiTranslator(lang, 'common');
 const research = await getResearchContent(lang);
-const techStack = [
-	{ label: 'BiLSTM' },
-	{ label: 'Python', icon: PythonIcon },
-	{ label: 'TensorFlow' },
-	{ label: 'GitHub API', icon: GitHubIcon },
+const researchAreas = [
+	'Software Supply Chain',
+	'OSS Security',
+	'Mining Software Repositories',
+	'Open Data',
 ];
 const pipeline = [
-	tResearch('pipeline.githubApi'),
-	tResearch('pipeline.raw'),
-	tResearch('pipeline.features'),
-	tResearch('pipeline.sequences'),
-	tResearch('pipeline.bilstm'),
-	tResearch('pipeline.classifier'),
+	tResearch('pipeline.literature'),
+	tResearch('pipeline.openData'),
+	tResearch('pipeline.outcome'),
+	tResearch('pipeline.signals'),
+	tResearch('pipeline.comparison'),
+	tResearch('pipeline.refinement'),
 ];
 const modeledSignals = research.featuredSignals;
 ---
@@ -138,9 +136,9 @@ const modeledSignals = research.featuredSignals;
 			</p>
 			<ul class="flex flex-wrap gap-2" data-research-tech-stack>
 				{
-					techStack.map(tag => (
+					researchAreas.map(label => (
 						<li>
-							<TechPill label={tag.label} icon={tag.icon} size="md" variant="stack" />
+							<TechPill {label} size="md" variant="stack" />
 						</li>
 					))
 				}

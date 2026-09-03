@@ -1,0 +1,112 @@
+---
+researchId: vulnerable-dependency-remediation
+locale: es
+label: Tesis de Pregrado
+title: Investigando la Remediación de Dependencias Vulnerables en Software de Código Abierto
+status: in-progress
+institution: Universidad Nacional de Piura
+featuredSignals:
+    - Contexto de vulnerabilidad y remediación
+    - Historial de remediación del proyecto consumidor
+    - Historial de mantenimiento del upstream
+    - Observaciones de tiempo hasta la remediación
+keywords:
+    - Cadena de Suministro de Software
+    - Remediación de Vulnerabilidades
+    - Software de Código Abierto
+    - Mining Software Repositories
+    - Datos Time-to-Event
+    - npm
+---
+
+<ResearchSection eyebrow="Problema actual" title="REMEDIAR ES MÁS QUE CONOCER LA SEVERIDAD">
+
+Una dependencia vulnerable puede ser conocida, severa y aun así resultar difícil de remediar en un proyecto real. Debe existir una corrección, el proyecto consumidor tiene que poder adoptarla y el historial de mantenimiento alrededor de esa dependencia puede influir en cuánto tarda esa remediación en volverse viable.
+
+Estoy estudiando ese espacio de decisión en lugar de tratar la severidad de la vulnerabilidad como todo el problema.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Dirección de investigación" title="¿LAS SEÑALES DE MANTENIMIENTO UPSTREAM APORTAN INFORMACIÓN ÚTIL?">
+
+La dirección que estoy validando es si las señales históricas de mantenimiento del upstream aportan información predictiva útil sobre el tiempo de remediación de una dependencia vulnerable **después** de considerar el contexto de la vulnerabilidad, la remediación y el proyecto consumidor.
+
+La pregunta está planteada para poder ser refutada: si el historial upstream no aporta valor estable sobre esos controles, no quiero forzar un modelo más complejo solo para conservar la idea.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Método actual" title="PRIMERO LITERATURA, DESPUÉS FACTIBILIDAD DE DATOS">
+
+El trabajo está concentrado ahora en validar la literatura y una ruta de factibilidad con datos abiertos. El piloto inicial está acotado a npm y trata el tiempo hasta la remediación como un outcome candidato de tipo time-to-event, donde las observaciones no resueltas pueden quedar censuradas.
+
+Todavía no he seleccionado una familia de modelos. Prefiero que los datos, la definición del outcome y la literatura competidora sean defendibles antes de elegir la técnica de modelado.
+
+</ResearchSection>
+
+<MermaidDiagram
+	title="Flujo actual de investigación"
+	description="La investigación avanza desde literatura y factibilidad con datos abiertos hacia reconstrucción del outcome, señales históricas, comparación incremental y refinamiento de la formulación de tesis."
+	tones={{ Literature: 'info', Data: 'brand', Outcome: 'success', Signals: 'secondary', Compare: 'warning', Refine: 'danger' }}
+	chart={`flowchart LR
+    Literature["Literatura + mapa de competidores"] --> Data["Factibilidad con datos abiertos de npm"]
+    Data --> Outcome["Reconstrucción del outcome de remediación"]
+    Outcome --> Signals["Señales históricas de mantenimiento"]
+    Signals --> Compare["Comparación incremental"]
+    Compare --> Refine["Refinar o descartar la dirección"]`}
+/>
+
+<ResearchEvidenceLayout>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Evidencia bajo estudio" variant="feature-grid">
+
+- Contexto de la vulnerabilidad y de la remediación disponible
+- Historial de remediación del proyecto consumidor
+- Historial de mantenimiento de dependencias del upstream
+- Timestamps públicos necesarios para reconstruir el tiempo de remediación
+- Cobertura y censura de observaciones no resueltas
+- Estabilidad fuera del periodo utilizado para ajustar un modelo
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Alcance inicial">
+
+La línea base de factibilidad utiliza **datos abiertos** y comienza con el **ecosistema npm**. El objetivo es saber si el outcome y las señales históricas pueden reconstruirse de forma reproducible antes de ampliar el alcance o comprometer la tesis con una familia de modelos.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Estado actual" variant="status">
+
+La dirección de tesis todavía se está refinando mediante revisión de literatura y trabajo de factibilidad de datos. Estoy tratando la formulación actual como algo que debe superar pruebas, no como una conclusión que tenga que sobrevivir.
+
+</ResearchSection>
+
+</ResearchEvidenceColumn>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Límites de decisión" variant="technical-list">
+
+- **Pregunta de investigación:** dirección activa, redacción aún no congelada
+- **Outcome:** tiempo hasta la remediación como candidato, con observaciones censuradas
+- **Modelo:** deliberadamente no preseleccionado
+- **Datos:** línea base con fuentes abiertas antes de ampliar el alcance
+- **Comparación:** comprobar si el historial upstream aporta valor más allá de un contexto más simple
+- **Validación:** priorizar evidencia estable fuera del periodo de ajuste sobre un resultado llamativo in-sample
+
+</ResearchSection>
+
+<EvaluationCriteria
+	title="Comprobaciones de evidencia"
+	items={[
+		{ label: 'DATOS', detail: '¿Se pueden reconstruir oportunidades de remediación con suficiente cobertura y calidad temporal?' },
+		{ label: 'TIEMPO', detail: '¿Los clocks candidatos de remediación son suficientemente consistentes para definir un outcome defendible?' },
+		{ label: 'SEÑAL', detail: '¿Las señales de mantenimiento del consumidor y del upstream son observables sin leakage temporal?' },
+		{ label: 'VALOR', detail: '¿El historial de mantenimiento upstream aporta información estable más allá de un contexto más simple?' },
+	]}
+/>
+
+</ResearchEvidenceColumn>
+
+</ResearchEvidenceLayout>

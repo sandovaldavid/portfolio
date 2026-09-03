@@ -1,7 +1,7 @@
 {
 	"name": "David Sandoval — Portfolio",
 	"short_name": "David Sandoval",
-	"description": "Portfolio of David Sandoval, Software Engineer specialized in .NET 8, Angular 19 and BiLSTM neural networks research.",
+	"description": "Portfolio of David Sandoval, a backend-oriented Software Engineer with hands-on frontend experience, selected engineering work, technical writing and ongoing research.",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",
@@ -28,7 +28,7 @@
 		{
 			"name": "Research",
 			"url": "/research",
-			"description": "BiLSTM OSS Abandonment research"
+			"description": "Current thesis research on vulnerable-dependency remediation in open-source software"
 		},
 		{
 			"name": "Projects",

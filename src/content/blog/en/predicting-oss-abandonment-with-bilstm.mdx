@@ -1,47 +1,37 @@
 ---
 translationKey: predicting-oss-abandonment-with-bilstm
-title: 'Predicting OSS Abandonment With BiLSTM: Notes From My Thesis'
-description: 'Early notes on using Bidirectional LSTM networks to predict when an open-source repository is at risk of abandonment, from commit and issue activity time series.'
+title: 'Predicting OSS Abandonment With BiLSTM: Notes From an Earlier Thesis Direction'
+description: 'Historical notes from an earlier thesis direction that explored BiLSTM models for OSS abandonment prediction. The current research direction has since changed.'
 pubDate: 2026-06-18
+updatedDate: 2026-09-03
 tags: ['research', 'machine-learning', 'oss']
 ---
 
+> **Research update — September 2026:** This post documents an earlier thesis direction. My current research has moved to vulnerable-dependency remediation in open-source software, and the research question and method are still being refined. See the [current research page](/research).
+
 ## The problem
 
-Open-source repositories die quietly. A project that looked healthy a year ago can end up
-with no maintainer, no merged PRs, and a growing pile of unaddressed security issues — and
-by the time that's obvious, dependents have already built on top of it. My thesis asks a
-narrower question: can we predict abandonment risk early, directly from a repository's
-activity time series?
+Open-source repositories can lose active maintenance gradually. A project that looked healthy a year ago can end up with fewer contributions, slower issue resolution and growing maintenance risk for downstream users. At the time, this research direction asked a narrower question: could abandonment risk be predicted from a repository's activity time series?
 
 ## Why BiLSTM
 
-Commit frequency, issue resolution rate, and contributor churn are all sequential signals —
-what happened in month _t_ depends on what happened in months before it, and abandonment
-rarely happens in a single step. A **Bidirectional LSTM** reads that sequence in both
-directions, which matters here: early warning signs (a maintainer going quiet, PRs piling
-up unreviewed) are easier to weigh correctly when the model has context from both before
-_and_ after a given point in training data.
+Commit frequency, issue resolution rate, and contributor churn are sequential signals. The earlier direction explored whether a **Bidirectional LSTM** could use that sequence structure more effectively than models based on aggregated snapshots.
+
+That was a modeling hypothesis for the previous direction, not a result I established.
 
 ## Data & features
 
-Using GH Archive as the source, I extract per-repository monthly time series:
+The proposed data path used GitHub activity sources to construct per-repository time series such as:
 
-- Commit count and unique committers
-- Issue open/close rates
-- PR merge latency
-- A rough "bus factor" proxy from contributor concentration
+- Commit activity and unique contributors
+- Issue open/close behavior
+- Pull-request activity
+- Contributor concentration proxies
 
-Repositories are labeled abandoned/active using activity-threshold heuristics on
-last-contribution date and open-issue aging — the same kind of signal maintainers already
-use informally, just made explicit.
+The plan was to label repositories using activity-based abandonment heuristics and then test whether sequential structure added useful signal.
 
 ## Baseline comparison
 
-The BiLSTM is benchmarked against Logistic Regression and Random Forest on the same
-features, evaluated with F1 on the (imbalanced) abandonment class and AUC-ROC for ranking
-risk. The goal isn't just "does deep learning win" — it's whether the _sequence_ structure
-the BiLSTM can exploit actually adds signal over models that only see aggregated snapshots.
+The proposed comparison used simpler machine-learning baselines alongside the BiLSTM and evaluation metrics appropriate for an imbalanced classification problem. The aim was to test whether sequence-aware modeling added value, not to assume that deep learning would win.
 
-Full methodology and current results are on the [research page](/research) — this post will
-get a follow-up once training converges on the full dataset.
+This direction was later superseded as the thesis problem was refined. The [current research page](/research) reflects the active work and its present evidence boundaries.

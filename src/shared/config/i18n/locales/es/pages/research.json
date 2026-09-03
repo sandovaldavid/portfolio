@@ -1,5 +1,5 @@
 {
-	"pageTitle": "Investigación — Abandono OSS con BiLSTM | David Sandoval",
-	"pageDescription": "Investigación de tesis sobre predicción del abandono de repositorios OSS mediante redes neuronales BiLSTM, minería de repositorios y datos de actividad de GitHub.",
+	"pageTitle": "Investigación — Remediación de Dependencias Vulnerables | David Sandoval",
+	"pageDescription": "Investigación de tesis de pregrado en curso sobre si el historial de mantenimiento upstream aporta información útil sobre el tiempo de remediación de dependencias vulnerables en software de código abierto.",
 	"keywordsLabel": "Palabras clave"
 }

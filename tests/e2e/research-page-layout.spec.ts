@@ -43,11 +43,11 @@ const VIEWPORTS: ResearchViewport[] = [
 const ROUTES = [
 	{
 		route: '/research',
-		title: 'Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks',
+		title: 'Investigating Vulnerable-Dependency Remediation in Open Source Software',
 	},
 	{
 		route: '/es/research',
-		title: 'Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuronales BiLSTM',
+		title: 'Investigando la Remediación de Dependencias Vulnerables en Software de Código Abierto',
 	},
 ] as const;
 

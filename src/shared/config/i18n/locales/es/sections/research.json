@@ -1,22 +1,22 @@
 {
 	"sectionTitle": "INVESTIGACIÓN",
 	"institution": "Universidad Nacional de Piura",
-	"label": "Tesis de grado",
-	"title": "Predicción del estado de abandono de repositorios OSS mediante redes neuronales BiLSTM",
-	"summary": "Aplico redes neuronales LSTM bidireccionales para detectar el riesgo de abandono de repositorios OSS mediante series temporales de actividad de GitHub y comparar los resultados con modelos tradicionales de machine learning.",
-	"hypothesisLabel": "HIPÓTESIS",
-	"hypothesisTitle": "BILSTM VS. BASELINES DE ML",
-	"pipelineTitle": "PIPELINE",
+	"label": "Tesis de pregrado",
+	"title": "Investigando la remediación de dependencias vulnerables en software de código abierto",
+	"summary": "Estoy validando si las señales históricas de mantenimiento del upstream aportan información útil sobre el tiempo de remediación después de considerar el contexto de la vulnerabilidad, la remediación y el proyecto consumidor.",
+	"hypothesisLabel": "DIRECCIÓN DE INVESTIGACIÓN",
+	"hypothesisTitle": "¿LAS SEÑALES DE MANTENIMIENTO UPSTREAM APORTAN VALOR PREDICTIVO ÚTIL?",
+	"pipelineTitle": "FLUJO ACTUAL DE INVESTIGACIÓN",
 	"pipeline": {
-		"githubApi": "GITHUB API",
-		"raw": "DATOS CRUDOS DE ACTIVIDAD",
-		"features": "CARACTERÍSTICAS",
-		"sequences": "SECUENCIAS",
-		"bilstm": "BILSTM",
-		"classifier": "CLASIFICADOR"
+		"literature": "LITERATURA",
+		"openData": "DATOS ABIERTOS DE NPM",
+		"outcome": "RECONSTRUCCIÓN DEL OUTCOME",
+		"signals": "SEÑALES HISTÓRICAS",
+		"comparison": "COMPARACIÓN INCREMENTAL",
+		"refinement": "REFINAR O DESCARTAR"
 	},
-	"signalsLabel": "SEÑALES MODELADAS",
-	"techStackLabel": "STACK TECNOLÓGICO",
-	"methodologyHint": "Metodología, arquitectura y pipeline completos en la página de investigación.",
+	"signalsLabel": "EVIDENCIA BAJO ESTUDIO",
+	"techStackLabel": "ÁREAS DE INVESTIGACIÓN",
+	"methodologyHint": "La pregunta y el método todavía se están refinando mediante literatura y comprobaciones de factibilidad de datos.",
 	"viewFull": "Ver investigación"
 }

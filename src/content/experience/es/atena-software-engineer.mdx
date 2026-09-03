@@ -4,38 +4,44 @@ locale: es
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Ene 2026 – Presente
-summary: Rol actual que combina modernización en Angular, flujos de reporting en .NET, integración tipada con SQL Server y seguridad ante regresiones.
+summary: Trabajo profesional sobre software fintech existente, con orientación backend hacia correctness, autorización, contratos entre sistemas, debugging y validación, junto con participación práctica en frontend.
 achievements:
-    - Reemplacé cadenas complejas de RxJS con Angular 19 Signals en dashboards existentes, centralizando el estado reactivo y eliminando suscripciones redundantes
-    - Optimicé APIs Web en C# (.NET 8) y consultas de Entity Framework Core con proyecciones y AsNoTracking para evitar carga innecesaria de datos en flujos de reporting
-    - Desarrollé funcionalidades end-to-end que conectan stored procedures de SQL Server con componentes Angular tipados mediante servicios .NET, interfaces TypeScript y DTOs
-    - Agregué pruebas unitarias para servicios de lógica de negocio y las integré en flujos CI/CD existentes para reforzar las verificaciones automatizadas de regresión
+    - Investigué defectos más allá del síntoma reportado, siguiendo supuestos modificados a través de los consumidores afectados y evitando defaults plausibles cuando la ambigüedad podía ocultar comportamiento incorrecto
+    - Trabajé sobre autorización con alcance por tenant y semántica fail-closed, distinguiendo restricciones ausentes de un conjunto permitido explícitamente vacío y revisando los puntos de enforcement
+    - Implementé cambios que cruzaron contratos de backend, frontend y servicios, revisando consumidores afectados y el orden de despliegue cuando la compatibilidad dependía de la secuencia
+    - Usé strictness de TypeScript, análisis estático y pruebas de regresión dirigidas para encontrar consumidores afectados y validar el comportamiento modificado
 ---
 
 <ExperienceSection
-	eyebrow="CONTEXTO DEL ROL"
-	title="Trabajo a través de un flujo tipado .NET + Angular"
+	eyebrow="CÓMO TRABAJO"
+	title="El software existente cambia el problema de debugging"
 	layout="split"
 >
 	<ExperiencePanel
-		eyebrow="MODERNIZACIÓN FRONTEND"
-		title="Estado reactivo sin proliferación de suscripciones"
+		eyebrow="CORRECTNESS"
+		title="Rastrear el supuesto, no solo el síntoma"
 		emphasis
 	>
-		Modernizo dashboards existentes en Angular reemplazando cadenas difíciles de RxJS por estado
-		basado en Signals, haciendo que el flujo de datos sea más sencillo de razonar y mantener.
+		Cuando cambia un supuesto del dominio, sigo los callers y consumidores que dependían del
+		comportamiento anterior. Un default determinista no es automáticamente una respuesta segura;
+		si el dominio es ambiguo, prefiero hacer explícita esa ambigüedad antes que devolver algo
+		plausible pero incorrecto.
 	</ExperiencePanel>
-	<ExperiencePanel eyebrow="BACKEND + DATOS" title="Flujos de reporting con contratos explícitos">
-		Trabajo con .NET 8, Entity Framework Core y SQL Server, conectando stored procedures y
-		servicios con interfaces TypeScript y DTOs tipados en Angular.
+	<ExperiencePanel eyebrow="LÍMITES" title="Autorización y contratos necesitan semántica explícita">
+		Trabajo sobre autorización con alcance por tenant y límites de integración donde “sin
+		restricción” y “un conjunto permitido explícitamente vacío” no pueden significar lo mismo. Los
+		cambios entre servicios también requieren revisar consumidores y orden de despliegue cuando la
+		compatibilidad cruza repositorios.
 	</ExperiencePanel>
 </ExperienceSection>
 
 <ExperienceSection
-	eyebrow="DISCIPLINA DE ENTREGA"
-	title="La seguridad ante regresiones forma parte del cambio"
+	eyebrow="VALIDACIÓN"
+	title="Una comprobación útil debe poder demostrar que la corrección falla"
 	surface="highlight"
 >
-	Las pruebas unitarias de servicios de lógica de negocio se integran en el flujo CI/CD existente
-	para que la validación acompañe al cambio en lugar de tratarse como una fase separada.
+	Uso feedback del compilador y del sistema de tipos, análisis estático y pruebas dirigidas para
+	encontrar el alcance real de un cambio, no como gates decorativos. Cuando una regresión importa,
+	quiero que la prueba vuelva a fallar si se reintroduce el comportamiento anterior. Y cuando nueva
+	evidencia cambia mi diagnóstico, corrijo la conclusión en lugar de defender la primera explicación.
 </ExperienceSection>

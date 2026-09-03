@@ -3,25 +3,25 @@
 	"locale": "es",
 	"seo": {
 		"title": "Sobre David Sandoval — Ingeniero de Software",
-		"description": "Conoce cómo David Sandoval aborda la ingeniería de software a través de sistemas backend, productos web, pruebas, developer tooling e investigación aplicada."
+		"description": "Conoce a David Sandoval, ingeniero de software con orientación backend, experiencia frontend práctica, proyectos verificables, escritura técnica e investigación en curso."
 	},
-	"summary": "Ingeniero de software orientado a backend con experiencia frontend. Conecto decisiones técnicas con el contexto de negocio, construyo productos web mantenibles y valido los cambios mediante pruebas y workflows reproducibles.",
+	"summary": "Soy ingeniero de software con orientación backend y experiencia práctica en frontend. Me importa entender el dominio, hacer explícitas las decisiones técnicas y validar el comportamiento que realmente importa.",
 	"biography": [
-		"Ingeniero de software orientado a backend con experiencia frontend en .NET, Angular y TypeScript. Valoro una arquitectura clara cuando reduce riesgos de entrega, no como un objetivo por sí misma.",
-		"Mi experiencia profesional incluye modernización de módulos frontend, contribución en APIs REST, mejoras en flujos de datos y reporting, ampliación de cobertura de regresión automatizada y apoyo en migraciones desde sistemas legacy. Documento decisiones, trade-offs y validación para que la ingeniería detrás del trabajo sea más fácil de comprender.",
-		"En paralelo al desarrollo de productos, investigo Mining Software Repositories y el uso de modelos BiLSTM para estudiar el abandono de proyectos OSS, actualmente en desarrollo para obtener mi título profesional. Esta investigación es una especialización secundaria que complementa mi trabajo en ingeniería de software."
+		"Soy ingeniero de software con orientación backend y experiencia frontend significativa. Disfruto el trabajo donde entender el dominio y rastrear supuestos importa tanto como elegir la implementación.",
+		"En Atena trabajo sobre software fintech existente, cruzando límites de backend y frontend. Esa experiencia me ha enseñado a mirar más allá del síntoma reportado: seguir supuestos a través de los consumidores afectados, revisar autorización y límites entre servicios, usar feedback del sistema de tipos y análisis estático para encontrar impacto, y validar correcciones con pruebas dirigidas. Cuando nueva evidencia cambia el diagnóstico, corrijo la conclusión en lugar de defender la primera explicación.",
+		"Fuera del trabajo construyo y documento proyectos de ingeniería y continúo con investigación de pregrado. Actualmente estoy validando una dirección de tesis sobre remediación de dependencias vulnerables en software de código abierto; la pregunta y el método todavía se están refinando antes de comprometerme con un modelo."
 	],
 	"focusAreas": [
-		"Sistemas backend mantenibles y límites de API",
-		"Arquitectura frontend reactiva",
-		"Desarrollo web con contratos tipados",
-		"Pruebas automatizadas y quality gates en CI",
-		"Ingeniería orientada a negocio y validación",
-		"Developer tooling y documentación técnica"
+		"Comportamiento correcto en backend y límites entre servicios",
+		"Hardening frontend y contratos tipados",
+		"Autorización y comportamiento fail-closed",
+		"Debugging y rastreo de supuestos",
+		"Validación automatizada y seguridad ante regresiones",
+		"Herramientas para desarrollo y documentación técnica"
 	],
-	"availabilityStatement": "Disponible para oportunidades remotas de ingeniería de software, incluyendo relocation internacional o posgrado como parte de mi crecimiento profesional.",
-	"location": "Perú (UTC-5)",
-	"workMode": "Remoto desde Perú",
-	"researchSummary": "Investigación sobre predicción de abandono OSS mediante modelos BiLSTM y datos de actividad de repositorios, como parte de mi tesis en desarrollo.",
-	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer, orientado a backend con experiencia frontend en Angular y .NET. Mi enfoque es entregar software mantenible, validar los cambios y documentar las decisiones técnicas."
+	"availabilityStatement": "Disponible para oportunidades en ingeniería de software, incluyendo trabajo remoto internacional, reubicación y estudios de posgrado.",
+	"location": "Piura, Perú",
+	"workMode": "Remoto",
+	"researchSummary": "Estoy validando una dirección de tesis de pregrado sobre remediación de dependencias vulnerables en software de código abierto; la pregunta y el método siguen refinándose con literatura y trabajo de factibilidad de datos.",
+	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer. Mi trabajo tiene orientación backend con participación práctica en frontend, con énfasis en correctness, autorización, límites de integración, debugging y validación sobre software existente."
 }

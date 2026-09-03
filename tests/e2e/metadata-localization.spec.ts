@@ -144,8 +144,13 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(devlog, 'datePublished')).toBeTruthy();
 
 		await page.goto('/es/research');
-		const research = await getJsonLd(page, 'ScholarlyArticle');
-		expect(getString(research, 'inLanguage')).toBe('es');
+		const researchSchemas = await page
+			.locator('script[type="application/ld+json"]')
+			.allTextContents();
+		const parsedResearchSchemas = researchSchemas.map(schema => JSON.parse(schema) as JsonLd);
+		expect(parsedResearchSchemas.some(schema => schema['@type'] === 'ScholarlyArticle')).toBe(false);
+		const researchBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
+		expect(JSON.stringify(researchBreadcrumbs)).toContain('Investigación');
 
 		await page.goto('/es/projects/yukidoke');
 		const project = await getJsonLd(page, 'SoftwareSourceCode');

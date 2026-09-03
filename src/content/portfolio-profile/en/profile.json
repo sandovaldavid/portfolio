@@ -3,25 +3,25 @@
 	"locale": "en",
 	"seo": {
 		"title": "About David Sandoval — Software Engineer",
-		"description": "Learn how David Sandoval approaches software engineering across backend systems, web products, testing, developer tooling and applied research."
+		"description": "Meet David Sandoval, a backend-oriented Software Engineer with hands-on frontend experience, project evidence, technical writing and ongoing research."
 	},
-	"summary": "Backend-oriented Software Engineer with frontend experience. I connect technical decisions with business context, build maintainable web products and validate changes through testing and reproducible workflows.",
+	"summary": "I’m a backend-oriented Software Engineer with hands-on frontend experience. I care about understanding the domain, making technical decisions explicit and validating the behavior that matters.",
 	"biography": [
-		"Backend-oriented Software Engineer with frontend experience across .NET, Angular and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
-		"My professional work includes modernizing frontend modules, contributing to REST APIs, improving data and reporting workflows, expanding automated regression coverage and supporting migrations from legacy systems. I document project decisions, trade-offs and validation so the engineering behind the work is easier to understand.",
-		"Alongside product engineering, I research Mining Software Repositories and the use of BiLSTM models to study OSS project abandonment, currently in progress toward my professional degree. This research is a secondary specialization that complements my software-engineering work."
+		"I’m a backend-oriented Software Engineer with meaningful frontend experience. I enjoy work where understanding the domain and tracing assumptions matters as much as choosing the implementation.",
+		"At Atena, I work on existing fintech software across backend and frontend boundaries. The work has taught me to look beyond the reported symptom: trace assumptions through affected consumers, check authorization and service boundaries, use type-system and static-analysis feedback to find impact, and validate fixes with targeted tests. When new evidence changes the diagnosis, I update the conclusion instead of defending the first explanation.",
+		"Outside work, I build and document engineering projects and continue undergraduate research. I’m currently validating a thesis direction around vulnerable-dependency remediation in open-source software; the research question and method are still being refined before I commit to a model."
 	],
 	"focusAreas": [
-		"Maintainable backend systems and API boundaries",
-		"Reactive frontend architecture",
-		"Type-safe web application development",
-		"Automated testing and CI quality gates",
-		"Business-aware, validation-driven engineering",
+		"Backend correctness and service boundaries",
+		"Frontend hardening and typed contracts",
+		"Authorization and fail-closed behavior",
+		"Debugging and assumption tracing",
+		"Automated validation and regression safety",
 		"Developer tooling and technical documentation"
 	],
-	"availabilityStatement": "Open to remote software engineering opportunities, including international relocation or graduate study as part of ongoing career growth.",
-	"location": "Peru (UTC-5)",
-	"workMode": "Remote from Peru",
-	"researchSummary": "Researching OSS abandonment prediction with BiLSTM models and repository activity data as part of ongoing thesis work.",
-	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer, backend-oriented with frontend experience across Angular and .NET. My focus is maintainable delivery, validated changes and clear technical documentation."
+	"availabilityStatement": "Open to software engineering opportunities, including international remote roles, relocation and postgraduate paths.",
+	"location": "Piura, Peru",
+	"workMode": "Remote",
+	"researchSummary": "I’m validating an undergraduate thesis direction on vulnerable-dependency remediation in open-source software, with the question and method still being refined through literature and data-feasibility work.",
+	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer. My work is backend-oriented with hands-on frontend delivery, with an emphasis on correctness, authorization, integration boundaries, debugging and validation in existing software."
 }
