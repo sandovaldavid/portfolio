@@ -13,6 +13,13 @@ async function getJsonLd(page: Page, type: string): Promise<JsonLd> {
 	return match ?? {};
 }
 
+async function hasJsonLd(page: Page, type: string): Promise<boolean> {
+	const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+	return schemas
+		.map(schema => JSON.parse(schema) as JsonLd)
+		.some(schema => schema['@type'] === type);
+}
+
 function getString(schema: JsonLd, key: string): string {
 	const value = schema[key];
 	expect(typeof value, `Expected ${key} to be a string`).toBe('string');
@@ -97,7 +104,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'en',
 			title: 'David Sandoval — Software Engineer',
 			description:
-				'Software Engineer building maintainable web products and backend systems with clear technical decisions, automated validation and documented trade-offs. Remote from Peru, open to international opportunities.',
+				'Backend-oriented Software Engineer with hands-on frontend experience, working through assumptions, system boundaries, debugging and validation to build maintainable software. Remote from Peru and open to international opportunities.',
 			ogLocale: 'en_US',
 			alternateOgLocale: 'es_PE',
 			imageAlt: 'David Sandoval portfolio preview',
@@ -111,7 +118,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'es',
 			title: 'David Sandoval — Ingeniero de Software',
 			description:
-				'Ingeniero de software que construye productos web y sistemas backend mantenibles con decisiones técnicas claras, validación automatizada y trade-offs documentados. Remoto desde Perú, disponible para oportunidades internacionales.',
+				'Ingeniero de software orientado a backend con experiencia práctica en frontend, enfocado en supuestos, límites del sistema, debugging y validación para construir software mantenible. Remoto desde Perú y disponible para oportunidades internacionales.',
 			ogLocale: 'es_PE',
 			alternateOgLocale: 'en_US',
 			imageAlt: 'Vista previa del portafolio de David Sandoval',
@@ -144,8 +151,10 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(devlog, 'datePublished')).toBeTruthy();
 
 		await page.goto('/es/research');
-		const research = await getJsonLd(page, 'ScholarlyArticle');
-		expect(getString(research, 'inLanguage')).toBe('es');
+		expect(await hasJsonLd(page, 'ScholarlyArticle')).toBe(false);
+		await expect(page.locator('meta[property="og:type"]')).toHaveAttribute('content', 'website');
+		const researchBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
+		expect(JSON.stringify(researchBreadcrumbs)).toContain('Investigación');
 
 		await page.goto('/es/projects/yukidoke');
 		const project = await getJsonLd(page, 'SoftwareSourceCode');
@@ -162,10 +171,12 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 
 		expect(getString(profile, 'inLanguage')).toBe('es');
 		expect(getString(profile, 'description')).toContain(
-			'Conoce cómo David Sandoval aborda la ingeniería de software'
+			'Cómo trabaja David Sandoval entre ingeniería de producto orientada a backend'
 		);
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
-		expect(getString(person, 'description')).toContain('sistemas backend mantenibles');
+		expect(getString(person, 'description')).toContain(
+			'orientado a backend con experiencia práctica en frontend'
+		);
 	});
 
 	test('canonical alternate targets resolve for representative route families', async ({
