@@ -23,7 +23,7 @@ describe('Identity System shared iconography contract', () => {
 		expect(icons.arrowLeft).toContain('M10 19l-7-7');
 		expect(icons.arrowRight).toContain('M14 5l7 7');
 		expect(icons.arrowUpRight).toContain('M7 17L17 7');
-		expect(icons.chevronRight).toContain('M9 18l6-6-6-6');
+		expect(icons.chevronRight).toContain('M9 18L15 12L9 6');
 		expect(icons.home).toContain('M3 12l2-2');
 		expect(icons.menu).toContain('M4 6l16 0');
 		expect(icons.code).toContain('M7 8l-4 4l4 4');
