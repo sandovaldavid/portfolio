@@ -17,7 +17,11 @@ achievements:
 	title="Correctness starts with the assumptions behind the behavior"
 	layout="split"
 >
-	<ExperiencePanel eyebrow="DEBUGGING + CONTRACTS" title="Trace the rule before changing the code" emphasis>
+	<ExperiencePanel
+		eyebrow="DEBUGGING + CONTRACTS"
+		title="Trace the rule before changing the code"
+		emphasis
+	>
 		When a bug appears, I try to follow the underlying assumption through its callers and system
 		boundaries before choosing the fix. If the real state is ambiguous, I prefer an explicit
 		contract or failure over a deterministic fallback that can still return the wrong answer.
