@@ -4,38 +4,40 @@ locale: es
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Ene 2026 – Presente
-summary: Rol actual que combina modernización en Angular, flujos de reporting en .NET, integración tipada con SQL Server y seguridad ante regresiones.
+summary: Experiencia profesional en fintech sobre sistemas .NET y Angular existentes, con foco orientado a backend en correctness, autorización, integración entre servicios, debugging y validación.
 achievements:
-    - Reemplacé cadenas complejas de RxJS con Angular 19 Signals en dashboards existentes, centralizando el estado reactivo y eliminando suscripciones redundantes
-    - Optimicé APIs Web en C# (.NET 8) y consultas de Entity Framework Core con proyecciones y AsNoTracking para evitar carga innecesaria de datos en flujos de reporting
-    - Desarrollé funcionalidades end-to-end que conectan stored procedures de SQL Server con componentes Angular tipados mediante servicios .NET, interfaces TypeScript y DTOs
-    - Agregué pruebas unitarias para servicios de lógica de negocio y las integré en flujos CI/CD existentes para reforzar las verificaciones automatizadas de regresión
+    - Investigo bugs siguiendo los supuestos a través de consumidores afectados, límites de datos y comportamiento del sistema, en lugar de tratar el primer síntoma como todo el problema
+    - Refuerzo flujos de autorización y tenant scoping hacia un comportamiento fail-closed explícito, incluyendo el impacto en consumidores cuando cambian contratos entre servicios
+    - Uso strictness de TypeScript, feedback del compilador, análisis estático y debugging por capas para localizar comportamiento afectado entre frontend y backend
+    - Valido fixes con verificaciones de regresión dirigidas y corrijo mi propia conclusión cuando nueva evidencia demuestra que la explicación inicial era incompleta
 ---
 
 <ExperienceSection
-	eyebrow="CONTEXTO DEL ROL"
-	title="Trabajo a través de un flujo tipado .NET + Angular"
+	eyebrow="TRABAJO SOBRE SISTEMAS EXISTENTES"
+	title="La correctness empieza en los supuestos detrás del comportamiento"
 	layout="split"
 >
-	<ExperiencePanel
-		eyebrow="MODERNIZACIÓN FRONTEND"
-		title="Estado reactivo sin proliferación de suscripciones"
-		emphasis
-	>
-		Modernizo dashboards existentes en Angular reemplazando cadenas difíciles de RxJS por estado
-		basado en Signals, haciendo que el flujo de datos sea más sencillo de razonar y mantener.
+	<ExperiencePanel eyebrow="DEBUGGING + CONTRATOS" title="Sigo la regla antes de cambiar el código" emphasis>
+		Cuando aparece un bug, intento seguir el supuesto que hay detrás a través de sus consumidores y
+		límites del sistema antes de elegir el fix. Si el estado real es ambiguo, prefiero un contrato
+		explícito o un fallo claro antes que un fallback determinista que todavía puede devolver una
+		respuesta incorrecta.
 	</ExperiencePanel>
-	<ExperiencePanel eyebrow="BACKEND + DATOS" title="Flujos de reporting con contratos explícitos">
-		Trabajo con .NET 8, Entity Framework Core y SQL Server, conectando stored procedures y
-		servicios con interfaces TypeScript y DTOs tipados en Angular.
+	<ExperiencePanel eyebrow="AUTORIZACIÓN + INTEGRACIÓN" title="Los límites forman parte de la funcionalidad">
+		Trabajo entre backend y frontend, incluyendo autorización, tenant scoping y cambios de contrato
+		que pueden atravesar servicios. El comportamiento fail-closed y los consumidores afectados son
+		parte del cambio, no una comprobación agregada después de implementar.
 	</ExperiencePanel>
 </ExperienceSection>
 
 <ExperienceSection
-	eyebrow="DISCIPLINA DE ENTREGA"
-	title="La seguridad ante regresiones forma parte del cambio"
+	eyebrow="VALIDACIÓN"
+	title="Intento que el fix pueda ponerse a prueba"
 	surface="highlight"
 >
-	Las pruebas unitarias de servicios de lógica de negocio se integran en el flujo CI/CD existente
-	para que la validación acompañe al cambio en lugar de tratarse como una fase separada.
+	Las pruebas, el feedback del compilador y el análisis estático son herramientas que uso para
+	cuestionar un cambio, no solo para dejar un pipeline en verde. En comportamiento propenso a
+	regresiones, compruebo que la prueba relevante vuelva a fallar si se retira el fix. Esa misma
+	disciplina implica corregir mi propia conclusión cuando nueva evidencia demuestra que mi primera
+	explicación era incorrecta.
 </ExperienceSection>

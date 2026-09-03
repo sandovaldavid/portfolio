@@ -1,10 +1,10 @@
 {
 	"siteTitle": "David Sandoval — Software Engineer",
-	"siteDescription": "Software Engineer building maintainable web products and backend systems with clear technical decisions, automated validation and documented trade-offs. Remote from Peru, open to international opportunities.",
+	"siteDescription": "Backend-oriented Software Engineer with hands-on frontend experience, working through assumptions, system boundaries, debugging and validation to build maintainable software. Remote from Peru and open to international opportunities.",
 	"personJobTitle": "Software Engineer",
-	"personDescription": "Software Engineer focused on maintainable backend systems, web products, automated validation, developer tooling and applied research.",
+	"personDescription": "Backend-oriented Software Engineer with hands-on frontend experience, focused on correctness, explicit system boundaries, debugging, validation and maintainable delivery.",
 	"rssFeedTitle": "David Sandoval — Software Engineering Blog",
-	"rssFeedDescription": "Articles about software engineering, backend systems, web architecture, testing, developer tooling and applied research.",
+	"rssFeedDescription": "Articles about software engineering, backend systems, web architecture, testing, developer tooling and software-maintenance research.",
 	"rssEnglishDiscoveryTitle": "David Sandoval — Blog in English",
 	"rssSpanishDiscoveryTitle": "David Sandoval — Blog in Spanish"
 }

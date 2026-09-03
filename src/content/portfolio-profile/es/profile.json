@@ -3,13 +3,13 @@
 	"locale": "es",
 	"seo": {
 		"title": "Sobre David Sandoval — Ingeniero de Software",
-		"description": "Conoce cómo David Sandoval aborda la ingeniería de software a través de sistemas backend, productos web, pruebas, developer tooling e investigación aplicada."
+		"description": "Cómo trabaja David Sandoval entre ingeniería de producto orientada a backend, desarrollo frontend, debugging, validación, developer tooling e investigación sobre mantenimiento de software."
 	},
-	"summary": "Ingeniero de software orientado a backend con experiencia frontend. Conecto decisiones técnicas con el contexto de negocio, construyo productos web mantenibles y valido los cambios mediante pruebas y workflows reproducibles.",
+	"summary": "Ingeniero de software orientado a backend con experiencia práctica en frontend. Conecto decisiones técnicas con el contexto de negocio, sigo los supuestos a través de los límites del sistema y valido los cambios antes de darlos por resueltos.",
 	"biography": [
-		"Ingeniero de software orientado a backend con experiencia frontend en .NET, Angular y TypeScript. Valoro una arquitectura clara cuando reduce riesgos de entrega, no como un objetivo por sí misma.",
-		"Mi experiencia profesional incluye modernización de módulos frontend, contribución en APIs REST, mejoras en flujos de datos y reporting, ampliación de cobertura de regresión automatizada y apoyo en migraciones desde sistemas legacy. Documento decisiones, trade-offs y validación para que la ingeniería detrás del trabajo sea más fácil de comprender.",
-		"En paralelo al desarrollo de productos, investigo Mining Software Repositories y el uso de modelos BiLSTM para estudiar el abandono de proyectos OSS, actualmente en desarrollo para obtener mi título profesional. Esta investigación es una especialización secundaria que complementa mi trabajo en ingeniería de software."
+		"Soy un ingeniero de software orientado a backend con experiencia práctica en frontend usando .NET, Angular y TypeScript. Disfruto la parte de la ingeniería que empieza antes del fix: entender el comportamiento, la regla de negocio que hay detrás y los límites que puede afectar un cambio.",
+		"En Atena trabajo sobre software fintech existente, no sobre ejercicios aislados desde cero. Eso me ha enseñado a seguir supuestos a través de consumidores y servicios, hacer explícitos los contratos de autorización y datos, usar pruebas y feedback del sistema de tipos para encontrar comportamiento afectado, y corregir mi propia conclusión cuando aparece nueva evidencia.",
+		"Fuera del trabajo construyo developer tooling y proyectos de producto, y desarrollo mi tesis alrededor de la remediación de dependencias vulnerables en ecosistemas OSS. La dirección de investigación cambió cuando la literatura cuestionó mi primer planteamiento; mantener visible esa corrección es importante para mí porque aprender también implica cambiar el plan cuando cambia la evidencia."
 	],
 	"focusAreas": [
 		"Sistemas backend mantenibles y límites de API",
@@ -22,6 +22,6 @@
 	"availabilityStatement": "Disponible para oportunidades remotas de ingeniería de software, incluyendo relocation internacional o posgrado como parte de mi crecimiento profesional.",
 	"location": "Perú (UTC-5)",
 	"workMode": "Remoto desde Perú",
-	"researchSummary": "Investigación sobre predicción de abandono OSS mediante modelos BiLSTM y datos de actividad de repositorios, como parte de mi tesis en desarrollo.",
-	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer, orientado a backend con experiencia frontend en Angular y .NET. Mi enfoque es entregar software mantenible, validar los cambios y documentar las decisiones técnicas."
+	"researchSummary": "Investigo si las señales históricas de mantenimiento upstream aportan información prospectiva útil para estimar la latencia de remediación de dependencias vulnerables; la definición final del outcome y la familia de modelos siguen en validación.",
+	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer. Mi trabajo está orientado a backend con un alcance frontend significativo, con foco en correctness, autorización, integración entre servicios, debugging y validación sobre sistemas fintech existentes."
 }

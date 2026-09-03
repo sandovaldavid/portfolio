@@ -1,47 +1,53 @@
 ---
 translationKey: predicting-oss-abandonment-with-bilstm
-title: 'Predicting OSS Abandonment With BiLSTM: Notes From My Thesis'
-description: 'Early notes on using Bidirectional LSTM networks to predict when an open-source repository is at risk of abandonment, from commit and issue activity time series.'
+title: 'What I Learned From an Earlier BiLSTM Thesis Direction'
+description: 'A retrospective on an earlier OSS-abandonment thesis direction, what the BiLSTM framing taught me, and why I changed the research question when the literature changed the evidence.'
 pubDate: 2026-06-18
+updatedDate: 2026-09-03
 tags: ['research', 'machine-learning', 'oss']
 ---
 
-## The problem
+> **Update — September 2026:** this post documents an earlier thesis direction. My current
+> research focuses on vulnerable-dependency remediation viability in OSS ecosystems. I’m keeping
+> these notes because the change itself is part of what I learned: a research plan should change
+> when stronger evidence changes the question.
 
-Open-source repositories die quietly. A project that looked healthy a year ago can end up
-with no maintainer, no merged PRs, and a growing pile of unaddressed security issues — and
-by the time that's obvious, dependents have already built on top of it. My thesis asks a
-narrower question: can we predict abandonment risk early, directly from a repository's
-activity time series?
+## What I was exploring
 
-## Why BiLSTM
+My first thesis direction started from repository activity and asked whether sequential signals
+could help identify OSS abandonment risk. BiLSTM was the candidate model because commit, issue and
+contributor activity are temporal rather than isolated observations.
 
-Commit frequency, issue resolution rate, and contributor churn are all sequential signals —
-what happened in month _t_ depends on what happened in months before it, and abandonment
-rarely happens in a single step. A **Bidirectional LSTM** reads that sequence in both
-directions, which matters here: early warning signs (a maintainer going quiet, PRs piling
-up unreviewed) are easier to weigh correctly when the model has context from both before
-_and_ after a given point in training data.
+That framing helped me learn how quickly a model choice can shape the rest of a study: dataset
+construction, labels, observation windows, baselines and evaluation all begin to orbit the model if
+I am not careful.
 
-## Data & features
+## Why I changed direction
 
-Using GH Archive as the source, I extract per-repository monthly time series:
+The literature review made the original problem less compelling as a thesis contribution than I
+had assumed. Instead of defending the first idea, I changed the research question and moved the
+model family back to an open decision.
 
-- Commit count and unique committers
-- Issue open/close rates
-- PR merge latency
-- A rough "bus factor" proxy from contributor concentration
+The current work studies **vulnerable-dependency remediation viability**: whether historical
+upstream maintenance signals add useful prospective information about remediation timing beyond
+vulnerability, remediation and consumer-project characteristics.
 
-Repositories are labeled abandoned/active using activity-threshold heuristics on
-last-contribution date and open-issue aging — the same kind of signal maintainers already
-use informally, just made explicit.
+## What carried forward
 
-## Baseline comparison
+The earlier direction was still useful. I kept several lessons:
 
-The BiLSTM is benchmarked against Logistic Regression and Random Forest on the same
-features, evaluated with F1 on the (imbalanced) abandonment class and AUC-ROC for ranking
-risk. The goal isn't just "does deep learning win" — it's whether the _sequence_ structure
-the BiLSTM can exploit actually adds signal over models that only see aggregated snapshots.
+- temporal data needs explicit observation windows and leakage controls;
+- labels and outcome definitions deserve as much scrutiny as the model;
+- stronger models are not automatically better evidence;
+- baselines matter because the useful question is whether a new signal adds value;
+- a negative or non-incremental result can be informative if the design is sound.
 
-Full methodology and current results are on the [research page](/research) — this post will
-get a follow-up once training converges on the full dataset.
+## The part I want to keep visible
+
+Changing the thesis direction was not lost work. It was a correction produced by reading more,
+comparing the problem against existing research and being willing to revise my own hypothesis.
+That is also how I want to work as an engineer: make assumptions explicit, test them, and change the
+plan when the evidence no longer supports them.
+
+The [research page](/research) now reflects the current thesis direction and the decisions that are
+still intentionally open.

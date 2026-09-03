@@ -3,13 +3,13 @@
 	"locale": "en",
 	"seo": {
 		"title": "About David Sandoval — Software Engineer",
-		"description": "Learn how David Sandoval approaches software engineering across backend systems, web products, testing, developer tooling and applied research."
+		"description": "How David Sandoval works across backend-oriented product engineering, frontend delivery, debugging, validation, developer tooling and software-maintenance research."
 	},
-	"summary": "Backend-oriented Software Engineer with frontend experience. I connect technical decisions with business context, build maintainable web products and validate changes through testing and reproducible workflows.",
+	"summary": "Backend-oriented Software Engineer with hands-on frontend experience. I connect technical decisions to business context, trace assumptions across system boundaries and validate changes before treating them as solved.",
 	"biography": [
-		"Backend-oriented Software Engineer with frontend experience across .NET, Angular and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
-		"My professional work includes modernizing frontend modules, contributing to REST APIs, improving data and reporting workflows, expanding automated regression coverage and supporting migrations from legacy systems. I document project decisions, trade-offs and validation so the engineering behind the work is easier to understand.",
-		"Alongside product engineering, I research Mining Software Repositories and the use of BiLSTM models to study OSS project abandonment, currently in progress toward my professional degree. This research is a secondary specialization that complements my software-engineering work."
+		"I’m a backend-oriented Software Engineer with hands-on frontend experience across .NET, Angular and TypeScript. I enjoy the part of engineering that starts before the fix: understanding the behavior, the business rule behind it and the boundaries a change can affect.",
+		"At Atena, I work on existing fintech software rather than isolated greenfield exercises. That has taught me to trace assumptions through callers and services, make authorization and data contracts explicit, use tests and type-system feedback to find affected behavior, and revise my own conclusion when new evidence changes the problem.",
+		"Outside work, I build developer tools and product projects, and I’m developing my thesis around vulnerable-dependency remediation in OSS ecosystems. The research direction changed after the literature challenged my first framing; keeping that correction visible matters to me because learning should change the plan when the evidence changes."
 	],
 	"focusAreas": [
 		"Maintainable backend systems and API boundaries",
@@ -22,6 +22,6 @@
 	"availabilityStatement": "Open to remote software engineering opportunities, including international relocation or graduate study as part of ongoing career growth.",
 	"location": "Peru (UTC-5)",
 	"workMode": "Remote from Peru",
-	"researchSummary": "Researching OSS abandonment prediction with BiLSTM models and repository activity data as part of ongoing thesis work.",
-	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer, backend-oriented with frontend experience across Angular and .NET. My focus is maintainable delivery, validated changes and clear technical documentation."
+	"researchSummary": "Researching whether upstream maintenance signals add useful prospective information for estimating vulnerable-dependency remediation latency; the final outcome definition and model family remain under validation.",
+	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer. My work is backend-oriented with significant frontend scope, with a focus on correctness, authorization, service integration, debugging and validation in existing fintech systems."
 }

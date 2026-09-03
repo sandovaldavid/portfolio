@@ -1,10 +1,10 @@
 {
 	"siteTitle": "David Sandoval — Ingeniero de Software",
-	"siteDescription": "Ingeniero de software que construye productos web y sistemas backend mantenibles con decisiones técnicas claras, validación automatizada y trade-offs documentados. Remoto desde Perú, disponible para oportunidades internacionales.",
+	"siteDescription": "Ingeniero de software orientado a backend con experiencia práctica en frontend, enfocado en supuestos, límites del sistema, debugging y validación para construir software mantenible. Remoto desde Perú y disponible para oportunidades internacionales.",
 	"personJobTitle": "Ingeniero de Software",
-	"personDescription": "Ingeniero de software enfocado en sistemas backend mantenibles, productos web, validación automatizada, developer tooling e investigación aplicada.",
+	"personDescription": "Ingeniero de software orientado a backend con experiencia práctica en frontend, enfocado en correctness, límites explícitos del sistema, debugging, validación y entrega mantenible.",
 	"rssFeedTitle": "David Sandoval — Blog de ingeniería de software",
-	"rssFeedDescription": "Artículos sobre ingeniería de software, sistemas backend, arquitectura web, pruebas, developer tooling e investigación aplicada.",
+	"rssFeedDescription": "Artículos sobre ingeniería de software, sistemas backend, arquitectura web, pruebas, developer tooling e investigación sobre mantenimiento de software.",
 	"rssEnglishDiscoveryTitle": "David Sandoval — Blog en inglés",
 	"rssSpanishDiscoveryTitle": "David Sandoval — Blog en español"
 }

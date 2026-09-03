@@ -4,38 +4,38 @@ locale: en
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Jan 2026 – Present
-summary: Current role spanning Angular modernization, .NET reporting workflows, typed SQL Server integration and regression safety.
+summary: Professional fintech work on existing .NET and Angular systems, with a backend-oriented focus on correctness, authorization, service integration, debugging and validation.
 achievements:
-    - Replaced complex RxJS chains with Angular 19 Signals in existing dashboards, centralizing reactive state and removing redundant subscriptions
-    - Optimized C# (.NET 8) Web APIs and Entity Framework Core queries with projections and AsNoTracking to avoid unnecessary data loading in reporting workflows
-    - Developed end-to-end features connecting SQL Server stored procedures to typed Angular components through .NET services, TypeScript interfaces and DTOs
-    - Added unit tests for business-logic services and integrated them into existing CI/CD workflows to strengthen automated regression checks
+    - Investigate bugs by tracing assumptions through affected callers, data boundaries and system behavior instead of treating the first symptom as the whole problem
+    - Harden authorization and tenant-scoped flows toward explicit fail-closed behavior, including consumer impact when contracts change across service boundaries
+    - Use TypeScript strictness, compiler feedback, static analysis and layered debugging to locate affected behavior across frontend and backend code
+    - Validate fixes with targeted regression checks and revise my own conclusion when new evidence shows that the original explanation was incomplete
 ---
 
 <ExperienceSection
-	eyebrow="ROLE CONTEXT"
-	title="Working across a typed .NET + Angular delivery path"
+	eyebrow="WORKING ON EXISTING SYSTEMS"
+	title="Correctness starts with the assumptions behind the behavior"
 	layout="split"
 >
-	<ExperiencePanel
-		eyebrow="FRONTEND MODERNIZATION"
-		title="Reactive state without subscription sprawl"
-		emphasis
-	>
-		I modernize existing Angular dashboards by replacing difficult RxJS subscription chains with
-		Signals-based state, making data flow easier to reason about and maintain.
+	<ExperiencePanel eyebrow="DEBUGGING + CONTRACTS" title="Trace the rule before changing the code" emphasis>
+		When a bug appears, I try to follow the underlying assumption through its callers and system
+		boundaries before choosing the fix. If the real state is ambiguous, I prefer an explicit
+		contract or failure over a deterministic fallback that can still return the wrong answer.
 	</ExperiencePanel>
-	<ExperiencePanel eyebrow="BACKEND + DATA" title="Reporting workflows with explicit contracts">
-		I work across .NET 8, Entity Framework Core and SQL Server reporting paths, connecting
-		stored procedures and services to typed TypeScript interfaces and DTOs in Angular.
+	<ExperiencePanel eyebrow="AUTHORIZATION + INTEGRATION" title="Boundaries are part of the feature">
+		I work across backend and frontend concerns, including authorization, tenant scoping and
+		contract changes that can span services. Fail-closed behavior and affected consumers are part
+		of the change itself, not a check added after implementation.
 	</ExperiencePanel>
 </ExperienceSection>
 
 <ExperienceSection
-	eyebrow="DELIVERY DISCIPLINE"
-	title="Regression safety is part of feature work"
+	eyebrow="VALIDATION"
+	title="I try to make the fix falsifiable"
 	surface="highlight"
 >
-	Unit tests for business-logic services are integrated into the existing CI/CD workflow so
-	validation travels with the change instead of being treated as a separate phase.
+	Tests, compiler feedback and static analysis are tools I use to challenge a change, not just to
+	make a pipeline green. For regression-prone behavior, I check that the relevant test would fail
+	again if the fix were removed. That same discipline means changing my own conclusion when new
+	evidence shows that my first explanation was wrong.
 </ExperienceSection>
