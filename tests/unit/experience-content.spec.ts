@@ -104,7 +104,9 @@ describe('localized professional experience content', () => {
 		expect(atena?.dateLabel).toBe('Jan 2026 – Present');
 		expect(atena?.achievements).toHaveLength(4);
 		expect(atena?.source).toContain('layout="split"');
-		expect(atena?.source).toContain('DELIVERY DISCIPLINE');
+		expect(atena?.source).toContain('WORKING ON EXISTING SYSTEMS');
+		expect(atena?.source).toContain('VALIDATION');
+		expect(atena?.source).not.toContain('Optimized C#');
 
 		expect(chirasoft?.title).toBe('Junior Software Developer');
 		expect(chirasoft?.dateLabel).toBe('Mar 2025 – Jun 2025');

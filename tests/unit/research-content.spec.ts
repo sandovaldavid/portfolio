@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 const readSource = (filePath: string): string => readFileSync(filePath, 'utf8');
 const readJson = <T>(filePath: string): T => JSON.parse(readSource(filePath)) as T;
 const locales = ['en', 'es'] as const;
-const researchId = 'oss-abandonment-bilstm';
+const researchId = 'vulnerable-dependency-remediation';
 
 function researchSource(locale: (typeof locales)[number]): string {
 	return readSource(`src/content/research/${locale}/${researchId}.mdx`);
@@ -58,10 +58,11 @@ describe('localized research MDX content', () => {
 			expect(frontmatterScalar(source, 'status')).toBe('in-progress');
 			expect(source).toContain('featuredSignals:');
 			expect(source).toContain('keywords:');
+			expect(source).not.toContain('BiLSTM');
 		}
 	});
 
-	it('keeps scientific narrative flexible while preserving current published claims in both locales', () => {
+	it('keeps scientific narrative flexible while preserving the current bounded claims', () => {
 		const english = researchSource('en');
 		const spanish = researchSource('es');
 
@@ -73,16 +74,12 @@ describe('localized research MDX content', () => {
 			expect(source).not.toContain('<ExperimentBlock');
 			expect(source).not.toContain('<ResultTable');
 		}
-		expect(english).toContain('Results will be published upon thesis completion.');
-		expect(spanish).toContain('Los resultados se publicarán al completar la tesis.');
-		expect(english).toContain(
-			'Classification accuracy vs. Logistic Regression & Random Forest baselines'
-		);
-		expect(spanish).toContain(
-			'Accuracy de clasificación vs. baselines Logistic Regression y Random Forest'
-		);
-		expect(english).toContain('title="Evaluation criteria"');
-		expect(spanish).toContain('title="Criterios de evaluación"');
+		expect(english).toContain('The final model family is not selected in advance.');
+		expect(spanish).toContain('La familia de modelos final no está seleccionada de antemano.');
+		expect(english).toContain('title="Validation gates"');
+		expect(spanish).toContain('title="Criterios de validación"');
+		expect(english).toContain('npm is the first feasibility ecosystem');
+		expect(spanish).toContain('npm es el primer ecosistema para validar factibilidad');
 	});
 
 	it('loads validated entries for MDX routes while Home can keep reading frontmatter data', () => {
@@ -162,17 +159,13 @@ describe('localized research MDX content', () => {
 		expect(homeResearch).toContain('border-t border-edge-subtle pt-4');
 		expect(homeResearch).not.toContain('border-t-2 border-edge-strong pt-5');
 		expect(homeResearch).toContain('size="md" variant="stack"');
-		expect(homeResearch).toContain(
-			"import PythonIcon from '@assets/technologies/Python.astro'"
-		);
-		expect(homeResearch).toContain(
-			"import GitHubIcon from '@assets/technologies/GitHub.astro'"
-		);
-		expect(homeResearch).toContain('icon={tag.icon}');
-		expect(homeResearch).not.toContain('hover:-translate-y-0.5');
-		expect(homeResearch).not.toContain('hover:shadow-retro-3xl');
-		expect(englishSection.signalsLabel).toBe('SIGNALS MODELED');
-		expect(spanishSection.signalsLabel).toBe('SEÑALES MODELADAS');
+		expect(homeResearch).toContain("label: 'Software Supply Chain'");
+		expect(homeResearch).toContain("label: 'Mining Software Repositories'");
+		expect(homeResearch).not.toContain("import PythonIcon from '@assets/technologies/Python.astro'");
+		expect(homeResearch).not.toContain("import GitHubIcon from '@assets/technologies/GitHub.astro'");
+		expect(homeResearch).not.toContain('icon={tag.icon}');
+		expect(englishSection.signalsLabel).toBe('SIGNALS UNDER STUDY');
+		expect(spanishSection.signalsLabel).toBe('SEÑALES EN ESTUDIO');
 		expect(Object.keys(englishSection).sort()).toEqual(Object.keys(spanishSection).sort());
 	});
 });
