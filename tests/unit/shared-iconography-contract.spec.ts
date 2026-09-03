@@ -35,6 +35,7 @@ describe('Identity System shared iconography contract', () => {
 			moon: read('src/assets/icons/Moon.astro'),
 			system: read('src/assets/icons/System.astro'),
 			briefcase: read('src/assets/icons/Briefcase.astro'),
+			download: read('src/assets/icons/Download.astro'),
 			email: read('src/assets/icons/Mail.astro'),
 			link: read('src/assets/icons/Link.astro'),
 			share: read('src/assets/icons/Share.astro'),
@@ -49,9 +50,18 @@ describe('Identity System shared iconography contract', () => {
 		expect(icons.moon).toContain('a7.5 7.5 0 0 0 7.92 12.446');
 		expect(icons.system).toContain('M3 5a1 1 0 0 1 1 -1h16');
 		expect(icons.briefcase).toContain('M3 13a20 20 0 0 0 18 0');
+		expect(icons.download).toContain('M4 17v2a2 2 0 0 0 2 2h12');
 		expect(icons.email).toContain('M3 8L8.44992 11.6333');
 		expect(icons.link).toContain('M10 13a5 5 0 0 0 7.54.54');
 		expect(icons.share).toContain('m8.6 10.5 6.8-4');
+	});
+
+	it('uses the download glyph for the resume shortcut', () => {
+		const sidebar = read('src/widgets/contact-sidebar/ui/ContactSidebar.astro');
+
+		expect(sidebar).toContain("DownloadIcon from '@assets/icons/Download.astro'");
+		expect(sidebar).toContain('Icon: DownloadIcon');
+		expect(sidebar).not.toContain('ProfileCheckIcon');
 	});
 
 	it('keeps shared technology marks aligned with the cross-channel registry', () => {
