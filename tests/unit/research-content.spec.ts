@@ -161,8 +161,12 @@ describe('localized research MDX content', () => {
 		expect(homeResearch).toContain('size="md" variant="stack"');
 		expect(homeResearch).toContain("label: 'Software Supply Chain'");
 		expect(homeResearch).toContain("label: 'Mining Software Repositories'");
-		expect(homeResearch).not.toContain("import PythonIcon from '@assets/technologies/Python.astro'");
-		expect(homeResearch).not.toContain("import GitHubIcon from '@assets/technologies/GitHub.astro'");
+		expect(homeResearch).not.toContain(
+			"import PythonIcon from '@assets/technologies/Python.astro'"
+		);
+		expect(homeResearch).not.toContain(
+			"import GitHubIcon from '@assets/technologies/GitHub.astro'"
+		);
 		expect(homeResearch).not.toContain('icon={tag.icon}');
 		expect(englishSection.signalsLabel).toBe('SIGNALS UNDER STUDY');
 		expect(spanishSection.signalsLabel).toBe('SEÑALES EN ESTUDIO');
