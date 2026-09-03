@@ -86,12 +86,14 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		{
 			route: '/research',
 			title: 'Vulnerable-Dependency Remediation Viability in OSS Ecosystems',
-			statusCopy: 'The final research question, outcome definition and model family remain deliberately open',
+			statusCopy:
+				'The final research question, outcome definition and model family remain deliberately open',
 		},
 		{
 			route: '/es/research',
 			title: 'Viabilidad de Remediación de Dependencias Vulnerables en Ecosistemas OSS',
-			statusCopy: 'La pregunta de investigación, la definición del outcome y la familia de modelos finales permanecen deliberadamente abiertas',
+			statusCopy:
+				'La pregunta de investigación, la definición del outcome y la familia de modelos finales permanecen deliberadamente abiertas',
 		},
 	] as const) {
 		test(`${scenario.route} renders localized research MDX composition`, async ({ page }) => {
