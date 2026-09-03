@@ -8,7 +8,7 @@
 	"summary": "Soy ingeniero de software con orientación backend y experiencia práctica en frontend. Me importa entender el dominio, hacer explícitas las decisiones técnicas y validar el comportamiento que realmente importa.",
 	"biography": [
 		"Soy ingeniero de software con orientación backend y experiencia frontend significativa. Disfruto el trabajo donde entender el dominio y rastrear supuestos importa tanto como elegir la implementación.",
-		"En Atena trabajo sobre software fintech existente, cruzando límites de backend y frontend. Esa experiencia me ha enseñado a mirar más allá del síntoma reportado: seguir supuestos a través de los consumidores afectados, revisar autorización y límites entre servicios, usar feedback del sistema de tipos y análisis estático para encontrar impacto, y validar correcciones con pruebas dirigidas. Cuando nueva evidencia cambia el diagnóstico, corrijo la conclusión en lugar de defender la primera explicación.",
+		"En Atena trabajo sobre software fintech existente, cruzando límites de backend y frontend. Esa experiencia me ha enseñado a mirar más allá del síntoma reportado: seguir supuestos a través de los consumidores afectados, revisar autorización y límites entre servicios, usar el sistema de tipos y el análisis estático para encontrar impacto, y validar correcciones con pruebas dirigidas. Cuando nueva evidencia cambia el diagnóstico, corrijo la conclusión en lugar de defender la primera explicación.",
 		"Fuera del trabajo construyo y documento proyectos de ingeniería y continúo con investigación de pregrado. Actualmente estoy validando una dirección de tesis sobre remediación de dependencias vulnerables en software de código abierto; la pregunta y el método todavía se están refinando antes de comprometerme con un modelo."
 	],
 	"focusAreas": [
@@ -23,5 +23,5 @@
 	"location": "Piura, Perú",
 	"workMode": "Remoto",
 	"researchSummary": "Estoy validando una dirección de tesis de pregrado sobre remediación de dependencias vulnerables en software de código abierto; la pregunta y el método siguen refinándose con literatura y trabajo de factibilidad de datos.",
-	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer. Mi trabajo tiene orientación backend con participación práctica en frontend, con énfasis en correctness, autorización, límites de integración, debugging y validación sobre software existente."
+	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer. Mi trabajo tiene orientación backend con participación práctica en frontend, con énfasis en comportamiento correcto, autorización, límites de integración, debugging y validación sobre software existente."
 }

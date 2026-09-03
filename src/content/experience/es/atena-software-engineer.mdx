@@ -4,12 +4,12 @@ locale: es
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Ene 2026 – Presente
-summary: Trabajo profesional sobre software fintech existente, con orientación backend hacia correctness, autorización, contratos entre sistemas, debugging y validación, junto con participación práctica en frontend.
+summary: Trabajo profesional sobre software fintech existente, con orientación backend hacia comportamiento correcto, autorización, contratos entre sistemas, debugging y validación, junto con participación práctica en frontend.
 achievements:
-    - Investigué defectos más allá del síntoma reportado, siguiendo supuestos modificados a través de los consumidores afectados y evitando defaults plausibles cuando la ambigüedad podía ocultar comportamiento incorrecto
-    - Trabajé sobre autorización con alcance por tenant y semántica fail-closed, distinguiendo restricciones ausentes de un conjunto permitido explícitamente vacío y revisando los puntos de enforcement
+    - Investigué defectos más allá del síntoma reportado, siguiendo supuestos modificados a través de los consumidores afectados y evitando valores por defecto plausibles cuando la ambigüedad podía ocultar comportamiento incorrecto
+    - Trabajé sobre autorización con alcance por tenant y semántica fail-closed, distinguiendo restricciones ausentes de un conjunto permitido explícitamente vacío y revisando los puntos donde se aplican esas reglas
     - Implementé cambios que cruzaron contratos de backend, frontend y servicios, revisando consumidores afectados y el orden de despliegue cuando la compatibilidad dependía de la secuencia
-    - Usé strictness de TypeScript, análisis estático y pruebas de regresión dirigidas para encontrar consumidores afectados y validar el comportamiento modificado
+    - Usé las comprobaciones estrictas de TypeScript, análisis estático y pruebas de regresión dirigidas para encontrar consumidores afectados y validar el comportamiento modificado
 ---
 
 <ExperienceSection
@@ -18,14 +18,14 @@ achievements:
 	layout="split"
 >
 	<ExperiencePanel
-		eyebrow="CORRECTNESS"
+		eyebrow="COMPORTAMIENTO CORRECTO"
 		title="Rastrear el supuesto, no solo el síntoma"
 		emphasis
 	>
-		Cuando cambia un supuesto del dominio, sigo los callers y consumidores que dependían del
-		comportamiento anterior. Un default determinista no es automáticamente una respuesta segura;
-		si el dominio es ambiguo, prefiero hacer explícita esa ambigüedad antes que devolver algo
-		plausible pero incorrecto.
+		Cuando cambia un supuesto del dominio, sigo los puntos de llamada y consumidores que dependían
+		del comportamiento anterior. Un valor por defecto determinista no es automáticamente una
+		respuesta segura; si el dominio es ambiguo, prefiero hacer explícita esa ambigüedad antes que
+		devolver algo plausible pero incorrecto.
 	</ExperiencePanel>
 	<ExperiencePanel eyebrow="LÍMITES" title="Autorización y contratos necesitan semántica explícita">
 		Trabajo sobre autorización con alcance por tenant y límites de integración donde “sin
@@ -40,8 +40,8 @@ achievements:
 	title="Una comprobación útil debe poder demostrar que la corrección falla"
 	surface="highlight"
 >
-	Uso feedback del compilador y del sistema de tipos, análisis estático y pruebas dirigidas para
-	encontrar el alcance real de un cambio, no como gates decorativos. Cuando una regresión importa,
+	Uso información del compilador y del sistema de tipos, análisis estático y pruebas dirigidas para
+	encontrar el alcance real de un cambio, no como controles decorativos. Cuando una regresión importa,
 	quiero que la prueba vuelva a fallar si se reintroduce el comportamiento anterior. Y cuando nueva
 	evidencia cambia mi diagnóstico, corrijo la conclusión en lugar de defender la primera explicación.
 </ExperienceSection>
