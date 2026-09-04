@@ -89,14 +89,14 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		const section = page.locator(
 			'[data-experience-section-surface="highlight"][data-experience-section-layout="prose"]'
 		);
-		const shell = section.locator(':scope > div');
-		const blocks = shell.locator(':scope > div');
+		const shell = section.locator('[data-experience-section-shell]');
+		const heading = section.locator('[data-experience-section-heading]');
+		const content = section.locator('[data-experience-section-content]');
 
 		await expect(section).toBeVisible();
-		await expect(blocks).toHaveCount(2);
 		const shellBox = (await shell.boundingBox())!;
-		const headingBox = (await blocks.nth(0).boundingBox())!;
-		const contentBox = (await blocks.nth(1).boundingBox())!;
+		const headingBox = (await heading.boundingBox())!;
+		const contentBox = (await content.boundingBox())!;
 
 		expect(Math.abs(shellBox.width - headingBox.width)).toBeLessThanOrEqual(2);
 		expect(Math.abs(shellBox.width - contentBox.width)).toBeLessThanOrEqual(2);
