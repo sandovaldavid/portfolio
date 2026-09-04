@@ -15,7 +15,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 -->
 <button
 	type="button"
-	class="theme-toggle grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-150 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+	class="theme-toggle relative grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-150 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 	data-theme-toggle
 	data-theme-select-label={tTheme('select')}
 	data-theme-light-label={tTheme('light')}
@@ -23,9 +23,15 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	data-theme-system-label={tTheme('system')}
 	aria-label={tTheme('select')}
 >
-	<span data-theme-icon="light" hidden><SunIcon class="size-5" aria-hidden="true" /></span>
-	<span data-theme-icon="dark" hidden><MoonIcon class="size-5" aria-hidden="true" /></span>
-	<span data-theme-icon="system" hidden><SystemIcon class="size-5" aria-hidden="true" /></span>
+	<span class="theme-toggle-icon" data-theme-icon="light" aria-hidden="true">
+		<SunIcon class="size-5" aria-hidden="true" />
+	</span>
+	<span class="theme-toggle-icon" data-theme-icon="dark" aria-hidden="true">
+		<MoonIcon class="size-5" aria-hidden="true" />
+	</span>
+	<span class="theme-toggle-icon" data-theme-icon="system" aria-hidden="true">
+		<SystemIcon class="size-5" aria-hidden="true" />
+	</span>
 </button>
 
 <script>
@@ -89,7 +95,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 
 		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
 			button.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(icon => {
-				icon.hidden = icon.dataset.themeIcon !== theme;
+				icon.dataset.themeActive = String(icon.dataset.themeIcon === theme);
 			});
 
 			const nextTheme = getNextTheme(theme);
@@ -118,7 +124,11 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		}, THEME_TRANSITION_DURATION_MS + 40);
 	};
 
-	const animateThemeToggle = (button: HTMLButtonElement) => {
+	const animateThemeToggle = (
+		button: HTMLButtonElement,
+		previousTheme: ThemePreference,
+		nextTheme: ThemePreference
+	) => {
 		if (reducedMotionMedia.matches) return;
 
 		button.animate(
@@ -133,15 +143,30 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			}
 		);
 
-		const activeIcon = button.querySelector<HTMLElement>('[data-theme-icon]:not([hidden])');
-		activeIcon?.animate(
+		const outgoingIcon = button.querySelector<HTMLElement>(
+			`[data-theme-icon="${previousTheme}"]`
+		);
+		const incomingIcon = button.querySelector<HTMLElement>(`[data-theme-icon="${nextTheme}"]`);
+
+		outgoingIcon?.animate(
+			[
+				{ opacity: 1, transform: 'rotate(0deg) scale(1)' },
+				{ opacity: 0, transform: 'rotate(18deg) scale(0.72)' },
+			],
+			{
+				duration: THEME_TRANSITION_DURATION_MS,
+				easing: 'cubic-bezier(0.4, 0, 1, 1)',
+			}
+		);
+
+		incomingIcon?.animate(
 			[
 				{ opacity: 0, transform: 'rotate(-18deg) scale(0.72)' },
 				{ opacity: 1, transform: 'rotate(0deg) scale(1)' },
 			],
 			{
 				duration: THEME_TRANSITION_DURATION_MS,
-				easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+				easing: 'cubic-bezier(0, 0, 0.2, 1)',
 			}
 		);
 	};
@@ -152,11 +177,12 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			button.dataset.themeReady = 'true';
 
 			button.addEventListener('click', () => {
-				const nextTheme = getNextTheme(getSavedTheme());
+				const currentTheme = getSavedTheme();
+				const nextTheme = getNextTheme(currentTheme);
 				beginThemeTransition();
 				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
 				syncThemeState();
-				animateThemeToggle(button);
+				animateThemeToggle(button, currentTheme, nextTheme);
 			});
 		});
 
@@ -178,6 +204,21 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 </script>
 
 <style is:global>
+	.theme-toggle-icon {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		opacity: 0;
+		pointer-events: none;
+		transform: rotate(-18deg) scale(0.72);
+	}
+
+	.theme-toggle-icon[data-theme-active='true'] {
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
+
 	/*
 	 * Theme changes are a short semantic-color transition, not a page animation.
 	 * Geometry and transforms remain untouched so layout never drifts while the
@@ -199,7 +240,8 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		html.theme-transition body *,
 		html.theme-transition body *::before,
 		html.theme-transition body *::after,
-		.theme-toggle {
+		.theme-toggle,
+		.theme-toggle-icon {
 			transition: none !important;
 		}
 	}
