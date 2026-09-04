@@ -104,7 +104,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'en',
 			title: 'David Sandoval — Software Engineer',
 			description:
-				'David Sandoval is a backend-oriented Software Engineer with hands-on frontend experience, currently working on fintech software at Atena. Based in Peru and open to international opportunities.',
+				'David Sandoval is a backend-oriented Software Engineer with hands-on frontend experience, working across product systems, integrations, developer tooling, and software-maintenance research. Based in Peru and open to international opportunities.',
 			ogLocale: 'en_US',
 			alternateOgLocale: 'es_PE',
 			imageAlt: 'David Sandoval portfolio preview',
@@ -118,7 +118,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'es',
 			title: 'David Sandoval — Ingeniero de Software',
 			description:
-				'David Sandoval es Ingeniero de Software orientado a backend con experiencia práctica en frontend. Actualmente trabaja en software fintech en Atena, desde Perú, y está abierto a oportunidades internacionales.',
+				'David Sandoval es Ingeniero de Software orientado a backend, con experiencia práctica en frontend y trabajo en sistemas de producto, integraciones, developer tooling e investigación sobre mantenimiento de software. Desde Perú, abierto a oportunidades internacionales.',
 			ogLocale: 'es_PE',
 			alternateOgLocale: 'en_US',
 			imageAlt: 'Vista previa del portafolio de David Sandoval',
@@ -180,7 +180,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		);
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
 		expect(getString(person, 'description')).toContain(
-			'orientado a backend, con experiencia trabajando sobre sistemas .NET y Angular'
+			'experiencia práctica en frontend, sistemas de producto, integraciones'
 		);
 	});
 

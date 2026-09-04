@@ -68,6 +68,13 @@ describe('localized SEO, RSS and structured metadata', () => {
 		}
 	});
 
+	it('marks both localized research routes as WebPage content', () => {
+		for (const path of ['src/pages/research.astro', 'src/pages/es/research.astro']) {
+			const source = readSource(path);
+			expect(source).toContain('pageType="research"');
+		}
+	});
+
 	it('owns RSS metadata in the typed catalog and declares each feed language', () => {
 		const englishRss = readSource('src/pages/rss.xml.ts');
 		const spanishRss = readSource('src/pages/es/rss.xml.ts');
