@@ -44,6 +44,7 @@ async function expectMetadata(
 		description: string;
 		ogLocale: 'en_US' | 'es_PE';
 		alternateOgLocale: 'en_US' | 'es_PE';
+		image: string;
 		imageAlt: string;
 		rssEnglishTitle: string;
 		rssSpanishTitle: string;
@@ -69,6 +70,14 @@ async function expectMetadata(
 	await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
 		'content',
 		scenario.description
+	);
+	await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+		'content',
+		`${siteUrl}${scenario.image}`
+	);
+	await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+		'content',
+		`${siteUrl}${scenario.image}`
 	);
 	await expect(page.locator('meta[property="og:locale"]')).toHaveAttribute(
 		'content',
@@ -107,6 +116,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 				'David Sandoval is a backend-oriented Software Engineer with hands-on frontend experience, working across product systems, integrations, developer tooling, and software-maintenance research. Based in Peru and open to international opportunities.',
 			ogLocale: 'en_US',
 			alternateOgLocale: 'es_PE',
+			image: '/og/preview-portfolio-home-en-dark.png',
 			imageAlt: 'David Sandoval portfolio preview',
 			rssEnglishTitle: 'David Sandoval — Blog in English',
 			rssSpanishTitle: 'David Sandoval — Blog in Spanish',
@@ -121,6 +131,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 				'David Sandoval es Ingeniero de Software orientado a backend, con experiencia práctica en frontend y trabajo en sistemas de producto, integraciones, developer tooling e investigación sobre mantenimiento de software. Desde Perú, abierto a oportunidades internacionales.',
 			ogLocale: 'es_PE',
 			alternateOgLocale: 'en_US',
+			image: '/og/preview-portfolio-home-es-dark.png',
 			imageAlt: 'Vista previa del portafolio de David Sandoval',
 			rssEnglishTitle: 'David Sandoval — Blog en inglés',
 			rssSpanishTitle: 'David Sandoval — Blog en español',
@@ -134,7 +145,9 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
 	});
 
-	test('dynamic route schemas match their content family and locale', async ({ page }) => {
+	test('dynamic route schemas match their content family, locale and social preview', async ({
+		page,
+	}) => {
 		await page.goto('/blog/building-this-portfolio-with-astro-and-fsd');
 		const blog = await getJsonLd(page, 'BlogPosting');
 		const blogHeading =
@@ -142,6 +155,10 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(blog, 'inLanguage')).toBe('en');
 		expect(getString(blog, 'headline')).toBe(blogHeading);
 		expect(getString(blog, 'datePublished')).toBeTruthy();
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-article-building-this-portfolio-with-astro-and-fsd-en-dark.png`
+		);
 		const blogBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
 		expect(JSON.stringify(blogBreadcrumbs)).toContain(blogHeading);
 
@@ -149,6 +166,10 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		const devlog = await getJsonLd(page, 'TechArticle');
 		expect(getString(devlog, 'inLanguage')).toBe('es');
 		expect(getString(devlog, 'datePublished')).toBeTruthy();
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-article-v2-0-0-es-dark.png`
+		);
 
 		await page.goto('/es/research');
 		expect(await hasJsonLd(page, 'ScholarlyArticle')).toBe(false);
@@ -158,18 +179,26 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			'content',
 			'website'
 		);
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-website-research-es-dark.png`
+		);
 		const researchBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
 		expect(JSON.stringify(researchBreadcrumbs)).toContain('Investigación');
 
 		await page.goto('/es/projects/yukidoke');
 		const project = await getJsonLd(page, 'SoftwareSourceCode');
 		expect(getString(project, 'inLanguage')).toBe('es');
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-project-yukidoke-es-dark.png`
+		);
 		expect(getString(getObject(project, 'image'), 'caption')).toBe(
-			'Vista previa de la arquitectura de la plataforma financiera familiar Yukidoke'
+			'Yukidoke — Caso de estudio'
 		);
 	});
 
-	test('profile routes expose localized ProfilePage and Person data', async ({ page }) => {
+	test('profile and experience routes use the intended social preview family', async ({ page }) => {
 		await page.goto('/es/about');
 		const profile = await getJsonLd(page, 'ProfilePage');
 		const person = await getJsonLd(page, 'Person');
@@ -181,6 +210,22 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
 		expect(getString(person, 'description')).toContain(
 			'experiencia práctica en frontend, sistemas de producto, integraciones'
+		);
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-profile-about-es-dark.png`
+		);
+
+		await page.goto('/experience/atena-software-engineer');
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-case-study-atena-software-engineer-en-dark.png`
+		);
+
+		await page.goto('/experience/chirasoft-fullstack-developer');
+		await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+			'content',
+			`${siteUrl}/og/preview-website-experience-en-dark.png`
 		);
 	});
 
