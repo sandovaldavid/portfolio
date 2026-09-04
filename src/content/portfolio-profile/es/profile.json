@@ -3,12 +3,12 @@
 	"locale": "es",
 	"seo": {
 		"title": "Sobre David Sandoval — Ingeniero de Software",
-		"description": "Sobre David Sandoval, Ingeniero de Software orientado a backend que trabaja en software fintech, frontend, developer tooling e investigación sobre mantenimiento de software."
+		"description": "Sobre David Sandoval, Ingeniero de Software orientado a backend con experiencia práctica en frontend, sistemas de producto, integraciones, developer tooling e investigación sobre mantenimiento de software."
 	},
-	"summary": "Ingeniero de software orientado a backend con experiencia práctica en frontend. Trabajo principalmente sobre sistemas de producto existentes, donde resolver un bug puede implicar seguir el comportamiento entre servicios, datos y frontend antes de cambiarlo.",
+	"summary": "Ingeniero de Software orientado a backend, con experiencia práctica en frontend. Trabajo en sistemas de producto entre servicios backend, funcionalidades frontend e integraciones. Cuando un problema cruza varias capas, sigo el flujo afectado antes de realizar el cambio.",
 	"biography": [
-		"Soy ingeniero de software orientado a backend, con experiencia práctica en frontend. Trabajo principalmente con .NET en backend y Angular/TypeScript en frontend, y me gusta entender cómo se comporta el sistema antes de cambiarlo, especialmente cuando un bug cruza varias capas.",
-		"En Atena trabajo sobre software fintech existente. He depurado flujos entre backend y frontend, ajustado comportamiento de autorización, coordinado cambios de contrato entre servicios y usado pruebas, errores del compilador y análisis estático para encontrar código afectado por un cambio.",
+		"Trabajo principalmente en servicios backend con .NET y también desarrollo funcionalidades frontend con Angular y TypeScript. Mi trabajo cotidiano incluye APIs, integraciones y flujos de producto existentes, así que a menudo necesito entender cómo un cambio afecta a más de una parte del sistema.",
+		"En Atena trabajo sobre servicios backend .NET y un frontend administrativo en Angular dentro de un producto fintech existente. Mi trabajo incluye cambios de API, autorización, integración y frontend. Cuando un cambio cruza capas o servicios, sigo el flujo afectado y sus consumidores, y después uso pruebas, feedback del compilador y análisis estático para validar comportamiento propenso a regresiones.",
 		"Fuera del trabajo construyo developer tooling y proyectos de producto, y desarrollo mi tesis sobre remediación de dependencias vulnerables en ecosistemas OSS. Mi dirección inicial de tesis cambió después de revisar la literatura, así que ahora estoy validando la nueva pregunta y los datos antes de elegir un modelo."
 	],
 	"focusAreas": [
@@ -23,5 +23,5 @@
 	"location": "Perú (UTC-5)",
 	"workMode": "Remoto desde Perú",
 	"researchSummary": "Investigo si las señales históricas de mantenimiento upstream aportan información prospectiva útil para estimar la latencia de remediación de dependencias vulnerables; la definición final del outcome y la familia de modelos siguen en validación.",
-	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer, principalmente en backend con .NET y también en un frontend administrativo con Angular. Mi trabajo incluye debugging de flujos existentes, autorización, integración entre servicios y validación de regresiones."
+	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer, principalmente en servicios backend con .NET y también en un frontend administrativo con Angular. Mi trabajo incluye cambios de API, autorización, integración entre servicios y frontend, con validación dirigida en comportamientos propensos a regresiones."
 }

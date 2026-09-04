@@ -4,46 +4,39 @@ locale: es
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Ene 2026 – Presente
-summary: En Atena trabajo principalmente en backend con .NET y también contribuyo a un frontend administrativo en Angular dentro de un producto fintech existente.
+summary: En Atena trabajo principalmente en servicios backend con .NET y también contribuyo a un frontend administrativo en Angular dentro de un producto fintech existente.
 achievements:
-    - Sigo los bugs más allá del primer síntoma, revisando los lugares donde se usa esa lógica, los supuestos de datos y las rutas relacionadas antes de cambiar el comportamiento
-    - Ajusto autorización y tenant scoping cuando un contrato puede fallar de forma permisiva o afectar a consumidores de otros servicios
-    - Uso strictness de TypeScript, errores del compilador y análisis estático para encontrar código afectado entre frontend y backend
-    - Agrego pruebas de regresión dirigidas y reviso el diagnóstico cuando nueva evidencia contradice la primera explicación
+    - Trabajo principalmente en servicios backend con .NET y también contribuyo a un frontend administrativo en Angular dentro de un producto fintech existente
+    - Implemento y mantengo cambios de API, autorización, integración y frontend en flujos de producto existentes
+    - Coordino cambios de contrato cuando servicios backend y consumidores frontend o de otros servicios necesitan evolucionar en conjunto
+    - Uso pruebas, feedback del compilador y análisis estático para identificar código afectado y validar cambios propensos a regresiones
 ---
 
 <ExperienceSection
 	eyebrow="TRABAJO SOBRE SISTEMAS EXISTENTES"
-	title="Seguir el comportamiento antes de decidir el cambio"
+	title="Servicios backend, funcionalidades frontend e integraciones"
 	layout="split"
 >
-	<ExperiencePanel
-		eyebrow="DEBUGGING + CONTRATOS"
-		title="Seguir el supuesto hasta sus consumidores"
-		emphasis
-	>
-		Cuando aparece un bug, sigo el supuesto que hay detrás por los lugares donde se usa antes de
-		decidir el cambio. Si el sistema no puede determinar de forma segura cuál es el estado
+	<ExperiencePanel eyebrow="DEBUGGING" title="Debugging entre servicios y datos" emphasis>
+		Cuando un problema cruza varias capas, sigo el flujo afectado entre callers, servicios y datos
+		antes de decidir el cambio. Si el sistema no puede determinar de forma segura cuál es el estado
 		correcto, prefiero un error explícito a devolver silenciosamente una respuesta plausible pero
 		incorrecta.
 	</ExperiencePanel>
 	<ExperiencePanel
 		eyebrow="AUTORIZACIÓN + INTEGRACIÓN"
-		title="Los cambios de autorización también afectan a otros consumidores"
+		title="Autorización e integración entre servicios"
 	>
-		Algunos cambios cruzan backend, frontend y límites entre servicios. Reviso el tenant scoping y
-		los consumidores afectados en conjunto para que una regla de autorización o un cambio de
-		contrato no deje otro caller dependiendo del comportamiento anterior.
+		Los cambios de autorización y contrato pueden afectar a más de un consumidor. Reviso el tenant
+		scoping y los callers que dependen del comportamiento para que backend, frontend y otros
+		servicios evolucionen en conjunto cuando cambia un contrato.
 	</ExperiencePanel>
 </ExperienceSection>
 
-<ExperienceSection
-	eyebrow="VALIDACIÓN"
-	title="Comprobar que el fix cubre el bug"
-	surface="highlight"
->
-	Uso pruebas, errores del compilador y análisis estático para comprobar el comportamiento que
-	cambié. En fixes propensos a regresiones, a veces retiro temporalmente el cambio para confirmar
-	que la nueva prueba falla por la razón esperada. Si la evidencia apunta a otra causa, actualizo
-	el diagnóstico en lugar de mantener la primera explicación.
+<ExperienceSection eyebrow="VALIDACIÓN" title="Validación de regresiones" surface="highlight">
+	Uso pruebas, feedback del compilador y análisis estático para identificar código afectado y
+	comprobar el comportamiento que cambié. En cambios propensos a regresiones, a veces retiro
+	temporalmente el cambio para confirmar que la nueva prueba falla por la razón esperada. Si nueva
+	evidencia apunta a otra causa, actualizo el diagnóstico en lugar de mantener la primera
+	explicación.
 </ExperienceSection>

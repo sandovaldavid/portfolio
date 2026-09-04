@@ -4,45 +4,41 @@ locale: en
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Jan 2026 – Present
-summary: At Atena, I work mainly on .NET backend systems and also contribute to an Angular administrative frontend in an existing fintech product.
+summary: At Atena, I work mainly on .NET backend services and also contribute to an Angular administrative frontend in an existing fintech product.
 achievements:
-    - Trace bugs beyond the reported symptom by checking callers, data assumptions and related paths before changing behavior
-    - Tighten authorization and tenant-scoped behavior when existing contracts can otherwise fail open or affect other service consumers
-    - Use TypeScript strictness, compiler errors and static analysis to find frontend and backend code affected by a change
-    - Add targeted regression checks and revisit the diagnosis when new evidence shows the first explanation was incomplete
+    - Work mainly on .NET backend services and also contribute to an Angular administrative frontend in an existing fintech product
+    - Implement and maintain API, authorization, integration and frontend changes across existing product workflows
+    - Coordinate contract changes when backend services and frontend or service consumers need to evolve together
+    - Use tests, compiler feedback and static analysis to identify affected code and validate regression-prone changes
 ---
 
 <ExperienceSection
 	eyebrow="WORKING ON EXISTING SYSTEMS"
-	title="Tracing behavior before choosing the fix"
+	title="Backend services, frontend features and integrations"
 	layout="split"
 >
 	<ExperiencePanel
-		eyebrow="DEBUGGING + CONTRACTS"
-		title="Follow the assumption through its callers"
+		eyebrow="DEBUGGING"
+		title="Debugging across service and data boundaries"
 		emphasis
 	>
-		When a bug appears, I trace the assumption behind it through callers and related paths before
-		choosing the change. If the system cannot determine the correct state safely, I prefer an
-		explicit error to silently returning a plausible but wrong answer.
+		When a problem crosses layers, I trace the affected flow through callers, services and data
+		before choosing the change. If the system cannot determine the correct state safely, I prefer
+		an explicit error to silently returning a plausible but wrong answer.
 	</ExperiencePanel>
 	<ExperiencePanel
 		eyebrow="AUTHORIZATION + INTEGRATION"
-		title="Authorization changes do not stop at one service"
+		title="Authorization and service integration"
 	>
-		Some changes cross backend, frontend and service boundaries. I check tenant scoping and
-		affected consumers together so a tightened authorization rule or contract change does not
-		leave another caller relying on the old behavior.
+		Authorization and contract changes can affect more than one consumer. I check tenant scoping
+		and the callers that depend on the behavior so backend, frontend and service consumers evolve
+		together when a contract changes.
 	</ExperiencePanel>
 </ExperienceSection>
 
-<ExperienceSection
-	eyebrow="VALIDATION"
-	title="Checking that the fix covers the bug"
-	surface="highlight"
->
-	I use tests, compiler errors and static analysis to check the behavior I changed. For
-	regression-prone fixes, I sometimes remove the change temporarily to confirm the new test fails
-	for the intended reason. If the evidence points to a different cause, I update the diagnosis
-	instead of keeping the first explanation.
+<ExperienceSection eyebrow="VALIDATION" title="Regression validation" surface="highlight">
+	I use tests, compiler feedback and static analysis to identify affected code and check the
+	behavior I changed. For regression-prone fixes, I sometimes remove the change temporarily to
+	confirm the new test fails for the intended reason. If new evidence points to a different cause,
+	I update the diagnosis instead of keeping the first explanation.
 </ExperienceSection>
