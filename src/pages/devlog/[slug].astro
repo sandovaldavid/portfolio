@@ -29,12 +29,13 @@ if (!post) {
 
 const localizedPaths = await getDevlogLocalizedPaths(post);
 const { Content } = await render(post);
+const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
 ---
 
 <Layout
 	title={`${post.data.title} | Devlog | David Sandoval`}
 	description={post.data.summary}
-	img_preview="/projects/portfolio.webp"
+	img_preview={previewImage}
 	imageAlt={post.data.title}
 	pageType="devlog"
 	publishedTime={post.data.pubDate}
