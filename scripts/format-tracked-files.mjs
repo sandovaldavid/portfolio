@@ -74,7 +74,15 @@ for (let index = 0; index < trackedFiles.length; index += batchSize) {
 		if (mode === '--check') {
 			spawnSync(
 				process.execPath,
-				[prettierCli, '--write', '--ignore-unknown', '--ignore-path', '.prettierignore', '--', ...batch],
+				[
+					prettierCli,
+					'--write',
+					'--ignore-unknown',
+					'--ignore-path',
+					'.prettierignore',
+					'--',
+					...batch,
+				],
 				{ stdio: 'inherit' }
 			);
 			const diffResult = spawnSync('git', ['diff', '--', ...batch], {
