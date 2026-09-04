@@ -35,7 +35,9 @@ test('Spanish current role renders the localized systems narrative', async ({ pa
 	await expect(caseStudy.locator('[data-experience-status]')).toContainText('ACTUAL');
 });
 
-test('highlighted prose narrative uses the full career shell width on desktop', async ({ page }) => {
+test('highlighted prose narrative uses the full career shell width on desktop', async ({
+	page,
+}) => {
 	await page.setViewportSize(DESKTOP);
 	await page.goto('/es/experience/atena-software-engineer');
 
