@@ -72,26 +72,48 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Reactive frontend architecture')).toBeVisible();
+		await expect(page.getByText('Angular and TypeScript frontend development')).toBeVisible();
 
 		await page.goto('/es/about');
 		await expect(page).toHaveTitle('Sobre David Sandoval — Ingeniero de Software');
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Arquitectura frontend reactiva')).toBeVisible();
+		await expect(page.getByText('Desarrollo frontend con Angular y TypeScript')).toBeVisible();
+	});
+
+	test('Atena highlighted prose uses the full career shell width', async ({ page }) => {
+		await page.setViewportSize({ width: 1440, height: 900 });
+		await page.goto('/es/experience/atena-software-engineer');
+
+		const section = page.locator(
+			'[data-experience-section-surface="highlight"][data-experience-section-layout="prose"]'
+		);
+		const shell = section.locator('[data-experience-section-shell]');
+		const heading = section.locator('[data-experience-section-heading]');
+		const content = section.locator('[data-experience-section-content]');
+
+		await expect(section).toBeVisible();
+		const shellBox = (await shell.boundingBox())!;
+		const headingBox = (await heading.boundingBox())!;
+		const contentBox = (await content.boundingBox())!;
+
+		expect(Math.abs(shellBox.width - headingBox.width)).toBeLessThanOrEqual(2);
+		expect(Math.abs(shellBox.width - contentBox.width)).toBeLessThanOrEqual(2);
 	});
 
 	for (const scenario of [
 		{
 			route: '/research',
-			title: 'Predicting the Abandonment State of OSS Repositories using BiLSTM Neural Networks',
-			statusCopy: 'Results will be published upon thesis completion.',
+			title: 'Vulnerable-Dependency Remediation Viability in OSS Ecosystems',
+			statusCopy:
+				'The final research question, outcome definition and model family remain deliberately open',
 		},
 		{
 			route: '/es/research',
-			title: 'Predicción del Estado de Abandono de Repositorios OSS usando Redes Neuronales BiLSTM',
-			statusCopy: 'Los resultados se publicarán al completar la tesis.',
+			title: 'Viabilidad de Remediación de Dependencias Vulnerables en Ecosistemas OSS',
+			statusCopy:
+				'La pregunta de investigación, la definición del outcome y la familia de modelos finales permanecen deliberadamente abiertas',
 		},
 	] as const) {
 		test(`${scenario.route} renders localized research MDX composition`, async ({ page }) => {

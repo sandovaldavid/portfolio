@@ -2,13 +2,13 @@
 projectId: yukidoke
 locale: en
 title: Yukidoke
-description: 'A household-scoped personal-finance platform built with Angular 22 and a .NET 10 modular monolith. The active V1 beta keeps identity, household authorization and financial authority in separate boundaries.'
+description: 'A private household personal-finance product built with Angular 22 and a modular .NET 10 API, designed to support shared finances without making every financial record visible to the whole household.'
 category: 'Enterprise Software'
 imageAlt: 'Yukidoke household-finance platform architecture preview'
 caseStudy:
     kicker: 'PROJECT CASE STUDY · HOUSEHOLD FINANCE'
     status:
-        lifecycle: 'ACTIVE · V1 BETA / CROSS-REPO HARDENING'
+        lifecycle: 'ACTIVE · PRIVATE V1 BETA'
         source: 'PRIVATE CODEBASE'
         demo: 'NO PUBLIC DEMO'
 ---
@@ -68,50 +68,41 @@ Yukidoke therefore treats **authentication**, **household membership** and **per
 </CaseStudySection>
 
 <CaseStudySection eyebrow="DATA FLOW" title="REST recovers truth; realtime is incremental">
-  The web repository documents typed REST clients, pagination normalization and ProblemDetails handling. Notification state is designed to recover from durable REST state and use SignalR for incremental updates, so losing a realtime connection does not redefine the source of truth.
+  The Angular client uses typed REST clients, normalized pagination and ProblemDetails handling. Notification state is loaded from REST and SignalR adds incremental updates, so reconnecting does not change where durable state comes from.
 
 This distinction matters in finance: a websocket event can improve responsiveness, but it should not be the only record that a balance, notification or household action exists.
 
 </CaseStudySection>
 
-<CaseStudySection eyebrow="CURRENT IMPLEMENTATION" title="What the V1 beta demonstrates today" surface="highlight">
+<CaseStudySection eyebrow="CURRENT IMPLEMENTATION" title="What the V1 beta includes today" surface="highlight">
   <CaseStudyGrid columns={2}>
     <EvidenceBlock label="WEB" title="ANGULAR 22 · 0.9.0-RC.1" tone="verified">
-      The current web manifest uses Angular 22 and identifies version **0.9.0-rc.1**. Repository documentation describes household context and capability guards, typed API clients, debts/cards/payoff flows, income, Planning consolidation, invitation and household administration, EN/ES localization and a real-stack browser harness.
+      The web client runs on Angular 22 and identifies version **0.9.0-rc.1**. It includes household context and capability guards, typed API clients, debts/cards/payoff flows, income, Planning consolidation, invitations and household administration, EN/ES localization and a browser harness against the real supporting stack.
     </EvidenceBlock>
 
     <EvidenceBlock label="API" title=".NET 10 MODULAR MONOLITH" tone="verified">
-      `Directory.Build.props` targets **net10.0**. The API documentation describes Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications and Overview modules, PostgreSQL 16 persistence, Keycloak authentication, Worker and Database Migrator processes, and real PostgreSQL/Keycloak integration paths.
+      The API targets **.NET 10** and organizes Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications and Overview as modules. It uses PostgreSQL 16, Keycloak authentication, Worker and Database Migrator processes, with integration paths against real PostgreSQL and Keycloak services.
     </EvidenceBlock>
 
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PRIVACY" title="Resource existence is part of the authorization model">
-  The API documentation explicitly allows household-scoped endpoints to conceal a resource from non-members rather than revealing that it exists. That is a stronger privacy boundary than simply returning “forbidden” after exposing an identifier.
+  Household-scoped endpoints can hide a resource from non-members instead of revealing that it exists and then returning “forbidden”. This keeps resource existence inside the privacy boundary.
 
-Hardening remains active around privacy enforcement, export and directory surfaces, balances and settlements, final authentication acceptance and clean-stack production gates. These areas define the remaining beta work before real household financial data is considered in scope.
+The beta is still being worked on around privacy, exports, balances, authentication and clean-stack acceptance before I would consider it ready for real household financial data.
 
 </CaseStudySection>
 
-<CaseStudySection
-	eyebrow="CURRENT BOUNDARY"
-	title="V1 remains in private beta while production hardening continues"
-	surface="highlight"
->
-	<EvidenceBlock
-		label="PRODUCT STATUS"
-		title="PRIVATE BETA · PRODUCTION HARDENING IN PROGRESS"
-		tone="boundary"
-	>
-		The implementation is maintained in private repositories. Current engineering work
-		concentrates on authorization, financial consistency, persistence, export and privacy
-		surfaces, and clean-stack acceptance before real household financial data is considered in
-		scope.
+<CaseStudySection eyebrow="CURRENT BOUNDARY" title="V1 remains a private beta" surface="highlight">
+	<EvidenceBlock label="PRODUCT STATUS" title="PRIVATE BETA · ACTIVE DEVELOPMENT" tone="boundary">
+		The code remains private. Current work is focused on authorization, financial consistency,
+		persistence, exports, privacy and clean-stack acceptance before real household financial
+		data is in scope.
 	</EvidenceBlock>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="LEARNINGS" title="Engineering lessons from the household boundary">
+<CaseStudySection eyebrow="LEARNINGS" title="What I learned from the household boundary">
   <CaseStudyGrid columns={3}>
     <CaseStudyCard label="LEARNING 01" title="AUTHENTICATION IS NOT AUTHORIZATION" tone="success">
       Identity, household membership and visibility of a specific financial record need independent rules and independent tests.

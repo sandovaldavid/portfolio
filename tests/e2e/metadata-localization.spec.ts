@@ -13,6 +13,13 @@ async function getJsonLd(page: Page, type: string): Promise<JsonLd> {
 	return match ?? {};
 }
 
+async function hasJsonLd(page: Page, type: string): Promise<boolean> {
+	const schemas = await page.locator('script[type="application/ld+json"]').allTextContents();
+	return schemas
+		.map(schema => JSON.parse(schema) as JsonLd)
+		.some(schema => schema['@type'] === type);
+}
+
 function getString(schema: JsonLd, key: string): string {
 	const value = schema[key];
 	expect(typeof value, `Expected ${key} to be a string`).toBe('string');
@@ -97,7 +104,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'en',
 			title: 'David Sandoval — Software Engineer',
 			description:
-				'Software Engineer building maintainable web products and backend systems with clear technical decisions, automated validation and documented trade-offs. Remote from Peru, open to international opportunities.',
+				'David Sandoval is a backend-oriented Software Engineer with hands-on frontend experience, working across product systems, integrations, developer tooling, and software-maintenance research. Based in Peru and open to international opportunities.',
 			ogLocale: 'en_US',
 			alternateOgLocale: 'es_PE',
 			imageAlt: 'David Sandoval portfolio preview',
@@ -111,7 +118,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'es',
 			title: 'David Sandoval — Ingeniero de Software',
 			description:
-				'Ingeniero de software que construye productos web y sistemas backend mantenibles con decisiones técnicas claras, validación automatizada y trade-offs documentados. Remoto desde Perú, disponible para oportunidades internacionales.',
+				'David Sandoval es Ingeniero de Software orientado a backend, con experiencia práctica en frontend y trabajo en sistemas de producto, integraciones, developer tooling e investigación sobre mantenimiento de software. Desde Perú, abierto a oportunidades internacionales.',
 			ogLocale: 'es_PE',
 			alternateOgLocale: 'en_US',
 			imageAlt: 'Vista previa del portafolio de David Sandoval',
@@ -123,7 +130,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		const website = await getJsonLd(page, 'WebSite');
 		const person = await getJsonLd(page, 'Person');
 		expect(getString(website, 'inLanguage')).toBe('es');
-		expect(getString(website, 'description')).toContain('Ingeniero de software');
+		expect(getString(website, 'description')).toContain('Ingeniero de Software');
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
 	});
 
@@ -144,8 +151,15 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		expect(getString(devlog, 'datePublished')).toBeTruthy();
 
 		await page.goto('/es/research');
-		const research = await getJsonLd(page, 'ScholarlyArticle');
+		expect(await hasJsonLd(page, 'ScholarlyArticle')).toBe(false);
+		const research = await getJsonLd(page, 'WebPage');
 		expect(getString(research, 'inLanguage')).toBe('es');
+		await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
+			'content',
+			'website'
+		);
+		const researchBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
+		expect(JSON.stringify(researchBreadcrumbs)).toContain('Investigación');
 
 		await page.goto('/es/projects/yukidoke');
 		const project = await getJsonLd(page, 'SoftwareSourceCode');
@@ -162,10 +176,12 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 
 		expect(getString(profile, 'inLanguage')).toBe('es');
 		expect(getString(profile, 'description')).toContain(
-			'Conoce cómo David Sandoval aborda la ingeniería de software'
+			'Sobre David Sandoval, Ingeniero de Software orientado a backend'
 		);
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
-		expect(getString(person, 'description')).toContain('sistemas backend mantenibles');
+		expect(getString(person, 'description')).toContain(
+			'experiencia práctica en frontend, sistemas de producto, integraciones'
+		);
 	});
 
 	test('canonical alternate targets resolve for representative route families', async ({

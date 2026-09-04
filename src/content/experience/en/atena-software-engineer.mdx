@@ -4,38 +4,41 @@ locale: en
 company: Atena
 title: Jr. Software Engineer
 dateLabel: Jan 2026 – Present
-summary: Current role spanning Angular modernization, .NET reporting workflows, typed SQL Server integration and regression safety.
+summary: At Atena, I work mainly on .NET backend services and also contribute to an Angular administrative frontend in an existing fintech product.
 achievements:
-    - Replaced complex RxJS chains with Angular 19 Signals in existing dashboards, centralizing reactive state and removing redundant subscriptions
-    - Optimized C# (.NET 8) Web APIs and Entity Framework Core queries with projections and AsNoTracking to avoid unnecessary data loading in reporting workflows
-    - Developed end-to-end features connecting SQL Server stored procedures to typed Angular components through .NET services, TypeScript interfaces and DTOs
-    - Added unit tests for business-logic services and integrated them into existing CI/CD workflows to strengthen automated regression checks
+    - Work mainly on .NET backend services and also contribute to an Angular administrative frontend in an existing fintech product
+    - Implement and maintain API, authorization, integration and frontend changes across existing product workflows
+    - Coordinate contract changes when backend services and frontend or service consumers need to evolve together
+    - Use tests, compiler feedback and static analysis to identify affected code and validate regression-prone changes
 ---
 
 <ExperienceSection
-	eyebrow="ROLE CONTEXT"
-	title="Working across a typed .NET + Angular delivery path"
+	eyebrow="WORKING ON EXISTING SYSTEMS"
+	title="Backend services, frontend features and integrations"
 	layout="split"
 >
 	<ExperiencePanel
-		eyebrow="FRONTEND MODERNIZATION"
-		title="Reactive state without subscription sprawl"
+		eyebrow="DEBUGGING"
+		title="Debugging across service and data boundaries"
 		emphasis
 	>
-		I modernize existing Angular dashboards by replacing difficult RxJS subscription chains with
-		Signals-based state, making data flow easier to reason about and maintain.
+		When a problem crosses layers, I trace the affected flow through callers, services and data
+		before choosing the change. If the system cannot determine the correct state safely, I
+		prefer an explicit error to silently returning a plausible but wrong answer.
 	</ExperiencePanel>
-	<ExperiencePanel eyebrow="BACKEND + DATA" title="Reporting workflows with explicit contracts">
-		I work across .NET 8, Entity Framework Core and SQL Server reporting paths, connecting
-		stored procedures and services to typed TypeScript interfaces and DTOs in Angular.
+	<ExperiencePanel
+		eyebrow="AUTHORIZATION + INTEGRATION"
+		title="Authorization and service integration"
+	>
+		Authorization and contract changes can affect more than one consumer. I check tenant scoping
+		and the callers that depend on the behavior so backend, frontend and service consumers
+		evolve together when a contract changes.
 	</ExperiencePanel>
 </ExperienceSection>
 
-<ExperienceSection
-	eyebrow="DELIVERY DISCIPLINE"
-	title="Regression safety is part of feature work"
-	surface="highlight"
->
-	Unit tests for business-logic services are integrated into the existing CI/CD workflow so
-	validation travels with the change instead of being treated as a separate phase.
+<ExperienceSection eyebrow="VALIDATION" title="Regression validation" surface="highlight">
+	I use tests, compiler feedback and static analysis to identify affected code and check the
+	behavior I changed. For regression-prone fixes, I sometimes remove the change temporarily to
+	confirm the new test fails for the intended reason. If new evidence points to a different cause,
+	I update the diagnosis instead of keeping the first explanation.
 </ExperienceSection>

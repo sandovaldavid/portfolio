@@ -3,25 +3,25 @@
 	"locale": "es",
 	"seo": {
 		"title": "Sobre David Sandoval — Ingeniero de Software",
-		"description": "Conoce cómo David Sandoval aborda la ingeniería de software a través de sistemas backend, productos web, pruebas, developer tooling e investigación aplicada."
+		"description": "Sobre David Sandoval, Ingeniero de Software orientado a backend con experiencia práctica en frontend, sistemas de producto, integraciones, developer tooling e investigación sobre mantenimiento de software."
 	},
-	"summary": "Ingeniero de software orientado a backend con experiencia frontend. Conecto decisiones técnicas con el contexto de negocio, construyo productos web mantenibles y valido los cambios mediante pruebas y workflows reproducibles.",
+	"summary": "Ingeniero de Software orientado a backend, con experiencia práctica en frontend. Trabajo en sistemas de producto entre servicios backend, funcionalidades frontend e integraciones. Cuando un problema cruza varias capas, sigo el flujo afectado antes de realizar el cambio.",
 	"biography": [
-		"Ingeniero de software orientado a backend con experiencia frontend en .NET, Angular y TypeScript. Valoro una arquitectura clara cuando reduce riesgos de entrega, no como un objetivo por sí misma.",
-		"Mi experiencia profesional incluye modernización de módulos frontend, contribución en APIs REST, mejoras en flujos de datos y reporting, ampliación de cobertura de regresión automatizada y apoyo en migraciones desde sistemas legacy. Documento decisiones, trade-offs y validación para que la ingeniería detrás del trabajo sea más fácil de comprender.",
-		"En paralelo al desarrollo de productos, investigo Mining Software Repositories y el uso de modelos BiLSTM para estudiar el abandono de proyectos OSS, actualmente en desarrollo para obtener mi título profesional. Esta investigación es una especialización secundaria que complementa mi trabajo en ingeniería de software."
+		"Trabajo principalmente en servicios backend con .NET y también desarrollo funcionalidades frontend con Angular y TypeScript. Mi trabajo cotidiano incluye APIs, integraciones y flujos de producto existentes, así que a menudo necesito entender cómo un cambio afecta a más de una parte del sistema.",
+		"En Atena trabajo sobre servicios backend .NET y un frontend administrativo en Angular dentro de un producto fintech existente. Mi trabajo incluye cambios de API, autorización, integración y frontend. Cuando un cambio cruza capas o servicios, sigo el flujo afectado y sus consumidores, y después uso pruebas, feedback del compilador y análisis estático para validar comportamiento propenso a regresiones.",
+		"Fuera del trabajo construyo developer tooling y proyectos de producto, y desarrollo mi tesis sobre remediación de dependencias vulnerables en ecosistemas OSS. Mi dirección inicial de tesis cambió después de revisar la literatura, así que ahora estoy validando la nueva pregunta y los datos antes de elegir un modelo."
 	],
 	"focusAreas": [
-		"Sistemas backend mantenibles y límites de API",
-		"Arquitectura frontend reactiva",
-		"Desarrollo web con contratos tipados",
-		"Pruebas automatizadas y quality gates en CI",
-		"Ingeniería orientada a negocio y validación",
+		"Servicios backend y diseño de APIs",
+		"Desarrollo frontend con Angular y TypeScript",
+		"Aplicaciones web con contratos tipados",
+		"Pruebas automatizadas y CI",
+		"Debugging entre capas y servicios",
 		"Developer tooling y documentación técnica"
 	],
-	"availabilityStatement": "Disponible para oportunidades remotas de ingeniería de software, incluyendo relocation internacional o posgrado como parte de mi crecimiento profesional.",
+	"availabilityStatement": "Disponible para oportunidades remotas de ingeniería de software, incluyendo roles internacionales o relocation; también exploro opciones de posgrado.",
 	"location": "Perú (UTC-5)",
 	"workMode": "Remoto desde Perú",
-	"researchSummary": "Investigación sobre predicción de abandono OSS mediante modelos BiLSTM y datos de actividad de repositorios, como parte de mi tesis en desarrollo.",
-	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer, orientado a backend con experiencia frontend en Angular y .NET. Mi enfoque es entregar software mantenible, validar los cambios y documentar las decisiones técnicas."
+	"researchSummary": "Investigo si las señales históricas de mantenimiento upstream aportan información prospectiva útil para estimar la latencia de remediación de dependencias vulnerables; la definición final del outcome y la familia de modelos siguen en validación.",
+	"currentRoleSummary": "Actualmente trabajo en Atena como Jr. Software Engineer, principalmente en servicios backend con .NET y también en un frontend administrativo con Angular. Mi trabajo incluye cambios de API, autorización, integración entre servicios y frontend, con validación dirigida en comportamientos propensos a regresiones."
 }

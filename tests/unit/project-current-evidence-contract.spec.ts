@@ -22,7 +22,7 @@ describe('current project evidence contracts', () => {
 		const metadata = read('src/entities/project/model/metadata.ts');
 		const block = metadata.match(/yukidoke: \{([\s\S]*?)\n\t\},\n\tkioku:/)?.[1] ?? '';
 
-		expect(en).toContain('ACTIVE · V1 BETA / CROSS-REPO HARDENING');
+		expect(en).toContain('ACTIVE · PRIVATE V1 BETA');
 		expect(en).toContain('Angular 22');
 		expect(en).toContain('.NET 10');
 		expect(en).toContain('PostgreSQL 16');
@@ -89,7 +89,7 @@ describe('current project evidence contracts', () => {
 		const auctions = project('es', 'auctions');
 
 		expect(kioku).toContain('ESTABLE 3.1.2 + DESARROLLO');
-		expect(yukidoke).toContain('ACTIVO · BETA V1 / ENDURECIMIENTO ENTRE REPOSITORIOS');
+		expect(yukidoke).toContain('ACTIVO · BETA V1 PRIVADA');
 		expect(campusMap).toContain('MANTENIDO · NEXT.JS 16');
 		expect(campusMap).toContain('EL MAPA INTERACTIVO CONTINÚA COMO TRABAJO FUTURO');
 		expect(madAi).toContain('CLIENTE PÚBLICO · API PRIVADA');
