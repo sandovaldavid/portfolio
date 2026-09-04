@@ -145,7 +145,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		const blogBreadcrumbs = await getJsonLd(page, 'BreadcrumbList');
 		expect(JSON.stringify(blogBreadcrumbs)).toContain(blogHeading);
 
-		await page.goto('/es/devlog/phase-3-complete');
+		await page.goto('/es/devlog/v2-0-0');
 		const devlog = await getJsonLd(page, 'TechArticle');
 		expect(getString(devlog, 'inLanguage')).toBe('es');
 		expect(getString(devlog, 'datePublished')).toBeTruthy();
