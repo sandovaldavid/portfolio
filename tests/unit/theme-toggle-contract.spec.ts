@@ -19,10 +19,22 @@ describe('theme toggle runtime contract', () => {
 		expect(themeToggle).toContain("window.matchMedia('(prefers-reduced-motion: reduce)')");
 	});
 
-	it('animates the control without making motion part of state correctness', () => {
+	it('crossfades the outgoing and incoming icons without changing button geometry', () => {
+		expect(themeToggle).toContain('theme-toggle-icon');
+		expect(themeToggle).toContain('icon.dataset.themeActive');
+		expect(themeToggle).toContain('outgoingIcon?.animate(');
+		expect(themeToggle).toContain('incomingIcon?.animate(');
+		expect(themeToggle).toContain("{ opacity: 0, transform: 'rotate(18deg) scale(0.72)' }");
+		expect(themeToggle).toContain("{ opacity: 0, transform: 'rotate(-18deg) scale(0.72)' }");
+		expect(themeToggle).toContain("{ opacity: 1, transform: 'rotate(0deg) scale(1)' }");
+		expect(themeToggle).toContain('position: absolute;');
+		expect(themeToggle).toContain('inset: 0;');
+	});
+
+	it('keeps motion optional and independent from state correctness', () => {
 		expect(themeToggle).toContain('button.animate(');
-		expect(themeToggle).toContain('activeIcon?.animate(');
 		expect(themeToggle).toContain("if (reducedMotionMedia.matches) return;");
+		expect(themeToggle).toContain('syncThemeState();');
 	});
 
 	it('keeps a runtime favicon aligned with the resolved portfolio theme', () => {
