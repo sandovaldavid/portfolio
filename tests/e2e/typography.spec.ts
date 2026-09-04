@@ -36,8 +36,8 @@ const KEY_PAGES = [
 	{ path: '/es/projects/mad-ai', name: 'Project detail (ES)' },
 	{ path: '/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (EN)' },
 	{ path: '/es/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (ES)' },
-	{ path: '/devlog/v1-3-0-beta', name: 'Devlog detail (EN)' },
-	{ path: '/es/devlog/v1-3-0-beta', name: 'Devlog detail (ES)' },
+	{ path: '/devlog/v2-0-0', name: 'Devlog detail (EN)' },
+	{ path: '/es/devlog/v2-0-0', name: 'Devlog detail (ES)' },
 ];
 
 const VIEWPORTS = [

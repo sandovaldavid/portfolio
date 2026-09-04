@@ -15,7 +15,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 -->
 <button
 	type="button"
-	class="theme-toggle grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+	class="theme-toggle relative grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-150 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 	data-theme-toggle
 	data-theme-select-label={tTheme('select')}
 	data-theme-light-label={tTheme('light')}
@@ -23,17 +23,27 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	data-theme-system-label={tTheme('system')}
 	aria-label={tTheme('select')}
 >
-	<span data-theme-icon="light" hidden><SunIcon class="size-5" aria-hidden="true" /></span>
-	<span data-theme-icon="dark" hidden><MoonIcon class="size-5" aria-hidden="true" /></span>
-	<span data-theme-icon="system" hidden><SystemIcon class="size-5" aria-hidden="true" /></span>
+	<span class="theme-toggle-icon" data-theme-icon="light" aria-hidden="true">
+		<SunIcon class="size-5" aria-hidden="true" />
+	</span>
+	<span class="theme-toggle-icon" data-theme-icon="dark" aria-hidden="true">
+		<MoonIcon class="size-5" aria-hidden="true" />
+	</span>
+	<span class="theme-toggle-icon" data-theme-icon="system" aria-hidden="true">
+		<SystemIcon class="size-5" aria-hidden="true" />
+	</span>
 </button>
 
 <script>
 	type ThemePreference = 'light' | 'dark' | 'system';
+	type ResolvedTheme = 'light' | 'dark';
 
 	const THEME_STORAGE_KEY = 'theme';
 	const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];
+	const THEME_TRANSITION_DURATION_MS = 180;
 	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+	const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+	let themeTransitionTimer: number | undefined;
 
 	const isThemePreference = (value: string | null): value is ThemePreference =>
 		value === 'light' || value === 'dark' || value === 'system';
@@ -42,6 +52,9 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		const saved = localStorage.getItem(THEME_STORAGE_KEY);
 		return isThemePreference(saved) ? saved : 'dark';
 	};
+
+	const getResolvedTheme = (theme: ThemePreference): ResolvedTheme =>
+		theme === 'dark' || (theme === 'system' && darkSchemeMedia.matches) ? 'dark' : 'light';
 
 	const getNextTheme = (theme: ThemePreference): ThemePreference => {
 		const index = THEME_ORDER.indexOf(theme);
@@ -54,14 +67,35 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		return button.dataset.themeSystemLabel ?? '';
 	};
 
+	const syncThemeFavicon = (resolvedTheme: ResolvedTheme) => {
+		let favicon = document.querySelector<HTMLLinkElement>('link[data-theme-favicon-active]');
+		if (!favicon) {
+			favicon = document.createElement('link');
+			favicon.rel = 'icon';
+			favicon.type = 'image/svg+xml';
+			favicon.dataset.themeFaviconActive = 'true';
+		}
+
+		const source = `/favicon.${resolvedTheme}.svg`;
+		if (favicon.getAttribute('href') !== source) favicon.setAttribute('href', source);
+
+		// Keep the runtime-selected favicon as the last icon candidate. The static
+		// prefers-color-scheme links remain a no-JS fallback, while this link follows
+		// the Portfolio preference even when it differs from the operating system.
+		document.head.append(favicon);
+	};
+
 	const syncThemeState = () => {
 		const theme = getSavedTheme();
-		const isDark = theme === 'dark' || (theme === 'system' && darkSchemeMedia.matches);
+		const resolvedTheme = getResolvedTheme(theme);
+		const isDark = resolvedTheme === 'dark';
 		document.documentElement.classList.toggle('dark', isDark);
+		document.documentElement.dataset.themeResolved = resolvedTheme;
+		syncThemeFavicon(resolvedTheme);
 
 		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
 			button.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(icon => {
-				icon.hidden = icon.dataset.themeIcon !== theme;
+				icon.dataset.themeActive = String(icon.dataset.themeIcon === theme);
 			});
 
 			const nextTheme = getNextTheme(theme);
@@ -74,15 +108,77 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		});
 	};
 
+	const beginThemeTransition = () => {
+		if (reducedMotionMedia.matches) return;
+
+		const root = document.documentElement;
+		window.clearTimeout(themeTransitionTimer);
+		root.classList.add('theme-transition');
+
+		// Ensure transition properties are active before semantic colors resolve
+		// against the next color-scheme value.
+		void root.offsetWidth;
+
+		themeTransitionTimer = window.setTimeout(() => {
+			root.classList.remove('theme-transition');
+		}, THEME_TRANSITION_DURATION_MS + 40);
+	};
+
+	const animateThemeToggle = (
+		button: HTMLButtonElement,
+		previousTheme: ThemePreference,
+		nextTheme: ThemePreference
+	) => {
+		if (reducedMotionMedia.matches) return;
+
+		button.animate(
+			[{ transform: 'scale(1)' }, { transform: 'scale(0.94)' }, { transform: 'scale(1)' }],
+			{
+				duration: THEME_TRANSITION_DURATION_MS,
+				easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
+			}
+		);
+
+		const outgoingIcon = button.querySelector<HTMLElement>(
+			`[data-theme-icon="${previousTheme}"]`
+		);
+		const incomingIcon = button.querySelector<HTMLElement>(`[data-theme-icon="${nextTheme}"]`);
+
+		outgoingIcon?.animate(
+			[
+				{ opacity: 1, transform: 'rotate(0deg) scale(1)' },
+				{ opacity: 0, transform: 'rotate(18deg) scale(0.72)' },
+			],
+			{
+				duration: THEME_TRANSITION_DURATION_MS,
+				easing: 'cubic-bezier(0.4, 0, 1, 1)',
+			}
+		);
+
+		incomingIcon?.animate(
+			[
+				{ opacity: 0, transform: 'rotate(-18deg) scale(0.72)' },
+				{ opacity: 1, transform: 'rotate(0deg) scale(1)' },
+			],
+			{
+				duration: THEME_TRANSITION_DURATION_MS,
+				easing: 'cubic-bezier(0, 0, 0.2, 1)',
+			}
+		);
+	};
+
 	const setupThemeToggles = () => {
 		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
 			if (button.dataset.themeReady === 'true') return;
 			button.dataset.themeReady = 'true';
 
 			button.addEventListener('click', () => {
-				const nextTheme = getNextTheme(getSavedTheme());
+				const currentTheme = getSavedTheme();
+				const nextTheme = getNextTheme(currentTheme);
+				beginThemeTransition();
 				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
 				syncThemeState();
+				animateThemeToggle(button, currentTheme, nextTheme);
 			});
 		});
 
@@ -92,7 +188,10 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	if (document.documentElement.dataset.themeSchemeListener !== 'ready') {
 		document.documentElement.dataset.themeSchemeListener = 'ready';
 		darkSchemeMedia.addEventListener('change', () => {
-			if (getSavedTheme() === 'system') syncThemeState();
+			if (getSavedTheme() === 'system') {
+				beginThemeTransition();
+				syncThemeState();
+			}
 		});
 	}
 
@@ -100,10 +199,46 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	document.addEventListener('astro:page-load', setupThemeToggles);
 </script>
 
-<style>
+<style is:global>
+	.theme-toggle-icon {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		opacity: 0;
+		pointer-events: none;
+		transform: rotate(-18deg) scale(0.72);
+	}
+
+	.theme-toggle-icon[data-theme-active='true'] {
+		opacity: 1;
+		transform: rotate(0deg) scale(1);
+	}
+
+	/*
+	 * Theme changes are a short semantic-color transition, not a page animation.
+	 * Geometry and transforms remain untouched so layout never drifts while the
+	 * Light/Dark token set changes.
+	 */
+	html.theme-transition body,
+	html.theme-transition body *,
+	html.theme-transition body *::before,
+	html.theme-transition body *::after {
+		transition-property:
+			background-color, border-color, color, fill, stroke, box-shadow, outline-color,
+			text-decoration-color;
+		transition-duration: 180ms;
+		transition-timing-function: ease-out;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
-		.theme-toggle {
-			transition: none;
+		html.theme-transition body,
+		html.theme-transition body *,
+		html.theme-transition body *::before,
+		html.theme-transition body *::after,
+		.theme-toggle,
+		.theme-toggle-icon {
+			transition: none !important;
 		}
 	}
 </style>

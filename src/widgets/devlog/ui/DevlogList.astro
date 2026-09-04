@@ -5,13 +5,10 @@ import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/
 import DevlogCard from './DevlogCard.astro';
 
 /*
- * Devlog list composition (spec/04 "Devlog List" +
- * plans/pages/devlog-list.md): intro inside the 1280 container — kicker
- * VERSIONED PROJECT HISTORY / HISTORIAL VERSIONADO DEL PROYECTO, title and
- * body line — followed by three Editorial Cards wrapping as a centered 2+1
- * arrangement (520 + 32 + 520 desktop / 369 pairs tablet / single 340 stack
- * with 24px gap on mobile). Historical release records keep their factual
- * strings unchanged (spec/06 drift rules).
+ * Devlog list composition: intro inside the 1280px container followed by
+ * data-driven Editorial Cards. Public records represent real portfolio
+ * versions only; development work belongs to the version it is preparing
+ * rather than being presented as an independent release.
  */
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');

@@ -1,11 +1,11 @@
 {
 	"label": "Devlog",
-	"introKicker": "HISTORIAL VERSIONADO DEL PROYECTO",
+	"introKicker": "HISTORIAL DE VERSIONES DEL PORTFOLIO",
 	"introTitle": "Devlog",
-	"introBody": "Registros orientados a releases que separan cambios completados, validación y trabajo pendiente.",
-	"gridSectionLabel": "Cuadrícula del devlog",
-	"pageTitle": "Devlog — Notas de Parche | David Sandoval",
-	"pageDescription": "Registro de desarrollo que documenta iteraciones del portafolio, decisiones técnicas y progreso.",
-	"readMore": "Leer notas",
+	"introBody": "Hasta ahora, dos hitos definen el portfolio: v1.0.0 es la versión publicada; v2.0.0 es la revisión mayor que sigue en desarrollo.",
+	"gridSectionLabel": "Entradas del historial de versiones",
+	"pageTitle": "Devlog — Historial de Versiones del Portfolio | David Sandoval",
+	"pageDescription": "Historial de versiones del portfolio de David Sandoval: la base publicada v1.0.0 y la revisión v2.0.0 que continúa en desarrollo.",
+	"readMore": "Leer notas de versión",
 	"back": "Volver al devlog"
 }

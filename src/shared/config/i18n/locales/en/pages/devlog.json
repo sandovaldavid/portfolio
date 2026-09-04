@@ -1,11 +1,11 @@
 {
 	"label": "Devlog",
-	"introKicker": "VERSIONED PROJECT HISTORY",
+	"introKicker": "PORTFOLIO VERSION HISTORY",
 	"introTitle": "Devlog",
-	"introBody": "Release-oriented records that separate completed changes, validation and remaining work.",
-	"gridSectionLabel": "Devlog grid",
-	"pageTitle": "Devlog — Patch Notes | David Sandoval",
-	"pageDescription": "Development log tracking portfolio iterations, technical decisions and progress.",
-	"readMore": "Read patch notes",
+	"introBody": "Two milestones define the portfolio so far: v1.0.0 is the released baseline; v2.0.0 is the major revision currently in development.",
+	"gridSectionLabel": "Portfolio version entries",
+	"pageTitle": "Devlog — Portfolio Version History | David Sandoval",
+	"pageDescription": "Version history for David Sandoval's portfolio, covering the released v1.0.0 baseline and the v2.0.0 revision currently in development.",
+	"readMore": "Read version notes",
 	"back": "Back to devlog"
 }

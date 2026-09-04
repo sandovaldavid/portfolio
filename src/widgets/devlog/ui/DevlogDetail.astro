@@ -15,14 +15,9 @@ const { post, Content, backText, backLink } = Astro.props;
 const { title, summary, pubDate, version, tags } = post.data;
 
 /*
- * Devlog detail composition (spec/04 "Devlog Detail" +
- * plans/pages/devlog-detail.md): detail header in the centered editorial
- * column (350px mobile / 720px tablet / 980px desktop), the release summary
- * as a Standard ContentPanel (620x240 desktop, 340x220 mobile) centered in
- * the body, then the real MDX record re-presented with the same
- * ContentPanel/code-rule patterns as Blog Detail (reading blocks at 620,
- * terminal code slabs at 760). Historical records keep their factual strings
- * unchanged (spec/06 drift rules); long localized rows grow vertically.
+ * Devlog detail composition: centered editorial header, a version summary
+ * presented in ContentPanel, and the Markdown record using the same reading
+ * and code-block rules as Blog Detail. Long localized rows grow vertically.
  */
 const articleBodyClasses =
 	'article-body prose prose-neutral mt-12 max-w-none dark:prose-invert ' +

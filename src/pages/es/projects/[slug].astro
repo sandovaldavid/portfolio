@@ -25,13 +25,14 @@ if (!detail) {
 const { project, entry } = detail;
 const { Content } = await render(entry);
 const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandoval`;
+const previewImage = `/og/preview-project-${slug}-${lang}-dark.png`;
 ---
 
 <Layout
 	title={pageTitle}
 	description={project.description}
-	img_preview={project.image.src}
-	imageAlt={project.imageAlt}
+	img_preview={previewImage}
+	imageAlt={`${project.title} — ${tProjects('caseStudy')}`}
 	pageType="project"
 	breadcrumbLabel={project.title}
 	contentLayout="flush"

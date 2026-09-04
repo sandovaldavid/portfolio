@@ -13,14 +13,14 @@ const pairedRoutes = [
 		target: '/blog/predicting-oss-abandonment-with-bilstm',
 	},
 	{
-		source: '/devlog/phase-3-complete',
+		source: '/devlog/v1-0-0-launch',
 		targetLabel: 'Español',
-		target: '/es/devlog/phase-3-complete',
+		target: '/es/devlog/v1-0-0-launch',
 	},
 	{
-		source: '/es/devlog/v1-3-0-beta',
+		source: '/es/devlog/v2-0-0',
 		targetLabel: 'English',
-		target: '/devlog/v1-3-0-beta',
+		target: '/devlog/v2-0-0',
 	},
 ] as const;
 

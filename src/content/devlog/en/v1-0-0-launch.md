@@ -1,22 +1,27 @@
 ---
 translationKey: v1-0-0-launch
-title: 'v1.0.0 — Portfolio Launch'
-summary: 'Initial production release with accessibility, performance, SEO and architecture improvements, rebuilt with Astro 5, Tailwind 4 and Feature-Sliced Design.'
-pubDate: 2026-06-15
+title: 'v1.0.0 — Initial Release'
+summary: 'The first published portfolio version: a stable baseline for accessibility, performance, SEO, theming and maintainable frontend architecture.'
+pubDate: 2026-07-29
 version: '1.0.0'
 tags: ['release']
 ---
 
-## Overview
+## What v1.0.0 established
 
-The portfolio launched on June 15, 2026 after a broad engineering review covering accessibility with axe-core, performance with Lighthouse CI, structured-data SEO and Feature-Sliced Design architecture.
+v1.0.0 is the first published version of the current portfolio. It established a stable baseline before the larger v2.0.0 revision began.
 
-## Key Changes
+The goal was straightforward: make the site reliable, accessible and maintainable before expanding its content and visual system.
 
-- **Framework migration**: Updated to Astro 5 with TypeScript strict mode
-- **Architecture**: Migrated to Feature-Sliced Design (FSD) with layer boundaries and enforced import direction
-- **Styling**: Adopted Tailwind CSS 4 with @tailwindcss/vite integration
-- **Theming**: Implemented light/dark/system themes with the CSS `light-dark()` function
-- **Accessibility**: Added skip-link, keyboard navigation, WCAG 2.1 AA checks and reduced-motion support
-- **Fonts**: Adopted Astro Font API with a legacy display-font stack (Press Start 2P, VT323, Silkscreen) that was later refined as the identity evolved
-- **CI/CD**: Added Lighthouse CI, Playwright E2E, CodeQL, bundle analysis and Vercel deployment pipelines
+## Engineering foundation
+
+- **Frontend foundation**: Astro with strict TypeScript and a Feature-Sliced Design structure that keeps import direction explicit.
+- **Styling and themes**: Tailwind CSS with light, dark and system preferences.
+- **Accessibility**: Keyboard navigation, a skip link, reduced-motion support and automated accessibility checks.
+- **Quality checks**: Playwright E2E coverage, Lighthouse CI, CodeQL and bundle checks as part of the delivery workflow.
+- **SEO**: Canonical metadata and structured data for the main public routes.
+- **Deployment**: Vercel deployment integrated into the repository workflow.
+
+## What changed after v1
+
+The first release still reflected an earlier, more effect-driven visual direction. It was a useful starting point, but it did not communicate my work as clearly as I wanted. The v2.0.0 work therefore focuses less on visual novelty and more on professional context, evidence, readable case studies and a consistent identity system.
