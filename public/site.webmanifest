@@ -1,7 +1,7 @@
 {
 	"name": "David Sandoval — Portfolio",
 	"short_name": "David Sandoval",
-	"description": "Portfolio of David Sandoval, a backend-oriented Software Engineer with hands-on frontend experience focused on correctness, debugging, explicit system boundaries and validation.",
+	"description": "Portfolio of David Sandoval, a backend-oriented Software Engineer with hands-on frontend experience, currently working on fintech software at Atena.",
 	"start_url": "/",
 	"scope": "/",
 	"display": "standalone",

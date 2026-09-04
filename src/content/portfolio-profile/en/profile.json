@@ -3,25 +3,25 @@
 	"locale": "en",
 	"seo": {
 		"title": "About David Sandoval — Software Engineer",
-		"description": "How David Sandoval works across backend-oriented product engineering, frontend delivery, debugging, validation, developer tooling and software-maintenance research."
+		"description": "About David Sandoval, a backend-oriented Software Engineer working on fintech software, frontend features, developer tools and software-maintenance research."
 	},
-	"summary": "Backend-oriented Software Engineer with hands-on frontend experience. I connect technical decisions to business context, trace assumptions across system boundaries and validate changes before treating them as solved.",
+	"summary": "Backend-oriented Software Engineer with hands-on frontend experience. I work mainly on existing product systems, where fixing a bug can mean tracing behavior across callers, services and data boundaries before changing it.",
 	"biography": [
-		"I’m a backend-oriented Software Engineer with hands-on frontend experience across .NET, Angular and TypeScript. I enjoy the part of engineering that starts before the fix: understanding the behavior, the business rule behind it and the boundaries a change can affect.",
-		"At Atena, I work on existing fintech software rather than isolated greenfield exercises. That has taught me to trace assumptions through callers and services, make authorization and data contracts explicit, use tests and type-system feedback to find affected behavior, and revise my own conclusion when new evidence changes the problem.",
-		"Outside work, I build developer tools and product projects, and I’m developing my thesis around vulnerable-dependency remediation in OSS ecosystems. The research direction changed after the literature challenged my first framing; keeping that correction visible matters to me because learning should change the plan when the evidence changes."
+		"I’m a backend-oriented Software Engineer with hands-on frontend experience. I work mainly with .NET on the backend and Angular/TypeScript on the frontend, and I like understanding how a system behaves before changing it, especially when a bug crosses several layers.",
+		"At Atena, I work on existing fintech software. My work has included debugging workflows across backend and frontend, tightening authorization behavior, coordinating contract changes between services, and using tests, compiler feedback and static analysis to find code affected by a change.",
+		"Outside work, I build developer tools and product projects, and I’m developing my thesis on vulnerable-dependency remediation in OSS ecosystems. My original thesis direction changed after the literature review, so I’m now validating the new question and data before choosing a model."
 	],
 	"focusAreas": [
-		"Maintainable backend systems and API boundaries",
-		"Reactive frontend architecture",
-		"Type-safe web application development",
-		"Automated testing and CI quality gates",
-		"Business-aware, validation-driven engineering",
+		"Backend services and API design",
+		"Angular and TypeScript frontend development",
+		"Type-safe web applications",
+		"Automated testing and CI",
+		"Debugging across system boundaries",
 		"Developer tooling and technical documentation"
 	],
-	"availabilityStatement": "Open to remote software engineering opportunities, including international relocation or graduate study as part of ongoing career growth.",
+	"availabilityStatement": "Open to remote software engineering opportunities, including international roles or relocation; I’m also exploring graduate study.",
 	"location": "Peru (UTC-5)",
 	"workMode": "Remote from Peru",
 	"researchSummary": "Researching whether upstream maintenance signals add useful prospective information for estimating vulnerable-dependency remediation latency; the final outcome definition and model family remain under validation.",
-	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer. My work is backend-oriented with significant frontend scope, with a focus on correctness, authorization, service integration, debugging and validation in existing fintech systems."
+	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer, mainly on .NET backend systems and also on an Angular administrative frontend. The work includes debugging existing workflows, authorization, service integration and regression validation."
 }
