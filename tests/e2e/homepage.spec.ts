@@ -103,16 +103,36 @@ test.describe('Homepage', () => {
 
 		await page.locator('#recruiter-hud-toggle').click();
 		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
+		const sunIcon = themeToggle.locator('[data-theme-icon="light"]');
+		const moonIcon = themeToggle.locator('[data-theme-icon="dark"]');
+		const systemIcon = themeToggle.locator('[data-theme-icon="system"]');
 		await expect(themeToggle).toBeVisible();
+		await expect(sunIcon).toHaveAttribute('data-theme-active', 'true');
+		await expect(moonIcon).toHaveAttribute('data-theme-active', 'false');
+		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
+
 		await themeToggle.click();
 
 		await expect(html).toHaveClass(/dark/);
 		await expect(html).toHaveAttribute('data-theme-resolved', 'dark');
 		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.dark.svg');
 		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('dark');
+		await expect(sunIcon).toHaveAttribute('data-theme-active', 'false');
+		await expect(moonIcon).toHaveAttribute('data-theme-active', 'true');
+		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
 
 		await expect(html).toHaveClass(/theme-transition/);
 		await expect.poll(() => html.getAttribute('class')).not.toContain('theme-transition');
+
+		await themeToggle.click();
+		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('system');
+		await expect(moonIcon).toHaveAttribute('data-theme-active', 'false');
+		await expect(systemIcon).toHaveAttribute('data-theme-active', 'true');
+
+		await themeToggle.click();
+		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('light');
+		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
+		await expect(sunIcon).toHaveAttribute('data-theme-active', 'true');
 	});
 
 	test('respects reduced motion while still changing theme and favicon state', async ({ page }) => {
@@ -131,6 +151,10 @@ test.describe('Homepage', () => {
 		await expect(page.locator('link[data-theme-favicon-active]')).toHaveAttribute(
 			'href',
 			'/favicon.dark.svg'
+		);
+		await expect(themeToggle.locator('[data-theme-icon="dark"]')).toHaveAttribute(
+			'data-theme-active',
+			'true'
 		);
 	});
 
