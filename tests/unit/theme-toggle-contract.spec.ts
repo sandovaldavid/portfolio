@@ -9,7 +9,7 @@ describe('theme toggle runtime contract', () => {
 			"const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];"
 		);
 		expect(themeToggle).toContain("type ResolvedTheme = 'light' | 'dark';");
-		expect(themeToggle).toContain('data-theme-current');
+		expect(themeToggle).toContain('button.dataset.themeCurrent = theme;');
 	});
 
 	it('smooths only semantic visual properties during a theme change', () => {
