@@ -1,7 +1,7 @@
 ---
 translationKey: v1-0-0-launch
-title: 'v1.0.0 — First Formal Release'
-summary: 'The first formal portfolio release: a stable production baseline for accessibility, performance, SEO, theming and maintainable frontend architecture.'
+title: 'v1.0.0 — Initial Release'
+summary: 'The first published portfolio version: a stable baseline for accessibility, performance, SEO, theming and maintainable frontend architecture.'
 pubDate: 2026-07-29
 version: '1.0.0'
 tags: ['release']
@@ -9,7 +9,7 @@ tags: ['release']
 
 ## What v1.0.0 established
 
-v1.0.0 is the first formal release of the current portfolio. It established a stable baseline before the larger v2.0.0 revision began.
+v1.0.0 is the first published version of the current portfolio. It established a stable baseline before the larger v2.0.0 revision began.
 
 The goal was straightforward: make the site reliable, accessible and maintainable before expanding its content and visual system.
 

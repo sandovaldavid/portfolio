@@ -1,7 +1,7 @@
 ---
 translationKey: v1-0-0-launch
-title: 'v1.0.0 — Primera versión formal'
-summary: 'La primera versión formal del portfolio: una base estable de producción para accesibilidad, rendimiento, SEO, temas y una arquitectura frontend mantenible.'
+title: 'v1.0.0 — Primera versión publicada'
+summary: 'La primera versión publicada del portfolio: una base estable para accesibilidad, rendimiento, SEO, temas y una arquitectura frontend mantenible.'
 pubDate: 2026-07-29
 version: '1.0.0'
 tags: ['publicada']
@@ -9,7 +9,7 @@ tags: ['publicada']
 
 ## Qué estableció v1.0.0
 
-v1.0.0 es la primera versión formal del portfolio actual. Estableció una base estable antes de comenzar la revisión mayor de v2.0.0.
+v1.0.0 es la primera versión publicada del portfolio actual. Estableció una base estable antes de comenzar la revisión mayor de v2.0.0.
 
 El objetivo era simple: tener un sitio fiable, accesible y mantenible antes de ampliar el contenido y el sistema visual.
 
