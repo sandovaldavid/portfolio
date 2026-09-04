@@ -14,7 +14,9 @@ describe('theme toggle runtime contract', () => {
 
 	it('smooths only semantic visual properties during a theme change', () => {
 		expect(themeToggle).toContain("root.classList.add('theme-transition')");
-		expect(themeToggle).toContain('background-color, border-color, color, fill, stroke, box-shadow');
+		expect(themeToggle).toContain(
+			'background-color, border-color, color, fill, stroke, box-shadow'
+		);
 		expect(themeToggle).not.toContain('transition-property: all');
 		expect(themeToggle).toContain("window.matchMedia('(prefers-reduced-motion: reduce)')");
 	});
@@ -33,14 +35,16 @@ describe('theme toggle runtime contract', () => {
 
 	it('keeps motion optional and independent from state correctness', () => {
 		expect(themeToggle).toContain('button.animate(');
-		expect(themeToggle).toContain("if (reducedMotionMedia.matches) return;");
+		expect(themeToggle).toContain('if (reducedMotionMedia.matches) return;');
 		expect(themeToggle).toContain('syncThemeState();');
 	});
 
 	it('keeps a runtime favicon aligned with the resolved portfolio theme', () => {
-		expect(themeToggle).toContain("link[data-theme-favicon-active]");
+		expect(themeToggle).toContain('link[data-theme-favicon-active]');
 		expect(themeToggle).toContain('`/favicon.${resolvedTheme}.svg`');
 		expect(themeToggle).toContain('document.head.append(favicon)');
-		expect(themeToggle).toContain('document.documentElement.dataset.themeResolved = resolvedTheme;');
+		expect(themeToggle).toContain(
+			'document.documentElement.dataset.themeResolved = resolvedTheme;'
+		);
 	});
 });

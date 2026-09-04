@@ -135,7 +135,9 @@ test.describe('Homepage', () => {
 		await expect(sunIcon).toHaveAttribute('data-theme-active', 'true');
 	});
 
-	test('respects reduced motion while still changing theme and favicon state', async ({ page }) => {
+	test('respects reduced motion while still changing theme and favicon state', async ({
+		page,
+	}) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.emulateMedia({ reducedMotion: 'reduce' });
 		await page.addInitScript(() => localStorage.setItem('theme', 'light'));

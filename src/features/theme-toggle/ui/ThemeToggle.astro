@@ -132,11 +132,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		if (reducedMotionMedia.matches) return;
 
 		button.animate(
-			[
-				{ transform: 'scale(1)' },
-				{ transform: 'scale(0.94)' },
-				{ transform: 'scale(1)' },
-			],
+			[{ transform: 'scale(1)' }, { transform: 'scale(0.94)' }, { transform: 'scale(1)' }],
 			{
 				duration: THEME_TRANSITION_DURATION_MS,
 				easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
