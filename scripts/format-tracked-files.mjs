@@ -71,26 +71,6 @@ for (let index = 0; index < trackedFiles.length; index += batchSize) {
 	}
 
 	if (prettierResult.status !== 0) {
-		if (mode === '--check') {
-			spawnSync(
-				process.execPath,
-				[
-					prettierCli,
-					'--write',
-					'--ignore-unknown',
-					'--ignore-path',
-					'.prettierignore',
-					'--',
-					...batch,
-				],
-				{ stdio: 'inherit' }
-			);
-			const diffResult = spawnSync('git', ['diff', '--', ...batch], {
-				encoding: 'utf8',
-				maxBuffer: 10 * 1024 * 1024,
-			});
-			process.stdout.write(diffResult.stdout);
-		}
 		process.exit(prettierResult.status ?? 1);
 	}
 }
