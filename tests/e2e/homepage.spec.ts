@@ -88,6 +88,52 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
+	test('animates theme changes and keeps the favicon aligned with the portfolio preference', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+		await page.goto('/');
+
+		const html = page.locator('html');
+		const runtimeFavicon = page.locator('link[data-theme-favicon-active]');
+		await expect(html).not.toHaveClass(/dark/);
+		await expect(html).toHaveAttribute('data-theme-resolved', 'light');
+		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.light.svg');
+
+		await page.locator('#recruiter-hud-toggle').click();
+		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
+		await expect(themeToggle).toBeVisible();
+		await themeToggle.click();
+
+		await expect(html).toHaveClass(/dark/);
+		await expect(html).toHaveAttribute('data-theme-resolved', 'dark');
+		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.dark.svg');
+		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('dark');
+
+		await expect(html).toHaveClass(/theme-transition/);
+		await expect.poll(() => html.getAttribute('class')).not.toContain('theme-transition');
+	});
+
+	test('respects reduced motion while still changing theme and favicon state', async ({ page }) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.emulateMedia({ reducedMotion: 'reduce' });
+		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+		await page.goto('/');
+
+		await page.locator('#recruiter-hud-toggle').click();
+		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
+		await themeToggle.click();
+
+		const html = page.locator('html');
+		await expect(html).toHaveClass(/dark/);
+		await expect(html).not.toHaveClass(/theme-transition/);
+		await expect(page.locator('link[data-theme-favicon-active]')).toHaveAttribute(
+			'href',
+			'/favicon.dark.svg'
+		);
+	});
+
 	test('navigates section by section on wheel scroll', async ({ page, isMobile }) => {
 		test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 		await page.setViewportSize({ width: 1280, height: 800 });
