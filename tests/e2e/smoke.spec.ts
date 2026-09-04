@@ -72,14 +72,14 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Reactive frontend architecture')).toBeVisible();
+		await expect(page.getByText('Angular and TypeScript frontend development')).toBeVisible();
 
 		await page.goto('/es/about');
 		await expect(page).toHaveTitle('Sobre David Sandoval — Ingeniero de Software');
 		await expect(page.getByRole('heading', { level: 1, name: 'David Sandoval' })).toBeVisible();
 		await expect(page.locator('main img[src="/profile/perfil.webp"]')).toBeVisible();
 		await expect(page.locator('[data-profile-fact]')).toHaveCount(0);
-		await expect(page.getByText('Arquitectura frontend reactiva')).toBeVisible();
+		await expect(page.getByText('Desarrollo frontend con Angular y TypeScript')).toBeVisible();
 	});
 
 	test('Atena highlighted prose uses the full career shell width', async ({ page }) => {

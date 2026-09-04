@@ -104,7 +104,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'en',
 			title: 'David Sandoval — Software Engineer',
 			description:
-				'Backend-oriented Software Engineer with hands-on frontend experience, working through assumptions, system boundaries, debugging and validation to build maintainable software. Remote from Peru and open to international opportunities.',
+				'David Sandoval is a backend-oriented Software Engineer with hands-on frontend experience, currently working on fintech software at Atena. Based in Peru and open to international opportunities.',
 			ogLocale: 'en_US',
 			alternateOgLocale: 'es_PE',
 			imageAlt: 'David Sandoval portfolio preview',
@@ -118,7 +118,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 			lang: 'es',
 			title: 'David Sandoval — Ingeniero de Software',
 			description:
-				'Ingeniero de software orientado a backend con experiencia práctica en frontend, enfocado en supuestos, límites del sistema, debugging y validación para construir software mantenible. Remoto desde Perú y disponible para oportunidades internacionales.',
+				'David Sandoval es Ingeniero de Software orientado a backend con experiencia práctica en frontend. Actualmente trabaja en software fintech en Atena, desde Perú, y está abierto a oportunidades internacionales.',
 			ogLocale: 'es_PE',
 			alternateOgLocale: 'en_US',
 			imageAlt: 'Vista previa del portafolio de David Sandoval',
@@ -130,7 +130,7 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		const website = await getJsonLd(page, 'WebSite');
 		const person = await getJsonLd(page, 'Person');
 		expect(getString(website, 'inLanguage')).toBe('es');
-		expect(getString(website, 'description')).toContain('Ingeniero de software');
+		expect(getString(website, 'description')).toContain('Ingeniero de Software');
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
 	});
 
@@ -152,6 +152,8 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 
 		await page.goto('/es/research');
 		expect(await hasJsonLd(page, 'ScholarlyArticle')).toBe(false);
+		const research = await getJsonLd(page, 'WebPage');
+		expect(getString(research, 'inLanguage')).toBe('es');
 		await expect(page.locator('meta[property="og:type"]')).toHaveAttribute(
 			'content',
 			'website'
@@ -174,11 +176,11 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 
 		expect(getString(profile, 'inLanguage')).toBe('es');
 		expect(getString(profile, 'description')).toContain(
-			'Cómo trabaja David Sandoval entre ingeniería de producto orientada a backend'
+			'Sobre David Sandoval, Ingeniero de Software orientado a backend'
 		);
 		expect(getString(person, 'jobTitle')).toBe('Ingeniero de Software');
 		expect(getString(person, 'description')).toContain(
-			'orientado a backend con experiencia práctica en frontend'
+			'orientado a backend, con experiencia trabajando sobre sistemas .NET y Angular'
 		);
 	});
 
