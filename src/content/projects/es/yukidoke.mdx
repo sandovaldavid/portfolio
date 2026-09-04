@@ -2,13 +2,13 @@
 projectId: yukidoke
 locale: es
 title: Yukidoke
-description: 'Una plataforma de finanzas personales por hogar construida con Angular 22 y un monolito modular en .NET 10. La beta V1 mantiene identidad, autorización del hogar y reglas financieras como límites separados.'
+description: 'Un producto privado de finanzas personales para hogares, construido con Angular 22 y una API modular en .NET 10. Está pensado para manejar finanzas compartidas sin hacer visibles por defecto todos los registros de cada miembro.'
 category: 'Software Empresarial'
 imageAlt: 'Vista previa de la arquitectura de la plataforma financiera familiar Yukidoke'
 caseStudy:
     kicker: 'CASO DE ESTUDIO · FINANZAS DEL HOGAR'
     status:
-        lifecycle: 'ACTIVO · BETA V1 / ENDURECIMIENTO ENTRE REPOSITORIOS'
+        lifecycle: 'ACTIVO · BETA V1 PRIVADA'
         source: 'CÓDIGO PRIVADO'
         demo: 'SIN DEMO PÚBLICA'
 ---
@@ -68,50 +68,49 @@ Por eso Yukidoke trata **autenticación**, **membresía del hogar** y **visibili
 </CaseStudySection>
 
 <CaseStudySection eyebrow="FLUJO DE DATOS" title="REST recupera la verdad; SignalR añade cambios incrementales">
-  El repositorio web documenta clientes REST tipados, normalización de paginación y manejo de ProblemDetails. El estado de notificaciones se recupera desde REST y usa SignalR para actualizaciones incrementales, de modo que perder una conexión en tiempo real no redefine la fuente de verdad.
+  El cliente Angular usa clientes REST tipados, normalización de paginación y manejo de ProblemDetails. El estado de notificaciones se carga desde REST y SignalR añade actualizaciones incrementales, de modo que una reconexión no cambia de dónde proviene el estado persistente.
 
 Esta diferencia importa en finanzas: un evento por WebSocket puede mejorar la respuesta de la interfaz, pero no debería ser el único registro de que existe un balance, una notificación o una acción del hogar.
 
 </CaseStudySection>
 
-<CaseStudySection eyebrow="IMPLEMENTACIÓN ACTUAL" title="Qué demuestra hoy la beta V1" surface="highlight">
+<CaseStudySection eyebrow="IMPLEMENTACIÓN ACTUAL" title="Qué incluye hoy la beta V1" surface="highlight">
   <CaseStudyGrid columns={2}>
     <EvidenceBlock label="WEB" title="ANGULAR 22 · 0.9.0-RC.1" tone="verified">
-      El proyecto web actual usa Angular 22 e identifica la versión **0.9.0-rc.1**. La documentación describe contexto y guards de capacidades por hogar, clientes API tipados, flujos de deudas, tarjetas y payoff, ingresos, consolidación de Planning, invitaciones y administración del hogar, localización EN/ES y pruebas de navegador contra el stack real.
+      El cliente web usa Angular 22 e identifica la versión **0.9.0-rc.1**. Incluye contexto y guards de capacidades por hogar, clientes API tipados, flujos de deudas, tarjetas y payoff, ingresos, consolidación de Planning, invitaciones y administración del hogar, localización EN/ES y un harness de navegador contra el stack real de soporte.
     </EvidenceBlock>
 
     <EvidenceBlock label="API" title="MONOLITO MODULAR .NET 10" tone="verified">
-      `Directory.Build.props` apunta a **net10.0**. La API organiza Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications y Overview como módulos, con PostgreSQL 16, autenticación Keycloak, procesos Worker y Database Migrator, e integración real con PostgreSQL y Keycloak.
+      La API usa **.NET 10** y organiza Users, Households, Accounting, Cards, Debts, Incomes, Planning, Notifications y Overview como módulos. Usa PostgreSQL 16, autenticación con Keycloak y procesos Worker y Database Migrator, con integración contra servicios reales de PostgreSQL y Keycloak.
     </EvidenceBlock>
 
   </CaseStudyGrid>
 </CaseStudySection>
 
 <CaseStudySection eyebrow="PRIVACIDAD" title="La existencia de un recurso forma parte del modelo de autorización">
-  La API permite que endpoints con alcance por hogar oculten un recurso a quien no pertenece al hogar, en vez de revelar primero que existe y responder después con “forbidden”. Es un límite de privacidad más fuerte que una autorización genérica posterior a la resolución del identificador.
+  Los endpoints con alcance por hogar pueden ocultar un recurso a quien no pertenece al hogar en lugar de revelar que existe y responder después con “forbidden”. Así, la existencia del recurso también queda dentro del límite de privacidad.
 
-El trabajo de endurecimiento continúa en privacidad, exportaciones y directorio, balances y liquidaciones, aceptación final de autenticación y validación del stack limpio. Esas áreas concentran el trabajo pendiente de la beta antes de considerar datos financieros reales dentro del alcance.
+La beta todavía está en trabajo alrededor de privacidad, exportaciones, balances, autenticación y aceptación sobre un stack limpio antes de que considere adecuado usar datos financieros reales del hogar.
 
 </CaseStudySection>
 
 <CaseStudySection
 	eyebrow="LÍMITE ACTUAL"
-	title="V1 sigue en beta privada mientras continúa el endurecimiento productivo"
+	title="V1 sigue en beta privada"
 	surface="highlight"
 >
 	<EvidenceBlock
 		label="ESTADO DEL PRODUCTO"
-		title="BETA PRIVADA · ENDURECIMIENTO PRODUCTIVO EN CURSO"
+		title="BETA PRIVADA · DESARROLLO ACTIVO"
 		tone="boundary"
 	>
-		La implementación se mantiene en repositorios privados. El trabajo actual se concentra en
-		autorización, consistencia financiera, persistencia, exportaciones, privacidad y aceptación
-		sobre un stack limpio antes de considerar datos financieros reales del hogar dentro del
-		alcance.
+		El código sigue siendo privado. El trabajo actual se concentra en autorización, consistencia
+		financiera, persistencia, exportaciones, privacidad y aceptación sobre un stack limpio antes
+		de incluir datos financieros reales del hogar.
 	</EvidenceBlock>
 </CaseStudySection>
 
-<CaseStudySection eyebrow="APRENDIZAJES" title="Lecciones de ingeniería del límite por hogar">
+<CaseStudySection eyebrow="APRENDIZAJES" title="Lo que aprendí trabajando el límite por hogar">
   <CaseStudyGrid columns={3}>
     <CaseStudyCard label="APRENDIZAJE 01" title="AUTENTICACIÓN NO ES AUTORIZACIÓN" tone="success">
       Identidad, membresía del hogar y visibilidad de un registro financiero específico necesitan reglas y pruebas independientes.
