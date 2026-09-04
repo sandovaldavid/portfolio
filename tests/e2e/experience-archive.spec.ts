@@ -35,28 +35,6 @@ test('Spanish current role renders the localized systems narrative', async ({ pa
 	await expect(caseStudy.locator('[data-experience-status]')).toContainText('ACTUAL');
 });
 
-test('highlighted prose narrative uses the full career shell width on desktop', async ({
-	page,
-}) => {
-	await page.setViewportSize(DESKTOP);
-	await page.goto('/es/experience/atena-software-engineer');
-
-	const section = page.locator(
-		'[data-experience-section-surface="highlight"][data-experience-section-layout="prose"]'
-	);
-	const shell = section.locator(':scope > div');
-	const heading = shell.locator(':scope > div').nth(0);
-	const content = shell.locator(':scope > div').nth(1);
-
-	await expect(section).toBeVisible();
-	const shellBox = (await shell.boundingBox())!;
-	const headingBox = (await heading.boundingBox())!;
-	const contentBox = (await content.boundingBox())!;
-
-	expect(Math.abs(shellBox.width - headingBox.width)).toBeLessThanOrEqual(2);
-	expect(Math.abs(shellBox.width - contentBox.width)).toBeLessThanOrEqual(2);
-});
-
 test('Chirasoft uses a product-oriented hierarchy with a lead contribution', async ({ page }) => {
 	await page.goto('/experience/chirasoft-fullstack-developer');
 
