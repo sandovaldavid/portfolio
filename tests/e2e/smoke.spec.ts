@@ -82,6 +82,26 @@ test.describe('Pull request smoke and accessibility gates', () => {
 		await expect(page.getByText('Arquitectura frontend reactiva')).toBeVisible();
 	});
 
+	test('Atena highlighted prose uses the full career shell width', async ({ page }) => {
+		await page.setViewportSize({ width: 1440, height: 900 });
+		await page.goto('/es/experience/atena-software-engineer');
+
+		const section = page.locator(
+			'[data-experience-section-surface="highlight"][data-experience-section-layout="prose"]'
+		);
+		const shell = section.locator(':scope > div');
+		const blocks = shell.locator(':scope > div');
+
+		await expect(section).toBeVisible();
+		await expect(blocks).toHaveCount(2);
+		const shellBox = (await shell.boundingBox())!;
+		const headingBox = (await blocks.nth(0).boundingBox())!;
+		const contentBox = (await blocks.nth(1).boundingBox())!;
+
+		expect(Math.abs(shellBox.width - headingBox.width)).toBeLessThanOrEqual(2);
+		expect(Math.abs(shellBox.width - contentBox.width)).toBeLessThanOrEqual(2);
+	});
+
 	for (const scenario of [
 		{
 			route: '/research',
