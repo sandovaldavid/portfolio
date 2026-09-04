@@ -90,7 +90,7 @@ describe('editorial translation pairing', () => {
 		}
 	});
 
-	it('pairs published articles and devlog entries while allowing the draft fixture to stand alone', () => {
+	it('pairs published articles and keeps devlog limited to real portfolio versions', () => {
 		const blogKeys = readTranslationKeys('blog');
 		const devlogKeys = readTranslationKeys('devlog');
 
@@ -107,7 +107,10 @@ describe('editorial translation pairing', () => {
 			'predicting-oss-abandonment-with-bilstm': 2,
 			'draft-rss-test': 1,
 		});
-		expect(Object.values(countByKey(devlogKeys)).every(count => count === 2)).toBe(true);
+		expect(countByKey(devlogKeys)).toEqual({
+			'v1-0-0-launch': 2,
+			'v2-0-0': 2,
+		});
 	});
 
 	it('disables an unavailable target locale instead of constructing a link', () => {

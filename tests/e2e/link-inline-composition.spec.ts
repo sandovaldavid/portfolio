@@ -11,7 +11,7 @@ import { test, expect } from './fixtures';
 const BACK_LINK_CONSUMERS = [
 	{ path: '/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (EN)' },
 	{ path: '/es/blog/building-this-portfolio-with-astro-and-fsd', name: 'Blog detail (ES)' },
-	{ path: '/devlog/v1-3-0-beta', name: 'Devlog detail (EN)' },
+	{ path: '/devlog/v2-0-0', name: 'Devlog detail (EN)' },
 ];
 
 for (const { path, name } of BACK_LINK_CONSUMERS) {
