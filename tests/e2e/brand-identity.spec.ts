@@ -50,7 +50,9 @@ test.describe('brand identity assets and typography', () => {
 		}
 	});
 
-	test('home metadata uses localized Open Graph cards and theme-aware favicon', async ({ page }) => {
+	test('home metadata uses localized Open Graph cards and theme-aware favicon', async ({
+		page,
+	}) => {
 		for (const scenario of [
 			{ path: '/', image: '/og/preview-portfolio-home-en-dark.png' },
 			{ path: '/es/', image: '/og/preview-portfolio-home-es-dark.png' },

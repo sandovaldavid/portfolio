@@ -63,7 +63,7 @@ describe('localized SEO, RSS and structured metadata', () => {
 		for (const path of routes.project) {
 			const source = readSource(path);
 			expect(source).toContain('pageType="project"');
-			expect(source).toContain('imageAlt={project.imageAlt}');
+			expect(source).toContain("imageAlt={`${project.title} — ${tProjects('caseStudy')}`}");
 			expect(source).toContain('breadcrumbLabel={project.title}');
 		}
 	});

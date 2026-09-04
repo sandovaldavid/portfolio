@@ -2,7 +2,15 @@ import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const locales = ['en', 'es'] as const;
-const websiteRoutes = ['projects', 'skills', 'research', 'experience', 'blog', 'devlog', 'components'];
+const websiteRoutes = [
+	'projects',
+	'skills',
+	'research',
+	'experience',
+	'blog',
+	'devlog',
+	'components',
+];
 const projectSlugs = ['yukidoke', 'kioku', 'campus-map', 'mad-ai', 'fluentreads', 'auctions'];
 const articleSlugs = [
 	'building-this-portfolio-with-astro-and-fsd',

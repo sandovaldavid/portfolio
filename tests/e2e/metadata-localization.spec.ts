@@ -198,7 +198,9 @@ test.describe('localized SEO, social, RSS and structured metadata', () => {
 		);
 	});
 
-	test('profile and experience routes use the intended social preview family', async ({ page }) => {
+	test('profile and experience routes use the intended social preview family', async ({
+		page,
+	}) => {
 		await page.goto('/es/about');
 		const profile = await getJsonLd(page, 'ProfilePage');
 		const person = await getJsonLd(page, 'Person');
