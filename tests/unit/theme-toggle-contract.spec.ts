@@ -16,11 +16,18 @@ describe('theme toggle runtime contract', () => {
 	it('smooths only cheap semantic color properties during a theme change', () => {
 		expect(themeToggle).toContain("root.classList.add('theme-transition')");
 		expect(globalStyles).toContain(
-			'transition-property: background-color, border-color, color, fill, stroke;'
+			'transition-property: background-color, border-color, color, fill, stroke !important;'
 		);
+		expect(globalStyles).toContain('transition-duration: 180ms !important;');
 		expect(globalStyles).not.toContain('transition-property: all');
 		expect(globalStyles).not.toContain('stroke, box-shadow');
 		expect(themeToggle).toContain("window.matchMedia('(prefers-reduced-motion: reduce)')");
+	});
+
+	it('temporarily outranks component-scoped transition shorthands during the theme switch', () => {
+		expect(globalStyles).toContain('transition-timing-function: ease-out !important;');
+		expect(globalStyles).toContain('otherwise surfaces such as RecruiterHUD can snap');
+		expect(globalStyles).toContain('html.theme-transition body *');
 	});
 
 	it('owns the page-wide transition in application styles', () => {

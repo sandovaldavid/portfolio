@@ -190,17 +190,21 @@ html {
 /*
  * Theme changes are a short semantic-color transition, not a page animation.
  * Keep this contract at application scope so every route receives the same
- * transition. Limit it to color-only properties so expensive paint effects
- * such as the Recruiter HUD retro shadows do not participate in the crossfade.
+ * transition. During the bounded theme switch it must outrank component-scoped
+ * transition shorthands; otherwise surfaces such as RecruiterHUD can snap to
+ * the new palette while the document canvas is still interpolating.
+ *
+ * Limit the contract to color-only properties so expensive paint effects such
+ * as retro box shadows and component geometry never participate in the crossfade.
  */
 html.theme-transition,
 html.theme-transition body,
 html.theme-transition body *,
 html.theme-transition body *::before,
 html.theme-transition body *::after {
-	transition-property: background-color, border-color, color, fill, stroke;
-	transition-duration: 180ms;
-	transition-timing-function: ease-out;
+	transition-property: background-color, border-color, color, fill, stroke !important;
+	transition-duration: 180ms !important;
+	transition-timing-function: ease-out !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
