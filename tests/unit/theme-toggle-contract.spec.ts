@@ -35,6 +35,17 @@ describe('theme toggle runtime contract', () => {
 		expect(themeToggle).toContain('previousTransition.skipTransition();');
 	});
 
+	it('crossfades only when the resolved visual palette changes', () => {
+		expect(themeToggle).toContain('const currentResolvedTheme = getResolvedTheme(currentTheme);');
+		expect(themeToggle).toContain('const nextResolvedTheme = getResolvedTheme(nextTheme);');
+		expect(themeToggle).toContain(
+			'const renderedResolvedTheme = document.documentElement.dataset.themeResolved;'
+		);
+		expect(themeToggle).toContain('currentResolvedTheme === nextResolvedTheme');
+		expect(themeToggle).toContain('renderedResolvedTheme === nextResolvedTheme');
+		expect(themeToggle).toContain('applyThemePreference(currentTheme, nextTheme);');
+	});
+
 	it('keeps rapid cyclic input state-correct even while a snapshot is pending', () => {
 		expect(themeToggle).toContain('let themeRequestVersion = 0;');
 		expect(themeToggle).toContain('const requestVersion = ++themeRequestVersion;');
