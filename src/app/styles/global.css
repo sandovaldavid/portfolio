@@ -187,6 +187,23 @@ html {
 	}
 }
 
+/*
+ * Theme changes are a short semantic-color transition, not a page animation.
+ * Keep this contract at application scope so every route receives the same
+ * transition, including the document canvas and SVG descendants.
+ */
+html.theme-transition,
+html.theme-transition body,
+html.theme-transition body *,
+html.theme-transition body *::before,
+html.theme-transition body *::after {
+	transition-property:
+		background-color, border-color, color, fill, stroke, box-shadow, outline-color,
+		text-decoration-color;
+	transition-duration: 180ms;
+	transition-timing-function: ease-out;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -195,5 +212,13 @@ html {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+
+	html.theme-transition,
+	html.theme-transition body,
+	html.theme-transition body *,
+	html.theme-transition body *::before,
+	html.theme-transition body *::after {
+		transition: none !important;
 	}
 }

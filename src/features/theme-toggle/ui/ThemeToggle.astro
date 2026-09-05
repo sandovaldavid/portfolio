@@ -44,6 +44,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
 	const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
 	let themeTransitionTimer: number | undefined;
+	let themeTransitionFrame: number | undefined;
 
 	const isThemePreference = (value: string | null): value is ThemePreference =>
 		value === 'light' || value === 'dark' || value === 'system';
@@ -108,20 +109,37 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		});
 	};
 
-	const beginThemeTransition = () => {
-		if (reducedMotionMedia.matches) return;
+	const clearThemeTransition = () => {
+		if (themeTransitionFrame !== undefined) {
+			window.cancelAnimationFrame(themeTransitionFrame);
+			themeTransitionFrame = undefined;
+		}
+		window.clearTimeout(themeTransitionTimer);
+		document.documentElement.classList.remove('theme-transition');
+	};
+
+	const beginThemeTransition = (applyTheme: () => void) => {
+		if (reducedMotionMedia.matches) {
+			applyTheme();
+			return;
+		}
 
 		const root = document.documentElement;
-		window.clearTimeout(themeTransitionTimer);
+		clearThemeTransition();
 		root.classList.add('theme-transition');
 
 		// Ensure transition properties are active before semantic colors resolve
 		// against the next color-scheme value.
 		void root.offsetWidth;
 
-		themeTransitionTimer = window.setTimeout(() => {
-			root.classList.remove('theme-transition');
-		}, THEME_TRANSITION_DURATION_MS + 40);
+		themeTransitionFrame = window.requestAnimationFrame(() => {
+			themeTransitionFrame = undefined;
+			applyTheme();
+			themeTransitionTimer = window.setTimeout(
+				clearThemeTransition,
+				THEME_TRANSITION_DURATION_MS + 80
+			);
+		});
 	};
 
 	const animateThemeToggle = (
@@ -175,10 +193,13 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			button.addEventListener('click', () => {
 				const currentTheme = getSavedTheme();
 				const nextTheme = getNextTheme(currentTheme);
-				beginThemeTransition();
+				// Persist the preference synchronously so rapid clicks advance the
+				// three-state cycle even while the visual transition is pending.
 				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-				syncThemeState();
-				animateThemeToggle(button, currentTheme, nextTheme);
+				beginThemeTransition(() => {
+					syncThemeState();
+					animateThemeToggle(button, currentTheme, nextTheme);
+				});
 			});
 		});
 
@@ -189,8 +210,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		document.documentElement.dataset.themeSchemeListener = 'ready';
 		darkSchemeMedia.addEventListener('change', () => {
 			if (getSavedTheme() === 'system') {
-				beginThemeTransition();
-				syncThemeState();
+				beginThemeTransition(syncThemeState);
 			}
 		});
 	}
@@ -215,27 +235,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		transform: rotate(0deg) scale(1);
 	}
 
-	/*
-	 * Theme changes are a short semantic-color transition, not a page animation.
-	 * Geometry and transforms remain untouched so layout never drifts while the
-	 * Light/Dark token set changes.
-	 */
-	html.theme-transition body,
-	html.theme-transition body *,
-	html.theme-transition body *::before,
-	html.theme-transition body *::after {
-		transition-property:
-			background-color, border-color, color, fill, stroke, box-shadow, outline-color,
-			text-decoration-color;
-		transition-duration: 180ms;
-		transition-timing-function: ease-out;
-	}
-
 	@media (prefers-reduced-motion: reduce) {
-		html.theme-transition body,
-		html.theme-transition body *,
-		html.theme-transition body *::before,
-		html.theme-transition body *::after,
 		.theme-toggle,
 		.theme-toggle-icon {
 			transition: none !important;

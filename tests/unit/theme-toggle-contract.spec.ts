@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const themeToggle = readFileSync('src/features/theme-toggle/ui/ThemeToggle.astro', 'utf8');
+const globalStyles = readFileSync('src/app/styles/global.css', 'utf8');
 
 describe('theme toggle runtime contract', () => {
 	it('keeps the three-state cyclic preference model', () => {
@@ -14,11 +15,22 @@ describe('theme toggle runtime contract', () => {
 
 	it('smooths only semantic visual properties during a theme change', () => {
 		expect(themeToggle).toContain("root.classList.add('theme-transition')");
-		expect(themeToggle).toContain(
+		expect(globalStyles).toContain(
 			'background-color, border-color, color, fill, stroke, box-shadow'
 		);
-		expect(themeToggle).not.toContain('transition-property: all');
+		expect(globalStyles).not.toContain('transition-property: all');
 		expect(themeToggle).toContain("window.matchMedia('(prefers-reduced-motion: reduce)')");
+	});
+
+	it('owns the page-wide transition in application styles', () => {
+		expect(globalStyles).toContain('html.theme-transition,');
+		expect(globalStyles).toContain('html.theme-transition body *');
+		expect(globalStyles).toContain('text-decoration-color');
+	});
+
+	it('applies the semantic theme change after transition styles are ready', () => {
+		expect(themeToggle).toContain('requestAnimationFrame');
+		expect(themeToggle).toContain('root.offsetWidth');
 	});
 
 	it('crossfades the outgoing and incoming icons without changing button geometry', () => {
