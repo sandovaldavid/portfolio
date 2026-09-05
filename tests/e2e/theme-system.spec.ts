@@ -1,7 +1,7 @@
 import { test, expect } from './fixtures';
 
 test.describe('System theme resolution', () => {
-	 test('does not snapshot Dark to System when the OS already resolves dark', async ({ page }) => {
+	test('does not snapshot Dark to System when the OS already resolves dark', async ({ page }) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.emulateMedia({ colorScheme: 'dark' });
 		await page.addInitScript(() => localStorage.setItem('theme', 'dark'));
