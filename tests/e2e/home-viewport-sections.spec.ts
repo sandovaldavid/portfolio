@@ -370,6 +370,7 @@ test('desktop closing flow moves Research to About Me to Footer and reverses in 
 	test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 	await page.setViewportSize(DESKTOP);
 	await page.goto('/');
+	await waitForFonts(page);
 
 	const researchTarget = await getSectionTargetY(page, 'research');
 	const aboutTarget = await getSectionTargetY(page, 'about-me');

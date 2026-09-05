@@ -113,6 +113,7 @@ test.describe('Homepage', () => {
 
 		await themeToggle.click();
 
+		await expect(html).toHaveClass(/theme-transition/);
 		await expect(html).toHaveClass(/dark/);
 		await expect(html).toHaveAttribute('data-theme-resolved', 'dark');
 		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.dark.svg');
@@ -121,7 +122,6 @@ test.describe('Homepage', () => {
 		await expect(moonIcon).toHaveAttribute('data-theme-active', 'true');
 		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
 
-		await expect(html).toHaveClass(/theme-transition/);
 		await expect.poll(() => html.getAttribute('class')).not.toContain('theme-transition');
 
 		await themeToggle.click();
