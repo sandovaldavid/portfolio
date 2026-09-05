@@ -36,7 +36,9 @@ describe('theme toggle runtime contract', () => {
 	});
 
 	it('crossfades only when the resolved visual palette changes', () => {
-		expect(themeToggle).toContain('const currentResolvedTheme = getResolvedTheme(currentTheme);');
+		expect(themeToggle).toContain(
+			'const currentResolvedTheme = getResolvedTheme(currentTheme);'
+		);
 		expect(themeToggle).toContain('const nextResolvedTheme = getResolvedTheme(nextTheme);');
 		expect(themeToggle).toContain(
 			'const renderedResolvedTheme = document.documentElement.dataset.themeResolved;'
