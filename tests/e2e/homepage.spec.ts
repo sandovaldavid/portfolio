@@ -88,7 +88,9 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
-	test('crossfades the complete theme snapshot and keeps the favicon aligned', async ({ page }) => {
+	test('crossfades the complete theme snapshot and keeps the favicon aligned', async ({
+		page,
+	}) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
 		await page.goto('/');
