@@ -190,16 +190,15 @@ html {
 /*
  * Theme changes are a short semantic-color transition, not a page animation.
  * Keep this contract at application scope so every route receives the same
- * transition, including the document canvas and SVG descendants.
+ * transition. Limit it to color-only properties so expensive paint effects
+ * such as the Recruiter HUD retro shadows do not participate in the crossfade.
  */
 html.theme-transition,
 html.theme-transition body,
 html.theme-transition body *,
 html.theme-transition body *::before,
 html.theme-transition body *::after {
-	transition-property:
-		background-color, border-color, color, fill, stroke, box-shadow, outline-color,
-		text-decoration-color;
+	transition-property: background-color, border-color, color, fill, stroke;
 	transition-duration: 180ms;
 	transition-timing-function: ease-out;
 }

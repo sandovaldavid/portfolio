@@ -13,24 +13,26 @@ describe('theme toggle runtime contract', () => {
 		expect(themeToggle).toContain('button.dataset.themeCurrent = theme;');
 	});
 
-	it('smooths only semantic visual properties during a theme change', () => {
+	it('smooths only cheap semantic color properties during a theme change', () => {
 		expect(themeToggle).toContain("root.classList.add('theme-transition')");
 		expect(globalStyles).toContain(
-			'background-color, border-color, color, fill, stroke, box-shadow'
+			'transition-property: background-color, border-color, color, fill, stroke;'
 		);
 		expect(globalStyles).not.toContain('transition-property: all');
+		expect(globalStyles).not.toContain('stroke, box-shadow');
 		expect(themeToggle).toContain("window.matchMedia('(prefers-reduced-motion: reduce)')");
 	});
 
 	it('owns the page-wide transition in application styles', () => {
 		expect(globalStyles).toContain('html.theme-transition,');
 		expect(globalStyles).toContain('html.theme-transition body *');
-		expect(globalStyles).toContain('text-decoration-color');
 	});
 
-	it('applies the semantic theme change after transition styles are ready', () => {
-		expect(themeToggle).toContain('requestAnimationFrame');
+	it('applies the semantic theme change synchronously after transition styles are ready', () => {
 		expect(themeToggle).toContain('root.offsetWidth');
+		expect(themeToggle).toContain('applyTheme();');
+		expect(themeToggle).not.toContain('requestAnimationFrame');
+		expect(themeToggle).not.toContain('cancelAnimationFrame');
 	});
 
 	it('crossfades the outgoing and incoming icons without changing button geometry', () => {

@@ -88,7 +88,7 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
-	test('animates theme changes and keeps the favicon aligned with the portfolio preference', async ({
+	test('animates theme changes without input lag and keeps the favicon aligned', async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
@@ -114,31 +114,51 @@ test.describe('Homepage', () => {
 		const transition = await page.evaluate(async () => {
 			const root = document.documentElement;
 			const body = document.body;
-			const toggle = document.querySelector<HTMLButtonElement>(
-				'#recruiter-hud-panel [data-theme-toggle]'
-			);
-			if (!toggle) throw new Error('Theme toggle not found');
+			const panel = document.querySelector<HTMLElement>('#recruiter-hud-panel');
+			const toggle = panel?.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+			if (!panel || !toggle) throw new Error('Recruiter HUD theme toggle not found');
 
-			const before = getComputedStyle(body).backgroundColor;
+			const before = {
+				bodyBackground: getComputedStyle(body).backgroundColor,
+				panelBackground: getComputedStyle(panel).backgroundColor,
+			};
+
 			toggle.click();
-			const active = {
+
+			const immediate = {
+				resolvedTheme: root.dataset.themeResolved,
+				isDark: root.classList.contains('dark'),
+				currentPreference: toggle.dataset.themeCurrent,
 				rootTransitionProperty: getComputedStyle(root).transitionProperty,
 				rootTransitionDuration: getComputedStyle(root).transitionDuration,
 			};
 
 			await new Promise(resolve => setTimeout(resolve, 90));
-			const middle = getComputedStyle(body).backgroundColor;
-			await new Promise(resolve => setTimeout(resolve, 220));
-			const after = getComputedStyle(body).backgroundColor;
+			const middle = {
+				bodyBackground: getComputedStyle(body).backgroundColor,
+				panelBackground: getComputedStyle(panel).backgroundColor,
+			};
 
-			return { active, before, middle, after };
+			await new Promise(resolve => setTimeout(resolve, 220));
+			const after = {
+				bodyBackground: getComputedStyle(body).backgroundColor,
+				panelBackground: getComputedStyle(panel).backgroundColor,
+			};
+
+			return { before, immediate, middle, after };
 		});
 
-		expect(transition.active.rootTransitionProperty).toContain('background-color');
-		expect(transition.active.rootTransitionDuration).toBe('0.18s');
-		expect(transition.before).not.toBe(transition.after);
-		expect(transition.middle).not.toBe(transition.before);
-		expect(transition.middle).not.toBe(transition.after);
+		expect(transition.immediate.resolvedTheme).toBe('dark');
+		expect(transition.immediate.isDark).toBe(true);
+		expect(transition.immediate.currentPreference).toBe('dark');
+		expect(transition.immediate.rootTransitionProperty).toBe(
+			'background-color, border-color, color, fill, stroke'
+		);
+		expect(transition.immediate.rootTransitionDuration).toBe('0.18s');
+		expect(transition.middle.bodyBackground).not.toBe(transition.before.bodyBackground);
+		expect(transition.middle.bodyBackground).not.toBe(transition.after.bodyBackground);
+		expect(transition.middle.panelBackground).not.toBe(transition.before.panelBackground);
+		expect(transition.middle.panelBackground).not.toBe(transition.after.panelBackground);
 		await expect(html).toHaveClass(/dark/);
 		await expect(html).toHaveAttribute('data-theme-resolved', 'dark');
 		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.dark.svg');
@@ -160,7 +180,7 @@ test.describe('Homepage', () => {
 		await expect(sunIcon).toHaveAttribute('data-theme-active', 'true');
 	});
 
-	test('keeps the cyclic preference order when toggled before the frame settles', async ({
+	test('keeps the cyclic preference order when toggled before the transition settles', async ({
 		page,
 	}) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
@@ -171,14 +191,25 @@ test.describe('Homepage', () => {
 		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
 		await expect(themeToggle).toBeVisible();
 
-		await themeToggle.evaluate(button => {
+		const rapidState = await themeToggle.evaluate(button => {
 			if (!(button instanceof HTMLButtonElement)) throw new Error('Theme toggle not found');
 			button.click();
+			const afterFirst = {
+				preference: localStorage.getItem('theme'),
+				resolved: document.documentElement.dataset.themeResolved,
+			};
 			button.click();
+			const afterSecond = {
+				preference: localStorage.getItem('theme'),
+				current: button.dataset.themeCurrent,
+			};
+			return { afterFirst, afterSecond };
 		});
 
-		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('system');
-		await expect(themeToggle).toHaveAttribute('data-theme-current', 'system');
+		expect(rapidState.afterFirst.preference).toBe('dark');
+		expect(rapidState.afterFirst.resolved).toBe('dark');
+		expect(rapidState.afterSecond.preference).toBe('system');
+		expect(rapidState.afterSecond.current).toBe('system');
 	});
 
 	test('respects reduced motion while still changing theme and favicon state', async ({

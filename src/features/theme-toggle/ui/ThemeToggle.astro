@@ -44,7 +44,6 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
 	const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
 	let themeTransitionTimer: number | undefined;
-	let themeTransitionFrame: number | undefined;
 
 	const isThemePreference = (value: string | null): value is ThemePreference =>
 		value === 'light' || value === 'dark' || value === 'system';
@@ -110,10 +109,6 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	};
 
 	const clearThemeTransition = () => {
-		if (themeTransitionFrame !== undefined) {
-			window.cancelAnimationFrame(themeTransitionFrame);
-			themeTransitionFrame = undefined;
-		}
 		window.clearTimeout(themeTransitionTimer);
 		document.documentElement.classList.remove('theme-transition');
 	};
@@ -128,18 +123,16 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		clearThemeTransition();
 		root.classList.add('theme-transition');
 
-		// Ensure transition properties are active before semantic colors resolve
-		// against the next color-scheme value.
+		// Flush the transition styles before resolving the next semantic palette,
+		// then apply the theme in this same interaction turn. Deferring the theme
+		// itself to requestAnimationFrame adds visible input latency on dense routes.
 		void root.offsetWidth;
+		applyTheme();
 
-		themeTransitionFrame = window.requestAnimationFrame(() => {
-			themeTransitionFrame = undefined;
-			applyTheme();
-			themeTransitionTimer = window.setTimeout(
-				clearThemeTransition,
-				THEME_TRANSITION_DURATION_MS + 80
-			);
-		});
+		themeTransitionTimer = window.setTimeout(
+			clearThemeTransition,
+			THEME_TRANSITION_DURATION_MS + 40
+		);
 	};
 
 	const animateThemeToggle = (
@@ -193,8 +186,6 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			button.addEventListener('click', () => {
 				const currentTheme = getSavedTheme();
 				const nextTheme = getNextTheme(currentTheme);
-				// Persist the preference synchronously so rapid clicks advance the
-				// three-state cycle even while the visual transition is pending.
 				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
 				beginThemeTransition(() => {
 					syncThemeState();
