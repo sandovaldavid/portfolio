@@ -1,8 +1,6 @@
 ---
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
-import GitHubIcon from '@assets/technologies/GitHub.astro';
-import PythonIcon from '@assets/technologies/Python.astro';
 import { getResearchContent } from '@entities/research';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
@@ -12,10 +10,10 @@ const tResearch = createScopedUiTranslator(lang, 'sections.research');
 const tCommon = createScopedUiTranslator(lang, 'common');
 const research = await getResearchContent(lang);
 const techStack = [
-	{ label: 'BiLSTM' },
-	{ label: 'Python', icon: PythonIcon },
-	{ label: 'TensorFlow' },
-	{ label: 'GitHub API', icon: GitHubIcon },
+	{ label: 'Software Supply Chain' },
+	{ label: 'Mining Software Repositories' },
+	{ label: 'Time-to-event' },
+	{ label: 'npm pilot' },
 ];
 const pipeline = [
 	tResearch('pipeline.githubApi'),
@@ -140,7 +138,7 @@ const modeledSignals = research.featuredSignals;
 				{
 					techStack.map(tag => (
 						<li>
-							<TechPill label={tag.label} icon={tag.icon} size="md" variant="stack" />
+							<TechPill label={tag.label} size="md" variant="stack" />
 						</li>
 					))
 				}
@@ -148,7 +146,7 @@ const modeledSignals = research.featuredSignals;
 		</div>
 
 		<p
-			class="max-w-105 text-secondary text-content-muted md:justify-self-end md:text-right"
+			class="max-w-105 text-body text-content-muted md:justify-self-end md:text-right"
 			data-research-methodology
 		>
 			{tResearch('methodologyHint')}

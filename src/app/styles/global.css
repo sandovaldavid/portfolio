@@ -187,6 +187,38 @@ html {
 	}
 }
 
+/*
+ * Theme changes crossfade one document snapshot instead of attaching color
+ * transitions to every descendant. This keeps fixed/scoped surfaces such as
+ * RecruiterHUD synchronized with the canvas and leaves paint-heavy shadows,
+ * component transforms and local interaction motion out of the theme animation.
+ */
+@keyframes theme-crossfade-old {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes theme-crossfade-new {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+html.theme-transition::view-transition-old(root) {
+	animation: theme-crossfade-old 180ms ease-out both;
+}
+
+html.theme-transition::view-transition-new(root) {
+	animation: theme-crossfade-new 180ms ease-out both;
+}
+
 @media (prefers-reduced-motion: reduce) {
 	*,
 	*::before,
@@ -195,5 +227,10 @@ html {
 		animation-iteration-count: 1 !important;
 		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
+	}
+
+	html.theme-transition::view-transition-old(root),
+	html.theme-transition::view-transition-new(root) {
+		animation: none !important;
 	}
 }

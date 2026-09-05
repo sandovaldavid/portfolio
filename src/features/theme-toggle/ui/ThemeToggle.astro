@@ -15,7 +15,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 -->
 <button
 	type="button"
-	class="theme-toggle grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-100 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+	class="theme-toggle relative grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-150 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 	data-theme-toggle
 	data-theme-select-label={tTheme('select')}
 	data-theme-light-label={tTheme('light')}
@@ -23,17 +23,35 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	data-theme-system-label={tTheme('system')}
 	aria-label={tTheme('select')}
 >
-	<span data-theme-icon="light" hidden><SunIcon class="size-5" aria-hidden="true" /></span>
-	<span data-theme-icon="dark" hidden><MoonIcon class="size-5" aria-hidden="true" /></span>
-	<span data-theme-icon="system" hidden><SystemIcon class="size-5" aria-hidden="true" /></span>
+	<span class="theme-toggle-icon" data-theme-icon="light" aria-hidden="true">
+		<SunIcon class="size-5" aria-hidden="true" />
+	</span>
+	<span class="theme-toggle-icon" data-theme-icon="dark" aria-hidden="true">
+		<MoonIcon class="size-5" aria-hidden="true" />
+	</span>
+	<span class="theme-toggle-icon" data-theme-icon="system" aria-hidden="true">
+		<SystemIcon class="size-5" aria-hidden="true" />
+	</span>
 </button>
 
 <script>
 	type ThemePreference = 'light' | 'dark' | 'system';
+	type ResolvedTheme = 'light' | 'dark';
+	type ThemeViewTransition = {
+		skipTransition: () => void;
+		finished: Promise<void>;
+	};
+	type ViewTransitionDocument = Document & {
+		startViewTransition?: (updateCallback: () => void) => ThemeViewTransition;
+		activeViewTransition?: ThemeViewTransition | null;
+	};
 
 	const THEME_STORAGE_KEY = 'theme';
 	const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];
 	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
+	const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
+	let activeThemeTransition: ThemeViewTransition | undefined;
+	let themeRequestVersion = 0;
 
 	const isThemePreference = (value: string | null): value is ThemePreference =>
 		value === 'light' || value === 'dark' || value === 'system';
@@ -42,6 +60,9 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		const saved = localStorage.getItem(THEME_STORAGE_KEY);
 		return isThemePreference(saved) ? saved : 'dark';
 	};
+
+	const getResolvedTheme = (theme: ThemePreference): ResolvedTheme =>
+		theme === 'dark' || (theme === 'system' && darkSchemeMedia.matches) ? 'dark' : 'light';
 
 	const getNextTheme = (theme: ThemePreference): ThemePreference => {
 		const index = THEME_ORDER.indexOf(theme);
@@ -54,14 +75,35 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		return button.dataset.themeSystemLabel ?? '';
 	};
 
+	const syncThemeFavicon = (resolvedTheme: ResolvedTheme) => {
+		let favicon = document.querySelector<HTMLLinkElement>('link[data-theme-favicon-active]');
+		if (!favicon) {
+			favicon = document.createElement('link');
+			favicon.rel = 'icon';
+			favicon.type = 'image/svg+xml';
+			favicon.dataset.themeFaviconActive = 'true';
+		}
+
+		const source = `/favicon.${resolvedTheme}.svg`;
+		if (favicon.getAttribute('href') !== source) favicon.setAttribute('href', source);
+
+		// Keep the runtime-selected favicon as the last icon candidate. The static
+		// prefers-color-scheme links remain a no-JS fallback, while this link follows
+		// the Portfolio preference even when it differs from the operating system.
+		document.head.append(favicon);
+	};
+
 	const syncThemeState = () => {
 		const theme = getSavedTheme();
-		const isDark = theme === 'dark' || (theme === 'system' && darkSchemeMedia.matches);
+		const resolvedTheme = getResolvedTheme(theme);
+		const isDark = resolvedTheme === 'dark';
 		document.documentElement.classList.toggle('dark', isDark);
+		document.documentElement.dataset.themeResolved = resolvedTheme;
+		syncThemeFavicon(resolvedTheme);
 
 		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
 			button.querySelectorAll<HTMLElement>('[data-theme-icon]').forEach(icon => {
-				icon.hidden = icon.dataset.themeIcon !== theme;
+				icon.dataset.themeActive = String(icon.dataset.themeIcon === theme);
 			});
 
 			const nextTheme = getNextTheme(theme);
@@ -74,15 +116,81 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		});
 	};
 
+	const beginThemeTransition = (applyTheme: () => void) => {
+		const root = document.documentElement;
+		const transitionDocument = document as ViewTransitionDocument;
+
+		if (reducedMotionMedia.matches || !transitionDocument.startViewTransition) {
+			root.classList.remove('theme-transition');
+			applyTheme();
+			return;
+		}
+
+		// Rapid theme input should favor state correctness over stacking document
+		// snapshots. Skip only the transition owned by this feature; never cancel an
+		// Astro ClientRouter navigation transition that happens to be active.
+		if (activeThemeTransition) {
+			const previousTransition = activeThemeTransition;
+			activeThemeTransition = undefined;
+			previousTransition.skipTransition();
+			root.classList.remove('theme-transition');
+			applyTheme();
+			return;
+		}
+
+		if (transitionDocument.activeViewTransition) {
+			root.classList.remove('theme-transition');
+			applyTheme();
+			return;
+		}
+
+		root.classList.add('theme-transition');
+		const transition = transitionDocument.startViewTransition(applyTheme);
+		activeThemeTransition = transition;
+
+		const clearTransition = () => {
+			if (activeThemeTransition !== transition) return;
+			activeThemeTransition = undefined;
+			root.classList.remove('theme-transition');
+		};
+
+		void transition.finished.then(clearTransition, clearTransition);
+	};
+
+	const applyThemePreference = (currentTheme: ThemePreference, nextTheme: ThemePreference) => {
+		const currentResolvedTheme = getResolvedTheme(currentTheme);
+		const nextResolvedTheme = getResolvedTheme(nextTheme);
+		const renderedResolvedTheme = document.documentElement.dataset.themeResolved;
+
+		// Preference and resolved palette are separate contracts. System can resolve
+		// to the palette that is already visible, so starting a document snapshot in
+		// that case only re-captures identical colors and can produce a perceptible
+		// flash. Update preference semantics directly unless the palette must change.
+		localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+		if (
+			currentResolvedTheme === nextResolvedTheme ||
+			renderedResolvedTheme === nextResolvedTheme
+		) {
+			syncThemeState();
+			return;
+		}
+
+		const requestVersion = ++themeRequestVersion;
+		beginThemeTransition(() => {
+			if (requestVersion !== themeRequestVersion) return;
+			syncThemeState();
+		});
+	};
+
 	const setupThemeToggles = () => {
 		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
 			if (button.dataset.themeReady === 'true') return;
 			button.dataset.themeReady = 'true';
 
 			button.addEventListener('click', () => {
-				const nextTheme = getNextTheme(getSavedTheme());
-				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-				syncThemeState();
+				const currentTheme = getSavedTheme();
+				const nextTheme = getNextTheme(currentTheme);
+				applyThemePreference(currentTheme, nextTheme);
 			});
 		});
 
@@ -92,7 +200,12 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	if (document.documentElement.dataset.themeSchemeListener !== 'ready') {
 		document.documentElement.dataset.themeSchemeListener = 'ready';
 		darkSchemeMedia.addEventListener('change', () => {
-			if (getSavedTheme() === 'system') syncThemeState();
+			if (getSavedTheme() !== 'system') return;
+			const requestVersion = ++themeRequestVersion;
+			beginThemeTransition(() => {
+				if (requestVersion !== themeRequestVersion || getSavedTheme() !== 'system') return;
+				syncThemeState();
+			});
 		});
 	}
 
@@ -100,10 +213,24 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	document.addEventListener('astro:page-load', setupThemeToggles);
 </script>
 
-<style>
+<style is:global>
+	.theme-toggle-icon {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		opacity: 0;
+		pointer-events: none;
+	}
+
+	.theme-toggle-icon[data-theme-active='true'] {
+		opacity: 1;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
-		.theme-toggle {
-			transition: none;
+		.theme-toggle,
+		.theme-toggle-icon {
+			transition: none !important;
 		}
 	}
 </style>

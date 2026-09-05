@@ -3,11 +3,11 @@ import { Language } from '@shared/config/i18n';
 import type { ResearchContent, ResearchContentEntry } from './types';
 
 const RESEARCH_ENTRY_ID: Record<Language, string> = {
-	[Language.ENGLISH]: 'en/oss-abandonment-bilstm',
-	[Language.SPANISH]: 'es/oss-abandonment-bilstm',
+	[Language.ENGLISH]: 'en/vulnerable-dependency-remediation',
+	[Language.SPANISH]: 'es/vulnerable-dependency-remediation',
 };
 
-const RESEARCH_ID = 'oss-abandonment-bilstm';
+const RESEARCH_ID = 'vulnerable-dependency-remediation';
 
 export async function getResearchEntry(lang: Language): Promise<ResearchContentEntry> {
 	const research = await getEntry('research', RESEARCH_ENTRY_ID[lang]);

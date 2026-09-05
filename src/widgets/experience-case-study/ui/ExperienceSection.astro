@@ -7,8 +7,9 @@ interface Props {
 }
 
 const { eyebrow, title, surface = 'canvas', layout = 'prose' } = Astro.props;
+const useFullWidthProse = surface === 'highlight' && layout === 'prose';
 const contentLayout = {
-	prose: 'max-w-220',
+	prose: useFullWidthProse ? 'w-full' : 'max-w-220',
 	split: 'grid w-full max-w-320 grid-cols-1 gap-4 md:grid-cols-2',
 	lead: 'grid w-full max-w-320 grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.18fr)_minmax(0,0.82fr)]',
 	triad: 'grid w-full max-w-320 grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3',
@@ -22,9 +23,13 @@ const contentLayout = {
 	]}
 	data-experience-section
 	data-experience-section-layout={layout}
+	data-experience-section-surface={surface}
 >
-	<div class="mx-auto flex w-full max-w-320 flex-col gap-5">
-		<div class="flex max-w-220 flex-col gap-2">
+	<div class="mx-auto flex w-full max-w-320 flex-col gap-5" data-experience-section-shell>
+		<div
+			class:list={['flex flex-col gap-2', useFullWidthProse ? 'w-full' : 'max-w-220']}
+			data-experience-section-heading
+		>
 			<p class="text-editorial-label uppercase text-channel-accent-primary">{eyebrow}</p>
 			<h2 class="text-feature-title text-content-strong md:text-section-title">{title}</h2>
 		</div>
@@ -33,6 +38,7 @@ const contentLayout = {
 				contentLayout,
 				layout === 'prose' && 'text-body text-content-default [&>p+p]:mt-4',
 			]}
+			data-experience-section-content
 		>
 			<slot />
 		</div>

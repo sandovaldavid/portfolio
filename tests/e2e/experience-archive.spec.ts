@@ -11,10 +11,10 @@ test('English current role renders as a systems-oriented career case study', asy
 	await expect(caseStudy).toHaveAttribute('data-experience-presentation', 'systems');
 	await expect(caseStudy.locator('[data-experience-hero] h1')).toHaveText('Atena');
 	await expect(caseStudy.locator('[data-experience-contributions] li')).toHaveCount(4);
-	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText('ROLE CONTEXT');
 	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
-		'DELIVERY DISCIPLINE'
+		'WORKING ON EXISTING SYSTEMS'
 	);
+	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText('VALIDATION');
 	await expect(caseStudy.locator('[data-experience-section-layout="split"]')).toBeVisible();
 	await expect(caseStudy.locator('[data-experience-focus]')).toContainText(
 		'Entity Framework Core'
@@ -29,11 +29,9 @@ test('Spanish current role renders the localized systems narrative', async ({ pa
 	const caseStudy = page.locator('[data-experience-case-study="atena-software-engineer"]');
 	await expect(caseStudy).toBeVisible();
 	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
-		'CONTEXTO DEL ROL'
+		'TRABAJO SOBRE SISTEMAS EXISTENTES'
 	);
-	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText(
-		'DISCIPLINA DE ENTREGA'
-	);
+	await expect(caseStudy.locator('[data-experience-narrative]')).toContainText('VALIDACIÓN');
 	await expect(caseStudy.locator('[data-experience-status]')).toContainText('ACTUAL');
 });
 

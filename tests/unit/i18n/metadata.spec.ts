@@ -27,13 +27,15 @@ describe('localized SEO, RSS and structured metadata', () => {
 		expect(layout).toContain('twitter:image:alt');
 		expect(layout).toContain('BlogPosting');
 		expect(layout).toContain('TechArticle');
-		expect(layout).toContain('ScholarlyArticle');
+		expect(layout).toContain("research: 'WebPage'");
+		expect(layout).not.toContain("research: 'ScholarlyArticle'");
 		expect(layout).toContain('SoftwareSourceCode');
+		expect(layout).toContain('Software Maintenance Research');
+		expect(layout).not.toContain('Applied AI');
 		expect(layout).toContain('breadcrumbLabel');
 		expect(layout).toContain('const structuredTitle = breadcrumbLabel ?? title;');
 		expect(layout).toContain('name: structuredTitle');
 		expect(layout).toContain('headline: structuredTitle');
-		expect(layout).not.toContain("'@type': 'ScholarlyArticle',\n\t\t\tname: title");
 	});
 
 	it('requires dynamic routes to provide semantic metadata from canonical content', () => {
@@ -61,8 +63,15 @@ describe('localized SEO, RSS and structured metadata', () => {
 		for (const path of routes.project) {
 			const source = readSource(path);
 			expect(source).toContain('pageType="project"');
-			expect(source).toContain('imageAlt={project.imageAlt}');
+			expect(source).toContain("imageAlt={`${project.title} — ${tProjects('caseStudy')}`}");
 			expect(source).toContain('breadcrumbLabel={project.title}');
+		}
+	});
+
+	it('marks both localized research routes as WebPage content', () => {
+		for (const path of ['src/pages/research.astro', 'src/pages/es/research.astro']) {
+			const source = readSource(path);
+			expect(source).toContain('pageType="research"');
 		}
 	});
 

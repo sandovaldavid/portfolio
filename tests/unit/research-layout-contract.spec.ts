@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
+const researchId = 'vulnerable-dependency-remediation';
 
 describe('Research evidence composition contract', () => {
 	it('keeps narrative reading measure while widening structured evidence', () => {
@@ -48,9 +49,9 @@ describe('Research evidence composition contract', () => {
 		);
 	});
 
-	it('composes both localized research entries into evidence columns without changing their claims', () => {
+	it('composes both localized research entries into evidence columns without changing their bounded claims', () => {
 		for (const locale of ['en', 'es'] as const) {
-			const source = readSource(`src/content/research/${locale}/oss-abandonment-bilstm.mdx`);
+			const source = readSource(`src/content/research/${locale}/${researchId}.mdx`);
 
 			expect(source).toContain('<ResearchEvidenceLayout>');
 			expect(source.match(/<ResearchEvidenceColumn>/g) ?? []).toHaveLength(2);
@@ -59,11 +60,11 @@ describe('Research evidence composition contract', () => {
 			expect(source).toContain('variant="status"');
 		}
 
-		expect(readSource('src/content/research/en/oss-abandonment-bilstm.mdx')).toContain(
-			'Results will be published upon thesis completion.'
+		expect(readSource(`src/content/research/en/${researchId}.mdx`)).toContain(
+			'The final model family is not selected in advance.'
 		);
-		expect(readSource('src/content/research/es/oss-abandonment-bilstm.mdx')).toContain(
-			'Los resultados se publicarán al completar la tesis.'
+		expect(readSource(`src/content/research/es/${researchId}.mdx`)).toContain(
+			'La familia de modelos final no está seleccionada de antemano.'
 		);
 	});
 

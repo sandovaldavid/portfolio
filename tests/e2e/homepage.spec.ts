@@ -88,6 +88,171 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
+	test('crossfades the complete theme snapshot and keeps the favicon aligned', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+		await page.goto('/');
+
+		const html = page.locator('html');
+		const runtimeFavicon = page.locator('link[data-theme-favicon-active]');
+		await expect(html).not.toHaveClass(/dark/);
+		await expect(html).toHaveAttribute('data-theme-resolved', 'light');
+		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.light.svg');
+
+		await page.locator('#recruiter-hud-toggle').click();
+		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
+		const sunIcon = themeToggle.locator('[data-theme-icon="light"]');
+		const moonIcon = themeToggle.locator('[data-theme-icon="dark"]');
+		const systemIcon = themeToggle.locator('[data-theme-icon="system"]');
+		await expect(themeToggle).toBeVisible();
+		await expect(sunIcon).toHaveAttribute('data-theme-active', 'true');
+		await expect(moonIcon).toHaveAttribute('data-theme-active', 'false');
+		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
+
+		const transition = await page.evaluate(async () => {
+			type RuntimeViewTransition = {
+				updateCallbackDone: Promise<void>;
+				ready: Promise<void>;
+				finished: Promise<void>;
+			};
+			type RuntimeDocument = Document & {
+				activeViewTransition?: RuntimeViewTransition | null;
+			};
+
+			const root = document.documentElement;
+			const body = document.body;
+			const panel = document.querySelector<HTMLElement>('#recruiter-hud-panel');
+			const toggle = panel?.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+			if (!panel || !toggle) throw new Error('Recruiter HUD theme toggle not found');
+
+			const before = {
+				bodyBackground: getComputedStyle(body).backgroundColor,
+				panelBackground: getComputedStyle(panel).backgroundColor,
+			};
+
+			toggle.click();
+			const active = (document as RuntimeDocument).activeViewTransition;
+			if (!active) throw new Error('Theme view transition did not start');
+
+			const preferenceAfterClick = localStorage.getItem('theme');
+			await active.updateCallbackDone;
+			const updated = {
+				resolvedTheme: root.dataset.themeResolved,
+				isDark: root.classList.contains('dark'),
+				currentPreference: toggle.dataset.themeCurrent,
+				bodyBackground: getComputedStyle(body).backgroundColor,
+				panelBackground: getComputedStyle(panel).backgroundColor,
+			};
+
+			await active.ready;
+			const animations = document
+				.getAnimations()
+				.filter((animation): animation is CSSAnimation => animation instanceof CSSAnimation)
+				.map(animation => ({
+					name: animation.animationName,
+					duration: animation.effect?.getTiming().duration ?? null,
+				}));
+
+			await active.finished;
+			return {
+				before,
+				preferenceAfterClick,
+				updated,
+				animations,
+				markerAfterFinish: root.classList.contains('theme-transition'),
+			};
+		});
+
+		expect(transition.preferenceAfterClick).toBe('dark');
+		expect(transition.updated.resolvedTheme).toBe('dark');
+		expect(transition.updated.isDark).toBe(true);
+		expect(transition.updated.currentPreference).toBe('dark');
+		expect(transition.updated.bodyBackground).not.toBe(transition.before.bodyBackground);
+		expect(transition.updated.panelBackground).not.toBe(transition.before.panelBackground);
+		expect(transition.animations).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ name: 'theme-crossfade-old', duration: 180 }),
+				expect.objectContaining({ name: 'theme-crossfade-new', duration: 180 }),
+			])
+		);
+		expect(transition.markerAfterFinish).toBe(false);
+		await expect(html).toHaveClass(/dark/);
+		await expect(html).toHaveAttribute('data-theme-resolved', 'dark');
+		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.dark.svg');
+		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('dark');
+		await expect(sunIcon).toHaveAttribute('data-theme-active', 'false');
+		await expect(moonIcon).toHaveAttribute('data-theme-active', 'true');
+		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
+
+		await themeToggle.click();
+		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('system');
+		await expect(themeToggle).toHaveAttribute('data-theme-current', 'system');
+
+		await themeToggle.click();
+		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('light');
+		await expect(themeToggle).toHaveAttribute('data-theme-current', 'light');
+	});
+
+	test('keeps the cyclic preference order when toggled before the transition settles', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+		await page.goto('/');
+
+		await page.locator('#recruiter-hud-toggle').click();
+		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
+		await expect(themeToggle).toBeVisible();
+
+		const rapidState = await themeToggle.evaluate(async button => {
+			if (!(button instanceof HTMLButtonElement)) throw new Error('Theme toggle not found');
+			button.click();
+			const afterFirst = {
+				preference: localStorage.getItem('theme'),
+			};
+			button.click();
+			await new Promise(resolve => setTimeout(resolve, 0));
+			return {
+				afterFirst,
+				afterSecond: {
+					preference: localStorage.getItem('theme'),
+					current: button.dataset.themeCurrent,
+				},
+			};
+		});
+
+		expect(rapidState.afterFirst.preference).toBe('dark');
+		expect(rapidState.afterSecond.preference).toBe('system');
+		expect(rapidState.afterSecond.current).toBe('system');
+	});
+
+	test('respects reduced motion while still changing theme and favicon state', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await page.emulateMedia({ reducedMotion: 'reduce' });
+		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
+		await page.goto('/');
+
+		await page.locator('#recruiter-hud-toggle').click();
+		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
+		await themeToggle.click();
+
+		const html = page.locator('html');
+		await expect(html).toHaveClass(/dark/);
+		await expect(html).not.toHaveClass(/theme-transition/);
+		await expect(page.locator('link[data-theme-favicon-active]')).toHaveAttribute(
+			'href',
+			'/favicon.dark.svg'
+		);
+		await expect(themeToggle.locator('[data-theme-icon="dark"]')).toHaveAttribute(
+			'data-theme-active',
+			'true'
+		);
+	});
+
 	test('navigates section by section on wheel scroll', async ({ page, isMobile }) => {
 		test.skip(isMobile, 'Mouse-wheel section navigation is a desktop pointer contract.');
 		await page.setViewportSize({ width: 1280, height: 800 });

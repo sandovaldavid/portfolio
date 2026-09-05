@@ -24,12 +24,13 @@ if (!post) {
 
 const localizedPaths = await getBlogLocalizedPaths(post);
 const { Content } = await render(post);
+const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
 ---
 
 <Layout
 	title={`${post.data.title} | Blog | David Sandoval`}
 	description={post.data.description}
-	img_preview={post.data.heroImage?.src ?? '/projects/portfolio.webp'}
+	img_preview={previewImage}
 	imageAlt={post.data.title}
 	pageType="blog"
 	publishedTime={post.data.pubDate}

@@ -51,7 +51,7 @@ const {
 	publishedTime,
 	modifiedTime,
 	breadcrumbLabel,
-	keywords = 'David Sandoval, Software Engineer, backend engineering, web architecture, automated testing, developer tooling, applied AI, .NET, Angular, TypeScript, Peru, remote',
+	keywords = 'David Sandoval, Software Engineer, backend engineering, web architecture, automated testing, developer tooling, software maintenance research, .NET, Angular, TypeScript, Peru, remote',
 	localizedPaths,
 	contentLayout = 'default',
 } = Astro.props;
@@ -89,7 +89,7 @@ const resolvedImageAlt = imageAlt ?? tAccessibility('portfolioPreviewAlt');
 const ogLocale = lang === Language.ENGLISH ? 'en_US' : 'es_PE';
 const alternateOgLocale = lang === Language.ENGLISH ? 'es_PE' : 'en_US';
 const hasAlternateLocale = lang === Language.ENGLISH ? Boolean(esUrl) : Boolean(enUrl);
-const isArticlePage = pageType === 'blog' || pageType === 'devlog' || pageType === 'research';
+const isArticlePage = pageType === 'blog' || pageType === 'devlog';
 const ogType = isArticlePage ? 'article' : 'website';
 const pageContentClasses =
 	contentLayout === 'flush'
@@ -169,7 +169,7 @@ const personEntity = {
 		'Web Architecture',
 		'Automated Testing',
 		'Developer Tooling',
-		'Applied AI',
+		'Software Maintenance Research',
 		'.NET',
 		'C#',
 		'Angular',
@@ -193,7 +193,7 @@ const websiteSchema = {
 const structuredTypeByPage: Partial<Record<PageType, string>> = {
 	blog: 'BlogPosting',
 	devlog: 'TechArticle',
-	research: 'ScholarlyArticle',
+	research: 'WebPage',
 	project: 'SoftwareSourceCode',
 };
 const structuredType = structuredTypeByPage[pageType];

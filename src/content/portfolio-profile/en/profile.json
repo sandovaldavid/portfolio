@@ -3,25 +3,25 @@
 	"locale": "en",
 	"seo": {
 		"title": "About David Sandoval — Software Engineer",
-		"description": "Learn how David Sandoval approaches software engineering across backend systems, web products, testing, developer tooling and applied research."
+		"description": "About David Sandoval, a backend-oriented Software Engineer with hands-on frontend experience across product systems, integrations, developer tooling and software-maintenance research."
 	},
-	"summary": "Backend-oriented Software Engineer with frontend experience. I connect technical decisions with business context, build maintainable web products and validate changes through testing and reproducible workflows.",
+	"summary": "Backend-oriented Software Engineer with hands-on frontend experience. I work on product systems across backend services, frontend features, and integrations. When behavior changes or a problem crosses layers, I trace the affected flow before making the change.",
 	"biography": [
-		"Backend-oriented Software Engineer with frontend experience across .NET, Angular and TypeScript. I value clear architecture when it reduces delivery risk, not as an objective by itself.",
-		"My professional work includes modernizing frontend modules, contributing to REST APIs, improving data and reporting workflows, expanding automated regression coverage and supporting migrations from legacy systems. I document project decisions, trade-offs and validation so the engineering behind the work is easier to understand.",
-		"Alongside product engineering, I research Mining Software Repositories and the use of BiLSTM models to study OSS project abandonment, currently in progress toward my professional degree. This research is a secondary specialization that complements my software-engineering work."
+		"I work mainly on backend services with .NET and also build frontend features with Angular and TypeScript. My day-to-day work spans APIs, integrations and existing product workflows, so I often need to understand how a change affects more than one part of the system.",
+		"At Atena, I work on .NET backend services and an Angular administrative frontend in an existing fintech product. My work includes API, authorization, integration and frontend changes. When a change crosses layers or services, I trace the affected flow and consumers, then use tests, compiler feedback and static analysis to validate regression-prone behavior.",
+		"Outside work, I build developer tools and product projects, and I’m developing my thesis on vulnerable-dependency remediation in OSS ecosystems. My original thesis direction changed after the literature review, so I’m now validating the new question and data before choosing a model."
 	],
 	"focusAreas": [
-		"Maintainable backend systems and API boundaries",
-		"Reactive frontend architecture",
-		"Type-safe web application development",
-		"Automated testing and CI quality gates",
-		"Business-aware, validation-driven engineering",
+		"Backend services and API design",
+		"Angular and TypeScript frontend development",
+		"Type-safe web applications",
+		"Automated testing and CI",
+		"Debugging across system boundaries",
 		"Developer tooling and technical documentation"
 	],
-	"availabilityStatement": "Open to remote software engineering opportunities, including international relocation or graduate study as part of ongoing career growth.",
+	"availabilityStatement": "Open to remote software engineering opportunities, including international roles or relocation; I’m also exploring graduate study.",
 	"location": "Peru (UTC-5)",
 	"workMode": "Remote from Peru",
-	"researchSummary": "Researching OSS abandonment prediction with BiLSTM models and repository activity data as part of ongoing thesis work.",
-	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer, backend-oriented with frontend experience across Angular and .NET. My focus is maintainable delivery, validated changes and clear technical documentation."
+	"researchSummary": "Researching whether upstream maintenance signals add useful prospective information for estimating vulnerable-dependency remediation latency; the final outcome definition and model family remain under validation.",
+	"currentRoleSummary": "I currently work at Atena as a Jr. Software Engineer, mainly on .NET backend services and also on an Angular administrative frontend. My work includes API, authorization, service-integration and frontend changes, with targeted validation for regression-prone behavior."
 }

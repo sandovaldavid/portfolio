@@ -5,7 +5,8 @@ const brandAssets = [
 	['/favicon.light.svg', 'image/svg+xml'],
 	['/favicon.dark.svg', 'image/svg+xml'],
 	['/apple-touch-icon.png', 'image/png'],
-	['/og-meta.png', 'image/png'],
+	['/og/preview-portfolio-home-en-dark.png', 'image/png'],
+	['/og/preview-portfolio-home-es-dark.png', 'image/png'],
 	['/brand/favicon-16-light.svg', 'image/svg+xml'],
 	['/brand/favicon-16-dark.svg', 'image/svg+xml'],
 	['/brand/favicon-32-light.svg', 'image/svg+xml'],
@@ -49,11 +50,14 @@ test.describe('brand identity assets and typography', () => {
 		}
 	});
 
-	test('home metadata uses the branded Open Graph card and theme-aware favicon', async ({
+	test('home metadata uses localized Open Graph cards and theme-aware favicon', async ({
 		page,
 	}) => {
-		for (const path of ['/', '/es/']) {
-			await page.goto(path);
+		for (const scenario of [
+			{ path: '/', image: '/og/preview-portfolio-home-en-dark.png' },
+			{ path: '/es/', image: '/og/preview-portfolio-home-es-dark.png' },
+		] as const) {
+			await page.goto(scenario.path);
 			await expect(
 				page.locator('link[rel="icon"][media="(prefers-color-scheme: light)"]')
 			).toHaveAttribute('href', '/favicon.light.svg');
@@ -62,11 +66,11 @@ test.describe('brand identity assets and typography', () => {
 			).toHaveAttribute('href', '/favicon.dark.svg');
 			await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/og-meta.png'
+				`https://sandovaldavid.com${scenario.image}`
 			);
 			await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
 				'content',
-				'https://sandovaldavid.com/og-meta.png'
+				`https://sandovaldavid.com${scenario.image}`
 			);
 		}
 	});

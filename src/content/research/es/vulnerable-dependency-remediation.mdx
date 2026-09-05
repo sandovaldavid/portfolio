@@ -1,0 +1,120 @@
+---
+researchId: vulnerable-dependency-remediation
+locale: es
+label: Tesis de Pregrado
+title: Viabilidad de Remediación de Dependencias Vulnerables en Ecosistemas OSS
+status: in-progress
+institution: Universidad Nacional de Piura
+featuredSignals:
+    - Características de la vulnerabilidad y la remediación
+    - Preparación del proyecto consumidor para remediar
+    - Señales de mantenimiento de la dependencia upstream
+    - Tiempo hasta la remediación con censura a la derecha
+keywords:
+    - Supply Chain de Software
+    - Remediación de Vulnerabilidades
+    - Gestión de Dependencias
+    - Mining Software Repositories
+    - Análisis de Tiempo a Evento
+    - Mantenimiento OSS
+    - Ecosistema npm
+---
+
+<ResearchSection eyebrow="Planteamiento del problema" title="REMEDIAR ES MÁS QUE CONOCER LA SEVERIDAD">
+
+Una dependencia vulnerable no queda remediada solo porque se conozca su severidad. La existencia de un fix utilizable, la preparación del proyecto consumidor para adoptarlo y el contexto de mantenimiento de la dependencia upstream pueden influir en cuándo la remediación es posible y cuándo ocurre realmente.
+
+Mi dirección actual de tesis pregunta si **las señales históricas de mantenimiento upstream aportan información prospectiva útil sobre el tiempo de remediación** más allá de las características de la vulnerabilidad, la remediación y el proyecto consumidor.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Pregunta de investigación en trabajo" title="¿QUÉ APORTA EL MANTENIMIENTO UPSTREAM?">
+
+> ¿En qué medida las señales de mantenimiento de la dependencia upstream mejoran la predicción de la latencia de remediación de dependencias vulnerables más allá de las características de la vulnerabilidad, la remediación y la preparación del proyecto consumidor?
+
+Esta es la pregunta de trabajo actual, no una conclusión congelada. La redacción exacta y el reloj del outcome siguen en validación mientras compruebo si los datos permiten hacer la comparación sin leakage temporal.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Diseño de investigación" title="COMPARAR SEÑALES ANTES DE ELEGIR UN MODELO">
+
+El diseño candidato compara conjuntos de evidencia anidados: **M0** parte de características de vulnerabilidad y remediación, **M1** agrega preparación del proyecto consumidor y **M2** agrega señales de mantenimiento upstream. La pregunta útil es si M2 aporta valor incremental estable bajo validación fuera de muestra temporal. La familia de modelos final no está seleccionada de antemano.
+
+</ResearchSection>
+
+<MermaidDiagram
+	title="Ruta de validación actual"
+	description="Ruta de investigación desde datos públicos de vulnerabilidades e historial de paquetes hasta conjuntos de evidencia anidados y validación fuera de muestra temporal."
+	tones={{ Source: 'info', M0: 'brand', M1: 'secondary', M2: 'warning', Validation: 'success' }}
+	chart={`flowchart LR
+    Source["Vulnerabilidades públicas + historial de paquetes"] --> Events["Oportunidades de remediación"]
+    Events --> M0["M0\nVulnerabilidad + remediación"]
+    M0 --> M1["M1\n+ preparación del consumidor"]
+    M1 --> M2["M2\n+ mantenimiento upstream"]
+    M2 --> Validation["Validación fuera de muestra temporal"]`}
+/>
+
+<ResearchEvidenceLayout>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Señales en estudio" variant="feature-grid">
+
+- Características de vulnerabilidad y remediación disponibles en el momento de observación
+- Señales del proyecto consumidor que describen preparación o fricción frente a la remediación
+- Señales históricas de mantenimiento upstream calculadas sin observar información futura
+- Tiempo de los eventos conservando casos censurados a la derecha, en lugar de tratar todos los casos sin resolver como equivalentes
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Factibilidad de datos">
+
+El baseline está restringido a datos abiertos. **npm es el primer ecosistema para validar factibilidad**; la tesis podría ampliarse más allá de npm. El piloto comprueba si episodios de dependencias vulnerables, oportunidades de remediación y features disponibles en el momento de observación pueden reconstruirse con consistencia suficiente para un estudio prospectivo.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Estado actual" variant="status">
+
+La revisión inicial de literatura cambió la dirección original de mi tesis en lugar de confirmarla. El trabajo actual mapea la evidencia competidora más cercana, valida el pipeline de datos y decide si el outcome propuesto puede medirse de forma limpia. La pregunta de investigación, la definición del outcome y la familia de modelos finales permanecen deliberadamente abiertas hasta que la evidencia sea suficiente.
+
+</ResearchSection>
+
+</ResearchEvidenceColumn>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Decisiones todavía abiertas" variant="technical-list">
+
+- **Redacción de la pregunta:** el constructo es suficientemente estable para investigarlo, pero la formulación final no está congelada
+- **Reloj del outcome:** vulnerabilidad detectable frente a oportunidad de remediación accionable todavía necesita una definición operacional defendible
+- **Alcance de dependencias:** las dependencias directas y transitivas pueden requerir tratamientos distintos de factibilidad o robustez
+- **Familia de modelos:** deep learning, supervivencia, modelos basados en árboles u otras familias no están preseleccionadas como respuesta de la tesis
+- **Interpretación:** un resultado M2 negativo o no incremental sigue siendo informativo si el diseño y la validación son sólidos
+
+</ResearchSection>
+
+<EvaluationCriteria
+	title="Criterios de validación"
+	items={[
+		{
+			label: 'VERDAD',
+			detail: 'Reconstruir episodios de remediación desde historial observable de paquetes y vulnerabilidades con ground truth auditable.',
+		},
+		{
+			label: 'TIEMPO',
+			detail: 'Calcular cada feature solo con información disponible en el momento de observación y rechazar leakage temporal.',
+		},
+		{
+			label: 'DELTA',
+			detail: 'Comparar M0, M1 y M2 para que las señales de mantenimiento upstream deban aportar valor estable, no solo correlacionarse con el outcome.',
+		},
+		{
+			label: 'ROBUST',
+			detail: 'Preferir conclusiones interpretables bajo verificaciones fuera de muestra temporal y definiciones alternativas razonables.',
+		},
+	]}
+/>
+
+</ResearchEvidenceColumn>
+
+</ResearchEvidenceLayout>

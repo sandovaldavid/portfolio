@@ -23,12 +23,16 @@ if (!detail) {
 const { experience, entry, previous, next } = detail;
 const { Content } = await render(entry);
 const pageTitle = `${experience.title} — ${experience.company} | David Sandoval`;
+const previewImage =
+	slug === 'atena-software-engineer'
+		? `/og/preview-case-study-${slug}-es-dark.png`
+		: '/og/preview-website-experience-es-dark.png';
 ---
 
 <Layout
 	title={pageTitle}
 	description={experience.summary}
-	img_preview="/profile/perfil.webp"
+	img_preview={previewImage}
 	imageAlt={`${experience.company} — ${experience.title}`}
 	pageType="profile"
 	breadcrumbLabel={experience.company}

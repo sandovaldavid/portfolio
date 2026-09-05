@@ -1,0 +1,120 @@
+---
+researchId: vulnerable-dependency-remediation
+locale: en
+label: Bachelor Thesis
+title: Vulnerable-Dependency Remediation Viability in OSS Ecosystems
+status: in-progress
+institution: National University of Piura
+featuredSignals:
+    - Vulnerability and remediation characteristics
+    - Consumer-project remediation readiness
+    - Upstream dependency-maintenance signals
+    - Event-level remediation timing with right censoring
+keywords:
+    - Software Supply Chain
+    - Vulnerability Remediation
+    - Dependency Management
+    - Mining Software Repositories
+    - Time-to-Event Analysis
+    - OSS Maintenance
+    - npm Ecosystem
+---
+
+<ResearchSection eyebrow="Problem statement" title="REMEDIATION IS MORE THAN VULNERABILITY SEVERITY">
+
+A vulnerable dependency does not become remediated just because its severity is known. A usable fix, the consumer project's readiness to adopt it and the maintenance context of the upstream dependency can all shape when remediation becomes possible and when it actually happens.
+
+My current thesis direction asks whether **historical upstream maintenance signals add useful prospective information about remediation timing** beyond vulnerability, remediation and consumer-project characteristics.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Working research question" title="WHAT DOES UPSTREAM MAINTENANCE ADD?">
+
+> To what extent do upstream dependency maintenance signals improve the prediction of vulnerable-dependency remediation latency beyond vulnerability characteristics, remediation characteristics, and consumer-project remediation readiness?
+
+This is the current working question, not a frozen conclusion. The exact wording and outcome clock remain under validation while I test whether the data can support the comparison without temporal leakage.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Research design" title="COMPARE SIGNAL SETS BEFORE CHOOSING A MODEL">
+
+The candidate design compares nested evidence sets: **M0** starts with vulnerability and remediation characteristics, **M1** adds consumer-project remediation readiness, and **M2** adds upstream maintenance signals. The useful question is whether M2 provides stable incremental value under out-of-time validation. The final model family is not selected in advance.
+
+</ResearchSection>
+
+<MermaidDiagram
+	title="Current validation path"
+	description="Research path from public vulnerability and package-history data through nested evidence sets to out-of-time validation."
+	tones={{ Source: 'info', M0: 'brand', M1: 'secondary', M2: 'warning', Validation: 'success' }}
+	chart={`flowchart LR
+    Source["Public vulnerability + package history"] --> Events["Remediation opportunities"]
+    Events --> M0["M0\nVulnerability + remediation"]
+    M0 --> M1["M1\n+ consumer readiness"]
+    M1 --> M2["M2\n+ upstream maintenance"]
+    M2 --> Validation["Out-of-time validation"]`}
+/>
+
+<ResearchEvidenceLayout>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Signals under study" variant="feature-grid">
+
+- Vulnerability and remediation characteristics available at the observation point
+- Consumer-project signals describing readiness or friction around remediation
+- Historical upstream maintenance signals computed without looking into the future
+- Event timing that preserves right-censored cases instead of treating every unresolved case as identical
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Data feasibility">
+
+The baseline is restricted to open data. **npm is the first feasibility ecosystem**; the thesis may later extend beyond npm. The pilot is testing whether vulnerable-dependency episodes, remediation opportunities and observation-time features can be reconstructed consistently enough for a prospective study.
+
+</ResearchSection>
+
+<ResearchSection eyebrow="Current status" variant="status">
+
+The initial literature review changed my original thesis direction instead of confirming it. Current work is mapping the closest competing evidence, validating the data pipeline and deciding whether the proposed outcome can be measured cleanly. The final research question, outcome definition and model family remain deliberately open until that evidence is strong enough.
+
+</ResearchSection>
+
+</ResearchEvidenceColumn>
+
+<ResearchEvidenceColumn>
+
+<ResearchSection eyebrow="Decisions still open" variant="technical-list">
+
+- **Research question wording:** the construct is stable enough to investigate, but the final wording is not frozen
+- **Outcome clock:** detectable vulnerability versus actionable remediation opportunity still needs a defensible operational definition
+- **Dependency scope:** direct and transitive dependencies may require different feasibility or robustness treatment
+- **Model family:** no deep-learning, survival, tree-based or other family is preselected as the thesis answer
+- **Interpretation:** a negative or non-incremental M2 result remains informative if the design and validation are sound
+
+</ResearchSection>
+
+<EvaluationCriteria
+	title="Validation gates"
+	items={[
+		{
+			label: 'TRUTH',
+			detail: 'Reconstruct remediation episodes from observable package and vulnerability history with an auditable ground truth.',
+		},
+		{
+			label: 'TIME',
+			detail: 'Compute every feature from information available at the observation point and reject temporal leakage.',
+		},
+		{
+			label: 'DELTA',
+			detail: 'Compare M0, M1 and M2 so upstream-maintenance signals must add stable value rather than merely correlate with the outcome.',
+		},
+		{
+			label: 'ROBUST',
+			detail: 'Prefer conclusions that remain interpretable under out-of-time checks and reasonable alternative definitions.',
+		},
+	]}
+/>
+
+</ResearchEvidenceColumn>
+
+</ResearchEvidenceLayout>

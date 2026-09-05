@@ -55,8 +55,5 @@ export const REPRESENTATIVE_ROUTE_PAIRS = Object.freeze([
 		spanish: '/es/blog/building-this-portfolio-with-astro-and-fsd',
 	}),
 	Object.freeze({ english: '/devlog', spanish: '/es/devlog' }),
-	Object.freeze({
-		english: '/devlog/phase-3-complete',
-		spanish: '/es/devlog/phase-3-complete',
-	}),
+	Object.freeze({ english: '/devlog/v2-0-0', spanish: '/es/devlog/v2-0-0' }),
 ]);

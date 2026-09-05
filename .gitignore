@@ -45,10 +45,8 @@ junit-results.xml
 lighthouse-report/
 bundle-analysis/
 .docker/
-*.png
 !src/assets/**/*.png
 !tests/e2e/**/*.png
-!public/og-meta.png
 .playwright-cli/
 
 # playwright

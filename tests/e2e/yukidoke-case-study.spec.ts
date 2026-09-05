@@ -17,10 +17,10 @@ test.describe('Yukidoke flagship case study', () => {
 			source: 'Private source',
 			problem: 'Shared household money still contains private information',
 			system: 'Presentation is separated from financial authority',
-			implementation: 'What the V1 beta demonstrates today',
+			implementation: 'What the V1 beta includes today',
 			privacy: 'Resource existence is part of the authorization model',
-			boundary: 'V1 remains in private beta while production hardening continues',
-			learning: 'Engineering lessons from the household boundary',
+			boundary: 'V1 remains a private beta',
+			learning: 'What I learned from the household boundary',
 		},
 		{
 			path: '/es/projects/yukidoke',
@@ -28,10 +28,10 @@ test.describe('Yukidoke flagship case study', () => {
 			source: 'Código privado',
 			problem: 'El dinero compartido del hogar todavía contiene información privada',
 			system: 'La presentación está separada de la autoridad financiera',
-			implementation: 'Qué demuestra hoy la beta V1',
+			implementation: 'Qué incluye hoy la beta V1',
 			privacy: 'La existencia de un recurso forma parte del modelo de autorización',
-			boundary: 'V1 sigue en beta privada mientras continúa el endurecimiento productivo',
-			learning: 'Lecciones de ingeniería del límite por hogar',
+			boundary: 'V1 sigue en beta privada',
+			learning: 'Lo que aprendí trabajando el límite por hogar',
 		},
 	] as const) {
 		test(`renders current bilingual MDX at ${locale.path}`, async ({ page }) => {
