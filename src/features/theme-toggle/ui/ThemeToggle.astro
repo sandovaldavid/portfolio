@@ -37,13 +37,21 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 <script>
 	type ThemePreference = 'light' | 'dark' | 'system';
 	type ResolvedTheme = 'light' | 'dark';
+	type ThemeViewTransition = {
+		skipTransition: () => void;
+		finished: Promise<void>;
+	};
+	type ViewTransitionDocument = Document & {
+		startViewTransition?: (updateCallback: () => void) => ThemeViewTransition;
+		activeViewTransition?: ThemeViewTransition | null;
+	};
 
 	const THEME_STORAGE_KEY = 'theme';
 	const THEME_ORDER: ThemePreference[] = ['light', 'dark', 'system'];
-	const THEME_TRANSITION_DURATION_MS = 180;
 	const darkSchemeMedia = window.matchMedia('(prefers-color-scheme: dark)');
 	const reducedMotionMedia = window.matchMedia('(prefers-reduced-motion: reduce)');
-	let themeTransitionTimer: number | undefined;
+	let activeThemeTransition: ThemeViewTransition | undefined;
+	let themeRequestVersion = 0;
 
 	const isThemePreference = (value: string | null): value is ThemePreference =>
 		value === 'light' || value === 'dark' || value === 'system';
@@ -108,74 +116,45 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		});
 	};
 
-	const clearThemeTransition = () => {
-		window.clearTimeout(themeTransitionTimer);
-		document.documentElement.classList.remove('theme-transition');
-	};
-
 	const beginThemeTransition = (applyTheme: () => void) => {
-		if (reducedMotionMedia.matches) {
+		const root = document.documentElement;
+		const transitionDocument = document as ViewTransitionDocument;
+
+		if (reducedMotionMedia.matches || !transitionDocument.startViewTransition) {
+			root.classList.remove('theme-transition');
 			applyTheme();
 			return;
 		}
 
-		const root = document.documentElement;
-		clearThemeTransition();
+		// Rapid theme input should favor state correctness over stacking document
+		// snapshots. Skip only the transition owned by this feature; never cancel an
+		// Astro ClientRouter navigation transition that happens to be active.
+		if (activeThemeTransition) {
+			const previousTransition = activeThemeTransition;
+			activeThemeTransition = undefined;
+			previousTransition.skipTransition();
+			root.classList.remove('theme-transition');
+			applyTheme();
+			return;
+		}
+
+		if (transitionDocument.activeViewTransition) {
+			root.classList.remove('theme-transition');
+			applyTheme();
+			return;
+		}
+
 		root.classList.add('theme-transition');
+		const transition = transitionDocument.startViewTransition(applyTheme);
+		activeThemeTransition = transition;
 
-		// Flush the transition styles before resolving the next semantic palette,
-		// then apply the theme in this same interaction turn. Deferring the theme
-		// itself to a later animation frame adds visible input latency on dense routes.
-		void root.offsetWidth;
-		applyTheme();
+		const clearTransition = () => {
+			if (activeThemeTransition !== transition) return;
+			activeThemeTransition = undefined;
+			root.classList.remove('theme-transition');
+		};
 
-		themeTransitionTimer = window.setTimeout(
-			clearThemeTransition,
-			THEME_TRANSITION_DURATION_MS + 40
-		);
-	};
-
-	const animateThemeToggle = (
-		button: HTMLButtonElement,
-		previousTheme: ThemePreference,
-		nextTheme: ThemePreference
-	) => {
-		if (reducedMotionMedia.matches) return;
-
-		button.animate(
-			[{ transform: 'scale(1)' }, { transform: 'scale(0.94)' }, { transform: 'scale(1)' }],
-			{
-				duration: THEME_TRANSITION_DURATION_MS,
-				easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)',
-			}
-		);
-
-		const outgoingIcon = button.querySelector<HTMLElement>(
-			`[data-theme-icon="${previousTheme}"]`
-		);
-		const incomingIcon = button.querySelector<HTMLElement>(`[data-theme-icon="${nextTheme}"]`);
-
-		outgoingIcon?.animate(
-			[
-				{ opacity: 1, transform: 'rotate(0deg) scale(1)' },
-				{ opacity: 0, transform: 'rotate(18deg) scale(0.72)' },
-			],
-			{
-				duration: THEME_TRANSITION_DURATION_MS,
-				easing: 'cubic-bezier(0.4, 0, 1, 1)',
-			}
-		);
-
-		incomingIcon?.animate(
-			[
-				{ opacity: 0, transform: 'rotate(-18deg) scale(0.72)' },
-				{ opacity: 1, transform: 'rotate(0deg) scale(1)' },
-			],
-			{
-				duration: THEME_TRANSITION_DURATION_MS,
-				easing: 'cubic-bezier(0, 0, 0.2, 1)',
-			}
-		);
+		void transition.finished.then(clearTransition, clearTransition);
 	};
 
 	const setupThemeToggles = () => {
@@ -186,10 +165,14 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			button.addEventListener('click', () => {
 				const currentTheme = getSavedTheme();
 				const nextTheme = getNextTheme(currentTheme);
+				const requestVersion = ++themeRequestVersion;
+
+				// Preference state remains synchronous even though supporting browsers
+				// capture the old document before applying the visual DOM update.
 				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
 				beginThemeTransition(() => {
+					if (requestVersion !== themeRequestVersion) return;
 					syncThemeState();
-					animateThemeToggle(button, currentTheme, nextTheme);
 				});
 			});
 		});
@@ -200,9 +183,12 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 	if (document.documentElement.dataset.themeSchemeListener !== 'ready') {
 		document.documentElement.dataset.themeSchemeListener = 'ready';
 		darkSchemeMedia.addEventListener('change', () => {
-			if (getSavedTheme() === 'system') {
-				beginThemeTransition(syncThemeState);
-			}
+			if (getSavedTheme() !== 'system') return;
+			const requestVersion = ++themeRequestVersion;
+			beginThemeTransition(() => {
+				if (requestVersion !== themeRequestVersion || getSavedTheme() !== 'system') return;
+				syncThemeState();
+			});
 		});
 	}
 
@@ -218,12 +204,10 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		place-items: center;
 		opacity: 0;
 		pointer-events: none;
-		transform: rotate(-18deg) scale(0.72);
 	}
 
 	.theme-toggle-icon[data-theme-active='true'] {
 		opacity: 1;
-		transform: rotate(0deg) scale(1);
 	}
 
 	@media (prefers-reduced-motion: reduce) {

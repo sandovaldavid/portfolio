@@ -188,23 +188,35 @@ html {
 }
 
 /*
- * Theme changes are a short semantic-color transition, not a page animation.
- * Keep this contract at application scope so every route receives the same
- * transition. During the bounded theme switch it must outrank component-scoped
- * transition shorthands; otherwise surfaces such as RecruiterHUD can snap to
- * the new palette while the document canvas is still interpolating.
- *
- * Limit the contract to color-only properties so expensive paint effects such
- * as retro box shadows and component geometry never participate in the crossfade.
+ * Theme changes crossfade one document snapshot instead of attaching color
+ * transitions to every descendant. This keeps fixed/scoped surfaces such as
+ * RecruiterHUD synchronized with the canvas and leaves paint-heavy shadows,
+ * component transforms and local interaction motion out of the theme animation.
  */
-html.theme-transition,
-html.theme-transition body,
-html.theme-transition body *,
-html.theme-transition body *::before,
-html.theme-transition body *::after {
-	transition-property: background-color, border-color, color, fill, stroke !important;
-	transition-duration: 180ms !important;
-	transition-timing-function: ease-out !important;
+@keyframes theme-crossfade-old {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@keyframes theme-crossfade-new {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+html.theme-transition::view-transition-old(root) {
+	animation: theme-crossfade-old 180ms ease-out both;
+}
+
+html.theme-transition::view-transition-new(root) {
+	animation: theme-crossfade-new 180ms ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -217,11 +229,8 @@ html.theme-transition body *::after {
 		scroll-behavior: auto !important;
 	}
 
-	html.theme-transition,
-	html.theme-transition body,
-	html.theme-transition body *,
-	html.theme-transition body *::before,
-	html.theme-transition body *::after {
-		transition: none !important;
+	html.theme-transition::view-transition-old(root),
+	html.theme-transition::view-transition-new(root) {
+		animation: none !important;
 	}
 }

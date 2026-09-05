@@ -88,9 +88,7 @@ test.describe('Homepage', () => {
 		await expect(html).not.toHaveClass(/dark/);
 	});
 
-	test('animates theme changes without input lag and keeps the favicon aligned', async ({
-		page,
-	}) => {
+	test('crossfades the complete theme snapshot and keeps the favicon aligned', async ({ page }) => {
 		await page.setViewportSize({ width: 1280, height: 800 });
 		await page.addInitScript(() => localStorage.setItem('theme', 'light'));
 		await page.goto('/');
@@ -112,6 +110,15 @@ test.describe('Homepage', () => {
 		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
 
 		const transition = await page.evaluate(async () => {
+			type RuntimeViewTransition = {
+				updateCallbackDone: Promise<void>;
+				ready: Promise<void>;
+				finished: Promise<void>;
+			};
+			type RuntimeDocument = Document & {
+				activeViewTransition?: RuntimeViewTransition | null;
+			};
+
 			const root = document.documentElement;
 			const body = document.body;
 			const panel = document.querySelector<HTMLElement>('#recruiter-hud-panel');
@@ -124,41 +131,51 @@ test.describe('Homepage', () => {
 			};
 
 			toggle.click();
+			const active = (document as RuntimeDocument).activeViewTransition;
+			if (!active) throw new Error('Theme view transition did not start');
 
-			const immediate = {
+			const preferenceAfterClick = localStorage.getItem('theme');
+			await active.updateCallbackDone;
+			const updated = {
 				resolvedTheme: root.dataset.themeResolved,
 				isDark: root.classList.contains('dark'),
 				currentPreference: toggle.dataset.themeCurrent,
-				rootTransitionProperty: getComputedStyle(root).transitionProperty,
-				rootTransitionDuration: getComputedStyle(root).transitionDuration,
-			};
-
-			await new Promise(resolve => setTimeout(resolve, 90));
-			const middle = {
 				bodyBackground: getComputedStyle(body).backgroundColor,
 				panelBackground: getComputedStyle(panel).backgroundColor,
 			};
 
-			await new Promise(resolve => setTimeout(resolve, 220));
-			const after = {
-				bodyBackground: getComputedStyle(body).backgroundColor,
-				panelBackground: getComputedStyle(panel).backgroundColor,
-			};
+			await active.ready;
+			const animations = document
+				.getAnimations()
+				.filter((animation): animation is CSSAnimation => animation instanceof CSSAnimation)
+				.map(animation => ({
+					name: animation.animationName,
+					duration: animation.effect?.getTiming().duration ?? null,
+				}));
 
-			return { before, immediate, middle, after };
+			await active.finished;
+			return {
+				before,
+				preferenceAfterClick,
+				updated,
+				animations,
+				markerAfterFinish: root.classList.contains('theme-transition'),
+			};
 		});
 
-		expect(transition.immediate.resolvedTheme).toBe('dark');
-		expect(transition.immediate.isDark).toBe(true);
-		expect(transition.immediate.currentPreference).toBe('dark');
-		expect(transition.immediate.rootTransitionProperty).toBe(
-			'background-color, border-color, color, fill, stroke'
+		expect(transition.preferenceAfterClick).toBe('dark');
+		expect(transition.updated.resolvedTheme).toBe('dark');
+		expect(transition.updated.isDark).toBe(true);
+		expect(transition.updated.currentPreference).toBe('dark');
+		expect(transition.updated.bodyBackground).not.toBe(transition.before.bodyBackground);
+		expect(transition.updated.panelBackground).not.toBe(transition.before.panelBackground);
+		expect(transition.animations).toEqual(
+			expect.arrayContaining([
+				expect.objectContaining({ name: 'theme-crossfade-old', duration: 180 }),
+				expect.objectContaining({ name: 'theme-crossfade-new', duration: 180 }),
+			])
 		);
-		expect(transition.immediate.rootTransitionDuration).toBe('0.18s');
-		expect(transition.middle.bodyBackground).not.toBe(transition.before.bodyBackground);
-		expect(transition.middle.bodyBackground).not.toBe(transition.after.bodyBackground);
-		expect(transition.middle.panelBackground).not.toBe(transition.before.panelBackground);
-		expect(transition.middle.panelBackground).not.toBe(transition.after.panelBackground);
+		expect(transition.markerAfterFinish).toBe(false);
 		await expect(html).toHaveClass(/dark/);
 		await expect(html).toHaveAttribute('data-theme-resolved', 'dark');
 		await expect(runtimeFavicon).toHaveAttribute('href', '/favicon.dark.svg');
@@ -167,17 +184,13 @@ test.describe('Homepage', () => {
 		await expect(moonIcon).toHaveAttribute('data-theme-active', 'true');
 		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
 
-		await expect.poll(() => html.getAttribute('class')).not.toContain('theme-transition');
-
 		await themeToggle.click();
 		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('system');
-		await expect(moonIcon).toHaveAttribute('data-theme-active', 'false');
-		await expect(systemIcon).toHaveAttribute('data-theme-active', 'true');
+		await expect(themeToggle).toHaveAttribute('data-theme-current', 'system');
 
 		await themeToggle.click();
 		await expect.poll(() => page.evaluate(() => localStorage.getItem('theme'))).toBe('light');
-		await expect(systemIcon).toHaveAttribute('data-theme-active', 'false');
-		await expect(sunIcon).toHaveAttribute('data-theme-active', 'true');
+		await expect(themeToggle).toHaveAttribute('data-theme-current', 'light');
 	});
 
 	test('keeps the cyclic preference order when toggled before the transition settles', async ({
@@ -191,23 +204,24 @@ test.describe('Homepage', () => {
 		const themeToggle = page.locator('#recruiter-hud-panel [data-theme-toggle]');
 		await expect(themeToggle).toBeVisible();
 
-		const rapidState = await themeToggle.evaluate(button => {
+		const rapidState = await themeToggle.evaluate(async button => {
 			if (!(button instanceof HTMLButtonElement)) throw new Error('Theme toggle not found');
 			button.click();
 			const afterFirst = {
 				preference: localStorage.getItem('theme'),
-				resolved: document.documentElement.dataset.themeResolved,
 			};
 			button.click();
-			const afterSecond = {
-				preference: localStorage.getItem('theme'),
-				current: button.dataset.themeCurrent,
+			await new Promise(resolve => setTimeout(resolve, 0));
+			return {
+				afterFirst,
+				afterSecond: {
+					preference: localStorage.getItem('theme'),
+					current: button.dataset.themeCurrent,
+				},
 			};
-			return { afterFirst, afterSecond };
 		});
 
 		expect(rapidState.afterFirst.preference).toBe('dark');
-		expect(rapidState.afterFirst.resolved).toBe('dark');
 		expect(rapidState.afterSecond.preference).toBe('system');
 		expect(rapidState.afterSecond.current).toBe('system');
 	});
