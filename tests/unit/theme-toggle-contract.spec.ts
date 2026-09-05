@@ -51,7 +51,9 @@ describe('theme toggle runtime contract', () => {
 
 	it('keeps motion optional and independent from state correctness', () => {
 		expect(themeToggle).toContain("window.matchMedia('(prefers-reduced-motion: reduce)')");
-		expect(themeToggle).toContain('if (reducedMotionMedia.matches || !transitionDocument.startViewTransition)');
+		expect(themeToggle).toContain(
+			'if (reducedMotionMedia.matches || !transitionDocument.startViewTransition)'
+		);
 		expect(themeToggle).toContain('syncThemeState();');
 	});
 
