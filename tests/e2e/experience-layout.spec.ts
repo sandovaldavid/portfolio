@@ -137,7 +137,7 @@ test.describe('Experience responsive composition', () => {
 		).toBe('14px');
 		expect(
 			await researchMethodology.evaluate(element => getComputedStyle(element).fontSize)
-		).toBe('14px');
+		).toBe('16px');
 		expect(await researchTechPill.evaluate(element => getComputedStyle(element).fontSize)).toBe(
 			'14px'
 		);

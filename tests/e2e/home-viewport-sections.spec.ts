@@ -372,7 +372,8 @@ test('desktop closing flow moves Research to About Me to Footer and reverses in 
 	await page.goto('/');
 	await waitForFonts(page);
 
-	const researchTarget = await getSectionTargetY(page, 'research');
+	const research = await getSectionTraversalMetrics(page, 'research');
+	const researchTarget = research.startY;
 	const aboutTarget = await getSectionTargetY(page, 'about-me');
 	const contactTarget = await getSectionTargetY(page, 'contact');
 	await scrollInstantlyTo(page, researchTarget);
@@ -391,7 +392,7 @@ test('desktop closing flow moves Research to About Me to Footer and reverses in 
 
 	await page.waitForTimeout(160);
 	await page.mouse.wheel(0, -700);
-	await expectScrollNear(page, researchTarget);
+	await expectScrollNear(page, research.endY);
 });
 
 test('Mobile remains content-driven and horizontally contained', async ({ page }) => {

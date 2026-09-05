@@ -20,7 +20,7 @@ test.describe('Yukidoke flagship case study', () => {
 			implementation: 'What the V1 beta includes today',
 			privacy: 'Resource existence is part of the authorization model',
 			boundary: 'V1 remains a private beta',
-			learning: 'Engineering lessons from the household boundary',
+			learning: 'What I learned from the household boundary',
 		},
 		{
 			path: '/es/projects/yukidoke',
@@ -31,7 +31,7 @@ test.describe('Yukidoke flagship case study', () => {
 			implementation: 'Qué incluye hoy la beta V1',
 			privacy: 'La existencia de un recurso forma parte del modelo de autorización',
 			boundary: 'V1 sigue en beta privada',
-			learning: 'Lecciones de ingeniería del límite por hogar',
+			learning: 'Lo que aprendí trabajando el límite por hogar',
 		},
 	] as const) {
 		test(`renders current bilingual MDX at ${locale.path}`, async ({ page }) => {
