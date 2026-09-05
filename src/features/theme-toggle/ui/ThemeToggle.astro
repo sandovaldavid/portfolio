@@ -157,6 +157,31 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		void transition.finished.then(clearTransition, clearTransition);
 	};
 
+	const applyThemePreference = (currentTheme: ThemePreference, nextTheme: ThemePreference) => {
+		const currentResolvedTheme = getResolvedTheme(currentTheme);
+		const nextResolvedTheme = getResolvedTheme(nextTheme);
+		const renderedResolvedTheme = document.documentElement.dataset.themeResolved;
+
+		// Preference and resolved palette are separate contracts. System can resolve
+		// to the palette that is already visible, so starting a document snapshot in
+		// that case only re-captures identical colors and can produce a perceptible
+		// flash. Update preference semantics directly unless the palette must change.
+		localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+		if (
+			currentResolvedTheme === nextResolvedTheme ||
+			renderedResolvedTheme === nextResolvedTheme
+		) {
+			syncThemeState();
+			return;
+		}
+
+		const requestVersion = ++themeRequestVersion;
+		beginThemeTransition(() => {
+			if (requestVersion !== themeRequestVersion) return;
+			syncThemeState();
+		});
+	};
+
 	const setupThemeToggles = () => {
 		document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]').forEach(button => {
 			if (button.dataset.themeReady === 'true') return;
@@ -165,15 +190,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 			button.addEventListener('click', () => {
 				const currentTheme = getSavedTheme();
 				const nextTheme = getNextTheme(currentTheme);
-				const requestVersion = ++themeRequestVersion;
-
-				// Preference state remains synchronous even though supporting browsers
-				// capture the old document before applying the visual DOM update.
-				localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
-				beginThemeTransition(() => {
-					if (requestVersion !== themeRequestVersion) return;
-					syncThemeState();
-				});
+				applyThemePreference(currentTheme, nextTheme);
 			});
 		});
 
