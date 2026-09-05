@@ -125,7 +125,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 
 		// Flush the transition styles before resolving the next semantic palette,
 		// then apply the theme in this same interaction turn. Deferring the theme
-		// itself to requestAnimationFrame adds visible input latency on dense routes.
+		// itself to a later animation frame adds visible input latency on dense routes.
 		void root.offsetWidth;
 		applyTheme();
 
