@@ -3,14 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 const locales = ['en', 'es'] as const;
-const productionIds = [
-	'auctions',
-	'campus-map',
-	'fluentreads',
-	'kioku',
-	'mad-ai',
-	'yukidoke',
-] as const;
+const productionIds = ['campus-map', 'fluentreads', 'kioku', 'mad-ai', 'yukidoke'] as const;
 const developmentOnlyIds = [
 	'project-detail-fixture',
 	'fullstack-project-fixture',
@@ -97,9 +90,7 @@ describe('localized project MDX content', () => {
 
 		expect(slugs.sort()).toEqual([...allIds].sort());
 		expect(new Set(slugs).size).toBe(allIds.length);
-		expect(orders.sort((left, right) => right - left)).toEqual([
-			50, 45, 40, 30, 20, 10, 4, 3, 2, 1,
-		]);
+		expect(orders.sort((left, right) => right - left)).toEqual([50, 45, 40, 30, 20, 4, 3, 2, 1]);
 		expect(metadata).toContain("docs: 'https://kioku.sandovaldavid.com'");
 		expect(metadata).toContain("package: 'https://www.nuget.org/packages/kioku-mcp-server'");
 		expect(metadata).toContain(
