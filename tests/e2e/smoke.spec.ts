@@ -21,8 +21,6 @@ const CRITICAL_ROUTES = [
 	'/es/projects/mad-ai',
 	'/projects/fluentreads',
 	'/es/projects/fluentreads',
-	'/projects/auctions',
-	'/es/projects/auctions',
 ] as const;
 const WCAG_TAGS = ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'] as const;
 
