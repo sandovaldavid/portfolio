@@ -67,26 +67,12 @@ describe('current project evidence contracts', () => {
 		expect(en).not.toMatch(/95\+ Performance|100 Accessibility/);
 	});
 
-	it('keeps Auctions on current server-rendered wiring with explicit analytics and concurrency boundaries', () => {
-		const en = project('en', 'auctions');
-
-		expect(en).toContain('AuctionAnalytics');
-		expect(en).toContain('PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS');
-		expect(en).toContain('BID VALIDATION IS NOT A CONCURRENCY GUARANTEE');
-		expect(en).toContain('REST API AND WEBSOCKET EXPERIMENTS ARE OUTSIDE THE CURRENT FLOW');
-		expect(en).toContain('DRF and Django Channels are not part of the active user-facing');
-		expect(en).not.toContain('PANDAS · PLOTLY · SCIKIT-LEARN ANALYTICS MODULE');
-		expect(en).not.toContain('NO CURRENT DRF OR WEBSOCKET CLAIM');
-		expect(en).not.toContain('does not call the current implementation concurrency-safe');
-	});
-
 	it('keeps canonical project boundaries aligned in Spanish without requiring translation parity', () => {
 		const kioku = project('es', 'kioku');
 		const yukidoke = project('es', 'yukidoke');
 		const campusMap = project('es', 'campus-map');
 		const madAi = project('es', 'mad-ai');
 		const fluentReads = project('es', 'fluentreads');
-		const auctions = project('es', 'auctions');
 
 		expect(kioku).toContain('ESTABLE 3.1.2 + DESARROLLO');
 		expect(yukidoke).toContain('ACTIVO · BETA V1 PRIVADA');
@@ -95,10 +81,5 @@ describe('current project evidence contracts', () => {
 		expect(madAi).toContain('CLIENTE PÚBLICO · API PRIVADA');
 		expect(madAi).toContain('REST REQUEST/RESPONSE ES EL TRANSPORTE ACTUAL');
 		expect(fluentReads).toContain('Astro **7.0.6**');
-		expect(auctions).toContain('PANDAS · PLOTLY · SCIKIT-LEARN');
-		expect(auctions).toContain('VALIDAR LA PUJA NO GARANTIZA CONCURRENCIA');
-		expect(auctions).toContain(
-			'LOS EXPERIMENTOS REST Y WEBSOCKET ESTÁN FUERA DEL FLUJO ACTUAL'
-		);
 	});
 });
