@@ -6,7 +6,6 @@ import kiokuImg from '@assets/projects/project-12-kioku.svg';
 import campusMapImg from '@assets/projects/project-08-campus-map.webp';
 import madaiImg from '@assets/projects/project-10-MAD-AI.webp';
 import fluentreadsImg from '@assets/projects/project-09-fluentreads.webp';
-import auctionsImg from '@assets/projects/project-02-auctions.webp';
 import projectDetailFixtureImg from '@assets/projects/project-dev-fixture.svg';
 
 export const PROJECT_TECHNOLOGIES = {
@@ -130,17 +129,6 @@ const projectMetadata = {
 		lifecycle: 'maintained',
 		sourceAccess: 'public',
 		demoAccess: 'live',
-	},
-	auctions: {
-		slug: 'auctions',
-		github: 'https://github.com/sandovaldavid/auctions',
-		image: auctionsImg,
-		technologyIds: ['django', 'python', 'bootstrap', 'javascript', 'postgresql'],
-		featured: false,
-		order: 10,
-		lifecycle: 'maintained',
-		sourceAccess: 'public',
-		demoAccess: 'unavailable',
 	},
 	'project-detail-fixture': {
 		slug: 'project-detail-fixture',

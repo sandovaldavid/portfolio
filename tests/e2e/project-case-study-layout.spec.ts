@@ -202,13 +202,11 @@ const PROJECT_ROUTES = [
 	['/projects/campus-map', 'UNP Campus Map'],
 	['/projects/mad-ai', 'MAD AI'],
 	['/projects/fluentreads', 'FluentReads'],
-	['/projects/auctions', 'Auctions'],
 	['/es/projects/yukidoke', 'Yukidoke'],
 	['/es/projects/kioku', 'Kioku'],
 	['/es/projects/campus-map', 'UNP Campus Map'],
 	['/es/projects/mad-ai', 'MAD AI'],
 	['/es/projects/fluentreads', 'FluentReads'],
-	['/es/projects/auctions', 'Auctions'],
 ] as const;
 
 for (const [route, title] of PROJECT_ROUTES) {
