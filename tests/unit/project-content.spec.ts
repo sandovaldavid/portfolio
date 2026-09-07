@@ -3,13 +3,7 @@ import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 const locales = ['en', 'es'] as const;
-const productionIds = [
-	'campus-map',
-	'fluentreads',
-	'kioku',
-	'mad-ai',
-	'yukidoke',
-] as const;
+const productionIds = ['campus-map', 'fluentreads', 'kioku', 'mad-ai', 'yukidoke'] as const;
 const developmentOnlyIds = [
 	'project-detail-fixture',
 	'fullstack-project-fixture',
