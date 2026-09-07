@@ -11,7 +11,7 @@ const websiteRoutes = [
 	'devlog',
 	'components',
 ];
-const projectSlugs = ['yukidoke', 'kioku', 'campus-map', 'mad-ai', 'fluentreads', 'auctions'];
+const projectSlugs = ['yukidoke', 'kioku', 'campus-map', 'mad-ai', 'fluentreads'];
 const articleSlugs = [
 	'building-this-portfolio-with-astro-and-fsd',
 	'predicting-oss-abandonment-with-bilstm',
@@ -64,13 +64,13 @@ const publicPageSources = [
 ];
 
 describe('route-specific social preview assets', () => {
-	it('contains exactly the 40 canonical Figma exports', () => {
+	it('contains exactly the 38 canonical Figma exports', () => {
 		const actual = readdirSync('public/og')
 			.filter(name => name.endsWith('.png'))
 			.sort();
 
 		expect(actual).toEqual(expectedOgFiles);
-		expect(actual).toHaveLength(40);
+		expect(actual).toHaveLength(38);
 	});
 
 	it('keeps every exported PNG at the canonical 1200x630 geometry', () => {

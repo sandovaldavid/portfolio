@@ -132,43 +132,4 @@ test.describe('Project access and status contract', () => {
 		).toBeVisible();
 		await expect(page.getByText(/95\+ Performance|100 Accessibility/)).toHaveCount(0);
 	});
-
-	test('/projects/auctions exposes analytics plus the current concurrency and runtime boundaries', async ({
-		page,
-	}) => {
-		await page.goto('/projects/auctions');
-		await expect(page.getByText('Maintained', { exact: true })).toBeVisible();
-		await expect(page.getByText('Public source', { exact: true })).toBeVisible();
-		await expect(page.locator('[data-project-resource="demo"]')).toHaveCount(0);
-		await expect(
-			page.locator('a[href="https://github.com/sandovaldavid/auctions"]')
-		).toBeVisible();
-		await expect(page.locator('a[href*="herokuapp.com"]')).toHaveCount(0);
-		await expect(
-			page.getByRole('heading', {
-				name: 'Implemented behavior and the next engineering constraints',
-			})
-		).toBeVisible();
-
-		const analyticsDiagram = page
-			.locator('[data-mermaid-figure]')
-			.filter({ hasText: 'Administrative analytics path' });
-		await analyticsDiagram.scrollIntoViewIfNeeded();
-		await expect(analyticsDiagram.locator('[data-mermaid-host]')).toHaveAttribute(
-			'data-mermaid-state',
-			'rendered'
-		);
-		await expect(analyticsDiagram.locator('[data-diagram-svg]')).toContainText(
-			'AuctionAnalytics'
-		);
-
-		await expect(
-			page.getByRole('heading', { name: 'BID VALIDATION IS NOT A CONCURRENCY GUARANTEE' })
-		).toBeVisible();
-		await expect(
-			page.getByRole('heading', {
-				name: 'REST API AND WEBSOCKET EXPERIMENTS ARE OUTSIDE THE CURRENT FLOW',
-			})
-		).toBeVisible();
-	});
 });
