@@ -77,7 +77,7 @@ for (const viewport of VIEWPORTS) {
 		await expect(introShell).toBeVisible();
 		await expect(snapshot).toBeVisible();
 		await expect(gridShell).toBeVisible();
-		await expect(cards).toHaveCount(6);
+		await expect(cards).toHaveCount(5);
 		const introBox = await introShell.boundingBox();
 		expect(Math.round(introBox!.width)).toBe(viewport.introShellWidth);
 		expect(Math.round(introBox!.y)).toBe(viewport.introShellY);
@@ -129,8 +129,8 @@ test('Projects Catalog surfaces a project index and repository-aware actions', a
 	await expect(snapshot.getByText('Source available', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('Active builds', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('Most used technologies', { exact: true })).toBeVisible();
-	await expect(snapshot.getByText('06', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('05', { exact: true })).toBeVisible();
+	await expect(snapshot.getByText('04', { exact: true })).toBeVisible();
 	await expect(snapshot.getByText('02', { exact: true })).toBeVisible();
 
 	const kiokuCard = page.locator('article', {
