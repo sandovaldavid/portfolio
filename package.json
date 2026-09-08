@@ -61,7 +61,7 @@
 		"bundle:visualize": "ANALYZE_BUNDLE=true bun run build && bun run bundle:analyze"
 	},
 	"dependencies": {
-		"@astrojs/mdx": "7.0.8",
+		"@astrojs/mdx": "8.0.0",
 		"@astrojs/rss": "^4.0.19",
 		"@astrojs/sitemap": "^3.7.4",
 		"@tailwindcss/vite": "^4.3.3",
@@ -84,7 +84,7 @@
 		"@types/node": "^26.4.1",
 		"@typescript-eslint/eslint-plugin": "^8.69.0",
 		"@typescript-eslint/parser": "^8.69.0",
-		"@vitest/coverage-v8": "^4.1.11",
+		"@vitest/coverage-v8": "^5.0.0",
 		"eslint": "^10.8.1",
 		"eslint-plugin-astro": "~3.1.0",
 		"globals": "^17.12.0",
@@ -94,6 +94,6 @@
 		"rollup-plugin-visualizer": "^7.1.1",
 		"typescript": "^6.0.3",
 		"vite": "^8.2.2",
-		"vitest": "^4.1.11"
+		"vitest": "^5.0.0"
 	}
 }
