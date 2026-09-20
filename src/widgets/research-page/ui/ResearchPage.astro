@@ -19,11 +19,10 @@ const statusLabel = tCommon('status.inProgress');
 	<header class="relative mx-5 py-10 md:mx-8 lg:mx-0" aria-labelledby="research-title">
 		<span
 			class="absolute inset-y-0 left-0 w-2 bg-channel-accent-primary md:w-2.5"
-			aria-hidden="true"></span>
+			aria-hidden="true"
+		></span>
 		<div class="flex flex-col gap-4 pl-2 lg:gap-6 lg:pl-4">
-			<span
-				class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label"
-			>
+			<span class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
 				{research.institution} · {research.label}
 			</span>
 			<h1
@@ -32,7 +31,9 @@ const statusLabel = tCommon('status.inProgress');
 			>
 				{research.title}
 			</h1>
-			<Badge variant="info" size="md">{statusLabel}</Badge>
+			<Badge variant="info" size="md">
+				{statusLabel}
+			</Badge>
 		</div>
 	</header>
 
@@ -49,15 +50,16 @@ const statusLabel = tCommon('status.inProgress');
 		data-research-keywords-band
 	>
 		<div class="mx-auto w-full max-w-320 px-5 md:px-8 lg:px-0">
-			<TitleSection className="mb-6"><BrainIcon />{tPage('keywordsLabel')}</TitleSection>
+			<TitleSection className="mb-6">
+				<BrainIcon />
+				{tPage('keywordsLabel')}
+			</TitleSection>
 			<ul class="flex flex-wrap gap-3">
-				{
-					research.keywords.map(keyword => (
-						<li>
-							<TechPill label={keyword} size="sm" variant="card" />
-						</li>
-					))
-				}
+				{research.keywords.map(keyword => (
+					<li>
+						<TechPill label={keyword} size="sm" variant="card" />
+					</li>
+				))}
 			</ul>
 		</div>
 	</section>

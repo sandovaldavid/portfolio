@@ -114,13 +114,9 @@ const panelClasses = 'border border-channel-edge-subtle bg-channel-background-ca
 						{tPage('badgesHeading')}
 					</h3>
 					<div class="mt-4 flex flex-wrap items-center gap-3">
-						{
-							badgeVariants.map(variant => (
-								<Badge variant={variant}>
-									{tPage(badgeVariantLabels[variant])}
-								</Badge>
-							))
-						}
+						{badgeVariants.map(variant => (
+							<Badge {variant}>{tPage(badgeVariantLabels[variant])}</Badge>
+						))}
 					</div>
 				</section>
 
@@ -129,13 +125,11 @@ const panelClasses = 'border border-channel-edge-subtle bg-channel-background-ca
 						{tPage('techPillsHeading')}
 					</h3>
 					<ul class="mt-4 flex flex-wrap items-center gap-3" role="list">
-						{
-							showcasedTechnologies.map(({ name, icon }) => (
-								<li>
-									<TechPill label={name} icon={icon} size="sm" variant="stack" />
-								</li>
-							))
-						}
+						{showcasedTechnologies.map(({ name, icon }) => (
+							<li>
+								<TechPill label={name} {icon} size="sm" variant="stack" />
+							</li>
+						))}
 					</ul>
 				</section>
 
@@ -195,15 +189,9 @@ const panelClasses = 'border border-channel-edge-subtle bg-channel-background-ca
 						{tPage('avatarsHeading')}
 					</h3>
 					<div class="mt-4 flex flex-wrap items-end gap-4 md:gap-6">
-						{
-							avatarSizes.map(size => (
-								<Avatar
-									src="/profile/perfil.webp"
-									alt={tPage('profileAlt')}
-									{size}
-								/>
-							))
-						}
+						{avatarSizes.map(size => (
+							<Avatar src="/profile/perfil.webp" alt={tPage('profileAlt')} {size} />
+						))}
 					</div>
 				</section>
 			</div>

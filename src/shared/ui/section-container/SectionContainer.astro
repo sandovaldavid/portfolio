@@ -28,33 +28,31 @@ const surfaceClass =
 	surface === 'highlight' ? 'bg-channel-surface-highlight' : 'bg-channel-background-canvas';
 ---
 
-{
-	isFullBleed ? (
-		<section id={id} class:list={['w-full max-w-none scroll-mt-18', surfaceClass]}>
-			<div
-				data-home-section-shell
-				data-home-viewport-shell={layout === 'viewport' ? 'true' : undefined}
-				data-home-compact-shell={layout === 'compact' ? 'true' : undefined}
-				class:list={[
-					'mx-auto flex w-full max-w-360 flex-col justify-center !gap-y-10 px-5 md:!gap-y-12 md:px-8 lg:!gap-y-14 lg:px-20',
-					layout === 'viewport' && 'md:min-h-[calc(100svh-4.5rem)]',
-					className,
-				]}
-			>
-				<slot />
-			</div>
-		</section>
-	) : (
-		<section
-			{id}
+{isFullBleed ? (
+	<section {id} class:list={['w-full max-w-none scroll-mt-18', surfaceClass]}>
+		<div
+			data-home-section-shell
+			data-home-viewport-shell={layout === 'viewport' ? 'true' : undefined}
+			data-home-compact-shell={layout === 'compact' ? 'true' : undefined}
 			class:list={[
-				'w-full max-w-360 px-5 md:px-8 lg:px-20 mx-auto',
-				'flex flex-col justify-center',
-				'scroll-mt-18',
+				'mx-auto flex w-full max-w-360 flex-col justify-center !gap-y-10 px-5 md:!gap-y-12 md:px-8 lg:!gap-y-14 lg:px-20',
+				layout === 'viewport' && 'md:min-h-[calc(100svh-4.5rem)]',
 				className,
 			]}
 		>
 			<slot />
-		</section>
-	)
-}
+		</div>
+	</section>
+) : (
+	<section
+		{id}
+		class:list={[
+			'w-full max-w-360 px-5 md:px-8 lg:px-20 mx-auto',
+			'flex flex-col justify-center',
+			'scroll-mt-18',
+			className,
+		]}
+	>
+		<slot />
+	</section>
+)}

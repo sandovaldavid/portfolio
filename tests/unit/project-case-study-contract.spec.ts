@@ -90,10 +90,12 @@ describe('Project Case Study MDX contract', () => {
 	});
 
 	it('delegates Mermaid parsing and layout while preserving the Portfolio presentation contract', () => {
-		expect(packageManifest.dependencies.mermaid).toMatch(/^11\.\d+\.\d+$/);
+		expect(packageManifest.dependencies.mermaid).toMatch(/^12\.\d+\.\d+$/);
 		expect(mermaid).toContain("import('mermaid')");
 		expect(mermaid).toContain("securityLevel: 'strict'");
 		expect(mermaid).toContain("theme: 'base'");
+		expect(mermaid).toContain("look: 'classic'");
+		expect(mermaid).toContain("layout: 'dagre'");
 		expect(mermaid).toContain('htmlLabels: false');
 		expect(mermaid.indexOf('htmlLabels: false')).toBeLessThan(mermaid.indexOf('flowchart: {'));
 		expect(mermaid).toContain('document.fonts.ready');

@@ -4,11 +4,9 @@ import { TechPill } from '@shared/ui';
 ---
 
 <ul class="flex w-full max-w-270 flex-wrap items-center justify-center gap-4 self-center">
-	{
-		CORE_STACK.map(({ name, icon }) => (
-			<li>
-				<TechPill label={name} icon={icon} variant="stack" size="md" />
-			</li>
-		))
-	}
+	{CORE_STACK.map(({ name, icon }) => (
+		<li>
+			<TechPill label={name} {icon} variant="stack" size="md" />
+		</li>
+	))}
 </ul>
