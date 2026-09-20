@@ -88,27 +88,25 @@ const {
 
 		<!-- Navigation Items -->
 		<nav class="flex flex-col items-center gap-3 w-full" aria-label={menuLabel}>
-			{
-				navItems.map(link => (
-					<a
-						class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-none text-base font-bold uppercase tracking-wider font-mono text-content-strong hover:text-primary-500 hover:bg-surface-highlight border-2 border-transparent hover:border-edge-strong transition-all duration-100 whitespace-nowrap"
-						aria-label={link.title}
-						data-section-id={link.label}
-						href={link.url}
-						data-astro-prefetch={link.prefetch ? 'hover' : undefined}
-						data-close-menu="true"
-					>
-						{link.icon === 'experience' && <BriefcaseIcon class="size-5" />}
-						{link.icon === 'research' && <BrainIcon class="size-5" />}
-						{link.icon === 'projects' && <CodeIcon class="size-5" />}
-						{link.icon === 'devlog' && <ScrollTextIcon class="size-5" />}
-						{link.icon === 'blog' && <BookOpenIcon class="size-5" />}
-						{link.icon === 'about-me' && <AboutIcon class="size-5" />}
-						{link.icon === 'technologies' && <SystemIcon class="size-5" />}
-						<span>{link.title}</span>
-					</a>
-				))
-			}
+			{navItems.map(link => (
+				<a
+					class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-none text-base font-bold uppercase tracking-wider font-mono text-content-strong hover:text-primary-500 hover:bg-surface-highlight border-2 border-transparent hover:border-edge-strong transition-all duration-100 whitespace-nowrap"
+					aria-label={link.title}
+					data-section-id={link.label}
+					href={link.url}
+					data-astro-prefetch={link.prefetch ? 'hover' : undefined}
+					data-close-menu="true"
+				>
+					{link.icon === 'experience' && <BriefcaseIcon class="size-5" />}
+					{link.icon === 'research' && <BrainIcon class="size-5" />}
+					{link.icon === 'projects' && <CodeIcon class="size-5" />}
+					{link.icon === 'devlog' && <ScrollTextIcon class="size-5" />}
+					{link.icon === 'blog' && <BookOpenIcon class="size-5" />}
+					{link.icon === 'about-me' && <AboutIcon class="size-5" />}
+					{link.icon === 'technologies' && <SystemIcon class="size-5" />}
+					<span>{link.title}</span>
+				</a>
+			))}
 		</nav>
 
 		<!-- Actions: Download resume and Get in touch -->

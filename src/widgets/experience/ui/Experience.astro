@@ -40,38 +40,34 @@ const EXPERIENCE = await getExperienceData(lang);
 				aria-label={tAccessibility('experienceTabs')}
 				class="experience-tablist flex w-full min-w-0 items-stretch gap-2.5 overflow-x-auto md:flex-col md:overflow-visible md:border-y md:border-edge-subtle md:py-2"
 			>
-				{
-					EXPERIENCE.map((exp, idx) => (
-						<ExperienceTab
-							company={exp.company}
-							role={exp.title}
-							selected={idx === 0}
-							focusable={idx === 0}
-							tabId={`exp-tab-${exp.experienceId}`}
-							panelId={`exp-panel-${exp.experienceId}`}
-							experienceId={exp.experienceId}
-						/>
-					))
-				}
+				{EXPERIENCE.map((exp, idx) => (
+					<ExperienceTab
+						company={exp.company}
+						role={exp.title}
+						selected={idx === 0}
+						focusable={idx === 0}
+						tabId={`exp-tab-${exp.experienceId}`}
+						panelId={`exp-panel-${exp.experienceId}`}
+						experienceId={exp.experienceId}
+					/>
+				))}
 			</div>
 
 			<div class="experience-panels grid w-full min-w-0">
-				{
-					EXPERIENCE.map((exp, idx) => (
-						<div
-							class="experience-panel col-start-1 row-start-1 min-w-0"
-							role="tabpanel"
-							id={`exp-panel-${exp.experienceId}`}
-							aria-labelledby={`exp-tab-${exp.experienceId}`}
-							aria-hidden={idx === 0 ? 'false' : 'true'}
-							data-active={idx === 0 ? 'true' : 'false'}
-							data-motion="idle"
-							data-experience-id={exp.experienceId}
-						>
-							<ExperienceDetail {...exp} />
-						</div>
-					))
-				}
+				{EXPERIENCE.map((exp, idx) => (
+					<div
+						class="experience-panel col-start-1 row-start-1 min-w-0"
+						role="tabpanel"
+						id={`exp-panel-${exp.experienceId}`}
+						aria-labelledby={`exp-tab-${exp.experienceId}`}
+						aria-hidden={idx === 0 ? 'false' : 'true'}
+						data-active={idx === 0 ? 'true' : 'false'}
+						data-motion="idle"
+						data-experience-id={exp.experienceId}
+					>
+						<ExperienceDetail {...exp} />
+					</div>
+				))}
 			</div>
 		</div>
 	</div>

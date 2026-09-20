@@ -103,8 +103,7 @@ const easterRows = [
 		data-email={siteConfig.email}
 		data-linkedin={siteConfig.social.linkedinUsername}
 		data-site-url={siteConfig.url}
-	>
-	</div>
+	></div>
 
 	<div
 		id="cli-overlay"
@@ -114,33 +113,26 @@ const easterRows = [
 		class="fixed inset-0 z-[200] bg-channel-overlay backdrop-blur-sm hidden items-center justify-center p-4"
 	>
 		<div class="w-full max-w-2xl">
-			<div
-				class="bg-channel-portfolio-terminal-surface border-2 border-channel-portfolio-terminal-cyan shadow-terminal-glow font-mono"
-			>
-				<div
-					class="flex items-center gap-2 px-4 py-2.5 bg-channel-portfolio-terminal-surface-raised border-b border-channel-portfolio-terminal-cyan/40 select-none"
-				>
+			<div class="bg-channel-portfolio-terminal-surface border-2 border-channel-portfolio-terminal-cyan shadow-terminal-glow font-mono">
+				<div class="flex items-center gap-2 px-4 py-2.5 bg-channel-portfolio-terminal-surface-raised border-b border-channel-portfolio-terminal-cyan/40 select-none">
 					<button
 						id="cli-close-dot"
 						type="button"
 						aria-label={tAccessibility('closeTerminal')}
 						class="w-3 h-3 rounded-full bg-channel-status-error hover:brightness-125 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-content"
 					></button>
-					<div class="w-3 h-3 rounded-full bg-channel-status-warning" aria-hidden="true">
-					</div>
+					<div
+						class="w-3 h-3 rounded-full bg-channel-status-warning"
+						aria-hidden="true"
+					></div>
 					<div
 						class="w-3 h-3 rounded-full bg-channel-portfolio-terminal-phosphor"
 						aria-hidden="true"
-					>
-					</div>
-					<span
-						class="ml-3 text-xs text-channel-portfolio-terminal-cyan tracking-widest uppercase"
-					>
+					></div>
+					<span class="ml-3 text-xs text-channel-portfolio-terminal-cyan tracking-widest uppercase">
 						portfolio@{siteConfig.handle}:~
 					</span>
-					<span
-						class="ml-auto text-xs text-channel-portfolio-terminal-content-muted hidden sm:block"
-					>
+					<span class="ml-auto text-xs text-channel-portfolio-terminal-content-muted hidden sm:block">
 						[{tCli('terminal.escapeHint')}]
 					</span>
 				</div>
@@ -150,15 +142,14 @@ const easterRows = [
 					class="h-96 overflow-y-auto p-4 space-y-0.5"
 					aria-live="polite"
 					aria-relevant="additions"
-				>
-				</div>
-				<div
-					class="flex items-center border-t border-channel-portfolio-terminal-cyan/30 px-4 py-3 bg-channel-portfolio-terminal-surface"
-				>
+				></div>
+				<div class="flex items-center border-t border-channel-portfolio-terminal-cyan/30 px-4 py-3 bg-channel-portfolio-terminal-surface">
 					<span
 						class="text-channel-portfolio-terminal-cyan mr-2 text-sm font-bold select-none"
-						aria-hidden="true">$</span
+						aria-hidden="true"
 					>
+						$
+					</span>
 					<input
 						id="cli-input"
 						type="text"
@@ -168,9 +159,7 @@ const easterRows = [
 						spellcheck="false"
 						aria-label={tAccessibility('terminalInput')}
 					/>
-					<span
-						class="text-xs text-channel-portfolio-terminal-content-muted uppercase tracking-widest hidden sm:block"
-					>
+					<span class="text-xs text-channel-portfolio-terminal-content-muted uppercase tracking-widest hidden sm:block">
 						{tCli('terminal.tabHint')}
 					</span>
 				</div>
@@ -185,15 +174,9 @@ const easterRows = [
 		aria-label={tCli('shortcuts.title')}
 		class="fixed inset-0 z-[200] bg-channel-overlay backdrop-blur-sm hidden items-center justify-center p-4"
 	>
-		<div
-			class="w-full max-w-lg bg-channel-surface-default border-2 border-channel-edge-default shadow-retro-3xl font-mono"
-		>
-			<div
-				class="flex items-center justify-between px-5 py-3 border-b-2 border-dashed border-channel-edge-subtle"
-			>
-				<span
-					class="text-channel-accent-primary font-pixel-clean text-xs font-bold tracking-wider uppercase"
-				>
+		<div class="w-full max-w-lg bg-channel-surface-default border-2 border-channel-edge-default shadow-retro-3xl font-mono">
+			<div class="flex items-center justify-between px-5 py-3 border-b-2 border-dashed border-channel-edge-subtle">
+				<span class="text-channel-accent-primary font-pixel-clean text-xs font-bold tracking-wider uppercase">
 					{tCli('shortcuts.title')}
 				</span>
 				<button
@@ -207,41 +190,35 @@ const easterRows = [
 			</div>
 
 			<div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
-				{
-					[
-						[tCli('shortcuts.navigationHeading'), navigationShortcuts],
-						[tCli('shortcuts.sectionsHeading'), sectionShortcuts],
-						[tCli('shortcuts.actionsHeading'), actionShortcuts],
-					].map(([heading, shortcuts]) => (
-						<div>
-							<div class="text-channel-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-channel-edge-subtle">
-								{heading}
-							</div>
-							<div class="space-y-2">
-								{(shortcuts as [string, string][]).map(([key, label]) => (
-									<div class="flex items-center gap-2.5">
-										<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-channel-edge-default bg-channel-surface-highlight text-xs font-bold shadow-retro-sm">
-											{key}
-										</kbd>
-										<span class="text-channel-content-muted">{label}</span>
-									</div>
-								))}
-							</div>
+				{[
+					[tCli('shortcuts.navigationHeading'), navigationShortcuts],
+					[tCli('shortcuts.sectionsHeading'), sectionShortcuts],
+					[tCli('shortcuts.actionsHeading'), actionShortcuts],
+				].map(([heading, shortcuts]) => (
+					<div>
+						<div class="text-channel-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-channel-edge-subtle">
+							{heading}
 						</div>
-					))
-				}
+						<div class="space-y-2">
+							{(shortcuts as [string, string][]).map(([key, label]) => (
+								<div class="flex items-center gap-2.5">
+									<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-channel-edge-default bg-channel-surface-highlight text-xs font-bold shadow-retro-sm">
+										{key}
+									</kbd>
+									<span class="text-channel-content-muted">{label}</span>
+								</div>
+							))}
+						</div>
+					</div>
+				))}
 
 				<div class="opacity-60">
-					<div
-						class="text-channel-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-channel-edge-subtle"
-					>
+					<div class="text-channel-content-muted uppercase tracking-widest text-xs pb-1 mb-3 border-b border-channel-edge-subtle">
 						{tCli('shortcuts.secretHeading')}
 					</div>
 					<div class="space-y-2">
 						<div class="flex items-center gap-2.5">
-							<kbd
-								class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-channel-edge-default/40 bg-channel-surface-highlight/50 text-xs font-bold opacity-50"
-							>
+							<kbd class="inline-block min-w-[28px] text-center px-2 py-0.5 border border-channel-edge-default/40 bg-channel-surface-highlight/50 text-xs font-bold opacity-50">
 								??
 							</kbd>
 							<span class="text-channel-content-muted/80 text-xs italic">
@@ -255,9 +232,7 @@ const easterRows = [
 				</div>
 			</div>
 
-			<div
-				class="px-5 py-2.5 border-t-2 border-dashed border-channel-edge-subtle text-sm text-channel-content-muted/80 text-center uppercase tracking-widest"
-			>
+			<div class="px-5 py-2.5 border-t-2 border-dashed border-channel-edge-subtle text-sm text-channel-content-muted/80 text-center uppercase tracking-widest">
 				{tCli('shortcuts.footer')}
 			</div>
 		</div>
@@ -272,17 +247,11 @@ const easterRows = [
 	>
 		<div class="terminal-grid absolute inset-0 pointer-events-none opacity-25"></div>
 		<div class="w-full max-w-md font-mono space-y-4 relative z-10">
-			<div
-				class="border-2 border-channel-portfolio-terminal-error bg-channel-portfolio-terminal-error/10 px-6 py-4 text-center"
-			>
-				<div
-					class="text-channel-portfolio-terminal-error font-bold tracking-[0.4rem] text-xl animate-pulse"
-				>
+			<div class="border-2 border-channel-portfolio-terminal-error bg-channel-portfolio-terminal-error/10 px-6 py-4 text-center">
+				<div class="text-channel-portfolio-terminal-error font-bold tracking-[0.4rem] text-xl animate-pulse">
 					{tCli('easter.classified')}
 				</div>
-				<div
-					class="text-channel-portfolio-terminal-error/80 text-xs mt-1.5 tracking-widest"
-				>
+				<div class="text-channel-portfolio-terminal-error/80 text-xs mt-1.5 tracking-widest">
 					{tCli('easter.protocol')}
 				</div>
 				<div class="text-channel-portfolio-terminal-error/80 text-xs mt-0.5">
@@ -293,29 +262,24 @@ const easterRows = [
 			<div
 				id="egg-loading"
 				class="bg-channel-portfolio-terminal-surface/60 border border-channel-portfolio-terminal-cyan/30 p-4 text-xs space-y-1 min-h-[9rem] overflow-hidden"
-			>
-			</div>
+			></div>
 
 			<div
 				id="egg-stats"
 				class="hidden border-2 border-channel-portfolio-terminal-phosphor bg-channel-portfolio-terminal-phosphor/5 p-4"
 			>
-				<div
-					class="text-channel-portfolio-terminal-phosphor font-bold tracking-widest text-xs mb-3 uppercase"
-				>
+				<div class="text-channel-portfolio-terminal-phosphor font-bold tracking-widest text-xs mb-3 uppercase">
 					{tCli('easter.statsTitle')}
 				</div>
 				<div class="space-y-2 text-xs">
-					{
-						easterRows.map(({ label, value, color }) => (
-							<div class="flex justify-between gap-4">
-								<span class="text-channel-portfolio-terminal-content/50 shrink-0">
-									{label}
-								</span>
-								<span style={`color: ${color}`}>{value}</span>
-							</div>
-						))
-					}
+					{easterRows.map(({ label, value, color }) => (
+						<div class="flex justify-between gap-4">
+							<span class="text-channel-portfolio-terminal-content/50 shrink-0">
+								{label}
+							</span>
+							<span style={`color: ${color}`}>{value}</span>
+						</div>
+					))}
 				</div>
 				<p class="mt-4 text-xs text-channel-portfolio-terminal-content/70">
 					{tCli('easter.footer')}

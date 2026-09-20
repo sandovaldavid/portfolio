@@ -27,13 +27,9 @@ const labelClasses = {
 	]}
 	data-case-study-card
 >
-	{
-		label && (
-			<p class:list={['text-editorial-label-compact uppercase', labelClasses[tone]]}>
-				{label}
-			</p>
-		)
-	}
+	{label && (
+		<p class:list={['text-editorial-label-compact uppercase', labelClasses[tone]]}>{label}</p>
+	)}
 	<h3
 		class:list={[
 			'text-subheading text-content-strong md:text-component-title',

@@ -32,43 +32,39 @@ const isCatalog = layout === 'catalog';
 				: 'grid grid-cols-1 justify-center gap-8 md:grid-cols-[repeat(2,minmax(0,369px))] lg:grid-cols-[repeat(2,minmax(0,560px))] lg:gap-12',
 		]}
 	>
-		{
-			projectsToDisplay.map((project, i) => (
-				<div
-					class:list={[
-						'h-full min-w-0',
-						isCatalog && 'w-full max-w-85 md:max-w-92.25 lg:max-w-148',
-					]}
-				>
-					<ProjectCard
-						project={project}
-						variant={isCatalog ? 'catalog' : 'secondary'}
-						headingLevel={showAll ? 'h2' : 'h3'}
-						caseStudyText={tProjects('caseStudy')}
-						caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
-						sourceText={tProjects('source')}
-						lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
-						newTabLabel={tAccessibility('externalLink')}
-						priority={i < 2}
-					/>
-				</div>
-			))
-		}
+		{projectsToDisplay.map((project, i) => (
+			<div
+				class:list={[
+					'h-full min-w-0',
+					isCatalog && 'w-full max-w-85 md:max-w-92.25 lg:max-w-148',
+				]}
+			>
+				<ProjectCard
+					{project}
+					variant={isCatalog ? 'catalog' : 'secondary'}
+					headingLevel={showAll ? 'h2' : 'h3'}
+					caseStudyText={tProjects('caseStudy')}
+					caseStudyLink={getRelativeLocaleUrl(lang, `projects/${project.slug}`)}
+					sourceText={tProjects('source')}
+					lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
+					newTabLabel={tAccessibility('externalLink')}
+					priority={i < 2}
+				/>
+			</div>
+		))}
 	</div>
 
-	{
-		!showAll && (
-			<div class="mt-8 flex w-full justify-center md:mt-10">
-				<LinkButton
-					href={getRelativeLocaleUrl(lang, 'projects')}
-					target="_self"
-					variant="secondary"
-					class="w-fit"
-				>
-					<ArrowUpRightIcon class="size-4" aria-hidden="true" />
-					{tProjects('viewAll')}
-				</LinkButton>
-			</div>
-		)
-	}
+	{!showAll && (
+		<div class="mt-8 flex w-full justify-center md:mt-10">
+			<LinkButton
+				href={getRelativeLocaleUrl(lang, 'projects')}
+				target="_self"
+				variant="secondary"
+				class="w-fit"
+			>
+				<ArrowUpRightIcon class="size-4" aria-hidden="true" />
+				{tProjects('viewAll')}
+			</LinkButton>
+		</div>
+	)}
 </div>

@@ -56,25 +56,23 @@ const iconFrameClasses = 'tech-pill-icon-frame flex size-6 shrink-0 items-center
 const iconClasses = 'block size-full max-h-6 max-w-6 shrink-0';
 ---
 
-{
-	href ? (
-		<a href={href} class={containerClasses} rel="noopener noreferrer" target="_blank">
-			{Icon && (
-				<span class={iconFrameClasses} aria-hidden="true">
-					<Icon class={iconClasses} aria-hidden="true" />
-				</span>
-			)}
-			<span>{label}</span>
-			{newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
-		</a>
-	) : (
-		<span class={containerClasses}>
-			{Icon && (
-				<span class={iconFrameClasses} aria-hidden="true">
-					<Icon class={iconClasses} aria-hidden="true" />
-				</span>
-			)}
-			<span>{label}</span>
-		</span>
-	)
-}
+{href ? (
+	<a {href} class={containerClasses} rel="noopener noreferrer" target="_blank">
+		{Icon && (
+			<span class={iconFrameClasses} aria-hidden="true">
+				<Icon class={iconClasses} aria-hidden="true" />
+			</span>
+		)}
+		<span>{label}</span>
+		{newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
+	</a>
+) : (
+	<span class={containerClasses}>
+		{Icon && (
+			<span class={iconFrameClasses} aria-hidden="true">
+				<Icon class={iconClasses} aria-hidden="true" />
+			</span>
+		)}
+		<span>{label}</span>
+	</span>
+)}

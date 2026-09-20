@@ -83,14 +83,10 @@ const detailUrl = (item: ExperienceItem) =>
 				<p class="text-editorial-label uppercase text-channel-accent-primary">
 					{experience.isCurrent ? tPage('currentKicker') : tPage('archiveKicker')}
 				</p>
-				<h1
-					class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display"
-				>
+				<h1 class="text-page-title-mobile text-content-strong md:text-page-title lg:text-hero-display">
 					{experience.company}
 				</h1>
-				<p
-					class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title"
-				>
+				<p class="max-w-180 uppercase text-component-title text-content-strong lg:text-feature-title">
 					{experience.title}
 				</p>
 			</div>
@@ -101,31 +97,29 @@ const detailUrl = (item: ExperienceItem) =>
 					<Badge variant={experience.isCurrent ? 'success' : 'default'} size="sm">
 						{experience.isCurrent ? tPage('currentStatus') : tPage('pastStatus')}
 					</Badge>
-					{
-						experience.domain && (
-							<Badge variant="info" size="sm">
-								{experience.domain}
-							</Badge>
-						)
-					}
-					<Badge variant="secondary" size="sm">{experience.date}</Badge>
+					{experience.domain && (
+						<Badge variant="info" size="sm">
+							{experience.domain}
+						</Badge>
+					)}
+					<Badge variant="secondary" size="sm">
+						{experience.date}
+					</Badge>
 				</div>
-				{
-					experience.organizationUrl && (
-						<LinkInline
-							href={experience.organizationUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							icon={ArrowUpRightIcon}
-							iconPosition="trailing"
-							newTabLabel={tPage('opensInNewTab')}
-							class="w-fit"
-							data-experience-organization-link
-						>
-							{tPage('officialWebsite')}
-						</LinkInline>
-					)
-				}
+				{experience.organizationUrl && (
+					<LinkInline
+						href={experience.organizationUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						icon={ArrowUpRightIcon}
+						iconPosition="trailing"
+						newTabLabel={tPage('opensInNewTab')}
+						class="w-fit"
+						data-experience-organization-link
+					>
+						{tPage('officialWebsite')}
+					</LinkInline>
+				)}
 			</div>
 		</div>
 	</header>
@@ -140,21 +134,19 @@ const detailUrl = (item: ExperienceItem) =>
 				<span id="experience-contributions-title">{tPage('selectedContributions')}</span>
 			</TitleSection>
 			<ol class:list={['grid grid-cols-1 gap-3', layout.contributions]}>
-				{
-					experience.description.map((achievement, index) => (
-						<li
-							class:list={[
-								'flex min-w-0 items-start gap-3 border border-edge-subtle bg-channel-surface-default p-4',
-								contributionItemClass(index),
-							]}
-						>
-							<span class="shrink-0 font-mono text-caption text-channel-accent-primary">
-								{String(index + 1).padStart(2, '0')}
-							</span>
-							<span class="text-body text-content-default">{achievement}</span>
-						</li>
-					))
-				}
+				{experience.description.map((achievement, index) => (
+					<li
+						class:list={[
+							'flex min-w-0 items-start gap-3 border border-edge-subtle bg-channel-surface-default p-4',
+							contributionItemClass(index),
+						]}
+					>
+						<span class="shrink-0 font-mono text-caption text-channel-accent-primary">
+							{String(index + 1).padStart(2, '0')}
+						</span>
+						<span class="text-body text-content-default">{achievement}</span>
+					</li>
+				))}
 			</ol>
 		</div>
 	</section>
@@ -173,83 +165,76 @@ const detailUrl = (item: ExperienceItem) =>
 				<span id="experience-focus-title">{tPage('engineeringFocus')}</span>
 			</TitleSection>
 			<div class:list={['grid grid-cols-1 gap-5', layout.focus]}>
-				{
-					groups.map(group => (
-						<div
-							class:list={[
-								'flex min-w-0 flex-col gap-3 border-t border-edge-subtle pt-4',
-								focusItemClass(group.kind),
-							]}
-						>
-							<p class="text-editorial-label uppercase text-channel-accent-primary">
-								{group.label}
-							</p>
-							<ul class="flex flex-wrap gap-2">
-								{group.items.map(technology => (
-									<li>
-										<ExperienceTechnologyPill
-											technology={technology}
-											size="md"
-										/>
-									</li>
-								))}
-							</ul>
-						</div>
-					))
-				}
+				{groups.map(group => (
+					<div
+						class:list={[
+							'flex min-w-0 flex-col gap-3 border-t border-edge-subtle pt-4',
+							focusItemClass(group.kind),
+						]}
+					>
+						<p class="text-editorial-label uppercase text-channel-accent-primary">
+							{group.label}
+						</p>
+						<ul class="flex flex-wrap gap-2">
+							{group.items.map(technology => (
+								<li>
+									<ExperienceTechnologyPill {technology} size="md" />
+								</li>
+							))}
+						</ul>
+					</div>
+				))}
 			</div>
 		</div>
 	</section>
 
-	{
-		(previous || next) && (
-			<nav
-				class="w-full border-t border-edge-subtle px-5 py-10 md:px-8 lg:px-20"
-				aria-label={tPage('careerHistory')}
-				data-experience-career-navigation
-			>
-				<div class="mx-auto flex w-full max-w-320 flex-col gap-5 md:flex-row md:items-center md:justify-between">
-					<p
-						class="text-editorial-label uppercase text-channel-accent-primary"
-						data-experience-career-label
-					>
-						{tPage('careerHistory')}
-					</p>
-					<div
-						class="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:justify-end"
-						data-experience-career-links
-					>
-						{previous && (
-							<LinkButton
-								href={detailUrl(previous)}
-								target="_self"
-								variant="secondary"
-								class="min-h-11 w-full justify-start sm:w-auto"
-							>
-								<ArrowLeftIcon class="size-4" aria-hidden="true" />
-								<span class="flex flex-col items-start">
-									<span>{tPage('previousRole')}</span>
-									<span class="text-caption">{previous.company}</span>
-								</span>
-							</LinkButton>
-						)}
-						{next && (
-							<LinkButton
-								href={detailUrl(next)}
-								target="_self"
-								variant="secondary"
-								class="min-h-11 w-full justify-end sm:w-auto"
-							>
-								<span class="flex flex-col items-end">
-									<span>{tPage('nextRole')}</span>
-									<span class="text-caption">{next.company}</span>
-								</span>
-								<ArrowRightIcon class="size-4" aria-hidden="true" />
-							</LinkButton>
-						)}
-					</div>
+	{(previous || next) && (
+		<nav
+			class="w-full border-t border-edge-subtle px-5 py-10 md:px-8 lg:px-20"
+			aria-label={tPage('careerHistory')}
+			data-experience-career-navigation
+		>
+			<div class="mx-auto flex w-full max-w-320 flex-col gap-5 md:flex-row md:items-center md:justify-between">
+				<p
+					class="text-editorial-label uppercase text-channel-accent-primary"
+					data-experience-career-label
+				>
+					{tPage('careerHistory')}
+				</p>
+				<div
+					class="flex w-full flex-col gap-3 sm:flex-row md:w-auto md:justify-end"
+					data-experience-career-links
+				>
+					{previous && (
+						<LinkButton
+							href={detailUrl(previous)}
+							target="_self"
+							variant="secondary"
+							class="min-h-11 w-full justify-start sm:w-auto"
+						>
+							<ArrowLeftIcon class="size-4" aria-hidden="true" />
+							<span class="flex flex-col items-start">
+								<span>{tPage('previousRole')}</span>
+								<span class="text-caption">{previous.company}</span>
+							</span>
+						</LinkButton>
+					)}
+					{next && (
+						<LinkButton
+							href={detailUrl(next)}
+							target="_self"
+							variant="secondary"
+							class="min-h-11 w-full justify-end sm:w-auto"
+						>
+							<span class="flex flex-col items-end">
+								<span>{tPage('nextRole')}</span>
+								<span class="text-caption">{next.company}</span>
+							</span>
+							<ArrowRightIcon class="size-4" aria-hidden="true" />
+						</LinkButton>
+					)}
 				</div>
-			</nav>
-		)
-	}
+			</div>
+		</nav>
+	)}
 </article>
