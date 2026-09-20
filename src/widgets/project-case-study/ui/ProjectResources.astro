@@ -55,100 +55,90 @@ const resourceToneClasses = {
 			{tPage('resourcesTitle')}
 		</p>
 		<ul class="mt-3 flex flex-wrap gap-3">
-			{
-				repositories.map(repository => (
-					<li>
-						<a
-							href={repository.url}
-							target="_blank"
-							rel="noopener noreferrer"
-							class:list={[resourceBaseClasses, resourceToneClasses.repository]}
-							data-project-resource="repository"
-							data-resource-tone="info"
-						>
-							<GitHubIcon class="size-4" />
-							<span>{repository.label}</span>
-							<span class="sr-only"> {tAccessibility('externalLink')}</span>
-						</a>
-					</li>
-				))
-			}
+			{repositories.map(repository => (
+				<li>
+					<a
+						href={repository.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class:list={[resourceBaseClasses, resourceToneClasses.repository]}
+						data-project-resource="repository"
+						data-resource-tone="info"
+					>
+						<GitHubIcon class="size-4" />
+						<span>{repository.label}</span>
+						<span class="sr-only"> {tAccessibility('externalLink')}</span>
+					</a>
+				</li>
+			))}
 
-			{
-				docs && (
-					<li>
-						<a
-							href={docs}
-							target="_blank"
-							rel="noopener noreferrer"
-							class:list={[resourceBaseClasses, resourceToneClasses.docs]}
-							data-project-resource="docs"
-							data-resource-tone="brand"
-						>
-							<BookOpenIcon class="size-4" />
-							<span>{tPage('resourceDocs')}</span>
-							<span class="sr-only"> {tAccessibility('externalLink')}</span>
-						</a>
-					</li>
-				)
-			}
+			{docs && (
+				<li>
+					<a
+						href={docs}
+						target="_blank"
+						rel="noopener noreferrer"
+						class:list={[resourceBaseClasses, resourceToneClasses.docs]}
+						data-project-resource="docs"
+						data-resource-tone="brand"
+					>
+						<BookOpenIcon class="size-4" />
+						<span>{tPage('resourceDocs')}</span>
+						<span class="sr-only"> {tAccessibility('externalLink')}</span>
+					</a>
+				</li>
+			)}
 
-			{
-				liveDemo && (
-					<li>
-						<a
-							href={liveDemo}
-							target="_blank"
-							rel="noopener noreferrer"
-							class:list={[resourceBaseClasses, resourceToneClasses.demo]}
-							data-project-resource="demo"
-							data-resource-tone="success"
-						>
-							<ArrowUpRightIcon class="size-4" />
-							<span>{tPage('resourceDemo')}</span>
-							<span class="sr-only"> {tAccessibility('externalLink')}</span>
-						</a>
-					</li>
-				)
-			}
+			{liveDemo && (
+				<li>
+					<a
+						href={liveDemo}
+						target="_blank"
+						rel="noopener noreferrer"
+						class:list={[resourceBaseClasses, resourceToneClasses.demo]}
+						data-project-resource="demo"
+						data-resource-tone="success"
+					>
+						<ArrowUpRightIcon class="size-4" />
+						<span>{tPage('resourceDemo')}</span>
+						<span class="sr-only"> {tAccessibility('externalLink')}</span>
+					</a>
+				</li>
+			)}
 
-			{
-				packageUrl && (
-					<li>
-						<a
-							href={packageUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							class:list={[resourceBaseClasses, resourceToneClasses.package]}
-							data-project-resource="package"
-							data-resource-tone="secondary"
-						>
-							<LinkIcon class="size-4" />
-							<span>{tPage('resourcePackage')}</span>
-							<span class="sr-only"> {tAccessibility('externalLink')}</span>
-						</a>
-					</li>
-				)
-			}
+			{packageUrl && (
+				<li>
+					<a
+						href={packageUrl}
+						target="_blank"
+						rel="noopener noreferrer"
+						class:list={[resourceBaseClasses, resourceToneClasses.package]}
+						data-project-resource="package"
+						data-resource-tone="secondary"
+					>
+						<LinkIcon class="size-4" />
+						<span>{tPage('resourcePackage')}</span>
+						<span class="sr-only"> {tAccessibility('externalLink')}</span>
+					</a>
+				</li>
+			)}
 
-			{
-				related && (
-					<li>
-						<a
-							href={related}
-							target="_blank"
-							rel="noopener noreferrer"
-							class:list={[resourceBaseClasses, resourceToneClasses.related]}
-							data-project-resource="related"
-							data-resource-tone="warning"
-						>
-							<LinkIcon class="size-4" />
-							<span>{tPage('resourceRelated')}</span>
-							<span class="sr-only"> {tAccessibility('externalLink')}</span>
-						</a>
-					</li>
-				)
-			}
+			{related && (
+				<li>
+					<a
+						href={related}
+						target="_blank"
+						rel="noopener noreferrer"
+						class:list={[resourceBaseClasses, resourceToneClasses.related]}
+						data-project-resource="related"
+						data-resource-tone="warning"
+					>
+						<LinkIcon class="size-4" />
+						<span>{tPage('resourceRelated')}</span>
+						<span class="sr-only"> {tAccessibility('externalLink')}</span>
+					</a>
+				</li>
+			)}
 
 			<li>
 				<button
@@ -161,7 +151,9 @@ const resourceToneClasses = {
 					data-share-copied={tPage('shareCopied')}
 				>
 					<ShareIcon class="size-4 shrink-0" />
-					<span class="inline-block" data-share-text>{tPage('resourceShare')}</span>
+					<span class="inline-block" data-share-text>
+						{tPage('resourceShare')}
+					</span>
 				</button>
 			</li>
 		</ul>

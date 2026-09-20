@@ -315,26 +315,30 @@ const structuredPageSchema =
 		<Font cssVariable="--font-gaming-mono" />
 		<Font cssVariable="--font-mono" />
 
-		<script is:inline type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-		<script is:inline type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
-		{
-			breadcrumbSchema && (
-				<script
-					is:inline
-					type="application/ld+json"
-					set:html={JSON.stringify(breadcrumbSchema)}
-				/>
-			)
-		}
-		{
-			structuredPageSchema && (
-				<script
-					is:inline
-					type="application/ld+json"
-					set:html={JSON.stringify(structuredPageSchema)}
-				/>
-			)
-		}
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={JSON.stringify(personSchema)}
+		></script>
+		<script
+			is:inline
+			type="application/ld+json"
+			set:html={JSON.stringify(websiteSchema)}
+		></script>
+		{breadcrumbSchema && (
+			<script
+				is:inline
+				type="application/ld+json"
+				set:html={JSON.stringify(breadcrumbSchema)}
+			></script>
+		)}
+		{structuredPageSchema && (
+			<script
+				is:inline
+				type="application/ld+json"
+				set:html={JSON.stringify(structuredPageSchema)}
+			></script>
+		)}
 
 		<meta name="generator" content={Astro.generator} />
 		<script is:inline>
@@ -371,87 +375,85 @@ const structuredPageSchema =
 		<div class="flex flex-col justify-center items-center w-full">
 			<Header localizedPaths={resolvedLocalizedPaths} />
 			<main id="main-content" class="w-full min-h-screen flex flex-col items-center">
-				{
-					isHome ? (
-						/*
-						 * Home is viewport-oriented from Tablet upward for Hero,
-						 * Experience, Projects, Research and About. Experience owns its
-						 * dedicated internal contract; Core Stack remains content-driven.
-						 */
-						<div class="w-full pt-18">
-							<slot name="hero" />
-							<slot name="experience" />
+				{isHome ? (
+					/*
+					 * Home is viewport-oriented from Tablet upward for Hero,
+					 * Experience, Projects, Research and About. Experience owns its
+					 * dedicated internal contract; Core Stack remains content-driven.
+					 */
+					<div class="w-full pt-18">
+						<slot name="hero" />
+						<slot name="experience" />
 
-							<SectionContainer
-								id="projects"
-								layout="viewport"
-								surface="canvas"
-								class="py-12 md:py-16 gap-y-6"
-							>
-								<TitleSection align="center" className="mb-0">
-									<ChevronRightIcon
-										class="text-channel-accent-primary"
-										aria-hidden="true"
-									/>
-									{tProjects('sectionTitle')}
-								</TitleSection>
-								<slot name="projects" />
-							</SectionContainer>
+						<SectionContainer
+							id="projects"
+							layout="viewport"
+							surface="canvas"
+							class="py-12 md:py-16 gap-y-6"
+						>
+							<TitleSection align="center" className="mb-0">
+								<ChevronRightIcon
+									class="text-channel-accent-primary"
+									aria-hidden="true"
+								/>
+								{tProjects('sectionTitle')}
+							</TitleSection>
+							<slot name="projects" />
+						</SectionContainer>
 
-							<SectionContainer
-								id="research"
-								layout="viewport"
-								surface="highlight"
-								class="py-12 md:py-16 gap-y-6"
-							>
-								<TitleSection align="center" className="mb-0">
-									<ChevronRightIcon
-										class="text-channel-accent-primary"
-										aria-hidden="true"
-									/>
-									{tResearchSection('sectionTitle')}
-								</TitleSection>
-								<slot name="research" />
-							</SectionContainer>
+						<SectionContainer
+							id="research"
+							layout="viewport"
+							surface="highlight"
+							class="py-12 md:py-16 gap-y-6"
+						>
+							<TitleSection align="center" className="mb-0">
+								<ChevronRightIcon
+									class="text-channel-accent-primary"
+									aria-hidden="true"
+								/>
+								{tResearchSection('sectionTitle')}
+							</TitleSection>
+							<slot name="research" />
+						</SectionContainer>
 
-							<SectionContainer
-								id="about-me"
-								layout="viewport"
-								surface="canvas"
-								class="py-12 md:py-16 gap-y-6"
-							>
-								<TitleSection align="center" className="mb-0">
-									<ChevronRightIcon
-										class="text-channel-accent-primary"
-										aria-hidden="true"
-									/>
-									{tAbout('sectionTitle')}
-								</TitleSection>
-								<slot name="about-me" />
-							</SectionContainer>
+						<SectionContainer
+							id="about-me"
+							layout="viewport"
+							surface="canvas"
+							class="py-12 md:py-16 gap-y-6"
+						>
+							<TitleSection align="center" className="mb-0">
+								<ChevronRightIcon
+									class="text-channel-accent-primary"
+									aria-hidden="true"
+								/>
+								{tAbout('sectionTitle')}
+							</TitleSection>
+							<slot name="about-me" />
+						</SectionContainer>
 
-							<SectionContainer
-								id="technologies"
-								layout="compact"
-								surface="highlight"
-								class="py-12 md:py-16 gap-y-6"
-							>
-								<TitleSection align="center" className="mb-0">
-									<ChevronRightIcon
-										class="text-channel-accent-primary"
-										aria-hidden="true"
-									/>
-									{tTechStack('sectionTitle')}
-								</TitleSection>
-								<TechStack />
-							</SectionContainer>
-						</div>
-					) : (
-						<div class={pageContentClasses}>
-							<slot />
-						</div>
-					)
-				}
+						<SectionContainer
+							id="technologies"
+							layout="compact"
+							surface="highlight"
+							class="py-12 md:py-16 gap-y-6"
+						>
+							<TitleSection align="center" className="mb-0">
+								<ChevronRightIcon
+									class="text-channel-accent-primary"
+									aria-hidden="true"
+								/>
+								{tTechStack('sectionTitle')}
+							</TitleSection>
+							<TechStack />
+						</SectionContainer>
+					</div>
+				) : (
+					<div class={pageContentClasses}>
+						<slot />
+					</div>
+				)}
 			</main>
 			<Footer />
 			<RecruiterHUD localizedPaths={resolvedLocalizedPaths} />

@@ -25,47 +25,45 @@ const baseClass =
 	role="group"
 	aria-label={tAccessibility('chooseLanguage')}
 >
-	{
-		AVAILABLE_LANGUAGES.map(lang => {
-			const isActive = currentLang === lang;
-			const path = localizedPaths[lang];
-			const isUnavailable = !path;
-			const label = isActive
-				? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('currentPage')}`
-				: isUnavailable
-					? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('translationUnavailable')}`
-					: LANGUAGE_LABELS[lang];
+	{AVAILABLE_LANGUAGES.map(lang => {
+		const isActive = currentLang === lang;
+		const path = localizedPaths[lang];
+		const isUnavailable = !path;
+		const label = isActive
+			? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('currentPage')}`
+			: isUnavailable
+				? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('translationUnavailable')}`
+				: LANGUAGE_LABELS[lang];
 
-			if (isUnavailable) {
-				return (
-					<button
-						type="button"
-						disabled
-						class={`${baseClass} cursor-not-allowed opacity-50 bg-channel-surface-default text-content-muted`}
-						aria-label={label}
-					>
-						{lang.toUpperCase()}
-					</button>
-				);
-			}
-
+		if (isUnavailable) {
 			return (
-				<a
-					href={path}
-					data-language-base-path={path}
-					class={`${baseClass} ${
-						isActive
-							? 'bg-button-primary-background text-button-primary-content cursor-default pointer-events-none shadow-retro-xs'
-							: 'bg-channel-surface-default text-content-strong hover:bg-channel-surface-highlight hover:shadow-retro-md active:shadow-retro-xs'
-					}`}
+				<button
+					type="button"
+					disabled
+					class={`${baseClass} cursor-not-allowed opacity-50 bg-channel-surface-default text-content-muted`}
 					aria-label={label}
-					aria-current={isActive ? 'page' : undefined}
 				>
 					{lang.toUpperCase()}
-				</a>
+				</button>
 			);
-		})
-	}
+		}
+
+		return (
+			<a
+				href={path}
+				data-language-base-path={path}
+				class={`${baseClass} ${
+					isActive
+						? 'bg-button-primary-background text-button-primary-content cursor-default pointer-events-none shadow-retro-xs'
+						: 'bg-channel-surface-default text-content-strong hover:bg-channel-surface-highlight hover:shadow-retro-md active:shadow-retro-xs'
+				}`}
+				aria-label={label}
+				aria-current={isActive ? 'page' : undefined}
+			>
+				{lang.toUpperCase()}
+			</a>
+		);
+	})}
 </div>
 
 <script>

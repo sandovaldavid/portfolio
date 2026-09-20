@@ -24,13 +24,11 @@ const { eyebrow, title, surface = 'canvas', width = 'wide', id } = Astro.props;
 			data-case-study-section-content
 			data-case-study-width={width}
 		>
-			{
-				eyebrow && (
-					<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
-						{eyebrow}
-					</p>
-				)
-			}
+			{eyebrow && (
+				<p class="text-editorial-label-compact uppercase text-channel-accent-primary md:text-editorial-label">
+					{eyebrow}
+				</p>
+			)}
 			<h2
 				class:list={[
 					'text-feature-title text-content-strong md:text-section-title',

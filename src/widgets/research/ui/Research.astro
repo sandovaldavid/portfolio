@@ -32,13 +32,13 @@ const modeledSignals = research.featuredSignals;
 		data-research-home-main
 	>
 		<div class="flex min-w-0 flex-col gap-5">
-			<div
-				class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between"
-			>
+			<div class="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
 				<p class="text-editorial-label text-channel-accent-primary">
 					{tResearch('institution')} · {tResearch('label')}
 				</p>
-				<Badge variant="info" size="sm">{tCommon('status.inProgress')}</Badge>
+				<Badge variant="info" size="sm">
+					{tCommon('status.inProgress')}
+				</Badge>
 			</div>
 
 			<h3 class="max-w-168 uppercase text-feature-title text-content-strong">
@@ -80,24 +80,22 @@ const modeledSignals = research.featuredSignals;
 					{tResearch('pipelineTitle')}
 				</h4>
 				<ol class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-					{
-						pipeline.map((step, index) => (
-							<li
-								class="flex min-h-16 min-w-0 items-start gap-3 border border-edge-subtle px-3 py-3"
-								data-research-pipeline-step
+					{pipeline.map((step, index) => (
+						<li
+							class="flex min-h-16 min-w-0 items-start gap-3 border border-edge-subtle px-3 py-3"
+							data-research-pipeline-step
+						>
+							<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<span
+								class="min-w-0 text-secondary text-content-default"
+								data-research-pipeline-label
 							>
-								<span class="w-5 shrink-0 text-editorial-label-compact text-channel-accent-primary">
-									{String(index + 1).padStart(2, '0')}
-								</span>
-								<span
-									class="min-w-0 text-secondary text-content-default"
-									data-research-pipeline-label
-								>
-									{step}
-								</span>
-							</li>
-						))
-					}
+								{step}
+							</span>
+						</li>
+					))}
 				</ol>
 			</div>
 
@@ -106,21 +104,19 @@ const modeledSignals = research.featuredSignals;
 					{tResearch('signalsLabel')}
 				</p>
 				<ul class="grid grid-cols-1 gap-x-4 gap-y-2 sm:grid-cols-2">
-					{
-						modeledSignals.map((signal, index) => (
-							<li class="flex min-w-0 items-start gap-2" data-research-signal>
-								<span class="shrink-0 text-editorial-label-compact text-channel-accent-primary">
-									{String(index + 1).padStart(2, '0')}
-								</span>
-								<span
-									class="min-w-0 text-secondary text-content-default"
-									data-research-signal-label
-								>
-									{signal}
-								</span>
-							</li>
-						))
-					}
+					{modeledSignals.map((signal, index) => (
+						<li class="flex min-w-0 items-start gap-2" data-research-signal>
+							<span class="shrink-0 text-editorial-label-compact text-channel-accent-primary">
+								{String(index + 1).padStart(2, '0')}
+							</span>
+							<span
+								class="min-w-0 text-secondary text-content-default"
+								data-research-signal-label
+							>
+								{signal}
+							</span>
+						</li>
+					))}
 				</ul>
 			</div>
 		</aside>
@@ -135,13 +131,11 @@ const modeledSignals = research.featuredSignals;
 				{tResearch('techStackLabel')}
 			</p>
 			<ul class="flex flex-wrap gap-2" data-research-tech-stack>
-				{
-					techStack.map(tag => (
-						<li>
-							<TechPill label={tag.label} size="md" variant="stack" />
-						</li>
-					))
-				}
+				{techStack.map(tag => (
+					<li>
+						<TechPill label={tag.label} size="md" variant="stack" />
+					</li>
+				))}
 			</ul>
 		</div>
 

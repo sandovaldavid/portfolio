@@ -38,19 +38,15 @@ const summarySupport = summaryParts.slice(1).join(' ');
 				{tPage('introTitle')}
 			</h1>
 
-			<p
-				class="mt-6 max-w-3xl text-subheading text-channel-content-strong md:text-component-title"
-			>
+			<p class="mt-6 max-w-3xl text-subheading text-channel-content-strong md:text-component-title">
 				{summaryLead}
 			</p>
 
-			{
-				summarySupport && (
-					<p class="mt-5 max-w-3xl text-body text-channel-content-default">
-						{summarySupport}
-					</p>
-				)
-			}
+			{summarySupport && (
+				<p class="mt-5 max-w-3xl text-body text-channel-content-default">
+					{summarySupport}
+				</p>
+			)}
 		</div>
 
 		<figure class="mx-auto w-full max-w-xs md:max-w-sm lg:col-span-2 lg:justify-self-end">
@@ -71,45 +67,45 @@ const summarySupport = summaryParts.slice(1).join(' ');
 
 	<section class="mx-auto w-full max-w-7xl px-5 pb-16 md:px-8 md:pb-20 lg:pb-24">
 		<TitleSection align="center" className="mb-8 md:mb-10">
-			<span aria-hidden="true" class="text-channel-accent-primary">&gt;</span>
+			<span aria-hidden="true" class="text-channel-accent-primary">
+				&gt;
+			</span>
 			<span>{tAbout('biographyTitle')}</span>
 		</TitleSection>
 
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-2 md:gap-10 lg:grid-cols-3">
-			{
-				profile.biography.map((paragraph, index) => (
-					<div class="min-w-0">
-						<p class="mb-3 text-editorial-label-compact uppercase text-channel-accent-primary">
-							{tAbout('biographyLabel')} {String(index + 1).padStart(2, '0')}
-						</p>
-						<p class="text-body text-channel-content-default">{paragraph}</p>
-					</div>
-				))
-			}
+			{profile.biography.map((paragraph, index) => (
+				<div class="min-w-0">
+					<p class="mb-3 text-editorial-label-compact uppercase text-channel-accent-primary">
+						{tAbout('biographyLabel')} {String(index + 1).padStart(2, '0')}
+					</p>
+					<p class="text-body text-channel-content-default">{paragraph}</p>
+				</div>
+			))}
 		</div>
 	</section>
 
 	<section class="w-full border-t border-channel-edge-subtle bg-channel-surface-highlight">
 		<div class="mx-auto w-full max-w-7xl px-5 py-10 md:px-8 md:py-12 lg:py-14">
 			<TitleSection align="center" className="mb-8 md:mb-10">
-				<span aria-hidden="true" class="text-channel-accent-primary">&gt;</span>
+				<span aria-hidden="true" class="text-channel-accent-primary">
+					&gt;
+				</span>
 				<span>{tAbout('focusTitle')}</span>
 			</TitleSection>
 
 			<ul class="grid grid-cols-1 gap-x-10 gap-y-6 md:grid-cols-2 lg:grid-cols-3" role="list">
-				{
-					profile.focusAreas.map((area, index) => (
-						<li class="flex min-w-0 gap-4">
-							<span
-								class="w-6 shrink-0 text-editorial-label-compact text-channel-accent-primary"
-								aria-hidden="true"
-							>
-								{String(index + 1).padStart(2, '0')}
-							</span>
-							<p class="text-body text-channel-content-default">{area}</p>
-						</li>
-					))
-				}
+				{profile.focusAreas.map((area, index) => (
+					<li class="flex min-w-0 gap-4">
+						<span
+							class="w-6 shrink-0 text-editorial-label-compact text-channel-accent-primary"
+							aria-hidden="true"
+						>
+							{String(index + 1).padStart(2, '0')}
+						</span>
+						<p class="text-body text-channel-content-default">{area}</p>
+					</li>
+				))}
 			</ul>
 		</div>
 	</section>

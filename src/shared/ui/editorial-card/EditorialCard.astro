@@ -51,9 +51,7 @@ const cardSize =
 ---
 
 <article class:list={[cardBase, cardSize, className]}>
-	<header
-		class="flex h-11 shrink-0 items-center justify-between gap-2 rounded-none border-b-0 bg-badge-brand-bg px-3.5"
-	>
+	<header class="flex h-11 shrink-0 items-center justify-between gap-2 rounded-none border-b-0 bg-badge-brand-bg px-3.5">
 		<span class="font-retro-tag text-xs font-bold tracking-wide text-badge-brand-text">
 			{typeLabel}
 		</span>
@@ -63,26 +61,20 @@ const cardSize =
 	</header>
 
 	<div class="flex grow flex-col gap-5 pt-4.5 px-3.5 pb-4 lg:px-4.5">
-		{
-			tags.length > 0 && (
-				<ul class="flex flex-row flex-wrap gap-2" aria-label={typeLabel}>
-					{tags.map(tag => (
-						<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-0.75 font-retro-tag text-xs font-bold leading-none tracking-wide text-badge-brand-text">
-							{tag}
-						</li>
-					))}
-				</ul>
-			)
-		}
+		{tags.length > 0 && (
+			<ul class="flex flex-row flex-wrap gap-2" aria-label={typeLabel}>
+				{tags.map(tag => (
+					<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-0.75 font-retro-tag text-xs font-bold leading-none tracking-wide text-badge-brand-text">
+						{tag}
+					</li>
+				))}
+			</ul>
+		)}
 		<div class="flex flex-col gap-5">
-			<Heading
-				class="text-content-strong font-mono text-lg font-medium leading-snug lg:text-xl"
-			>
+			<Heading class="text-content-strong font-mono text-lg font-medium leading-snug lg:text-xl">
 				{title}
 			</Heading>
-			<p class="font-sans text-base leading-relaxed text-content-default">
-				{description}
-			</p>
+			<p class="font-sans text-base leading-relaxed text-content-default">{description}</p>
 		</div>
 
 		<a

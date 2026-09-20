@@ -31,23 +31,19 @@ const posts = await getDevlogPosts(lang);
 		</header>
 
 		<section class="pt-10 lg:pt-16" aria-label={tDevlog('gridSectionLabel')}>
-			<div
-				class="flex w-full flex-col items-center gap-6 md:flex-row md:flex-wrap md:items-stretch md:justify-center md:gap-8"
-			>
-				{
-					posts.map(post => (
-						<div class="flex w-full max-w-[340px] md:max-w-[369px] lg:max-w-[520px]">
-							<DevlogCard
-								post={post}
-								readMoreText={tDevlog('readMore')}
-								readMoreLink={getRelativeLocaleUrl(
-									lang,
-									`devlog/${getDevlogSlug(post)}`
-								)}
-							/>
-						</div>
-					))
-				}
+			<div class="flex w-full flex-col items-center gap-6 md:flex-row md:flex-wrap md:items-stretch md:justify-center md:gap-8">
+				{posts.map(post => (
+					<div class="flex w-full max-w-[340px] md:max-w-[369px] lg:max-w-[520px]">
+						<DevlogCard
+							{post}
+							readMoreText={tDevlog('readMore')}
+							readMoreLink={getRelativeLocaleUrl(
+								lang,
+								`devlog/${getDevlogSlug(post)}`
+							)}
+						/>
+					</div>
+				))}
 			</div>
 		</section>
 	</div>

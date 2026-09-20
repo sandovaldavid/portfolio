@@ -298,19 +298,15 @@ const localizedShell = {
 						{tErrors('notFoundMessage')}
 					</p>
 
-					<div
-						class="mt-6 w-full max-w-2xl border border-channel-edge-subtle bg-channel-surface-default px-5 py-4 shadow-retro-sm"
-					>
+					<div class="mt-6 w-full max-w-2xl border border-channel-edge-subtle bg-channel-surface-default px-5 py-4 shadow-retro-sm">
 						<p class="text-code text-channel-content-default">
-							<span aria-hidden="true">“</span><span id="not-found-quote"
-								>{tErrors('notFoundQuote')}</span
-							><span aria-hidden="true">”</span>
+							<span aria-hidden="true">“</span>
+							<span id="not-found-quote">{tErrors('notFoundQuote')}</span>
+							<span aria-hidden="true">”</span>
 						</p>
 					</div>
 
-					<div
-						class="mt-6 flex w-full max-w-85 flex-col justify-center gap-4 sm:max-w-none sm:flex-row"
-					>
+					<div class="mt-6 flex w-full max-w-85 flex-col justify-center gap-4 sm:max-w-none sm:flex-row">
 						<div id="not-found-home-link" class="w-full sm:w-auto">
 							<LinkButton
 								href={localizedHomePaths[defaultLang]}

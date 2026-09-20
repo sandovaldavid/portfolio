@@ -66,30 +66,23 @@ const desktopPaddingClasses = isCompact ? 'lg:p-5' : 'lg:p-6';
 		className,
 	]}
 >
-	{
-		label && (
-			<span
-				class:list={[
-					'font-retro-tag text-xs font-bold tracking-wide',
-					labelClasses[variant],
-				]}
-			>
-				{label}
-			</span>
-		)
-	}
-	{
-		title && (
-			<Heading
-				class:list={[
-					'text-content-strong font-mono font-medium leading-snug text-lg',
-					titleClasses,
-				]}
-			>
-				{title}
-			</Heading>
-		)
-	}
+	{label && (
+		<span
+			class:list={['font-retro-tag text-xs font-bold tracking-wide', labelClasses[variant]]}
+		>
+			{label}
+		</span>
+	)}
+	{title && (
+		<Heading
+			class:list={[
+				'text-content-strong font-mono font-medium leading-snug text-lg',
+				titleClasses,
+			]}
+		>
+			{title}
+		</Heading>
+	)}
 	<div class:list={['font-sans text-base leading-6 text-content-default']}>
 		<slot />
 	</div>

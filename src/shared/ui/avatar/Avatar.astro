@@ -26,30 +26,28 @@ const { dimension, class: sizeClass } = sizeMap[size];
 const isLocalImage = src.startsWith('/') || src.startsWith('./') || src.startsWith('../');
 ---
 
-{
-	isLocalImage ? (
-		<Image
-			src={src}
-			alt={alt}
-			width={dimension}
-			height={dimension}
-			class:list={[
-				'rounded-none overflow-hidden border-2 border-edge-strong shadow-retro-md object-cover aspect-square',
-				sizeClass,
-				className,
-			]}
-		/>
-	) : (
-		<img
-			src={src}
-			alt={alt}
-			width={dimension}
-			height={dimension}
-			class:list={[
-				'rounded-none overflow-hidden border-2 border-edge-strong shadow-retro-md object-cover aspect-square',
-				sizeClass,
-				className,
-			]}
-		/>
-	)
-}
+{isLocalImage ? (
+	<Image
+		{src}
+		{alt}
+		width={dimension}
+		height={dimension}
+		class:list={[
+			'rounded-none overflow-hidden border-2 border-edge-strong shadow-retro-md object-cover aspect-square',
+			sizeClass,
+			className,
+		]}
+	/>
+) : (
+	<img
+		{src}
+		{alt}
+		width={dimension}
+		height={dimension}
+		class:list={[
+			'rounded-none overflow-hidden border-2 border-edge-strong shadow-retro-md object-cover aspect-square',
+			sizeClass,
+			className,
+		]}
+	/>
+)}
