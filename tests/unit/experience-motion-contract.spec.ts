@@ -84,7 +84,7 @@ describe('Experience motion contract', () => {
 		expect(detail).toContain('data-experience-technology-kind={technology.kind}');
 		expect(detail).toContain('<ExperienceTechnologyPill {technology} size="sm" />');
 		expect(careerShell).toContain('<ExperienceTechnologyPill');
-		expect(careerShell).toContain('technology={technology}');
+		expect(careerShell).toContain('<ExperienceTechnologyPill {technology} size="md" />');
 		expect(careerShell).toContain('size="md"');
 		expect(careerShell).toContain('technology.kind === group.kind');
 	});
