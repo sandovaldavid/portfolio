@@ -1,3 +1,5 @@
+import { interpolate } from '@shared/lib/i18n';
+
 interface GitHubStats {
 	login: string;
 	name: string;
@@ -52,10 +54,6 @@ function escapeHtml(value: string): string {
 		.replace(/'/g, '&#039;');
 }
 
-function formatCopy(template: string, variables: Record<string, string> = {}): string {
-	return template.replace(/\{(\w+)\}/g, (match, name) => variables[name] ?? match);
-}
-
 function isEditableTarget(target: EventTarget | null): boolean {
 	return target instanceof Element && target.matches(EDITABLE_SELECTOR);
 }
@@ -108,7 +106,7 @@ export function setupCliTerminal(): void {
 		return value;
 	};
 	const localized = (key: string, variables: Record<string, string> = {}): string =>
-		escapeHtml(formatCopy(getCopy(key), variables));
+		escapeHtml(interpolate(getCopy(key), variables));
 
 	const cliOverlayElement = document.getElementById('cli-overlay');
 	const cliOutputElement = document.getElementById('cli-output');
@@ -285,8 +283,8 @@ export function setupCliTerminal(): void {
 	const sections = [
 		{ number: 1, id: null as string | null, key: 'hero', name: sectionNames[0] ?? 'Hero' },
 		{ number: 2, id: 'experience', key: 'experience', name: sectionNames[1] ?? 'Experience' },
-		{ number: 3, id: 'research', key: 'research', name: sectionNames[2] ?? 'Research' },
-		{ number: 4, id: 'projects', key: 'projects', name: sectionNames[3] ?? 'Projects' },
+		{ number: 3, id: 'projects', key: 'projects', name: sectionNames[2] ?? 'Projects' },
+		{ number: 4, id: 'research', key: 'research', name: sectionNames[3] ?? 'Research' },
 		{ number: 5, id: 'about-me', key: 'about', name: sectionNames[4] ?? 'About' },
 		{ number: 6, id: 'technologies', key: 'tech', name: sectionNames[5] ?? 'Technologies' },
 	];
@@ -454,8 +452,8 @@ export function setupCliTerminal(): void {
 		for (const [number, key] of [
 			[1, 'runtime.listHero'],
 			[2, 'runtime.listExperience'],
-			[3, 'runtime.listResearch'],
-			[4, 'runtime.listProjects'],
+			[3, 'runtime.listProjects'],
+			[4, 'runtime.listResearch'],
 			[5, 'runtime.listAbout'],
 			[6, 'runtime.listTechnologies'],
 		] as const) {
@@ -502,13 +500,13 @@ export function setupCliTerminal(): void {
 			`│  ${localized('runtime.skillsFrontend')}: Angular, Astro, TypeScript`,
 			'output'
 		);
-		printLine(`│  ${localized('runtime.skillsBackend')}: .NET, C#, Node.js`, 'output');
+		printLine(`│  ${localized('runtime.skillsBackend')}: .NET, C#`, 'output');
 		printLine(`│  ${localized('runtime.skillsMl')}: TensorFlow, BiLSTM`, 'output');
 		printLine(
 			`│  ${localized('runtime.skillsDevops')}: GitHub Actions, Docker, Vercel`,
 			'output'
 		);
-		printLine(`│  ${localized('runtime.skillsDatabase')}: PostgreSQL, SQL Server`, 'output');
+		printLine(`│  ${localized('runtime.skillsDatabase')}: PostgreSQL`, 'output');
 		printBoxEnd();
 	}
 
