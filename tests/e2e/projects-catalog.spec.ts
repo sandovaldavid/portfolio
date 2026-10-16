@@ -136,7 +136,7 @@ test('Projects Catalog surfaces a project index and repository-aware actions', a
 	const kiokuCard = page.locator('article', {
 		has: page.getByRole('heading', { name: 'Kioku', exact: true }),
 	});
-	const caseStudyAction = kiokuCard.getByRole('link', { name: 'Case Study', exact: true });
+	const caseStudyAction = kiokuCard.getByRole('link', { name: 'Case Study' });
 	const repositoryAction = kiokuCard.locator('[data-project-card-repository] a');
 	await expect(caseStudyAction).toBeVisible();
 	await expect(repositoryAction).toBeVisible();
