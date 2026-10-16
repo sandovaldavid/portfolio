@@ -17,7 +17,19 @@ export default defineConfig({
 		}),
 	},
 	// ponytail: robots.txt is static public output; no integration needed.
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		sitemap({
+			filter: page => !/\/(es\/)?(atena|components)\/?$/.test(new URL(page).pathname),
+			i18n: {
+				defaultLocale: 'en',
+				locales: {
+					en: 'en',
+					es: 'es',
+				},
+			},
+		}),
+	],
 	site: 'https://sandovaldavid.com',
 	// Keep the Astro 6 whitespace contract while adopting Astro 7's Rust compiler.
 	compressHTML: true,
