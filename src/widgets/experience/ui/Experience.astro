@@ -61,6 +61,7 @@ const EXPERIENCE = await getExperienceData(lang);
 						id={`exp-panel-${exp.experienceId}`}
 						aria-labelledby={`exp-tab-${exp.experienceId}`}
 						aria-hidden={idx === 0 ? 'false' : 'true'}
+						inert={idx !== 0 ? true : undefined}
 						data-active={idx === 0 ? 'true' : 'false'}
 						data-motion="idle"
 						data-experience-id={exp.experienceId}

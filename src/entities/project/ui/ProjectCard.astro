@@ -147,6 +147,7 @@ const mediaSourceHeight = isPrimary ? 500 : isCatalog ? 400 : 380;
 					<LinkButton href={caseStudyLink} target="_self" class="w-fit shrink-0 px-3">
 						<ArrowUpRightIcon class="size-4" aria-hidden="true" />
 						{caseStudyText}
+						<span class="sr-only">: {title}</span>
 					</LinkButton>
 				)}
 				{github && showSecondaryAction && repositoryName && (
