@@ -72,10 +72,10 @@ const localizedShell = {
 		<title>{tErrors('notFoundPageTitle')}</title>
 
 		<Font cssVariable="--font-pixel" />
-		<Font cssVariable="--font-pixel-clean" preload />
+		<Font cssVariable="--font-pixel-clean" />
 		<Font cssVariable="--font-retro-tag" />
 		<Font cssVariable="--font-gaming-mono" />
-		<Font cssVariable="--font-mono" />
+		<Font cssVariable="--font-mono" preload={[{ weight: '400', style: 'normal' }]} />
 
 		<script is:inline>
 			(function applyTheme() {
