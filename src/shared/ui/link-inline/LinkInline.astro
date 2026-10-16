@@ -16,6 +16,8 @@ const {
 	icon: Icon,
 	iconPosition = 'leading',
 	newTabLabel,
+	target,
+	rel,
 	...rest
 } = Astro.props;
 
@@ -25,10 +27,13 @@ const {
  * appears on hover/focus without shifting line geometry.
  */
 const iconClasses = 'size-4 shrink-0';
+const resolvedRel = target === '_blank' ? (rel ?? 'noopener noreferrer') : rel;
 ---
 
 <a
 	{href}
+	{target}
+	rel={resolvedRel}
 	class:list={[
 		'link-inline inline-flex h-8 items-center gap-1.5 font-sans text-base font-medium text-channel-accent-primary',
 		className,
@@ -38,7 +43,7 @@ const iconClasses = 'size-4 shrink-0';
 	{iconPosition === 'leading' && Icon && <Icon class={iconClasses} aria-hidden="true" />}
 	<slot />
 	{iconPosition === 'trailing' && Icon && <Icon class={iconClasses} aria-hidden="true" />}
-	{newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
+	{target === '_blank' && newTabLabel && <span class="sr-only"> {newTabLabel}</span>}
 </a>
 
 <style>

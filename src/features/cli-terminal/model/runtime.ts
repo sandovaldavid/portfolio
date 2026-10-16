@@ -439,11 +439,11 @@ export function setupCliTerminal(): void {
 			'output'
 		);
 		printLine(
-			`│  LinkedIn: <a class="underline text-channel-portfolio-terminal-cyan" href="https://www.linkedin.com/in/${escapeHtml(contactLinkedin)}" target="_blank" rel="noreferrer">${escapeHtml(contactLinkedin)}</a>`,
+			`│  LinkedIn: <a class="underline text-channel-portfolio-terminal-cyan" href="https://www.linkedin.com/in/${escapeHtml(contactLinkedin)}" target="_blank" rel="noopener noreferrer">${escapeHtml(contactLinkedin)}</a>`,
 			'output'
 		);
 		printLine(
-			`│  Web: <a class="underline text-channel-portfolio-terminal-cyan" href="${escapeHtml(siteUrl)}" target="_blank" rel="noreferrer">${escapeHtml(siteUrl)}</a>`,
+			`│  Web: <a class="underline text-channel-portfolio-terminal-cyan" href="${escapeHtml(siteUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(siteUrl)}</a>`,
 			'output'
 		);
 		printBoxEnd();
