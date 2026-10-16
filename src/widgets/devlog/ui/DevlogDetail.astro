@@ -44,14 +44,12 @@ const articleBodyClasses =
 
 			<div class="mb-3 flex flex-wrap items-center gap-2 text-caption text-content-muted">
 				<time datetime={pubDate.toISOString()}>{pubDate.toISOString().split('T')[0]}</time>
-				<span class="text-editorial-label uppercase text-primary-500 dark:text-primary-400">
+				<span class="text-editorial-label uppercase text-channel-accent-primary">
 					{version}
 				</span>
 			</div>
 
-			<h1 class="font-mono text-4xl font-bold leading-12 tracking-[-0.5px] text-content-strong lg:text-5xl lg:leading-14 lg:tracking-[-1px]">
-				{title}
-			</h1>
+			<h1 class="text-page-title-mobile lg:text-page-title text-content-strong">{title}</h1>
 		</header>
 
 		<div class="flex justify-center">
@@ -63,7 +61,7 @@ const articleBodyClasses =
 		{tags.length > 0 && (
 			<div class="mt-4 flex flex-wrap items-center gap-2 self-center">
 				{tags.map(tag => (
-					<span class="rounded-none border border-primary-500/40 bg-primary-500/10 px-2 py-0.5 text-editorial-label uppercase text-primary-600 dark:text-primary-400">
+					<span class="rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-0.5 text-editorial-label uppercase text-badge-brand-text">
 						{tag}
 					</span>
 				))}

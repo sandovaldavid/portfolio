@@ -13,8 +13,7 @@ const deliveryPolicy = readSource('docs/DELIVERY.md');
 const protectionPolicy = readSource('.github/BRANCH_PROTECTION.md');
 
 const requiredChecks = [
-	'Code Quality & Commits',
-	'Unit Tests (Vitest)',
+	'Code Quality & Unit Tests',
 	'Build & Bundle Analysis',
 	'Playwright Chromium Smoke',
 	'Analyze Security',
