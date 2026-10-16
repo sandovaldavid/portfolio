@@ -49,6 +49,7 @@ jobs:
               uses: ./.github/actions/setup-playwright
               with:
                   browsers: chromium firefox webkit
+                  install-deps: 'true'
 
             - name: Run extended desktop and mobile matrix
               run: bun run test:e2e:extended
