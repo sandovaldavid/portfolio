@@ -84,7 +84,7 @@ const articleBodyClasses =
 			</nav>
 
 			<div class="flex flex-col gap-4">
-				<div class="flex flex-wrap items-center gap-3">
+				<div class="flex flex-wrap items-center gap-3" data-metadata-group>
 					<span class="inline-flex h-7 items-center rounded-none border border-edge-subtle bg-channel-surface-highlight px-2.5 text-caption text-content-muted">
 						{publishedLabel}:
 						<time
@@ -114,13 +114,16 @@ const articleBodyClasses =
 				<p class="max-w-240 text-body text-content-default">{description}</p>
 
 				{tags.length > 0 && (
-					<ul class="flex flex-wrap items-center gap-2 pt-1" aria-label={tagsLabel}>
-						{tags.map(tag => (
-							<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2.5 py-1 font-retro-tag text-xs font-bold uppercase tracking-wide text-badge-brand-text">
-								{tag}
-							</li>
-						))}
-					</ul>
+					<div class="flex flex-wrap items-center gap-2 pt-1" data-tags-group>
+						<span class="sr-only">{tagsLabel}</span>
+						<ul class="flex flex-wrap items-center gap-2" aria-label={tagsLabel}>
+							{tags.map(tag => (
+								<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2.5 py-1 font-retro-tag text-xs font-bold uppercase tracking-wide text-badge-brand-text">
+									{tag}
+								</li>
+							))}
+						</ul>
+					</div>
 				)}
 			</div>
 		</div>
@@ -148,7 +151,7 @@ const articleBodyClasses =
 							<p class="font-mono text-caption text-channel-accent-primary">
 								{authorRole}
 							</p>
-							<p class="text-sm text-content-default">{authorBio}</p>
+							<p class="text-body text-content-default">{authorBio}</p>
 						</div>
 					</div>
 				)}

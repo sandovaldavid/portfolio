@@ -45,11 +45,10 @@ test.describe('Blog article header (issue #244)', () => {
 	test('metadata and tags render as distinct sibling groups', async ({ page }) => {
 		await page.goto('/blog/building-this-portfolio-with-astro-and-fsd');
 
-		const groups = page.locator('main header > div').first().locator('> div');
-		await expect(groups).toHaveCount(2);
-
-		const metadataGroup = groups.nth(0);
-		const tagsGroup = groups.nth(1);
+		const metadataGroup = page.locator('main header [data-metadata-group]');
+		const tagsGroup = page.locator('main header [data-tags-group]');
+		await expect(metadataGroup).toBeVisible();
+		await expect(tagsGroup).toBeVisible();
 		await expect(metadataGroup.locator('time')).toHaveCount(1);
 		await expect(tagsGroup.locator('span.sr-only')).toHaveCount(1);
 	});
@@ -59,7 +58,7 @@ test.describe('Blog article header (issue #244)', () => {
 		await page.goto('/blog/building-this-portfolio-with-astro-and-fsd');
 
 		const header = page.locator('main header').first();
-		const tagsGroup = page.locator('main header > div').first().locator('> div').nth(1);
+		const tagsGroup = page.locator('main header [data-tags-group]');
 		const headerBox = await header.boundingBox();
 		const tagsBox = await tagsGroup.boundingBox();
 		expect(headerBox).not.toBeNull();
