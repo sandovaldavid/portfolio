@@ -1,5 +1,6 @@
 ---
 import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
 import { getExperienceData, getExperienceDetailBySlug } from '@entities/experience';
 import { Language } from '@shared/config/i18n';
@@ -27,6 +28,10 @@ const previewImage =
 	slug === 'atena-software-engineer'
 		? `/og/preview-case-study-${slug}-en-dark.png`
 		: '/og/preview-website-experience-en-dark.png';
+const localizedPaths = {
+	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, `experience/${slug}`),
+	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, `experience/${slug}`),
+};
 ---
 
 <Layout
@@ -34,8 +39,9 @@ const previewImage =
 	description={experience.summary}
 	img_preview={previewImage}
 	imageAlt={`${experience.company} — ${experience.title}`}
-	pageType="profile"
+	pageType="experience"
 	breadcrumbLabel={experience.company}
+	{localizedPaths}
 	contentLayout="flush"
 >
 	<ExperienceCaseStudy {experience} {previous} {next}>

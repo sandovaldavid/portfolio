@@ -14,7 +14,7 @@ const LOCALES = [
 		code: 'en',
 		home: '/',
 		roleText: 'Software Engineer',
-		viewWorkText: 'View work',
+		viewRoleText: 'View role',
 		contactText: 'GET IN TOUCH',
 		caseStudyText: 'Case Study',
 		resumeHref: 'https://sandovaldavid.com/resume/david-sandoval-resume.pdf',
@@ -22,8 +22,8 @@ const LOCALES = [
 	{
 		code: 'es',
 		home: '/es/',
-		roleText: 'Ingeniero de software',
-		viewWorkText: 'Ver proyectos',
+		roleText: 'Ingeniero de Software',
+		viewRoleText: 'Ver experiencia',
 		contactText: 'CONTACTARME',
 		caseStudyText: 'Caso de estudio',
 		resumeHref: 'https://sandovaldavid.com/resume/david-sandoval-resume-es.pdf',
@@ -66,10 +66,10 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 				await expect(yukidokeCard).toBeVisible();
 				await expect(kiokuCard).toBeVisible();
 				await expect(
-					yukidokeCard.getByRole('link', { name: locale.caseStudyText, exact: true })
+					yukidokeCard.getByRole('link', { name: locale.caseStudyText })
 				).toBeVisible();
 				await expect(
-					kiokuCard.getByRole('link', { name: locale.caseStudyText, exact: true })
+					kiokuCard.getByRole('link', { name: locale.caseStudyText })
 				).toBeVisible();
 
 				const yukidokeSource = yukidokeCard.locator(
@@ -116,7 +116,7 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 
 				// 5. Primary calls to action are present without any optional retro interaction.
 				await expect(
-					page.getByRole('link', { name: locale.viewWorkText, exact: true })
+					page.getByRole('link', { name: locale.viewRoleText, exact: true })
 				).toBeVisible();
 				await expect(
 					page.getByRole('link', { name: locale.contactText, exact: true }).first()

@@ -17,8 +17,7 @@ short-lived branch -> develop -> main -> production
 
 The versioned workflows expose these stable checks for pull requests targeting `develop` or `main`:
 
-- `Code Quality & Commits`;
-- `Unit Tests (Vitest)`;
+- `Code Quality & Unit Tests`;
 - `Build & Bundle Analysis`;
 - `Playwright Chromium Smoke`;
 - `Analyze Security`.
@@ -35,8 +34,7 @@ Use branch target `develop` and configure:
 - require the branch to be up to date before merge;
 - require conversation resolution;
 - require these checks:
-    - `Code Quality & Commits`;
-    - `Unit Tests (Vitest)`;
+    - `Code Quality & Unit Tests`;
     - `Build & Bundle Analysis`;
     - `Playwright Chromium Smoke`;
     - `Analyze Security`;
@@ -54,8 +52,7 @@ Use branch target `main` and configure:
 - require the branch to be up to date before merge;
 - require conversation resolution;
 - require these checks:
-    - `Code Quality & Commits`;
-    - `Unit Tests (Vitest)`;
+    - `Code Quality & Unit Tests`;
     - `Build & Bundle Analysis`;
     - `Playwright Chromium Smoke`;
     - `Analyze Security`;

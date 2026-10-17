@@ -373,7 +373,7 @@ test('desktop closing flow moves Research to About Me to Footer and reverses in 
 	await waitForFonts(page);
 
 	const research = await getSectionTraversalMetrics(page, 'research');
-	const researchTarget = research.startY;
+	const researchTarget = research.endY;
 	const aboutTarget = await getSectionTargetY(page, 'about-me');
 	const contactTarget = await getSectionTargetY(page, 'contact');
 	await scrollInstantlyTo(page, researchTarget);

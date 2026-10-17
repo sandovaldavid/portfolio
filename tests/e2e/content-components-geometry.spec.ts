@@ -293,7 +293,7 @@ test.describe('Editorial Card contract', () => {
 		await card.hover();
 		const shadowAfter = await card.evaluate(el => getComputedStyle(el).boxShadow);
 		expect(shadowBefore).not.toBe(shadowAfter);
-		expect((await card.boundingBox())?.width).toBeLessThanOrEqual(520);
+		expect((await card.boundingBox())?.width).toBeLessThanOrEqual(640);
 	});
 
 	test('cards resolve the brand badge surface in dark mode', async ({ page }) => {

@@ -9,12 +9,7 @@ const lang = getLanguageFromLocale(Astro.currentLocale);
 const tResearch = createScopedUiTranslator(lang, 'sections.research');
 const tCommon = createScopedUiTranslator(lang, 'common');
 const research = await getResearchContent(lang);
-const techStack = [
-	{ label: 'Software Supply Chain' },
-	{ label: 'Mining Software Repositories' },
-	{ label: 'Time-to-event' },
-	{ label: 'npm pilot' },
-];
+const techStack = research.keywords.slice(0, 4).map(label => ({ label }));
 const pipeline = [
 	tResearch('pipeline.githubApi'),
 	tResearch('pipeline.raw'),

@@ -15,7 +15,10 @@
 		"secretHeading": "Detalles del portfolio",
 		"secretHint": "Usa la CLI para explorar el portfolio.",
 		"secretMessage": "Proyectos, investigación y contacto están a un comando de distancia.",
-		"footer": "Los atajos están activos fuera de campos de texto"
+		"footer": "Los atajos están activos fuera de campos de texto",
+		"toggleLabel": "Atajos de una tecla",
+		"enabled": "Activados",
+		"disabled": "Desactivados"
 	},
 	"terminal": {
 		"placeholder": "escribe un comando… (prueba 'help')",
@@ -25,8 +28,8 @@
 	"sections": {
 		"hero": "Hero / Inicio",
 		"experience": "Experiencia",
-		"research": "Investigación",
 		"projects": "Proyectos",
+		"research": "Investigación",
 		"about": "Sobre mí",
 		"technologies": "Tecnologías"
 	},
@@ -80,6 +83,7 @@
 		"helpSkills": "Resumen del stack tecnológico",
 		"helpMatrix": "Navegación del portfolio",
 		"helpResume": "Abrir el CV en PDF",
+		"helpShortcuts": "Activar o desactivar atajos (on/off)",
 		"helpClear": "Limpiar terminal",
 		"helpExit": "Cerrar terminal",
 		"profileTitle": "Perfil profesional",
@@ -93,15 +97,15 @@
 		"profileStatusValue": "Disponible para oportunidades en ingeniería de software",
 		"listHero": "Inicio y posicionamiento",
 		"listExperience": "Experiencia profesional",
-		"listResearch": "Investigación de tesis y artículos técnicos",
 		"listProjects": "Trabajo de ingeniería seleccionado",
+		"listResearch": "Investigación de tesis y artículos técnicos",
 		"listAbout": "Biografía profesional",
 		"listTechnologies": "Stack y herramientas",
 		"listTip": "Usa goto {name} para navegar a una sección.",
-		"gotoUsage": "Uso: goto {section} (hero, experience, research, projects, about, tech)",
+		"gotoUsage": "Uso: goto {section} (hero, experience, projects, research, about, tech)",
 		"gotoNavigating": "Navegando a {section}...",
 		"gotoUnknown": "Sección desconocida: {section}",
-		"gotoAvailable": "Secciones disponibles: hero, experience, research, projects, about, tech",
+		"gotoAvailable": "Secciones disponibles: hero, experience, projects, research, about, tech",
 		"githubFetching": "Obteniendo datos en vivo de la API de GitHub...",
 		"githubError": "No se pudieron obtener los datos de GitHub por un error de red o límite de API.",
 		"githubDirect": "Enlace directo",
@@ -141,6 +145,8 @@
 		"vimTaste": "Usa los atajos de navegación para recorrer el portfolio.",
 		"vimMotions": "La navegación por teclado funciona fuera de campos de texto.",
 		"commandNotFound": "Comando no encontrado: {command}",
-		"typeHelp": "Escribe help para ver los comandos disponibles."
+		"typeHelp": "Escribe help para ver los comandos disponibles.",
+		"shortcutsEnabled": "Atajos de navegación de una tecla activados.",
+		"shortcutsDisabled": "Atajos de navegación de una tecla desactivados."
 	}
 }

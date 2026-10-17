@@ -22,7 +22,7 @@ const {
 ---
 
 <a
-	{href}
+	href={disabled ? undefined : href}
 	{target}
 	rel={target === '_blank' ? 'noopener noreferrer' : undefined}
 	role="link"

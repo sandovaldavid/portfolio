@@ -10,7 +10,7 @@ test.describe('Homepage', () => {
 		await expect(page).toHaveTitle(/David Sandoval.*Software Engineer/i);
 		await expect(page.locator('h1')).toHaveText(/David Sandoval/i);
 		await expect(page.getByText(/Angular · \.NET · TypeScript/i).first()).toBeVisible();
-		await expect(page.getByRole('link', { name: /view work/i })).toBeVisible();
+		await expect(page.getByRole('link', { name: /view role/i })).toBeVisible();
 		await expect(page.getByRole('link', { name: /get in touch/i })).toBeVisible();
 
 		if (isMobile) {

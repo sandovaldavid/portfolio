@@ -68,4 +68,19 @@ API --> DB["PostgreSQL 16"]`;
 			})
 		).toThrow('Unsafe Mermaid node id');
 	});
+
+	it('handles escaped quotes inside quoted labels', () => {
+		const chart = 'flowchart LR\nA["hello \\"world\\""] --> B["done"]';
+		expect(normalizeMermaidAuthoring(chart, 'escaped')).toContain('hello \\"world\\"');
+	});
+
+	it('returns AUTO direction when not specified', () => {
+		expect(getMermaidDirection('sequenceDiagram\nAlice->>Bob: Hi')).toBe('AUTO');
+	});
+
+	it('throws on empty chart definition', () => {
+		expect(() => prepareMermaidChart('', 'empty', 'desc')).toThrow(
+			'Diagram "empty" has no Mermaid definition.'
+		);
+	});
 });

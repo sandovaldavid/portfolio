@@ -17,7 +17,19 @@ export default defineConfig({
 		}),
 	},
 	// ponytail: robots.txt is static public output; no integration needed.
-	integrations: [mdx(), sitemap()],
+	integrations: [
+		mdx(),
+		sitemap({
+			filter: page => !/\/(es\/)?(atena|components)\/?$/.test(new URL(page).pathname),
+			i18n: {
+				defaultLocale: 'en',
+				locales: {
+					en: 'en',
+					es: 'es',
+				},
+			},
+		}),
+	],
 	site: 'https://sandovaldavid.com',
 	// Keep the Astro 6 whitespace contract while adopting Astro 7's Rust compiler.
 	compressHTML: true,
@@ -27,35 +39,6 @@ export default defineConfig({
 		defaultStrategy: 'hover',
 	},
 	fonts: [
-		{
-			provider: fontProviders.local(),
-			name: 'Inter',
-			cssVariable: '--font-sans',
-			display: 'swap',
-			fallbacks: ['system-ui', 'sans-serif'],
-			options: {
-				variants: [
-					{ weight: '400', style: 'normal', src: ['./src/assets/fonts/inter-400.woff2'] },
-					{ weight: '500', style: 'normal', src: ['./src/assets/fonts/inter-500.woff2'] },
-				],
-			},
-		},
-		{
-			provider: fontProviders.local(),
-			name: 'Fira Code',
-			cssVariable: '--font-code',
-			display: 'optional',
-			fallbacks: ['monospace'],
-			options: {
-				variants: [
-					{
-						weight: '400',
-						style: 'normal',
-						src: ['./src/assets/fonts/fira-code-400.woff2'],
-					},
-				],
-			},
-		},
 		{
 			provider: fontProviders.local(),
 			name: 'Press Start 2P',

@@ -5,6 +5,10 @@ inputs:
     browsers:
         description: Space-separated browser names to install (e.g. "chromium" or "chromium firefox webkit").
         required: true
+    install-deps:
+        description: Install system dependencies with apt (required for webkit/firefox on fresh images).
+        required: false
+        default: 'false'
 
 runs:
     using: composite
@@ -19,4 +23,9 @@ runs:
 
         - name: Install Playwright browsers
           shell: bash
-          run: bunx playwright install --with-deps ${{ inputs.browsers }}
+          run: |
+              if [ "${{ inputs.install-deps }}" = "true" ]; then
+                bunx playwright install --with-deps ${{ inputs.browsers }}
+              else
+                bunx playwright install ${{ inputs.browsers }}
+              fi

@@ -37,7 +37,7 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 			<button
 				id="retro-close"
 				type="button"
-				class="border border-channel-portfolio-terminal-phosphor/60 px-2 py-1 text-channel-portfolio-terminal-phosphor cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-cyan-bright"
+				class="inline-flex min-h-6 min-w-6 items-center justify-center border border-channel-portfolio-terminal-phosphor/60 px-2 py-1 text-channel-portfolio-terminal-phosphor cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-cyan-bright"
 				aria-label={tSplash('close')}
 			>
 				<span aria-hidden="true">×</span>
@@ -77,8 +77,11 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 		const continueButton = splash.querySelector('#retro-continue');
 		const closeButton = splash.querySelector('#retro-close');
 		const previousOverflow = document.body.style.overflow;
+		let previousFocus = null;
 
 		const show = () => {
+			previousFocus =
+				document.activeElement instanceof HTMLElement ? document.activeElement : null;
 			splash.classList.remove('hidden');
 			splash.classList.add('flex');
 			document.body.style.overflow = 'hidden';
@@ -91,6 +94,9 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 				splash.classList.add('hidden');
 				splash.classList.remove('flex', 'dismissing');
 				document.body.style.overflow = previousOverflow;
+				if (previousFocus instanceof HTMLElement && document.contains(previousFocus)) {
+					previousFocus.focus();
+				}
 				params.delete('retro');
 				const query = params.toString();
 				window.history.replaceState(
@@ -104,7 +110,25 @@ const lines = [tSplash('line1'), tSplash('line2'), tSplash('line3'), tSplash('li
 		continueButton?.addEventListener('click', dismiss);
 		closeButton?.addEventListener('click', dismiss);
 		splash.addEventListener('keydown', event => {
-			if (event.key === 'Escape' && !splash.classList.contains('hidden')) dismiss();
+			if (event.key === 'Escape' && !splash.classList.contains('hidden')) {
+				dismiss();
+				return;
+			}
+			if (event.key === 'Tab' && !splash.classList.contains('hidden')) {
+				const focusable = [closeButton, continueButton].filter(
+					el => el instanceof HTMLElement
+				);
+				if (focusable.length === 0) return;
+				const first = focusable[0];
+				const last = focusable[focusable.length - 1];
+				if (event.shiftKey && document.activeElement === first) {
+					event.preventDefault();
+					last.focus();
+				} else if (!event.shiftKey && document.activeElement === last) {
+					event.preventDefault();
+					first.focus();
+				}
+			}
 		});
 
 		show();

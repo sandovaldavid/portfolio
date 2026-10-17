@@ -15,6 +15,7 @@ const unitCoverageScope = [
 	'src/shared/lib/i18n/**/*.ts',
 	'src/shared/config/i18n/**/*.ts',
 	'src/shared/lib/content/locale-content-id.ts',
+	'src/shared/ui/rich-content/model/diagram.ts',
 ];
 
 export default defineConfig({

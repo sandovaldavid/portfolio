@@ -1,12 +1,9 @@
 /*
- * Transitional local faces not yet emitted through Layout's Astro Font
- * components. JetBrains Mono, Silkscreen, Share Tech Mono, VT323 and
- * Press Start 2P are already emitted from the Astro font-provider contract
+ * Local WOFF2 @font-face declarations for Inter (--font-sans reading face)
+ * and Fira Code (--font-code inline/block code face).
+ * JetBrains Mono, Silkscreen, Share Tech Mono, VT323 and Press Start 2P are
+ * emitted from the Astro font-provider contract in Layout.astro / 404.astro
  * and must not be duplicated here.
- *
- * Inter is the reading face and Fira Code is the code face. Keep these local
- * WOFF2 declarations until Layout explicitly emits --font-sans/--font-code;
- * then this compatibility stylesheet can be removed entirely.
  */
 @font-face {
 	font-family: 'Inter';

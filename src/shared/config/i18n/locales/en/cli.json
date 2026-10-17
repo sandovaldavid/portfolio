@@ -15,7 +15,10 @@
 		"secretHeading": "Portfolio details",
 		"secretHint": "Use the CLI to explore the portfolio.",
 		"secretMessage": "Projects, research and contact are one command away.",
-		"footer": "Shortcuts are active outside text fields"
+		"footer": "Shortcuts are active outside text fields",
+		"toggleLabel": "Single-key shortcuts",
+		"enabled": "Enabled",
+		"disabled": "Disabled"
 	},
 	"terminal": {
 		"placeholder": "type a command… (try 'help')",
@@ -25,8 +28,8 @@
 	"sections": {
 		"hero": "Hero / Home",
 		"experience": "Experience",
-		"research": "Research",
 		"projects": "Projects",
+		"research": "Research",
 		"about": "About me",
 		"technologies": "Technologies"
 	},
@@ -80,6 +83,7 @@
 		"helpSkills": "Technology stack overview",
 		"helpMatrix": "Portfolio navigation",
 		"helpResume": "Open resume PDF",
+		"helpShortcuts": "Toggle single-key shortcuts (on/off)",
 		"helpClear": "Clear terminal",
 		"helpExit": "Close terminal",
 		"profileTitle": "Professional profile",
@@ -93,15 +97,15 @@
 		"profileStatusValue": "Available for software engineering opportunities",
 		"listHero": "Landing and positioning",
 		"listExperience": "Professional experience",
-		"listResearch": "Thesis research and technical writing",
 		"listProjects": "Selected engineering work",
+		"listResearch": "Thesis research and technical writing",
 		"listAbout": "Professional biography",
 		"listTechnologies": "Stack and tools",
 		"listTip": "Use goto {name} to navigate to a section.",
-		"gotoUsage": "Usage: goto {section} (hero, experience, research, projects, about, tech)",
+		"gotoUsage": "Usage: goto {section} (hero, experience, projects, research, about, tech)",
 		"gotoNavigating": "Navigating to {section}...",
 		"gotoUnknown": "Unknown section: {section}",
-		"gotoAvailable": "Available sections: hero, experience, research, projects, about, tech",
+		"gotoAvailable": "Available sections: hero, experience, projects, research, about, tech",
 		"githubFetching": "Fetching live data from the GitHub API...",
 		"githubError": "Could not fetch GitHub data because of a network or API limit.",
 		"githubDirect": "Direct link",
@@ -141,6 +145,8 @@
 		"vimTaste": "Use the navigation shortcuts to move through the portfolio.",
 		"vimMotions": "Keyboard navigation is available outside text fields.",
 		"commandNotFound": "Command not found: {command}",
-		"typeHelp": "Type help to see available commands."
+		"typeHelp": "Type help to see available commands.",
+		"shortcutsEnabled": "Single-key navigation shortcuts enabled.",
+		"shortcutsDisabled": "Single-key navigation shortcuts disabled."
 	}
 }

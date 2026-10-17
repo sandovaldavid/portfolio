@@ -1,5 +1,6 @@
 ---
 import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
 import { getProjectDetailBySlug, getProjectsData } from '@entities/project';
 import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
@@ -26,6 +27,10 @@ const { project, entry } = detail;
 const { Content } = await render(entry);
 const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandoval`;
 const previewImage = `/og/preview-project-${slug}-${lang}-dark.png`;
+const localizedPaths = {
+	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, `projects/${slug}`),
+	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, `projects/${slug}`),
+};
 ---
 
 <Layout
@@ -35,6 +40,7 @@ const previewImage = `/og/preview-project-${slug}-${lang}-dark.png`;
 	imageAlt={`${project.title} — ${tProjects('caseStudy')}`}
 	pageType="project"
 	breadcrumbLabel={project.title}
+	{localizedPaths}
 	contentLayout="flush"
 >
 	<ProjectCaseStudy {project}>

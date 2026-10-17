@@ -8,7 +8,7 @@ import { Avatar, LinkButton } from '@shared/ui';
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const profile = (await getPortfolioProfile(lang)).data;
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
-const tCommon = createScopedUiTranslator(lang, 'common');
+const tExperience = createScopedUiTranslator(lang, 'sections.experience');
 ---
 
 <div class="mx-auto flex w-full max-w-288 flex-col gap-6 md:gap-8">
@@ -60,7 +60,7 @@ const tCommon = createScopedUiTranslator(lang, 'common');
 			class="w-fit lg:justify-self-end"
 		>
 			<ArrowUpRightIcon class="size-4" aria-hidden="true" />
-			{tCommon('actions.viewWork')}
+			{tExperience('viewRole')}
 		</LinkButton>
 	</section>
 </div>

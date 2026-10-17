@@ -159,8 +159,9 @@ describe('localized research MDX content', () => {
 		expect(homeResearch).toContain('border-t border-edge-subtle pt-4');
 		expect(homeResearch).not.toContain('border-t-2 border-edge-strong pt-5');
 		expect(homeResearch).toContain('size="md" variant="stack"');
-		expect(homeResearch).toContain("label: 'Software Supply Chain'");
-		expect(homeResearch).toContain("label: 'Mining Software Repositories'");
+		expect(homeResearch).toContain('research.keywords.slice(0, 4)');
+		expect(researchSource('en')).toContain('Software Supply Chain');
+		expect(researchSource('en')).toContain('Mining Software Repositories');
 		expect(homeResearch).not.toContain(
 			"import PythonIcon from '@assets/technologies/Python.astro'"
 		);
