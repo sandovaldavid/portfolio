@@ -46,4 +46,18 @@ describe('interpolate', () => {
 	it('handles nested-looking key names', () => {
 		expect(interpolate('{{user.name}}', { 'user.name': 'David' })).toBe('David');
 	});
+
+	it('replaces a single string variable with single braces', () => {
+		expect(interpolate('Hello {name}', { name: 'David' })).toBe('Hello David');
+	});
+
+	it('replaces multiple variables with single braces', () => {
+		expect(interpolate('{greeting}, {name}!', { greeting: 'Hi', name: 'David' })).toBe(
+			'Hi, David!'
+		);
+	});
+
+	it('preserves single-brace placeholders when variables do not match', () => {
+		expect(interpolate('Hello {name}', { other: 'value' })).toBe('Hello {name}');
+	});
 });
