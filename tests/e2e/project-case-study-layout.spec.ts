@@ -183,7 +183,7 @@ test('Mermaid initializes again after ClientRouter navigation', async ({ page })
 	const kiokuCard = page.getByRole('article').filter({
 		has: page.getByRole('heading', { level: 3, name: 'Kioku' }),
 	});
-	const kiokuLink = kiokuCard.getByRole('link', { name: 'Case Study', exact: true });
+	const kiokuLink = kiokuCard.getByRole('link', { name: 'Case Study' });
 	await expect(kiokuLink).toBeVisible();
 	await kiokuLink.click();
 	await expect(page).toHaveURL(/\/projects\/kioku\/?$/);

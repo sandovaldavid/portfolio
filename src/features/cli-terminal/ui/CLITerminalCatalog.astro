@@ -119,8 +119,13 @@ const easterRows = [
 						id="cli-close-dot"
 						type="button"
 						aria-label={tAccessibility('closeTerminal')}
-						class="w-3 h-3 rounded-full bg-channel-status-error hover:brightness-125 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-content"
-					></button>
+						class="inline-flex size-6 items-center justify-center rounded-full cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-channel-portfolio-terminal-content"
+					>
+						<span
+							class="size-3 rounded-full bg-channel-status-error hover:brightness-125"
+							aria-hidden="true"
+						></span>
+					</button>
 					<div
 						class="w-3 h-3 rounded-full bg-channel-status-warning"
 						aria-hidden="true"
@@ -182,7 +187,7 @@ const easterRows = [
 				<button
 					id="shortcuts-close"
 					type="button"
-					class="px-1.5 py-0.5 border border-channel-edge-default text-xs font-bold hover:bg-channel-status-error hover:text-button-primary-content transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+					class="inline-flex min-h-6 min-w-6 items-center justify-center px-2 py-1 border border-channel-edge-default text-xs font-bold hover:bg-channel-status-error hover:text-button-primary-content transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
 					aria-label={tCli('shortcuts.closeOverlay')}
 				>
 					<span aria-hidden="true">×</span>
@@ -232,8 +237,19 @@ const easterRows = [
 				</div>
 			</div>
 
-			<div class="px-5 py-2.5 border-t-2 border-dashed border-channel-edge-subtle text-sm text-channel-content-muted/80 text-center uppercase tracking-widest">
-				{tCli('shortcuts.footer')}
+			<div class="flex flex-wrap items-center justify-between gap-3 px-5 py-2.5 border-t-2 border-dashed border-channel-edge-subtle text-xs text-channel-content-muted/80 uppercase tracking-widest">
+				<span>{tCli('shortcuts.footer')}</span>
+				<button
+					id="shortcuts-toggle"
+					type="button"
+					aria-pressed="true"
+					data-enabled-label={tCli('shortcuts.enabled')}
+					data-disabled-label={tCli('shortcuts.disabled')}
+					class="inline-flex min-h-6 items-center gap-1.5 border border-channel-edge-default bg-channel-surface-highlight px-2.5 py-1 text-xs font-bold text-content-strong cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+				>
+					<span>{tCli('shortcuts.toggleLabel')}:</span>
+					<span id="shortcuts-toggle-state">{tCli('shortcuts.enabled')}</span>
+				</button>
 			</div>
 		</div>
 	</div>

@@ -15,7 +15,10 @@
 		"secretHeading": "Portfolio details",
 		"secretHint": "Use the CLI to explore the portfolio.",
 		"secretMessage": "Projects, research and contact are one command away.",
-		"footer": "Shortcuts are active outside text fields"
+		"footer": "Shortcuts are active outside text fields",
+		"toggleLabel": "Single-key shortcuts",
+		"enabled": "Enabled",
+		"disabled": "Disabled"
 	},
 	"terminal": {
 		"placeholder": "type a command… (try 'help')",
@@ -80,6 +83,7 @@
 		"helpSkills": "Technology stack overview",
 		"helpMatrix": "Portfolio navigation",
 		"helpResume": "Open resume PDF",
+		"helpShortcuts": "Toggle single-key shortcuts (on/off)",
 		"helpClear": "Clear terminal",
 		"helpExit": "Close terminal",
 		"profileTitle": "Professional profile",
@@ -141,6 +145,8 @@
 		"vimTaste": "Use the navigation shortcuts to move through the portfolio.",
 		"vimMotions": "Keyboard navigation is available outside text fields.",
 		"commandNotFound": "Command not found: {command}",
-		"typeHelp": "Type help to see available commands."
+		"typeHelp": "Type help to see available commands.",
+		"shortcutsEnabled": "Single-key navigation shortcuts enabled.",
+		"shortcutsDisabled": "Single-key navigation shortcuts disabled."
 	}
 }

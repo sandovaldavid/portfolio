@@ -30,7 +30,6 @@ const captionId = `mermaid-caption-${diagramHash}`;
 		data-mermaid-id={diagramHash}
 		data-mermaid-source={preparedChart}
 		data-mermaid-state="pending"
-		aria-busy="true"
 		aria-label={title}
 		aria-describedby={captionId}
 		role="region"
@@ -83,6 +82,7 @@ const captionId = `mermaid-caption-${diagramHash}`;
 		if (!source) return;
 
 		host.dataset.mermaidState = 'loading';
+		host.setAttribute('aria-busy', 'true');
 
 		try {
 			await document.fonts.ready;

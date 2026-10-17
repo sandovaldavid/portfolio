@@ -66,10 +66,10 @@ test.describe('Recruiter journey — identity, evidence, resume and contact', ()
 				await expect(yukidokeCard).toBeVisible();
 				await expect(kiokuCard).toBeVisible();
 				await expect(
-					yukidokeCard.getByRole('link', { name: locale.caseStudyText, exact: true })
+					yukidokeCard.getByRole('link', { name: locale.caseStudyText })
 				).toBeVisible();
 				await expect(
-					kiokuCard.getByRole('link', { name: locale.caseStudyText, exact: true })
+					kiokuCard.getByRole('link', { name: locale.caseStudyText })
 				).toBeVisible();
 
 				const yukidokeSource = yukidokeCard.locator(

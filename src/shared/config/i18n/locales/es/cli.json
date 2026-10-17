@@ -15,7 +15,10 @@
 		"secretHeading": "Detalles del portfolio",
 		"secretHint": "Usa la CLI para explorar el portfolio.",
 		"secretMessage": "Proyectos, investigación y contacto están a un comando de distancia.",
-		"footer": "Los atajos están activos fuera de campos de texto"
+		"footer": "Los atajos están activos fuera de campos de texto",
+		"toggleLabel": "Atajos de una tecla",
+		"enabled": "Activados",
+		"disabled": "Desactivados"
 	},
 	"terminal": {
 		"placeholder": "escribe un comando… (prueba 'help')",
@@ -80,6 +83,7 @@
 		"helpSkills": "Resumen del stack tecnológico",
 		"helpMatrix": "Navegación del portfolio",
 		"helpResume": "Abrir el CV en PDF",
+		"helpShortcuts": "Activar o desactivar atajos (on/off)",
 		"helpClear": "Limpiar terminal",
 		"helpExit": "Cerrar terminal",
 		"profileTitle": "Perfil profesional",
@@ -141,6 +145,8 @@
 		"vimTaste": "Usa los atajos de navegación para recorrer el portfolio.",
 		"vimMotions": "La navegación por teclado funciona fuera de campos de texto.",
 		"commandNotFound": "Comando no encontrado: {command}",
-		"typeHelp": "Escribe help para ver los comandos disponibles."
+		"typeHelp": "Escribe help para ver los comandos disponibles.",
+		"shortcutsEnabled": "Atajos de navegación de una tecla activados.",
+		"shortcutsDisabled": "Atajos de navegación de una tecla desactivados."
 	}
 }

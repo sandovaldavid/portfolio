@@ -31,12 +31,17 @@ const COMMANDS = [
 	'contact',
 	'skills',
 	'open resume',
+	'shortcuts on',
+	'shortcuts off',
 	'clear',
 	'exit',
 	':q',
 ] as const;
 
 const EDITABLE_SELECTOR = 'input, textarea, select, [contenteditable="true"]';
+const SHORTCUTS_STORAGE_KEY = 'portfolio-vim-shortcuts';
+const FOCUSABLE_SELECTOR =
+	'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
 function escapeHtml(value: string): string {
 	return value
@@ -53,6 +58,29 @@ function formatCopy(template: string, variables: Record<string, string> = {}): s
 
 function isEditableTarget(target: EventTarget | null): boolean {
 	return target instanceof Element && target.matches(EDITABLE_SELECTOR);
+}
+
+function getScrollBehavior(): ScrollBehavior {
+	return window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+}
+
+function trapDialogFocus(dialog: HTMLElement, event: KeyboardEvent): void {
+	if (event.key !== 'Tab') return;
+	const focusable = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter(
+		element => !element.hasAttribute('hidden') && element.offsetParent !== null
+	);
+	if (focusable.length === 0) return;
+	const first = focusable[0];
+	const last = focusable[focusable.length - 1];
+	const active = document.activeElement;
+
+	if (event.shiftKey && (active === first || !dialog.contains(active))) {
+		event.preventDefault();
+		last?.focus();
+	} else if (!event.shiftKey && (active === last || !dialog.contains(active))) {
+		event.preventDefault();
+		first?.focus();
+	}
 }
 
 export function setupCliTerminal(): void {
@@ -88,6 +116,8 @@ export function setupCliTerminal(): void {
 	const cliCloseElement = document.getElementById('cli-close-dot');
 	const shortcutsModalElement = document.getElementById('shortcuts-modal');
 	const shortcutsCloseElement = document.getElementById('shortcuts-close');
+	const shortcutsToggleElement = document.getElementById('shortcuts-toggle');
+	const shortcutsToggleStateElement = document.getElementById('shortcuts-toggle-state');
 
 	if (
 		!(cliOverlayElement instanceof HTMLElement) ||
@@ -113,6 +143,37 @@ export function setupCliTerminal(): void {
 	let githubCache: GitHubStats | null = null;
 	let keyBuffer = '';
 	let keyTimer: number | null = null;
+	let cliReturnFocus: HTMLElement | null = null;
+	let shortcutsReturnFocus: HTMLElement | null = null;
+
+	function areShortcutsEnabled(): boolean {
+		try {
+			return localStorage.getItem(SHORTCUTS_STORAGE_KEY) !== 'off';
+		} catch {
+			return true;
+		}
+	}
+
+	function syncShortcutsToggleUi(enabled: boolean): void {
+		if (!(shortcutsToggleElement instanceof HTMLButtonElement)) return;
+		shortcutsToggleElement.setAttribute('aria-pressed', String(enabled));
+		if (shortcutsToggleStateElement instanceof HTMLElement) {
+			shortcutsToggleStateElement.textContent = enabled
+				? (shortcutsToggleElement.dataset.enabledLabel ?? '')
+				: (shortcutsToggleElement.dataset.disabledLabel ?? '');
+		}
+	}
+
+	function setShortcutsEnabled(enabled: boolean): void {
+		try {
+			localStorage.setItem(SHORTCUTS_STORAGE_KEY, enabled ? 'on' : 'off');
+		} catch {
+			// Storage may be unavailable in restricted contexts.
+		}
+		syncShortcutsToggleUi(enabled);
+	}
+
+	syncShortcutsToggleUi(areShortcutsEnabled());
 
 	const colorClasses: Record<LineType, string> = {
 		output: 'text-channel-portfolio-terminal-phosphor',
@@ -153,6 +214,10 @@ export function setupCliTerminal(): void {
 	}
 
 	function openCli(prefill = ''): void {
+		if (cliOverlay.classList.contains('hidden')) {
+			cliReturnFocus =
+				document.activeElement instanceof HTMLElement ? document.activeElement : null;
+		}
 		cliOverlay.classList.remove('hidden');
 		cliOverlay.classList.add('flex');
 		if (!cliBooted) bootCli();
@@ -161,19 +226,33 @@ export function setupCliTerminal(): void {
 	}
 
 	function closeCli(): void {
+		if (cliOverlay.classList.contains('hidden')) return;
 		cliOverlay.classList.add('hidden');
 		cliOverlay.classList.remove('flex');
+		if (cliReturnFocus && document.contains(cliReturnFocus)) {
+			cliReturnFocus.focus();
+		}
+		cliReturnFocus = null;
 	}
 
 	function openShortcuts(): void {
+		if (shortcutsModal.classList.contains('hidden')) {
+			shortcutsReturnFocus =
+				document.activeElement instanceof HTMLElement ? document.activeElement : null;
+		}
 		shortcutsModal.classList.remove('hidden');
 		shortcutsModal.classList.add('flex');
 		requestAnimationFrame(() => shortcutsClose.focus());
 	}
 
 	function closeShortcuts(): void {
+		if (shortcutsModal.classList.contains('hidden')) return;
 		shortcutsModal.classList.add('hidden');
 		shortcutsModal.classList.remove('flex');
+		if (shortcutsReturnFocus && document.contains(shortcutsReturnFocus)) {
+			shortcutsReturnFocus.focus();
+		}
+		shortcutsReturnFocus = null;
 	}
 
 	function bootCli(): void {
@@ -230,8 +309,9 @@ export function setupCliTerminal(): void {
 	function navigateToSection(number: number): void {
 		const section = sections.find(item => item.number === number);
 		if (!section) return;
-		if (section.id) document.getElementById(section.id)?.scrollIntoView({ behavior: 'smooth' });
-		else window.scrollTo({ top: 0, behavior: 'smooth' });
+		const behavior = getScrollBehavior();
+		if (section.id) document.getElementById(section.id)?.scrollIntoView({ behavior });
+		else window.scrollTo({ top: 0, behavior });
 		showNavigationPopup(section.name);
 	}
 
@@ -343,6 +423,7 @@ export function setupCliTerminal(): void {
 		printCommand('contact', 'runtime.helpContact');
 		printCommand('skills', 'runtime.helpSkills');
 		printCommand('open resume', 'runtime.helpResume');
+		printCommand('shortcuts on|off', 'runtime.helpShortcuts');
 		printCommand('clear', 'runtime.helpClear');
 		printCommand(':q / exit', 'runtime.helpExit');
 		printBoxEnd();
@@ -504,7 +585,13 @@ export function setupCliTerminal(): void {
 		else if (normalized === 'contact') printContact();
 		else if (normalized === 'skills') printSkills();
 		else if (normalized === 'open resume') openResume();
-		else if (normalized.startsWith('open ')) {
+		else if (normalized === 'shortcuts on') {
+			setShortcutsEnabled(true);
+			printLine(localized('runtime.shortcutsEnabled'), 'info');
+		} else if (normalized === 'shortcuts off') {
+			setShortcutsEnabled(false);
+			printLine(localized('runtime.shortcutsDisabled'), 'info');
+		} else if (normalized.startsWith('open ')) {
 			printLine(localized('runtime.unknownTarget', { target: command.slice(5) }), 'error');
 			printLine(localized('runtime.tryResume'), 'muted');
 		} else if (normalized === 'exit' || normalized === ':q') {
@@ -545,6 +632,33 @@ export function setupCliTerminal(): void {
 
 	cliClose.addEventListener('click', closeCli, listenerOptions);
 	shortcutsClose.addEventListener('click', closeShortcuts, listenerOptions);
+	shortcutsToggleElement?.addEventListener(
+		'click',
+		() => {
+			setShortcutsEnabled(!areShortcutsEnabled());
+		},
+		listenerOptions
+	);
+
+	cliOverlay.addEventListener(
+		'keydown',
+		event => {
+			if (!cliOverlay.classList.contains('hidden')) {
+				trapDialogFocus(cliOverlay, event);
+			}
+		},
+		listenerOptions
+	);
+
+	shortcutsModal.addEventListener(
+		'keydown',
+		event => {
+			if (!shortcutsModal.classList.contains('hidden')) {
+				trapDialogFocus(shortcutsModal, event);
+			}
+		},
+		listenerOptions
+	);
 
 	cliInput.addEventListener(
 		'keydown',
@@ -556,7 +670,7 @@ export function setupCliTerminal(): void {
 				void executeCommand(command);
 				return;
 			}
-			if (event.key === 'Tab') {
+			if (event.key === 'Tab' && !event.shiftKey && cliInput.value.trim().length > 0) {
 				event.preventDefault();
 				autocomplete();
 				return;
@@ -585,6 +699,7 @@ export function setupCliTerminal(): void {
 			}
 			if (event.ctrlKey || event.metaKey || event.altKey || isEditableTarget(event.target))
 				return;
+			if (!areShortcutsEnabled()) return;
 			if (event.key === ':') {
 				event.preventDefault();
 				openCli();
@@ -604,10 +719,10 @@ export function setupCliTerminal(): void {
 				navigateToSection(Number(event.key));
 				return;
 			}
-			if (event.key === 'j') window.scrollBy({ top: 160, behavior: 'smooth' });
-			if (event.key === 'k') window.scrollBy({ top: -160, behavior: 'smooth' });
-			if (event.key === 'G')
-				window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+			const behavior = getScrollBehavior();
+			if (event.key === 'j') window.scrollBy({ top: 160, behavior });
+			if (event.key === 'k') window.scrollBy({ top: -160, behavior });
+			if (event.key === 'G') window.scrollTo({ top: document.body.scrollHeight, behavior });
 
 			keyBuffer = `${keyBuffer}${event.key}`.slice(-2);
 			if (keyTimer !== null) window.clearTimeout(keyTimer);
@@ -615,7 +730,7 @@ export function setupCliTerminal(): void {
 				keyBuffer = '';
 			}, 900);
 			if (keyBuffer.endsWith('gg')) {
-				window.scrollTo({ top: 0, behavior: 'smooth' });
+				window.scrollTo({ top: 0, behavior });
 				keyBuffer = '';
 			}
 		},
