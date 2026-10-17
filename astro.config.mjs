@@ -41,35 +41,6 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.local(),
-			name: 'Inter',
-			cssVariable: '--font-sans',
-			display: 'swap',
-			fallbacks: ['system-ui', 'sans-serif'],
-			options: {
-				variants: [
-					{ weight: '400', style: 'normal', src: ['./src/assets/fonts/inter-400.woff2'] },
-					{ weight: '500', style: 'normal', src: ['./src/assets/fonts/inter-500.woff2'] },
-				],
-			},
-		},
-		{
-			provider: fontProviders.local(),
-			name: 'Fira Code',
-			cssVariable: '--font-code',
-			display: 'optional',
-			fallbacks: ['monospace'],
-			options: {
-				variants: [
-					{
-						weight: '400',
-						style: 'normal',
-						src: ['./src/assets/fonts/fira-code-400.woff2'],
-					},
-				],
-			},
-		},
-		{
-			provider: fontProviders.local(),
 			name: 'Press Start 2P',
 			cssVariable: '--font-pixel',
 			display: 'optional',

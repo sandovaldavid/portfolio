@@ -48,7 +48,7 @@ const isCatalog = layout === 'catalog';
 					sourceText={tProjects('source')}
 					lifecycleText={tProjects(`lifecycle.${project.lifecycle}`)}
 					newTabLabel={tAccessibility('externalLink')}
-					priority={i < 2}
+					priority={isCatalog && i < 2}
 				/>
 			</div>
 		))}
