@@ -10,5 +10,15 @@
 	"back": "Back to blog",
 	"published": "Published",
 	"updated": "Updated",
-	"tags": "Tags"
+	"tags": "Tags",
+	"rssButton": "RSS Feed",
+	"snapshotLabel": "Blog overview",
+	"snapshotArticles": "Articles",
+	"snapshotTopics": "Topics",
+	"snapshotLatest": "Latest update",
+	"previousPost": "Previous article",
+	"nextPost": "Next article",
+	"pagination": "Article navigation",
+	"authorRole": "Senior Software Engineer & Frontend Architect",
+	"authorBio": "Writing on distributed systems, frontend architecture, and developer tooling."
 }

@@ -7,5 +7,14 @@
 	"pageTitle": "Devlog — Historial de Versiones del Portfolio | David Sandoval",
 	"pageDescription": "Historial de versiones del portfolio de David Sandoval: la base publicada v1.0.0 y la revisión v2.0.0 que continúa en desarrollo.",
 	"readMore": "Leer notas de versión",
-	"back": "Volver al devlog"
+	"back": "Volver al devlog",
+	"snapshotLabel": "Resumen del devlog",
+	"snapshotMilestones": "Hitos",
+	"snapshotActiveStatus": "En desarrollo",
+	"snapshotCurrentBaseline": "Base actual",
+	"previousVersion": "Versión anterior",
+	"nextVersion": "Versión siguiente",
+	"pagination": "Navegación de versiones",
+	"versionManifest": "Manifiesto de versión",
+	"publishedDate": "Publicado"
 }

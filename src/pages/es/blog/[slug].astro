@@ -16,7 +16,9 @@ export async function getStaticPaths() {
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const slug = Astro.params.slug ?? '';
 const tBlog = createScopedUiTranslator(lang, 'pages.blog');
-const post = await getBlogPost(lang, slug);
+const allPosts = await getBlogPosts(lang);
+const currentIndex = allPosts.findIndex(p => getBlogSlug(p) === slug);
+const post = currentIndex !== -1 ? allPosts[currentIndex] : await getBlogPost(lang, slug);
 
 if (!post) {
 	return Astro.redirect('/404');
@@ -25,6 +27,26 @@ if (!post) {
 const localizedPaths = await getBlogLocalizedPaths(post);
 const { Content } = await render(post);
 const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
+
+const nextArticle = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
+const prevArticle =
+	currentIndex !== -1 && currentIndex < allPosts.length - 1
+		? allPosts[currentIndex + 1]
+		: undefined;
+
+const previousPost = prevArticle
+	? {
+			title: prevArticle.data.title,
+			href: getRelativeLocaleUrl(lang, `blog/${getBlogSlug(prevArticle)}`),
+		}
+	: undefined;
+
+const nextPost = nextArticle
+	? {
+			title: nextArticle.data.title,
+			href: getRelativeLocaleUrl(lang, `blog/${getBlogSlug(nextArticle)}`),
+		}
+	: undefined;
 ---
 
 <Layout
@@ -36,6 +58,7 @@ const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
 	publishedTime={post.data.pubDate}
 	modifiedTime={post.data.updatedDate}
 	breadcrumbLabel={post.data.title}
+	contentLayout="flush"
 	{localizedPaths}
 >
 	<BlogDetail
@@ -46,5 +69,12 @@ const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
 		publishedLabel={tBlog('published')}
 		updatedLabel={tBlog('updated')}
 		tagsLabel={tBlog('tags')}
+		{previousPost}
+		{nextPost}
+		previousLabel={tBlog('previousPost')}
+		nextLabel={tBlog('nextPost')}
+		paginationLabel={tBlog('pagination')}
+		authorRole={tBlog('authorRole')}
+		authorBio={tBlog('authorBio')}
 	/>
 </Layout>

@@ -21,7 +21,9 @@ export async function getStaticPaths() {
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const slug = Astro.params.slug ?? '';
 const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
-const post = await getDevlogPost(lang, slug);
+const allPosts = await getDevlogPosts(lang);
+const currentIndex = allPosts.findIndex(p => getDevlogSlug(p) === slug);
+const post = currentIndex !== -1 ? allPosts[currentIndex] : await getDevlogPost(lang, slug);
 
 if (!post) {
 	return Astro.redirect('/404');
@@ -30,6 +32,28 @@ if (!post) {
 const localizedPaths = await getDevlogLocalizedPaths(post);
 const { Content } = await render(post);
 const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
+
+const nextArticle = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
+const prevArticle =
+	currentIndex !== -1 && currentIndex < allPosts.length - 1
+		? allPosts[currentIndex + 1]
+		: undefined;
+
+const previousPost = prevArticle
+	? {
+			title: prevArticle.data.title,
+			version: prevArticle.data.version,
+			href: getRelativeLocaleUrl(lang, `devlog/${getDevlogSlug(prevArticle)}`),
+		}
+	: undefined;
+
+const nextPost = nextArticle
+	? {
+			title: nextArticle.data.title,
+			version: nextArticle.data.version,
+			href: getRelativeLocaleUrl(lang, `devlog/${getDevlogSlug(nextArticle)}`),
+		}
+	: undefined;
 ---
 
 <Layout
@@ -40,6 +64,7 @@ const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
 	pageType="devlog"
 	publishedTime={post.data.pubDate}
 	breadcrumbLabel={post.data.title}
+	contentLayout="flush"
 	{localizedPaths}
 >
 	<DevlogDetail
@@ -47,5 +72,12 @@ const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
 		{Content}
 		backText={tDevlog('back')}
 		backLink={getRelativeLocaleUrl(lang, 'devlog')}
+		{previousPost}
+		{nextPost}
+		previousLabel={tDevlog('previousVersion')}
+		nextLabel={tDevlog('nextVersion')}
+		paginationLabel={tDevlog('pagination')}
+		manifestLabel={tDevlog('versionManifest')}
+		publishedLabel={tDevlog('publishedDate')}
 	/>
 </Layout>

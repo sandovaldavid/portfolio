@@ -10,5 +10,15 @@
 	"back": "Volver al blog",
 	"published": "Publicado",
 	"updated": "Actualizado",
-	"tags": "Etiquetas"
+	"tags": "Etiquetas",
+	"rssButton": "Feed RSS",
+	"snapshotLabel": "Resumen del blog",
+	"snapshotArticles": "Artículos",
+	"snapshotTopics": "Temas",
+	"snapshotLatest": "Última entrega",
+	"previousPost": "Artículo anterior",
+	"nextPost": "Artículo siguiente",
+	"pagination": "Navegación de artículos",
+	"authorRole": "Ingeniero de Software Senior y Arquitecto Frontend",
+	"authorBio": "Escribiendo sobre sistemas distribuidos, arquitectura frontend y herramientas de desarrollo."
 }
