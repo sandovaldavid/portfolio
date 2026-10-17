@@ -234,6 +234,9 @@ const structuredPageSchema =
 						: {}),
 				}
 			: null;
+
+const serializeJsonLd = (schema: unknown): string =>
+	JSON.stringify(schema).replaceAll('<', '\\u003c');
 ---
 
 <!doctype html>
@@ -318,25 +321,25 @@ const structuredPageSchema =
 		<script
 			is:inline
 			type="application/ld+json"
-			set:html={JSON.stringify(personSchema)}
+			set:html={serializeJsonLd(personSchema)}
 		></script>
 		<script
 			is:inline
 			type="application/ld+json"
-			set:html={JSON.stringify(websiteSchema)}
+			set:html={serializeJsonLd(websiteSchema)}
 		></script>
 		{breadcrumbSchema && (
 			<script
 				is:inline
 				type="application/ld+json"
-				set:html={JSON.stringify(breadcrumbSchema)}
+				set:html={serializeJsonLd(breadcrumbSchema)}
 			></script>
 		)}
 		{structuredPageSchema && (
 			<script
 				is:inline
 				type="application/ld+json"
-				set:html={JSON.stringify(structuredPageSchema)}
+				set:html={serializeJsonLd(structuredPageSchema)}
 			></script>
 		)}
 
