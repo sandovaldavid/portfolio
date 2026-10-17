@@ -28,11 +28,15 @@ describe('localized SEO, RSS and structured metadata', () => {
 		expect(layout).toContain('BlogPosting');
 		expect(layout).toContain('TechArticle');
 		expect(layout).toContain("research: 'WebPage'");
+		expect(layout).toContain("experience: 'WebPage'");
 		expect(layout).not.toContain("research: 'ScholarlyArticle'");
 		expect(layout).toContain('SoftwareSourceCode');
 		expect(layout).toContain('Software Maintenance Research');
 		expect(layout).not.toContain('Applied AI');
 		expect(layout).toContain('breadcrumbLabel');
+		expect(layout).toContain("experience: tBreadcrumbs('experience')");
+		expect(layout).toContain('siteConfig.social.linkHub');
+		expect(layout).toContain("content={noindex ? 'noindex, nofollow' : 'index, follow'}");
 		expect(layout).toContain('const structuredTitle = breadcrumbLabel ?? title;');
 		expect(layout).toContain('name: structuredTitle');
 		expect(layout).toContain('headline: structuredTitle');
@@ -43,6 +47,10 @@ describe('localized SEO, RSS and structured metadata', () => {
 			blog: ['src/pages/blog/[slug].astro', 'src/pages/es/blog/[slug].astro'],
 			devlog: ['src/pages/devlog/[slug].astro', 'src/pages/es/devlog/[slug].astro'],
 			project: ['src/pages/projects/[slug].astro', 'src/pages/es/projects/[slug].astro'],
+			experience: [
+				'src/pages/experience/[slug].astro',
+				'src/pages/es/experience/[slug].astro',
+			],
 		};
 
 		for (const path of routes.blog) {
@@ -66,12 +74,30 @@ describe('localized SEO, RSS and structured metadata', () => {
 			expect(source).toContain("imageAlt={`${project.title} — ${tProjects('caseStudy')}`}");
 			expect(source).toContain('breadcrumbLabel={project.title}');
 		}
+
+		for (const path of routes.experience) {
+			const source = readSource(path);
+			expect(source).toContain('pageType="experience"');
+			expect(source).not.toContain('pageType="profile"');
+			expect(source).toContain('breadcrumbLabel={experience.company}');
+		}
 	});
 
 	it('marks both localized research routes as WebPage content', () => {
 		for (const path of ['src/pages/research.astro', 'src/pages/es/research.astro']) {
 			const source = readSource(path);
 			expect(source).toContain('pageType="research"');
+		}
+	});
+
+	it('excludes redirect and showcase routes from sitemap and marks showcase routes noindex', () => {
+		const astroConfig = readSource('astro.config.mjs');
+		expect(astroConfig).toContain('(atena|components)');
+		expect(astroConfig).toContain("defaultLocale: 'en'");
+
+		for (const path of ['src/pages/components.astro', 'src/pages/es/components.astro']) {
+			const source = readSource(path);
+			expect(source).toContain('noindex');
 		}
 	});
 

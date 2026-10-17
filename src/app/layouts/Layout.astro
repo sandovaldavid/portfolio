@@ -23,7 +23,7 @@ import {
 } from '@shared/config/i18n';
 import { siteConfig } from '@shared/config/site.config';
 
-type PageType = 'website' | 'profile' | 'project' | 'blog' | 'devlog' | 'research';
+type PageType = 'website' | 'profile' | 'project' | 'blog' | 'devlog' | 'research' | 'experience';
 type ContentLayout = 'default' | 'flush';
 
 interface Props {
@@ -32,6 +32,7 @@ interface Props {
 	img_preview: string;
 	imageAlt?: string;
 	isHome?: boolean;
+	noindex?: boolean;
 	pageType?: PageType;
 	publishedTime?: Date | string;
 	modifiedTime?: Date | string;
@@ -47,6 +48,7 @@ const {
 	img_preview,
 	imageAlt,
 	isHome = false,
+	noindex = false,
 	pageType = 'website',
 	publishedTime,
 	modifiedTime,
@@ -106,6 +108,7 @@ const structuredTitle = breadcrumbLabel ?? title;
 
 const breadcrumbLabels: Record<string, string> = {
 	projects: tBreadcrumbs('projects'),
+	experience: tBreadcrumbs('experience'),
 	skills: tBreadcrumbs('skills'),
 	about: tBreadcrumbs('about'),
 	research: tBreadcrumbs('research'),
@@ -158,7 +161,7 @@ const personEntity = {
 	description: tMetadata('personDescription'),
 	url: siteConfig.url,
 	image: `${siteConfig.url}/profile/perfil.webp`,
-	sameAs: [siteConfig.social.github, siteConfig.social.linkedin],
+	sameAs: [siteConfig.social.github, siteConfig.social.linkedin, siteConfig.social.linkHub],
 	jobTitle: tMetadata('personJobTitle'),
 	worksFor: { '@type': 'Organization', name: siteConfig.currentCompany },
 	address: { '@type': 'PostalAddress', addressCountry: 'PE' },
@@ -194,6 +197,7 @@ const structuredTypeByPage: Partial<Record<PageType, string>> = {
 	blog: 'BlogPosting',
 	devlog: 'TechArticle',
 	research: 'WebPage',
+	experience: 'WebPage',
 	project: 'SoftwareSourceCode',
 };
 const structuredType = structuredTypeByPage[pageType];
@@ -249,7 +253,7 @@ const serializeJsonLd = (schema: unknown): string =>
 		<meta name="description" content={description} />
 		<meta name="keywords" content={keywords} />
 		<meta name="author" content={siteConfig.fullName} />
-		<meta name="robots" content="index, follow" />
+		<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 		<link rel="canonical" href={canonicalUrl} />
 
 		<link
