@@ -80,7 +80,7 @@ const articleBodyClasses =
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-wrap items-center gap-3">
 					{publishedLabel && (
-						<span class="inline-flex items-center rounded-none border border-edge-subtle bg-channel-surface-highlight px-2.5 py-1 text-caption text-content-muted">
+						<span class="inline-flex h-7 items-center rounded-none border border-edge-subtle bg-channel-surface-highlight px-2.5 text-caption text-content-muted">
 							{publishedLabel}:
 							<time
 								datetime={pubDate.toISOString()}
@@ -90,7 +90,7 @@ const articleBodyClasses =
 							</time>
 						</span>
 					)}
-					<span class="inline-flex items-center rounded-none border border-channel-accent-primary/40 bg-badge-brand-bg px-2.5 py-1 text-editorial-label uppercase text-channel-accent-primary">
+					<span class="inline-flex h-7 items-center rounded-none border border-channel-accent-primary/40 bg-badge-brand-bg px-2.5 font-mono text-xs font-bold text-channel-accent-primary">
 						{version}
 					</span>
 				</div>

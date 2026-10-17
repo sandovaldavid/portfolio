@@ -85,7 +85,7 @@ const articleBodyClasses =
 
 			<div class="flex flex-col gap-4">
 				<div class="flex flex-wrap items-center gap-3">
-					<span class="inline-flex items-center rounded-none border border-edge-subtle bg-channel-surface-highlight px-2.5 py-1 text-caption text-content-muted">
+					<span class="inline-flex h-7 items-center rounded-none border border-edge-subtle bg-channel-surface-highlight px-2.5 text-caption text-content-muted">
 						{publishedLabel}:
 						<time
 							datetime={pubDate.toISOString()}
@@ -95,9 +95,12 @@ const articleBodyClasses =
 						</time>
 					</span>
 					{updatedDate && (
-						<span class="inline-flex items-center rounded-none border border-channel-accent-primary/40 bg-badge-brand-bg px-2.5 py-1 text-editorial-label uppercase text-channel-accent-primary">
+						<span class="inline-flex h-7 items-center rounded-none border border-channel-accent-primary/40 bg-badge-brand-bg px-2.5 text-caption text-channel-accent-primary">
 							{updatedLabel}:
-							<time datetime={updatedDate.toISOString()} class="ml-1.5 font-mono">
+							<time
+								datetime={updatedDate.toISOString()}
+								class="ml-1.5 font-mono font-medium text-channel-accent-primary"
+							>
 								{updatedDate.toISOString().split('T')[0]}
 							</time>
 						</span>
