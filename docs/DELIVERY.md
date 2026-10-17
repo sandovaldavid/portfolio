@@ -16,8 +16,7 @@ Ordinary changes start from current `develop`, target `develop` and use a focuse
 
 The stable required checks are:
 
-- `Code Quality & Commits`;
-- `Unit Tests (Vitest)`;
+- `Code Quality & Unit Tests`;
 - `Build & Bundle Analysis`;
 - `Playwright Chromium Smoke`;
 - `Analyze Security`.

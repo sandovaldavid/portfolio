@@ -16,7 +16,7 @@ I adopted [Feature-Sliced Design](https://feature-sliced.design/) with a strict 
 direction:
 
 ```
-app → pages → widgets → features → entities → shared
+src/pages → app → widgets → features → entities → shared
 ```
 
 Each layer can only import from layers below it. Widgets can't import other widgets, pages
