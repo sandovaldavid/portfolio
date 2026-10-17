@@ -47,7 +47,7 @@ const { title, summary, pubDate, version, tags } = post.data;
  * - Shell clearance: pt-18 matches fixed navbar contract.
  * - Header: full-bleed canvas banner with back navigation, published date, version, title, and tags.
  * - Release Manifest: high-contrast highlight slab framing version summary.
- * - Reading column: centered max-w-190 (760px) container for changelog and release notes.
+ * - Reading column: aligned max-w-320 (1280px) container for changelog and release notes.
  * - Navigation: sequential version navigation cards at the article footer.
  */
 const articleBodyClasses =
@@ -95,7 +95,7 @@ const articleBodyClasses =
 					</span>
 				</div>
 
-				<h1 class="max-w-220 text-page-title-mobile text-content-strong md:text-page-title">
+				<h1 class="max-w-280 text-page-title-mobile text-content-strong md:text-page-title">
 					{title}
 				</h1>
 
@@ -113,18 +113,20 @@ const articleBodyClasses =
 	</header>
 
 	<section class="w-full border-b border-edge-subtle bg-channel-surface-highlight px-5 py-6 md:px-8 lg:px-20">
-		<div class="mx-auto flex w-full max-w-190 flex-col gap-2">
+		<div class="mx-auto flex w-full max-w-320 flex-col gap-2">
 			{manifestLabel && (
 				<span class="font-mono text-editorial-label uppercase text-channel-accent-primary">
 					{manifestLabel} · {version}
 				</span>
 			)}
-			<p class="font-sans text-base leading-relaxed text-content-default">{summary}</p>
+			<p class="max-w-240 font-sans text-base leading-relaxed text-content-default">
+				{summary}
+			</p>
 		</div>
 	</section>
 
 	<div class="w-full bg-channel-background-canvas px-5 py-10 md:px-8 md:py-14 lg:px-20 lg:py-16">
-		<div class="mx-auto w-full max-w-190">
+		<div class="mx-auto w-full max-w-320">
 			<div class={articleBodyClasses}>
 				<Content />
 			</div>

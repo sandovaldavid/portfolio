@@ -61,9 +61,11 @@ describe('Editorial and Devlog catalog composition contract', () => {
 		expect(devlogList).toContain('grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:gap-8');
 	});
 
-	it('structures detail views with 760px centered reading column, retro code blocks, and navigation', () => {
-		expect(blogDetail).toContain('max-w-190');
-		expect(devlogDetail).toContain('max-w-190');
+	it('structures detail views with 1280px aligned reading column, retro code blocks, and navigation', () => {
+		expect(blogDetail).toContain('max-w-320');
+		expect(devlogDetail).toContain('max-w-320');
+		expect(blogDetail).not.toContain('max-w-190');
+		expect(devlogDetail).not.toContain('max-w-190');
 		expect(blogDetail).toContain('articleBodyClasses');
 		expect(devlogDetail).toContain('articleBodyClasses');
 		expect(blogDetail).toContain('authorRole');

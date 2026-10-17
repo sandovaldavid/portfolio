@@ -52,7 +52,7 @@ const authorName = 'David Sandoval';
  * Blog detail composition:
  * - Shell clearance: pt-18 matches fixed navbar contract.
  * - Header: full-bleed canvas banner with back navigation, date chips, title, description, and retro tags.
- * - Reading column: centered max-w-190 (760px) container providing consistent reading rhythm.
+ * - Reading column: aligned max-w-320 (1280px) container providing consistent portfolio-wide rhythm.
  * - Typography & Code blocks: retro borders, monospace code slabs, and high-contrast blockquotes.
  * - Sign-off: retro author card followed by sequential previous/next article navigation.
  */
@@ -104,11 +104,11 @@ const articleBodyClasses =
 					)}
 				</div>
 
-				<h1 class="max-w-220 text-page-title-mobile text-content-strong md:text-page-title">
+				<h1 class="max-w-280 text-page-title-mobile text-content-strong md:text-page-title">
 					{title}
 				</h1>
 
-				<p class="max-w-200 text-body text-content-default">{description}</p>
+				<p class="max-w-240 text-body text-content-default">{description}</p>
 
 				{tags.length > 0 && (
 					<ul class="flex flex-wrap items-center gap-2 pt-1" aria-label={tagsLabel}>
@@ -124,7 +124,7 @@ const articleBodyClasses =
 	</header>
 
 	<div class="w-full bg-channel-background-canvas px-5 py-10 md:px-8 md:py-14 lg:px-20 lg:py-16">
-		<div class="mx-auto w-full max-w-190">
+		<div class="mx-auto w-full max-w-320">
 			<div class={articleBodyClasses}>
 				<Content />
 			</div>
