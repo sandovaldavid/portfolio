@@ -369,7 +369,6 @@ const serializeJsonLd = (schema: unknown): string =>
 			});
 		</script>
 		<ClientRouter />
-		<Analytics />
 	</head>
 
 	<body class="flex min-h-screen flex-col" data-is-home={isHome ? 'true' : 'false'}>
@@ -469,5 +468,6 @@ const serializeJsonLd = (schema: unknown): string =>
 			{isHome && <SplashScreen />}
 			<SectionScrollController enabled={isHome} />
 		</div>
+		<Analytics />
 	</body>
 </html>
