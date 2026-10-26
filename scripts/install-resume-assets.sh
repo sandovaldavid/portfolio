@@ -21,6 +21,17 @@ if [ ! -d "$source_dir" ] && command -v git >/dev/null 2>&1; then
 	fi
 fi
 
+if [ ! -d "$source_dir" ] && command -v curl >/dev/null 2>&1; then
+	mkdir -p "$source_dir"
+	raw_base="https://raw.githubusercontent.com/sandovaldavid/portfolio/resume-assets/public/resume"
+	for asset in manifest.json david-sandoval-resume.pdf david-sandoval-resume-es.pdf; do
+		curl --fail --silent --show-error --location "$raw_base/$asset" -o "$source_dir/$asset" || {
+			rm -rf "$source_dir"
+			break
+		}
+	done
+fi
+
 node scripts/validate-resume-assets.mjs "$source_dir"
 
 rm -rf "$target_dir"
