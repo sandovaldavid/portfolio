@@ -30,10 +30,10 @@ const baseClass =
 		const path = localizedPaths[lang];
 		const isUnavailable = !path;
 		const label = isActive
-			? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('currentPage')}`
+			? `${lang.toUpperCase()} - ${LANGUAGE_LABELS[lang]}, ${tAccessibility('currentPage')}`
 			: isUnavailable
-				? `${LANGUAGE_LABELS[lang]}, ${tAccessibility('translationUnavailable')}`
-				: LANGUAGE_LABELS[lang];
+				? `${lang.toUpperCase()} - ${LANGUAGE_LABELS[lang]}, ${tAccessibility('translationUnavailable')}`
+				: `${lang.toUpperCase()} - ${LANGUAGE_LABELS[lang]}`;
 
 		if (isUnavailable) {
 			return (
