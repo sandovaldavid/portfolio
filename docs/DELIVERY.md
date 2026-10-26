@@ -41,11 +41,14 @@ The promotion uses a real merge commit so the integrated commits remain ancestor
 
 ## Preview and production
 
-`Deploy to Vercel Preview` builds the exact pull-request head for changes targeting `develop` or `main` when credentials are available. It also runs after every push to `develop`, including a merged pull request, and assigns that deployment to `https://dev.sandovaldavid.com`.
+Vercel native Git integration handles preview and production deployments directly on push, without consuming GitHub Actions runner minutes.
 
-`main` is the only normal production source. A push to `main` triggers the production workflow, which verifies the selected revision, installs the canonical resume assets and deploys through the Vercel production environment.
+- Pull requests targeting `develop` or `main` generate Vercel Preview deployments with automated deployment status checks and preview comments.
+- Pushes to `develop` automatically deploy to the preview environment and assign to `https://dev.sandovaldavid.com`.
+- Pushes to `main` deploy directly to Vercel Production (`https://www.sandovaldavid.com` and `https://sandovaldavid.com`).
+- The build command in `vercel.json` (`bash scripts/install-resume-assets.sh && bun run build`) automatically installs and validates canonical resume assets from the `resume-assets` branch before building the static output.
 
-Workflow YAML is implemented configuration. Current rulesets, required checks, secrets, quotas and environment protections remain external settings until verified in GitHub.
+Repository configuration and `vercel.json` are implemented configuration. Current rulesets, required checks, secrets, quotas and environment protections remain external settings until verified in GitHub.
 
 ## Resume assets
 
@@ -67,7 +70,7 @@ node scripts/validate-resume-assets.mjs .resume-assets/public/resume
 bash scripts/install-resume-assets.sh
 ```
 
-Preview, main-quality and production workflows must use the same branch, filenames, manifest and installer. Recovery must preserve all three files as one provenance-matched payload; do not synthesize a source commit or bypass PDF validation.
+Build, main-quality and Vercel deployment commands must use the same branch, filenames, manifest and installer. Recovery must preserve all three files as one provenance-matched payload; do not synthesize a source commit or bypass PDF validation.
 
 ## Releases
 

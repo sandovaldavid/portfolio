@@ -21,6 +21,10 @@ validation-logs/
 # local Vercel CLI project linkage
 .vercel/
 
+# resume build artifacts
+.resume-assets/
+public/resume/
+
 # macOS-specific files
 .DS_Store
 
