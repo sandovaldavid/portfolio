@@ -209,8 +209,8 @@ const localizedShell = {
 					link.setAttribute(
 						'aria-label',
 						isCurrent
-							? `${languageLabels[language]}, ${shell.accessibility.currentPage}`
-							: languageLabels[language]
+							? `${language.toUpperCase()} - ${languageLabels[language]}, ${shell.accessibility.currentPage}`
+							: `${language.toUpperCase()} - ${languageLabels[language]}`
 					);
 					link.classList.toggle('pointer-events-none', isCurrent);
 					link.classList.toggle('cursor-default', isCurrent);
