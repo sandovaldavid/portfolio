@@ -22,9 +22,9 @@ The versioned workflows expose these stable checks for pull requests targeting `
 - `Playwright Chromium Smoke`;
 - `Analyze Security`.
 
-`PR Summary Report` and `Deploy to Vercel Preview` are informative and should not be required. The summary is derivative, while preview deployment depends on Vercel credentials and service availability.
+`PR Summary Report` and Vercel preview deployment checks are informative and should not be required. Preview deployments and status reporting are handled natively by Vercel.
 
-Do not configure `Deploy to Vercel Production` as a required pull-request check. It is a post-merge workflow triggered directly on push to `main`; `Main Quality` is what gates the pull request before merge (see the `main` ruleset below).
+Do not configure deployment status checks as blocking merge requirements. `Main Quality` is what gates the pull request before merge (see the `main` ruleset below). Production deployment runs natively on Vercel upon push to `main`.
 
 ## Ruleset for develop
 
@@ -69,28 +69,11 @@ Use branch target `main` and configure:
 
 ## Environment protection
 
-### Preview
+Deployments are handled directly by Vercel's native Git integration rather than GitHub Actions runner jobs, conserving CI minutes:
 
-The `Preview` environment is used by pull requests targeting `develop` or `main`, and by the post-merge deployment from `develop`.
-
-Recommended configuration:
-
-- allow deployments from pull-request refs and the `develop` branch;
-- do not make the Preview deployment a required merge check;
-- keep Vercel credentials scoped to the Preview environment;
-- review deployment history when a preview is used as manual evidence.
-
-### Production
-
-The `Production` environment is used only by `.github/workflows/deploy-production.yml`.
-
-Recommended configuration:
-
-- restrict deployment branches to `main`;
-- keep Vercel production credentials scoped to this environment;
-- optionally require a maintainer approval;
-- retain deployment history;
-- do not expose production credentials to pull-request workflows.
+- `Preview`: Managed by Vercel for pull requests and pushes to `develop` (assigned to `https://dev.sandovaldavid.com`).
+- `Production`: Managed by Vercel for pushes to `main` (assigned to `https://www.sandovaldavid.com` and `https://sandovaldavid.com`).
+- Build and domain settings are configured in `vercel.json` and the Vercel project configuration.
 
 ## Repository merge settings
 

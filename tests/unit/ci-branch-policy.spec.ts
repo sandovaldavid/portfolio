@@ -5,12 +5,11 @@ const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 const ciWorkflow = readSource('.github/workflows/ci.yml');
 const codeqlWorkflow = readSource('.github/workflows/codeql.yml');
-const previewWorkflow = readSource('.github/workflows/deploy-preview.yml');
 const mainQualityWorkflow = readSource('.github/workflows/main-quality.yml');
-const productionWorkflow = readSource('.github/workflows/deploy-production.yml');
 const dependabotConfig = readSource('.github/dependabot.yml');
 const deliveryPolicy = readSource('docs/DELIVERY.md');
 const protectionPolicy = readSource('.github/BRANCH_PROTECTION.md');
+const vercelConfig = JSON.parse(readSource('vercel.json'));
 
 const requiredChecks = [
 	'Code Quality & Unit Tests',
@@ -28,15 +27,13 @@ const dependabotBlock = (ecosystem: string): string => {
 };
 
 describe('develop integration and main promotion policy', () => {
-	it('runs pull-request quality, security and preview workflows for both bases', () => {
+	it('runs pull-request quality and security workflows for both bases', () => {
 		expect(ciWorkflow).toContain('branches: [develop, main]');
 		expect(codeqlWorkflow).toMatch(/pull_request:\n\s+branches: \[develop, main\]/);
-		expect(previewWorkflow).toContain('branches: [develop, main]');
 	});
 
 	it('keeps required pull-request workflows reportable for every changed-file shape', () => {
 		expect(ciWorkflow).not.toContain('paths-ignore:');
-		expect(previewWorkflow).not.toContain('paths-ignore:');
 	});
 
 	it('targets ordinary Dependabot version updates at develop', () => {
@@ -56,13 +53,13 @@ describe('develop integration and main promotion policy', () => {
 		expect(protectionPolicy).not.toContain('Promotion Source');
 	});
 
-	it('gates main with the full Main Quality suite pre-merge and deploys directly on push', () => {
+	it('gates main with the full Main Quality suite pre-merge and delegates deployment to Vercel', () => {
 		expect(mainQualityWorkflow).toMatch(/pull_request:\n\s+branches: \[main\]/);
 		expect(mainQualityWorkflow).not.toContain('branches: [develop, main]');
 		expect(mainQualityWorkflow).not.toMatch(/push:\n\s+branches: \[main\]/);
-		expect(productionWorkflow).toMatch(/push:\n\s+branches: \[main\]/);
-		expect(productionWorkflow).not.toContain('workflows: [Main Quality]');
-		expect(productionWorkflow).toContain("github.event_name == 'push'");
+		expect(vercelConfig.git?.deploymentEnabled).not.toBe(false);
+		expect(vercelConfig.buildCommand).toContain('install-resume-assets.sh');
+		expect(deliveryPolicy).toContain('Vercel native Git integration');
 	});
 
 	it('documents the real stable checks and removes obsolete protection guidance', () => {
@@ -74,7 +71,7 @@ describe('develop integration and main promotion policy', () => {
 		expect(deliveryPolicy).toContain('short-lived branch -> develop -> main -> production');
 		expect(protectionPolicy).not.toContain('validate-pr.yml');
 		expect(protectionPolicy).toContain(
-			'Do not configure `Deploy to Vercel Production` as a required pull-request check.'
+			'Do not configure deployment status checks as blocking merge requirements.'
 		);
 	});
 

@@ -1,11 +1,8 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
 	"installCommand": "bun install --frozen-lockfile",
-	"buildCommand": "bun run build",
-	"git": {
-		"deploymentEnabled": false
-	},
-	"ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"gh-pages\" ]; then exit 0; else exit 1; fi",
+	"buildCommand": "bash scripts/install-resume-assets.sh && bun run build",
+	"ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" = \"gh-pages\" ] || [ \"$VERCEL_GIT_COMMIT_REF\" = \"resume-assets\" ]; then exit 0; else exit 1; fi",
 	"headers": [
 		{
 			"source": "/(.*)",
