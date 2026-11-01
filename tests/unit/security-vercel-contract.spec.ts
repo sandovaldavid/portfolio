@@ -75,7 +75,6 @@ describe('Vercel security headers, redirects and external link safety', () => {
 		const layout = readSource('src/app/layouts/Layout.astro');
 		const linkInline = readSource('src/shared/ui/link-inline/LinkInline.astro');
 		const recruiterHud = readSource('src/widgets/recruiter-hud/ui/RecruiterHUD.astro');
-		const cliRuntime = readSource('src/features/cli-terminal/model/runtime.ts');
 
 		expect(layout).toContain("JSON.stringify(schema).replaceAll('<', '\\\\u003c')");
 		expect(layout).not.toContain('set:html={JSON.stringify(');
@@ -85,7 +84,5 @@ describe('Vercel security headers, redirects and external link safety', () => {
 		expect(linkInline).toContain("{target === '_blank' && newTabLabel &&");
 		expect(recruiterHud).toContain("target={external ? '_blank' : undefined}");
 		expect(recruiterHud).toContain("rel={external ? 'noopener noreferrer' : undefined}");
-		expect(cliRuntime).not.toContain('rel="noreferrer"');
-		expect(cliRuntime).toContain('rel="noopener noreferrer"');
 	});
 });

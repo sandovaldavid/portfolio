@@ -115,36 +115,6 @@ test.describe('Portfolio Retro color token contract', () => {
 		});
 	}
 
-	test('CLI resolves named terminal roles and retains keyboard behavior', async ({ page }) => {
-		await useTheme(page, 'dark');
-		await page.goto('/');
-		await page.waitForFunction(
-			() => typeof (window as Window & { __openCLI?: unknown }).__openCLI === 'function'
-		);
-		await page.evaluate(() => {
-			document.dispatchEvent(
-				new KeyboardEvent('keydown', {
-					key: ':',
-					shiftKey: true,
-					bubbles: true,
-					cancelable: true,
-				})
-			);
-		});
-
-		const overlay = page.locator('#cli-overlay');
-		const terminal = overlay.locator('.border-channel-portfolio-terminal-cyan');
-		const input = page.locator('#cli-input');
-		await expect(overlay).toBeVisible();
-		await expect(input).toBeFocused();
-		await expectColorRole(page, terminal, 'border-top-color', '--color-primary-500-dark');
-
-		await input.fill('help');
-		await input.press('Enter');
-		await expect(page.locator('#cli-output')).toContainText('Portfolio CLI');
-		await expectNoBlockingAxeViolations(page);
-	});
-
 	for (const scenario of [
 		{ theme: 'light' as const, canvasToken: '--color-base-background-light' },
 		{ theme: 'dark' as const, canvasToken: '--color-neutral-950' },
