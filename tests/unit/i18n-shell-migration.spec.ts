@@ -24,7 +24,6 @@ describe('shared shell localization migration', () => {
 			'src/widgets/recruiter-hud/ui/RecruiterHUD.astro',
 			'src/features/language-picker/ui/LanguagePicker.astro',
 			'src/features/theme-toggle/ui/ThemeToggle.astro',
-			'src/features/splash-screen/ui/SplashScreen.astro',
 			'src/pages/404.astro',
 		];
 

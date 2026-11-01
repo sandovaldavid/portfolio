@@ -38,19 +38,6 @@ test.describe('Homepage', () => {
 		await expect(page.getByText(/Systems Architect|Lvl\. 99|LEVEL 5\+/i)).toHaveCount(0);
 	});
 
-	test('opens retro mode only when explicitly requested', async ({ page }) => {
-		await page.goto('/?retro=1');
-
-		const dialog = page.getByRole('dialog', { name: /retro mode/i });
-		await expect(dialog).toBeVisible();
-		await expect(page.locator('body')).toHaveCSS('overflow', 'hidden');
-
-		await page.keyboard.press('Escape');
-		await expect(dialog).toBeHidden();
-		await expect(page).toHaveURL(/\/$/);
-		await expect(page.locator('body')).not.toHaveCSS('overflow', 'hidden');
-	});
-
 	test('has working navigation', async ({ page }) => {
 		await page.goto('/');
 

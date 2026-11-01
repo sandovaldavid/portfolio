@@ -145,20 +145,6 @@ test.describe('Portfolio Retro color token contract', () => {
 		await expectNoBlockingAxeViolations(page);
 	});
 
-	test('retro splash resolves terminal roles and remains dismissible', async ({ page }) => {
-		await useTheme(page, 'dark');
-		await page.goto('/?retro=1');
-
-		const splash = page.locator('#splash-screen');
-		const continueButton = splash.locator('#retro-continue');
-		await expect(splash).toBeVisible();
-		await expectColorRole(page, continueButton, 'background-color', '--color-primary-500-dark');
-		await expectNoBlockingAxeViolations(page);
-
-		await continueButton.click();
-		await expect(splash).toBeHidden();
-	});
-
 	for (const scenario of [
 		{ theme: 'light' as const, canvasToken: '--color-base-background-light' },
 		{ theme: 'dark' as const, canvasToken: '--color-neutral-950' },

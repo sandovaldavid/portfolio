@@ -8,7 +8,6 @@ const colors = readSource('src/app/styles/colors.css');
 const buttons = readSource('src/shared/ui/button/button.css');
 const logo = readSource('src/shared/ui/brand-logo/BrandLogo.astro');
 const header = readSource('src/widgets/header/ui/Header.astro');
-const splash = readSource('src/features/splash-screen/ui/SplashScreen.astro');
 const cliCatalog = readSource('src/features/cli-terminal/ui/CLITerminalCatalog.astro');
 const cliRuntime = readSource('src/features/cli-terminal/model/runtime.ts');
 const recruiterHud = readSource('src/widgets/recruiter-hud/ui/RecruiterHUD.astro');
@@ -189,7 +188,6 @@ describe('Portfolio Retro color architecture', () => {
 
 	it('uses named roles in high-risk consumers and keeps header effects tokenized', () => {
 		for (const [source, expectedToken] of [
-			[splash, 'bg-channel-portfolio-terminal-background'],
 			[cliCatalog, 'border-channel-portfolio-terminal-cyan'],
 			[cliRuntime, 'text-channel-portfolio-terminal-phosphor'],
 			[recruiterHud, 'bg-button-primary-background'],
