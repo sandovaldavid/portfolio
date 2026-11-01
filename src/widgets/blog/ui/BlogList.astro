@@ -3,8 +3,7 @@ import { getRelativeLocaleUrl } from 'astro:i18n';
 import ScrollTextIcon from '@assets/icons/ScrollText.astro';
 import { getBlogPosts, getBlogSlug } from '@entities/blog';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import { LinkButton } from '@shared/ui';
-import BlogCard from './BlogCard.astro';
+import { EditorialCard, LinkButton } from '@shared/ui';
 
 /*
  * Blog list composition:
@@ -97,11 +96,16 @@ const formatCount = (count: number) => String(count).padStart(2, '0');
 		<div class="mx-auto w-full max-w-320">
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:gap-8">
 				{posts.map(post => (
-					<BlogCard
-						{post}
-						label={tBlog('label')}
-						readMoreText={tBlog('readMore')}
-						readMoreLink={getRelativeLocaleUrl(lang, `blog/${getBlogSlug(post)}`)}
+					<EditorialCard
+						typeLabel={tBlog('label')}
+						metaText={post.data.pubDate.toISOString().split('T')[0]}
+						datetime={post.data.pubDate.toISOString()}
+						tags={post.data.tags}
+						title={post.data.title}
+						description={post.data.description}
+						ctaText={tBlog('readMore')}
+						ctaHref={getRelativeLocaleUrl(lang, `blog/${getBlogSlug(post)}`)}
+						headingLevel="h2"
 					/>
 				))}
 			</div>
