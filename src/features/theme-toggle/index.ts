@@ -1,1 +1,1 @@
-export { ThemeToggle } from './ui';
+export { default as ThemeToggle } from './ui/ThemeToggle.astro';

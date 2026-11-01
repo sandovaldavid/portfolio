@@ -1,20 +1,17 @@
-export {
-	EXPERIENCE_METADATA,
-	EXPERIENCE_TECHNOLOGIES,
-	getExperienceData,
-	getExperienceDetailBySlug,
-	isExperienceId,
-} from './model';
+export { EXPERIENCE_METADATA, EXPERIENCE_TECHNOLOGIES, isExperienceId } from './model/metadata';
 export type {
-	ExperienceContentEntry,
-	ExperienceDetail,
 	ExperienceId,
-	ExperienceItem,
-	ExperienceList,
 	ExperiencePresentation,
 	ExperienceTechnology,
 	ExperienceTechnologyIconKey,
 	ExperienceTechnologyId,
 	ExperienceTechnologyKind,
-} from './model';
+} from './model/metadata';
+export { getExperienceData, getExperienceDetailBySlug } from './model/queries';
+export type {
+	ExperienceContentEntry,
+	ExperienceDetail,
+	ExperienceItem,
+	ExperienceList,
+} from './model/types';
 export { default as ExperienceTechnologyPill } from './ui/ExperienceTechnologyPill.astro';

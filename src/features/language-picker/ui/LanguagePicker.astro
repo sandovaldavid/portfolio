@@ -5,7 +5,7 @@ import {
 	createScopedUiTranslator,
 	getLanguageFromLocale,
 } from '@shared/config/i18n';
-import type { LanguagePickerProps } from '../model';
+import type { LanguagePickerProps } from '../model/types';
 
 const { currentLang: providedCurrentLang, localizedPaths } = Astro.props as LanguagePickerProps;
 const currentLang = providedCurrentLang ?? getLanguageFromLocale(Astro.currentLocale);

@@ -1,7 +1,2 @@
-/**
- * Projects Widget
- *
- * Displays the portfolio projects grid with filtering by language.
- * Uses project data from the entities layer.
- */
-export * from './ui';
+export { default as Projects } from './ui/Projects.astro';
+export { default as ProjectsCatalog } from './ui/ProjectsCatalog.astro';
