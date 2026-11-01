@@ -10,6 +10,7 @@ export async function getStaticPaths() {
 	const posts = await getBlogPosts(Language.SPANISH);
 	return posts.map(post => ({
 		params: { slug: getBlogSlug(post) },
+		props: { slug: getBlogSlug(post) },
 	}));
 }
 
