@@ -1,5 +1,25 @@
 ---
-import Page from '../about.astro';
+import Layout from '@app/layouts/Layout.astro';
+import { getPortfolioProfile } from '@entities/profile';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { AboutContent } from '@widgets/about-content';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const profile = await getPortfolioProfile(lang);
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 ---
 
-<Page />
+<Layout
+	title={profile.data.seo.title}
+	description={profile.data.seo.description}
+	img_preview={`/og/preview-profile-about-${lang}-dark.png`}
+	pageType="profile"
+	contentLayout="flush"
+>
+	<AboutContent
+		{lang}
+		profile={profile.data}
+		portraitSrc="/profile/perfil.webp"
+		portraitAlt={tAccessibility('profileImageAlt')}
+	/>
+</Layout>

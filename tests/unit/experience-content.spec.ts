@@ -185,9 +185,9 @@ describe('localized professional experience content', () => {
 		expect(query).toContain('Missing experience content for locale');
 		expect(widget).toContain('await getExperienceData(lang)');
 		expect(englishRoute).toContain('await render(entry)');
+		expect(spanishRoute).toContain('await render(entry)');
 		expect(englishRoute).toContain('experienceCaseStudyComponents');
-		expect(spanishRoute).toContain("import Page from '../../experience/[slug].astro'");
-		expect(spanishRoute).toContain('getExperienceData');
+		expect(spanishRoute).toContain('experienceCaseStudyComponents');
 	});
 
 	it('uses a reusable career shell with semantic presentation variants', () => {

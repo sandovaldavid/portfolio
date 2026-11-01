@@ -1,7 +1,10 @@
 ---
-import { getProjectsData } from '@entities/project';
-import { Language } from '@shared/config/i18n';
-import Page from '../../projects/[slug].astro';
+import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Layout from '@app/layouts/Layout.astro';
+import { getProjectDetailBySlug, getProjectsData } from '@entities/project';
+import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
+import { ProjectCaseStudy, projectCaseStudyComponents } from '@widgets/project-case-study';
 
 export async function getStaticPaths() {
 	const projects = await getProjectsData(Language.SPANISH);
@@ -10,6 +13,37 @@ export async function getStaticPaths() {
 		props: { slug: project.slug },
 	}));
 }
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const slug = Astro.params.slug ?? '';
+const tProjects = createScopedUiTranslator(lang, 'sections.projects');
+const detail = await getProjectDetailBySlug(lang, slug);
+
+if (!detail) {
+	return Astro.redirect('/404');
+}
+
+const { project, entry } = detail;
+const { Content } = await render(entry);
+const pageTitle = `${project.title} — ${tProjects('caseStudy')} | David Sandoval`;
+const previewImage = `/og/preview-project-${slug}-${lang}-dark.png`;
+const localizedPaths = {
+	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, `projects/${slug}`),
+	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, `projects/${slug}`),
+};
 ---
 
-<Page {...Astro.props} />
+<Layout
+	title={pageTitle}
+	description={project.description}
+	img_preview={previewImage}
+	imageAlt={`${project.title} — ${tProjects('caseStudy')}`}
+	pageType="project"
+	breadcrumbLabel={project.title}
+	{localizedPaths}
+	contentLayout="flush"
+>
+	<ProjectCaseStudy {project}>
+		<Content components={projectCaseStudyComponents} />
+	</ProjectCaseStudy>
+</Layout>

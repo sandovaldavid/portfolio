@@ -1,5 +1,17 @@
 ---
-import Page from '../projects.astro';
+import Layout from '@app/layouts/Layout.astro';
+import { ProjectsCatalog } from '@widgets/projects';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 ---
 
-<Page />
+<Layout
+	title={tProjects('catalogTitle')}
+	description={tProjects('catalogDescription')}
+	img_preview={`/og/preview-website-projects-${lang}-dark.png`}
+	contentLayout="flush"
+>
+	<ProjectsCatalog {lang} />
+</Layout>

@@ -115,7 +115,12 @@ describe('editorial translation pairing', () => {
 
 	it('disables an unavailable target locale instead of constructing a link', () => {
 		const picker = readFileSync('src/features/language-picker/ui/LanguagePicker.astro', 'utf8');
-		const detailRoutes = ['src/pages/blog/[slug].astro', 'src/pages/devlog/[slug].astro'];
+		const detailRoutes = [
+			'src/pages/blog/[slug].astro',
+			'src/pages/es/blog/[slug].astro',
+			'src/pages/devlog/[slug].astro',
+			'src/pages/es/devlog/[slug].astro',
+		];
 
 		expect(picker).toContain('const path = localizedPaths[lang]');
 		expect(picker).toContain('const isUnavailable = !path');
@@ -125,12 +130,6 @@ describe('editorial translation pairing', () => {
 		for (const route of detailRoutes) {
 			expect(readFileSync(route, 'utf8'), route).toContain('{localizedPaths}');
 		}
-		expect(readFileSync('src/pages/es/blog/[slug].astro', 'utf8')).toContain(
-			"import Page from '../../blog/[slug].astro'"
-		);
-		expect(readFileSync('src/pages/es/devlog/[slug].astro', 'utf8')).toContain(
-			"import Page from '../../devlog/[slug].astro'"
-		);
 	});
 
 	it('keeps RSS feeds locale-specific and production drafts excluded', () => {

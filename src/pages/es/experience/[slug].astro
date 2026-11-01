@@ -1,7 +1,10 @@
 ---
-import { getExperienceData } from '@entities/experience';
-import { Language } from '@shared/config/i18n';
-import Page from '../../experience/[slug].astro';
+import { render } from 'astro:content';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import Layout from '@app/layouts/Layout.astro';
+import { getExperienceData, getExperienceDetailBySlug } from '@entities/experience';
+import { getLanguageFromLocale, Language } from '@shared/config/i18n';
+import { ExperienceCaseStudy, experienceCaseStudyComponents } from '@widgets/experience-case-study';
 
 export async function getStaticPaths() {
 	const experience = await getExperienceData(Language.SPANISH);
@@ -10,6 +13,39 @@ export async function getStaticPaths() {
 		props: { slug: item.experienceId },
 	}));
 }
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const slug = Astro.params.slug ?? '';
+const detail = await getExperienceDetailBySlug(lang, slug);
+
+if (!detail) {
+	return Astro.redirect('/404');
+}
+
+const { experience, entry, previous, next } = detail;
+const { Content } = await render(entry);
+const pageTitle = `${experience.title} — ${experience.company} | David Sandoval`;
+const previewImage =
+	slug === 'atena-software-engineer'
+		? `/og/preview-case-study-${slug}-${lang}-dark.png`
+		: `/og/preview-website-experience-${lang}-dark.png`;
+const localizedPaths = {
+	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, `experience/${slug}`),
+	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, `experience/${slug}`),
+};
 ---
 
-<Page {...Astro.props} />
+<Layout
+	title={pageTitle}
+	description={experience.summary}
+	img_preview={previewImage}
+	imageAlt={`${experience.company} — ${experience.title}`}
+	pageType="experience"
+	breadcrumbLabel={experience.company}
+	{localizedPaths}
+	contentLayout="flush"
+>
+	<ExperienceCaseStudy {experience} {previous} {next}>
+		<Content components={experienceCaseStudyComponents} />
+	</ExperienceCaseStudy>
+</Layout>

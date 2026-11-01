@@ -1,5 +1,18 @@
 ---
-import Page from '../blog.astro';
+import Layout from '@app/layouts/Layout.astro';
+import { BlogList } from '@widgets/blog';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tBlog = createScopedUiTranslator(lang, 'pages.blog');
 ---
 
-<Page />
+<Layout
+	title={tBlog('pageTitle')}
+	description={tBlog('pageDescription')}
+	img_preview={`/og/preview-website-blog-${lang}-dark.png`}
+	isHome={false}
+	contentLayout="flush"
+>
+	<BlogList />
+</Layout>

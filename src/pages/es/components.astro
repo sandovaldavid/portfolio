@@ -1,5 +1,18 @@
 ---
-import Page from '../components.astro';
+import Layout from '@app/layouts/Layout.astro';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+import { ComponentsShowcase } from '@widgets/components-showcase';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tPage = createScopedUiTranslator(lang, 'pages.components');
 ---
 
-<Page />
+<Layout
+	title={tPage('pageTitle')}
+	description={tPage('pageDescription')}
+	img_preview={`/og/preview-website-components-${lang}-dark.png`}
+	isHome={false}
+	noindex
+>
+	<ComponentsShowcase {lang} />
+</Layout>

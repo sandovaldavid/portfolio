@@ -1,5 +1,25 @@
 ---
-import Page from '../index.astro';
+import Layout from '@app/layouts/Layout.astro';
+import { AboutMe } from '@widgets/about-me';
+import { Experience } from '@widgets/experience';
+import { Hero } from '@widgets/hero';
+import { Projects } from '@widgets/projects';
+import { Research } from '@widgets/research';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
+
+const lang = getLanguageFromLocale(Astro.currentLocale);
+const tMetadata = createScopedUiTranslator(lang, 'metadata');
 ---
 
-<Page />
+<Layout
+	title={tMetadata('siteTitle')}
+	description={tMetadata('siteDescription')}
+	img_preview={`/og/preview-portfolio-home-${lang}-dark.png`}
+	isHome
+>
+	<Hero slot="hero" />
+	<Experience slot="experience" />
+	<Projects slot="projects" />
+	<Research slot="research" />
+	<AboutMe slot="about-me" />
+</Layout>

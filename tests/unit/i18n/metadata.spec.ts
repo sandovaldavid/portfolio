@@ -1,16 +1,7 @@
 import { readFileSync } from 'node:fs';
-import { dirname, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-const readSource = (path: string): string => {
-	const content = readFileSync(path, 'utf8');
-	const match = content.match(/import Page from ['"]([^'"]+)['"]/);
-	if (match) {
-		const resolvedPath = resolve(dirname(path), match[1]);
-		return readFileSync(resolvedPath, 'utf8');
-	}
-	return content;
-};
+const readSource = (path: string): string => readFileSync(path, 'utf8');
 const readJson = <T>(path: string): T => JSON.parse(readSource(path)) as T;
 
 describe('localized SEO, RSS and structured metadata', () => {
