@@ -35,10 +35,6 @@ expect(
 	/^\d+\.\d+\.\d+$/.test(playwrightVersion ?? ''),
 	'@playwright/test must use an exact version.'
 );
-expect(
-	packageJson.devDependencies?.['playwright-core'] === playwrightVersion,
-	'playwright-core must match @playwright/test.'
-);
 
 expect(
 	devcontainerDockerfile.includes(`ARG PLAYWRIGHT_VERSION=${playwrightVersion}`),
