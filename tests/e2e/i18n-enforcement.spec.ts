@@ -1,8 +1,5 @@
 import type { Page } from '@playwright/test';
-import {
-	REPRESENTATIVE_ROUTE_PAIRS,
-	SPANISH_FORBIDDEN_PHRASES,
-} from '../../scripts/i18n/config.mjs';
+import { REPRESENTATIVE_ROUTE_PAIRS, SPANISH_FORBIDDEN_PHRASES } from '@scripts/i18n/config.mjs';
 import { expect, test } from './fixtures';
 
 const normalizeRoute = (route: string): string => {

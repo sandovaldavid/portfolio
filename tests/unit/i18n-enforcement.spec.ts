@@ -2,10 +2,10 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'nod
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { validateCatalogs } from '../../scripts/i18n/check-catalogs.mjs';
-import { validateLocalizedContent } from '../../scripts/i18n/check-content.mjs';
-import { validateHardcodedCopy } from '../../scripts/i18n/check-hardcoded.mjs';
-import { validateGeneratedLocaleRoutes } from '../../scripts/i18n/check-routes.mjs';
+import { validateCatalogs } from '@scripts/i18n/check-catalogs.mjs';
+import { validateLocalizedContent } from '@scripts/i18n/check-content.mjs';
+import { validateHardcodedCopy } from '@scripts/i18n/check-hardcoded.mjs';
+import { validateGeneratedLocaleRoutes } from '@scripts/i18n/check-routes.mjs';
 
 const fixtures: string[] = [];
 

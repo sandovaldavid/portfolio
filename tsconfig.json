@@ -2,12 +2,15 @@
 	"extends": "astro/tsconfigs/strict",
 	"compilerOptions": {
 		"paths": {
+			"@app/*": ["./src/app/*"],
 			"@assets/*": ["./src/assets/*"],
+			"@content/*": ["./src/content/*"],
 			"@entities/*": ["./src/entities/*"],
 			"@features/*": ["./src/features/*"],
+			"@scripts/*": ["./scripts/*"],
 			"@shared/*": ["./src/shared/*"],
-			"@widgets/*": ["./src/widgets/*"],
-			"@app/*": ["./src/app/*"]
+			"@tests/*": ["./tests/*"],
+			"@widgets/*": ["./src/widgets/*"]
 		}
 	},
 	"exclude": ["dist", "coverage/", "tests/", "playwright.config.ts", "vitest.config.ts"]
