@@ -5,7 +5,6 @@ const MIGRATED_STYLE_SURFACES = [
 	'src/app/layouts/Layout.astro',
 	'src/entities/project/ui/ProjectCard.astro',
 	'src/shared/ui/badge/Badge.astro',
-	'src/shared/ui/content-panel/ContentPanel.astro',
 	'src/shared/ui/editorial-card/EditorialCard.astro',
 	'src/shared/ui/link-inline/LinkInline.astro',
 	'src/shared/ui/rich-content/ui/MermaidDiagram.astro',
