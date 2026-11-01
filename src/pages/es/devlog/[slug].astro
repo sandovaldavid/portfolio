@@ -1,83 +1,15 @@
 ---
-import { render } from 'astro:content';
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import Layout from '@app/layouts/Layout.astro';
-import {
-	getDevlogLocalizedPaths,
-	getDevlogPost,
-	getDevlogPosts,
-	getDevlogSlug,
-} from '@entities/devlog';
-import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
-import { DevlogDetail } from '@widgets/devlog';
+import { getDevlogPosts, getDevlogSlug } from '@entities/devlog';
+import { Language } from '@shared/config/i18n';
+import Page from '../../devlog/[slug].astro';
 
 export async function getStaticPaths() {
 	const posts = await getDevlogPosts(Language.SPANISH);
 	return posts.map(post => ({
 		params: { slug: getDevlogSlug(post) },
+		props: { slug: getDevlogSlug(post) },
 	}));
 }
-
-const lang = getLanguageFromLocale(Astro.currentLocale);
-const slug = Astro.params.slug ?? '';
-const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
-const allPosts = await getDevlogPosts(lang);
-const currentIndex = allPosts.findIndex(p => getDevlogSlug(p) === slug);
-const post = currentIndex !== -1 ? allPosts[currentIndex] : await getDevlogPost(lang, slug);
-
-if (!post) {
-	return Astro.redirect('/404');
-}
-
-const localizedPaths = await getDevlogLocalizedPaths(post);
-const { Content } = await render(post);
-const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
-
-const nextArticle = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
-const prevArticle =
-	currentIndex !== -1 && currentIndex < allPosts.length - 1
-		? allPosts[currentIndex + 1]
-		: undefined;
-
-const previousPost = prevArticle
-	? {
-			title: prevArticle.data.title,
-			version: prevArticle.data.version,
-			href: getRelativeLocaleUrl(lang, `devlog/${getDevlogSlug(prevArticle)}`),
-		}
-	: undefined;
-
-const nextPost = nextArticle
-	? {
-			title: nextArticle.data.title,
-			version: nextArticle.data.version,
-			href: getRelativeLocaleUrl(lang, `devlog/${getDevlogSlug(nextArticle)}`),
-		}
-	: undefined;
 ---
 
-<Layout
-	title={`${post.data.title} | Devlog | David Sandoval`}
-	description={post.data.summary}
-	img_preview={previewImage}
-	imageAlt={post.data.title}
-	pageType="devlog"
-	publishedTime={post.data.pubDate}
-	breadcrumbLabel={post.data.title}
-	contentLayout="flush"
-	{localizedPaths}
->
-	<DevlogDetail
-		{post}
-		{Content}
-		backText={tDevlog('back')}
-		backLink={getRelativeLocaleUrl(lang, 'devlog')}
-		{previousPost}
-		{nextPost}
-		previousLabel={tDevlog('previousVersion')}
-		nextLabel={tDevlog('nextVersion')}
-		paginationLabel={tDevlog('pagination')}
-		manifestLabel={tDevlog('versionManifest')}
-		publishedLabel={tDevlog('publishedDate')}
-	/>
-</Layout>
+<Page {...Astro.props} />

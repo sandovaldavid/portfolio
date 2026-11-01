@@ -92,13 +92,12 @@ describe('localized research MDX content', () => {
 		expect(query).toContain('export async function getResearchEntry');
 		expect(query).toContain("getEntry('research'");
 		expect(query).toContain('return (await getResearchEntry(lang)).data');
-		for (const route of [englishRoute, spanishRoute]) {
-			expect(route).toContain("import { render } from 'astro:content'");
-			expect(route).toContain('getResearchEntry');
-			expect(route).toContain('const { Content } = await render(entry)');
-			expect(route).toContain('<ResearchPage {research}>');
-			expect(route).toContain('<Content components={researchMdxComponents} />');
-		}
+		expect(englishRoute).toContain("import { render } from 'astro:content'");
+		expect(englishRoute).toContain('getResearchEntry');
+		expect(englishRoute).toContain('const { Content } = await render(entry)');
+		expect(englishRoute).toContain('<ResearchPage {research}>');
+		expect(englishRoute).toContain('<Content components={researchMdxComponents} />');
+		expect(spanishRoute).toContain("import Page from '../research.astro'");
 		expect(components).toContain("from '@shared/ui/rich-content'");
 		expect(components).toContain('EvaluationCriteria');
 		expect(components).toContain('ResearchSection');

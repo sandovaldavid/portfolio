@@ -1,80 +1,15 @@
 ---
-import { render } from 'astro:content';
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import Layout from '@app/layouts/Layout.astro';
-import { getBlogLocalizedPaths, getBlogPost, getBlogPosts, getBlogSlug } from '@entities/blog';
-import { createScopedUiTranslator, getLanguageFromLocale, Language } from '@shared/config/i18n';
-import { BlogDetail } from '@widgets/blog';
+import { getBlogPosts, getBlogSlug } from '@entities/blog';
+import { Language } from '@shared/config/i18n';
+import Page from '../../blog/[slug].astro';
 
 export async function getStaticPaths() {
 	const posts = await getBlogPosts(Language.SPANISH);
 	return posts.map(post => ({
 		params: { slug: getBlogSlug(post) },
+		props: { slug: getBlogSlug(post) },
 	}));
 }
-
-const lang = getLanguageFromLocale(Astro.currentLocale);
-const slug = Astro.params.slug ?? '';
-const tBlog = createScopedUiTranslator(lang, 'pages.blog');
-const allPosts = await getBlogPosts(lang);
-const currentIndex = allPosts.findIndex(p => getBlogSlug(p) === slug);
-const post = currentIndex !== -1 ? allPosts[currentIndex] : await getBlogPost(lang, slug);
-
-if (!post) {
-	return Astro.redirect('/404');
-}
-
-const localizedPaths = await getBlogLocalizedPaths(post);
-const { Content } = await render(post);
-const previewImage = `/og/preview-article-${slug}-${lang}-dark.png`;
-
-const nextArticle = currentIndex > 0 ? allPosts[currentIndex - 1] : undefined;
-const prevArticle =
-	currentIndex !== -1 && currentIndex < allPosts.length - 1
-		? allPosts[currentIndex + 1]
-		: undefined;
-
-const previousPost = prevArticle
-	? {
-			title: prevArticle.data.title,
-			href: getRelativeLocaleUrl(lang, `blog/${getBlogSlug(prevArticle)}`),
-		}
-	: undefined;
-
-const nextPost = nextArticle
-	? {
-			title: nextArticle.data.title,
-			href: getRelativeLocaleUrl(lang, `blog/${getBlogSlug(nextArticle)}`),
-		}
-	: undefined;
 ---
 
-<Layout
-	title={`${post.data.title} | Blog | David Sandoval`}
-	description={post.data.description}
-	img_preview={previewImage}
-	imageAlt={post.data.title}
-	pageType="blog"
-	publishedTime={post.data.pubDate}
-	modifiedTime={post.data.updatedDate}
-	breadcrumbLabel={post.data.title}
-	contentLayout="flush"
-	{localizedPaths}
->
-	<BlogDetail
-		{post}
-		{Content}
-		backText={tBlog('back')}
-		backLink={getRelativeLocaleUrl(lang, 'blog')}
-		publishedLabel={tBlog('published')}
-		updatedLabel={tBlog('updated')}
-		tagsLabel={tBlog('tags')}
-		{previousPost}
-		{nextPost}
-		previousLabel={tBlog('previousPost')}
-		nextLabel={tBlog('nextPost')}
-		paginationLabel={tBlog('pagination')}
-		authorRole={tBlog('authorRole')}
-		authorBio={tBlog('authorBio')}
-	/>
-</Layout>
+<Page {...Astro.props} />

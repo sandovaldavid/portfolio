@@ -1,18 +1,5 @@
 ---
-import Layout from '@app/layouts/Layout.astro';
-import { DevlogList } from '@widgets/devlog';
-import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-
-const lang = getLanguageFromLocale(Astro.currentLocale);
-const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
+import Page from '../devlog.astro';
 ---
 
-<Layout
-	title={tDevlog('pageTitle')}
-	description={tDevlog('pageDescription')}
-	img_preview="/og/preview-website-devlog-es-dark.png"
-	isHome={false}
-	contentLayout="flush"
->
-	<DevlogList />
-</Layout>
+<Page />

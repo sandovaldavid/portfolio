@@ -1,24 +1,5 @@
 ---
-import { render } from 'astro:content';
-import Layout from '@app/layouts/Layout.astro';
-import { getResearchEntry } from '@entities/research';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-import { ResearchPage, researchMdxComponents } from '@widgets/research-page';
-
-const lang = Language.SPANISH;
-const tPage = createScopedUiTranslator(lang, 'pages.research');
-const entry = await getResearchEntry(lang);
-const research = entry.data;
-const { Content } = await render(entry);
+import Page from '../research.astro';
 ---
 
-<Layout
-	title={tPage('pageTitle')}
-	description={tPage('pageDescription')}
-	img_preview="/og/preview-website-research-es-dark.png"
-	pageType="research"
->
-	<ResearchPage {research}>
-		<Content components={researchMdxComponents} />
-	</ResearchPage>
-</Layout>
+<Page />

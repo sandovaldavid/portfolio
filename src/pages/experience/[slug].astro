@@ -3,7 +3,7 @@ import { render } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import Layout from '@app/layouts/Layout.astro';
 import { getExperienceData, getExperienceDetailBySlug } from '@entities/experience';
-import { Language } from '@shared/config/i18n';
+import { getLanguageFromLocale, Language } from '@shared/config/i18n';
 import { ExperienceCaseStudy, experienceCaseStudyComponents } from '@widgets/experience-case-study';
 
 export async function getStaticPaths() {
@@ -14,8 +14,9 @@ export async function getStaticPaths() {
 	}));
 }
 
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const slug = Astro.params.slug ?? '';
-const detail = await getExperienceDetailBySlug(Language.ENGLISH, slug);
+const detail = await getExperienceDetailBySlug(lang, slug);
 
 if (!detail) {
 	return Astro.redirect('/404');
@@ -26,8 +27,8 @@ const { Content } = await render(entry);
 const pageTitle = `${experience.title} — ${experience.company} | David Sandoval`;
 const previewImage =
 	slug === 'atena-software-engineer'
-		? `/og/preview-case-study-${slug}-en-dark.png`
-		: '/og/preview-website-experience-en-dark.png';
+		? `/og/preview-case-study-${slug}-${lang}-dark.png`
+		: `/og/preview-website-experience-${lang}-dark.png`;
 const localizedPaths = {
 	[Language.ENGLISH]: getRelativeLocaleUrl(Language.ENGLISH, `experience/${slug}`),
 	[Language.SPANISH]: getRelativeLocaleUrl(Language.SPANISH, `experience/${slug}`),

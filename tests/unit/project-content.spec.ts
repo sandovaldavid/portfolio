@@ -166,14 +166,14 @@ describe('localized project MDX content', () => {
 		expect(queries).toContain('getProjectDetailBySlug');
 		expect(queries).toContain('Duplicate project ID');
 		expect(queries).toContain('Missing project content for locale');
-		for (const route of [englishRoute, spanishRoute]) {
-			expect(route).toContain("import { render } from 'astro:content'");
-			expect(route).toContain('await getProjectDetailBySlug(lang, slug)');
-			expect(route).toContain('const { Content } = await render(entry)');
-			expect(route).toContain('<Content components={projectCaseStudyComponents} />');
-			expect(route).toContain('contentLayout="flush"');
-			expect(route).toContain('getProjectsData');
-		}
+		expect(englishRoute).toContain("import { render } from 'astro:content'");
+		expect(englishRoute).toContain('await getProjectDetailBySlug(lang, slug)');
+		expect(englishRoute).toContain('const { Content } = await render(entry)');
+		expect(englishRoute).toContain('<Content components={projectCaseStudyComponents} />');
+		expect(englishRoute).toContain('contentLayout="flush"');
+		expect(englishRoute).toContain('getProjectsData');
+		expect(spanishRoute).toContain("import Page from '../../projects/[slug].astro'");
+		expect(spanishRoute).toContain('getProjectsData');
 	});
 
 	it('removes obsolete project data owners and the legacy renderer', () => {

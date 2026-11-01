@@ -1,16 +1,5 @@
 ---
-import Layout from '@app/layouts/Layout.astro';
-import { ProjectsCatalog } from '@widgets/projects';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
-
-const tProjects = createScopedUiTranslator(Language.SPANISH, 'sections.projects');
+import Page from '../projects.astro';
 ---
 
-<Layout
-	title={tProjects('catalogTitle')}
-	description={tProjects('catalogDescription')}
-	img_preview="/og/preview-website-projects-es-dark.png"
-	contentLayout="flush"
->
-	<ProjectsCatalog lang={Language.SPANISH} />
-</Layout>
+<Page />

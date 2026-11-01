@@ -96,6 +96,6 @@ describe('localized portfolio profile content', () => {
 		expect(detail).not.toContain('const copy =');
 		expect(detail).not.toContain('isEnglish');
 		expect(englishPage).toContain('profile.data.seo.title');
-		expect(spanishPage).toContain('profile.data.seo.title');
+		expect(spanishPage).toContain("import Page from '../about.astro'");
 	});
 });
