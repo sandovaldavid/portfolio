@@ -11,7 +11,6 @@ import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
 import { RecruiterHUD } from '@widgets/recruiter-hud';
 import { TechStack } from '@widgets/tech-stack';
-import { CLITerminal } from '@features/cli-terminal';
 import { SectionContainer, TitleSection } from '@shared/ui';
 import {
 	createScopedUiTranslator,
@@ -461,7 +460,6 @@ const serializeJsonLd = (schema: unknown): string =>
 			</main>
 			<Footer />
 			<RecruiterHUD localizedPaths={resolvedLocalizedPaths} />
-			<CLITerminal />
 			<ContactSidebar />
 		</div>
 		<Analytics />

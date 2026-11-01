@@ -156,6 +156,7 @@ describe('Home style hygiene', () => {
 		for (const retired of [
 			'#theme-toggle',
 			'.cli-terminal',
+			'#cli-terminal-root',
 			'.splash-screen',
 			'#splash-screen',
 			'.container',
@@ -163,7 +164,6 @@ describe('Home style hygiene', () => {
 			expect(printStyles).not.toContain(retired);
 		}
 		expect(printStyles).toContain('[data-theme-toggle]');
-		expect(printStyles).toContain('#cli-terminal-root');
 		expect(printStyles).toContain("a[href='#main-content']");
 	});
 });

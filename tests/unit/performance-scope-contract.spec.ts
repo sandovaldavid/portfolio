@@ -6,8 +6,6 @@ const projectCard = readSource('src/entities/project/ui/ProjectCard.astro');
 const projects = readSource('src/widgets/projects/ui/Projects.astro');
 const layout = readSource('src/app/layouts/Layout.astro');
 const notFound = readSource('src/pages/404.astro');
-const cliTerminal = readSource('src/features/cli-terminal/ui/CLITerminalHome.astro');
-const cliIndex = readSource('src/features/cli-terminal/index.ts');
 
 describe('Route performance scope contract', () => {
 	it('keeps catalog images below the primary-card raster target and lazy-loads Home project cards', () => {
@@ -30,15 +28,5 @@ describe('Route performance scope contract', () => {
 			);
 			expect(source).not.toContain('<Font cssVariable="--font-pixel-clean" preload />');
 		}
-	});
-
-	it('keeps the section-oriented CLI terminal on localized home routes only', () => {
-		expect(cliIndex).toContain("from './ui/CLITerminalHome.astro'");
-		expect(cliTerminal).toContain("import { getPathByLocale } from 'astro:i18n'");
-		expect(cliTerminal).toContain("Astro.url.pathname.split('/').filter(Boolean)");
-		expect(cliTerminal).toContain('pathnameSegments.length === 0');
-		expect(cliTerminal).toContain('pathnameSegments.length === 1');
-		expect(cliTerminal).toContain('pathnameSegments[0] === localePath');
-		expect(cliTerminal).toContain('isHome && <CLITerminalCatalog />');
 	});
 });

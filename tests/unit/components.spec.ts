@@ -46,11 +46,6 @@ describe('home section catalog consumers', () => {
 	});
 
 	it('enforces WCAG 2.2 AA modal focus traps, shortcut toggle, target sizes, and semantic CTAs', () => {
-		const cliRuntime = readFileSync('src/features/cli-terminal/model/runtime.ts', 'utf8');
-		const cliCatalog = readFileSync(
-			'src/features/cli-terminal/ui/CLITerminalCatalog.astro',
-			'utf8'
-		);
 		const mobileNav = readFileSync('src/widgets/header/ui/MobileNav.astro', 'utf8');
 		const linkButton = readFileSync('src/shared/ui/link-button/LinkButton.astro', 'utf8');
 		const projectCard = readFileSync('src/entities/project/ui/ProjectCard.astro', 'utf8');
@@ -65,14 +60,6 @@ describe('home section catalog consumers', () => {
 		const experience = readFileSync('src/widgets/experience/ui/Experience.astro', 'utf8');
 		const mermaid = readFileSync('src/shared/ui/rich-content/ui/MermaidDiagram.astro', 'utf8');
 
-		expect(cliRuntime).toContain('trapDialogFocus');
-		expect(cliRuntime).toContain('getScrollBehavior');
-		expect(cliRuntime).toContain('portfolio-vim-shortcuts');
-		expect(cliRuntime).toContain(
-			"if (event.key === 'Tab' && !event.shiftKey && cliInput.value.trim().length > 0)"
-		);
-		expect(cliCatalog).toContain('inline-flex size-6 items-center justify-center');
-		expect(cliCatalog).toContain('id="shortcuts-toggle"');
 		expect(mobileNav).toContain("if (e.key === 'Tab')");
 		expect(linkButton).toContain('href={disabled ? undefined : href}');
 		expect(projectCard).toContain('<span class="sr-only">: {title}</span>');

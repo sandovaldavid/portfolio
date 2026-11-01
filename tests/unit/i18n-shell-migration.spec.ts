@@ -1,21 +1,9 @@
-import { existsSync, readFileSync } from 'node:fs';
+import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 
 describe('shared shell localization migration', () => {
-	it('removes the component-local bilingual CLI implementation', () => {
-		expect(existsSync('src/features/cli-terminal/ui/CLITerminal.astro')).toBe(false);
-
-		const component = readSource('src/features/cli-terminal/ui/CLITerminalCatalog.astro');
-		const runtime = readSource('src/features/cli-terminal/model/runtime.ts');
-
-		expect(component).toContain("createScopedUiTranslator(lang, 'cli')");
-		expect(component).toContain("getUiCatalogNamespace(lang, 'cli')");
-		expect(runtime).not.toMatch(/\bisEn\b/);
-		expect(runtime).not.toMatch(/lang\s*===\s*['"]en['"]/);
-	});
-
 	it('uses granular catalogs in every migrated shared surface', () => {
 		const migratedFiles = [
 			'src/widgets/header/ui/Header.astro',

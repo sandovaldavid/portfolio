@@ -1,6 +1,5 @@
 import accessibilityEn from './locales/en/accessibility.json';
 import breadcrumbsEn from './locales/en/breadcrumbs.json';
-import cliEn from './locales/en/cli.json';
 import commonEn from './locales/en/common.json';
 import errorsEn from './locales/en/errors.json';
 import footerEn from './locales/en/footer.json';
@@ -24,7 +23,6 @@ import techStackEn from './locales/en/sections/tech-stack.json';
 import themeEn from './locales/en/theme.json';
 import accessibilityEs from './locales/es/accessibility.json';
 import breadcrumbsEs from './locales/es/breadcrumbs.json';
-import cliEs from './locales/es/cli.json';
 import commonEs from './locales/es/common.json';
 import errorsEs from './locales/es/errors.json';
 import footerEs from './locales/es/footer.json';
@@ -54,7 +52,6 @@ const englishCatalog = {
 	navigation: navigationEn,
 	accessibility: accessibilityEn,
 	breadcrumbs: breadcrumbsEn,
-	cli: cliEn,
 	footer: footerEn,
 	metadata: metadataEn,
 	theme: themeEn,
@@ -85,7 +82,6 @@ const spanishCatalog = {
 	navigation: navigationEs,
 	accessibility: accessibilityEs,
 	breadcrumbs: breadcrumbsEs,
-	cli: cliEs,
 	footer: footerEs,
 	metadata: metadataEs,
 	theme: themeEs,
@@ -116,7 +112,6 @@ export const UI_CATALOG_MODULES = [
 	'navigation',
 	'accessibility',
 	'breadcrumbs',
-	'cli',
 	'footer',
 	'metadata',
 	'theme',
