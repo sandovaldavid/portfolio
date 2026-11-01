@@ -1,1 +1,1 @@
-export * from './ui';
+export { default as Research } from './ui/Research.astro';

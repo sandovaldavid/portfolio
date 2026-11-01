@@ -3,7 +3,8 @@ import { Image } from 'astro:assets';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import GitHubIcon from '@assets/technologies/GitHub.astro';
 import { Badge, LinkButton, TechPill } from '@shared/ui';
-import type { ProjectItem, ProjectLifecycle } from '../model';
+import type { ProjectLifecycle } from '../model/metadata';
+import type { ProjectItem } from '../model/types';
 
 interface Props {
 	project: ProjectItem;

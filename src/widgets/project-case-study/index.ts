@@ -1,12 +1,10 @@
-export {
-	CaseStudyCard,
-	CaseStudyGrid,
-	CaseStudySection,
-	EvidenceBlock,
-	MermaidDiagram,
-	ProjectCaseStudy,
-	ProjectGallery,
-	ProjectResources,
-	ProjectVideo,
-	projectCaseStudyComponents,
-} from './ui';
+export { MermaidDiagram } from '@shared/ui/rich-content';
+export { default as CaseStudyCard } from './ui/CaseStudyCard.astro';
+export { default as CaseStudyGrid } from './ui/CaseStudyGrid.astro';
+export { default as CaseStudySection } from './ui/CaseStudySection.astro';
+export { default as EvidenceBlock } from './ui/EvidenceBlock.astro';
+export { default as ProjectCaseStudy } from './ui/ProjectCaseStudy.astro';
+export { default as ProjectGallery } from './ui/ProjectGallery.astro';
+export { default as ProjectResources } from './ui/ProjectResources.astro';
+export { default as ProjectVideo } from './ui/ProjectVideo.astro';
+export { projectCaseStudyComponents } from './ui/mdx-components';

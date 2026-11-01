@@ -1,25 +1,21 @@
-export {
-	PROJECT_METADATA,
-	PROJECT_TECHNOLOGIES,
-	getProjectBySlug,
-	getProjectDetailBySlug,
-	getProjectsData,
-	isProjectId,
-} from './model';
+export { PROJECT_METADATA, PROJECT_TECHNOLOGIES, isProjectId } from './model/metadata';
+export type {
+	ProjectDemoAccess,
+	ProjectId,
+	ProjectLifecycle,
+	ProjectRepository,
+	ProjectResourceKind,
+	ProjectSourceAccess,
+	ProjectTechnologyId,
+} from './model/metadata';
+export { getProjectBySlug, getProjectDetailBySlug, getProjectsData } from './model/queries';
 export type {
 	CaseStudy,
 	CaseStudyStatus,
 	ProjectContentData,
 	ProjectContentEntry,
-	ProjectDemoAccess,
 	ProjectDetail,
-	ProjectId,
 	ProjectItem,
-	ProjectLifecycle,
 	ProjectList,
-	ProjectRepository,
-	ProjectResourceKind,
-	ProjectSourceAccess,
-	ProjectTechnologyId,
-} from './model';
-export { ProjectCard } from './ui';
+} from './model/types';
+export { default as ProjectCard } from './ui/ProjectCard.astro';
