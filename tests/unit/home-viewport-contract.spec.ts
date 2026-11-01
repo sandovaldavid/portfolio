@@ -13,10 +13,6 @@ const experienceTab = readFileSync('src/widgets/experience/ui/ExperienceTab.astr
 const projectCard = readFileSync('src/entities/project/ui/ProjectCard.astro', 'utf8');
 const projects = readFileSync('src/widgets/projects/ui/Projects.astro', 'utf8');
 const aboutMe = readFileSync('src/widgets/about-me/ui/AboutMe.astro', 'utf8');
-const sectionScroll = readFileSync(
-	'src/features/section-scroll/ui/SectionScrollController.astro',
-	'utf8'
-);
 
 describe('Home viewport section contract', () => {
 	it('uses an explicit full-width Home wrapper without viewport-width or relational-selector hacks', () => {
@@ -92,29 +88,5 @@ describe('Home viewport section contract', () => {
 		expect(aboutMe).toContain('data-about-current-role');
 		expect(aboutMe).toContain('border-t border-edge-subtle');
 		expect(aboutMe).toContain('lg:grid-cols-[200px_minmax(0,1fr)_auto]');
-	});
-
-	it('snaps viewport sections through About Me into Contact while yielding to real vertical scrollers', () => {
-		expect(sectionScroll).toContain(
-			"['hero', 'experience', 'projects', 'research', 'about-me', 'contact']"
-		);
-		expect(sectionScroll).not.toContain(
-			"querySelectorAll<HTMLElement>('main > div > section[id], footer[id]')"
-		);
-		expect(sectionScroll).toContain('elementCanScrollVertically');
-		expect(sectionScroll).toContain('const { overflowY } = window.getComputedStyle(element)');
-		expect(sectionScroll).not.toContain("closest(\n\t\t\t\t\t'.overflow-y-auto");
-		expect(sectionScroll).not.toContain('.overflow-x-auto, .overflow-auto');
-		expect(sectionScroll).toContain('findDirectionalTarget');
-		expect(sectionScroll).toContain('WHEEL_QUIET_PERIOD');
-		expect(sectionScroll).not.toContain('}, 500);');
-		expect(sectionScroll).toContain(
-			'The directional Home journey closes explicitly from About Me to Contact'
-		);
-		expect(sectionScroll).toContain(
-			'Core Stack stays content-driven rather than becoming a viewport snap target.'
-		);
-		expect(sectionScroll).toContain('sectionScrollCleanup?.()');
-		expect(sectionScroll).toContain("window.removeEventListener('wheel', onWheel)");
 	});
 });

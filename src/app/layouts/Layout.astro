@@ -12,7 +12,6 @@ import { Header } from '@widgets/header';
 import { RecruiterHUD } from '@widgets/recruiter-hud';
 import { TechStack } from '@widgets/tech-stack';
 import { CLITerminal } from '@features/cli-terminal';
-import { SectionScrollController } from '@features/section-scroll';
 import { SectionContainer, TitleSection } from '@shared/ui';
 import {
 	createScopedUiTranslator,
@@ -464,7 +463,6 @@ const serializeJsonLd = (schema: unknown): string =>
 			<RecruiterHUD localizedPaths={resolvedLocalizedPaths} />
 			<CLITerminal />
 			<ContactSidebar />
-			<SectionScrollController enabled={isHome} />
 		</div>
 		<Analytics />
 	</body>
