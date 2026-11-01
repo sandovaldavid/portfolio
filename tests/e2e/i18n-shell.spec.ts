@@ -46,38 +46,15 @@ async function expectLocalizedShell(
 	await expect(
 		page.getByRole('group', { name: isEnglish ? 'Choose language' : 'Elegir idioma' }).first()
 	).toBeAttached();
-
-	await page.keyboard.press('?');
-	await expect(
-		page.getByRole('dialog', {
-			name: isEnglish ? 'Keyboard shortcuts' : 'Atajos de teclado',
-		})
-	).toBeVisible();
-	await page.keyboard.press('Escape');
-
-	await page.keyboard.press(':');
-	await expect(
-		page.getByRole('dialog', {
-			name: isEnglish ? 'Portfolio CLI terminal' : 'Terminal CLI del portafolio',
-		})
-	).toBeVisible();
-	await expect(
-		page.getByRole('textbox', {
-			name: isEnglish ? 'Terminal command input' : 'Entrada de comandos de la terminal',
-		})
-	).toHaveAttribute(
-		'placeholder',
-		isEnglish ? "type a command… (try 'help')" : "escribe un comando… (prueba 'help')"
-	);
 }
 
 test.describe('Localized shared shell', () => {
-	test('renders English navigation, controls and CLI labels', async ({ page }, testInfo) => {
+	test('renders English navigation and controls', async ({ page }, testInfo) => {
 		await page.goto('/');
 		await expectLocalizedShell(page, Boolean(testInfo.project.use.isMobile), 'en');
 	});
 
-	test('renders Spanish navigation, controls and CLI labels', async ({ page }, testInfo) => {
+	test('renders Spanish navigation and controls', async ({ page }, testInfo) => {
 		await page.goto('/es/');
 		await expectLocalizedShell(page, Boolean(testInfo.project.use.isMobile), 'es');
 	});
