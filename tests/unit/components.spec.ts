@@ -51,7 +51,6 @@ describe('home section catalog consumers', () => {
 			'src/features/cli-terminal/ui/CLITerminalCatalog.astro',
 			'utf8'
 		);
-		const splash = readFileSync('src/features/splash-screen/ui/SplashScreen.astro', 'utf8');
 		const mobileNav = readFileSync('src/widgets/header/ui/MobileNav.astro', 'utf8');
 		const linkButton = readFileSync('src/shared/ui/link-button/LinkButton.astro', 'utf8');
 		const projectCard = readFileSync('src/entities/project/ui/ProjectCard.astro', 'utf8');
@@ -74,7 +73,6 @@ describe('home section catalog consumers', () => {
 		);
 		expect(cliCatalog).toContain('inline-flex size-6 items-center justify-center');
 		expect(cliCatalog).toContain('id="shortcuts-toggle"');
-		expect(splash).toContain('min-h-6 min-w-6');
 		expect(mobileNav).toContain("if (e.key === 'Tab')");
 		expect(linkButton).toContain('href={disabled ? undefined : href}');
 		expect(projectCard).toContain('<span class="sr-only">: {title}</span>');

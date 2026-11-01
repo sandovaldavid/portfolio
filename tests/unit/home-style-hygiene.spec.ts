@@ -153,12 +153,17 @@ describe('Home style hygiene', () => {
 	});
 
 	it('keeps print-only hiding rules aligned with current component selectors', () => {
-		for (const retired of ['#theme-toggle', '.cli-terminal', '.splash-screen', '.container']) {
+		for (const retired of [
+			'#theme-toggle',
+			'.cli-terminal',
+			'.splash-screen',
+			'#splash-screen',
+			'.container',
+		]) {
 			expect(printStyles).not.toContain(retired);
 		}
 		expect(printStyles).toContain('[data-theme-toggle]');
 		expect(printStyles).toContain('#cli-terminal-root');
-		expect(printStyles).toContain('#splash-screen');
 		expect(printStyles).toContain("a[href='#main-content']");
 	});
 });

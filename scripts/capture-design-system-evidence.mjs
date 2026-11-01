@@ -101,15 +101,6 @@ const scenarios = [
 			await page.locator('#cli-overlay').waitFor({ state: 'visible' });
 		},
 	},
-	{
-		name: 'splash-dark',
-		path: '/?retro=1',
-		theme: 'dark',
-		viewport: { width: 1280, height: 900 },
-		prepare: async page => {
-			await page.locator('#splash-screen').waitFor({ state: 'visible' });
-		},
-	},
 ];
 
 /**

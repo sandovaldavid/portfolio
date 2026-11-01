@@ -21,7 +21,6 @@ import heroEn from './locales/en/sections/hero.json';
 import projectsEn from './locales/en/sections/projects.json';
 import researchEn from './locales/en/sections/research.json';
 import techStackEn from './locales/en/sections/tech-stack.json';
-import splashEn from './locales/en/splash.json';
 import themeEn from './locales/en/theme.json';
 import accessibilityEs from './locales/es/accessibility.json';
 import breadcrumbsEs from './locales/es/breadcrumbs.json';
@@ -46,7 +45,6 @@ import heroEs from './locales/es/sections/hero.json';
 import projectsEs from './locales/es/sections/projects.json';
 import researchEs from './locales/es/sections/research.json';
 import techStackEs from './locales/es/sections/tech-stack.json';
-import splashEs from './locales/es/splash.json';
 import themeEs from './locales/es/theme.json';
 import { Language } from './languages';
 import type { KeysWithinNamespace, LeafPath, StringCatalogShape } from './types';
@@ -62,7 +60,6 @@ const englishCatalog = {
 	theme: themeEn,
 	errors: errorsEn,
 	recruiter: recruiterEn,
-	splash: splashEn,
 	pages: {
 		about: aboutPageEn,
 		blog: blogEn,
@@ -94,7 +91,6 @@ const spanishCatalog = {
 	theme: themeEs,
 	errors: errorsEs,
 	recruiter: recruiterEs,
-	splash: splashEs,
 	pages: {
 		about: aboutPageEs,
 		blog: blogEs,
@@ -126,7 +122,6 @@ export const UI_CATALOG_MODULES = [
 	'theme',
 	'errors',
 	'recruiter',
-	'splash',
 	'pages.about',
 	'pages.blog',
 	'pages.components',
