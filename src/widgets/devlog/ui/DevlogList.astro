@@ -2,7 +2,7 @@
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import { getDevlogPosts, getDevlogSlug } from '@entities/devlog';
 import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
-import DevlogCard from './DevlogCard.astro';
+import { EditorialCard } from '@shared/ui';
 
 /*
  * Devlog list composition:
@@ -80,10 +80,16 @@ const formatCount = (count: number) => String(count).padStart(2, '0');
 		<div class="mx-auto w-full max-w-320">
 			<div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:gap-8">
 				{posts.map(post => (
-					<DevlogCard
-						{post}
-						readMoreText={tDevlog('readMore')}
-						readMoreLink={getRelativeLocaleUrl(lang, `devlog/${getDevlogSlug(post)}`)}
+					<EditorialCard
+						typeLabel={post.data.version}
+						metaText={`${post.data.pubDate.toISOString().split('T')[0]} · #${getDevlogSlug(post)}`}
+						datetime={post.data.pubDate.toISOString()}
+						tags={post.data.tags}
+						title={post.data.title}
+						description={post.data.summary}
+						ctaText={tDevlog('readMore')}
+						ctaHref={getRelativeLocaleUrl(lang, `devlog/${getDevlogSlug(post)}`)}
+						headingLevel="h2"
 					/>
 				))}
 			</div>

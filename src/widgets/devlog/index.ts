@@ -1,1 +1,1 @@
-export { DevlogCard, DevlogDetail, DevlogList } from './ui';
+export { DevlogDetail, DevlogList } from './ui';

@@ -136,6 +136,10 @@ describe('editorial translation pairing', () => {
 		const englishRss = readFileSync('src/pages/rss.xml.ts', 'utf8');
 		const spanishRss = readFileSync('src/pages/es/rss.xml.ts', 'utf8');
 		const blogQueries = readFileSync('src/entities/blog/model/queries.ts', 'utf8');
+		const editorialQueries = readFileSync(
+			'src/shared/lib/content/editorial-queries.ts',
+			'utf8'
+		);
 
 		expect(englishRss).toContain('const lang = Language.ENGLISH');
 		expect(englishRss).toContain("createScopedUiTranslator(lang, 'metadata')");
@@ -149,7 +153,8 @@ describe('editorial translation pairing', () => {
 		expect(spanishRss).toContain("customData: '<language>es</language>'");
 		expect(spanishRss).toContain('link: `/es/blog/${getBlogSlug(post)}/`');
 
-		expect(blogQueries).toContain('isContentForLanguage(post.id, lang)');
+		expect(blogQueries).toContain('filterAndSortEditorialPosts(posts, lang, isPublished)');
+		expect(editorialQueries).toContain('isContentForLanguage(post.id, lang)');
 		expect(blogQueries).toContain('import.meta.env.PROD ? !post.data.draft : true');
 	});
 });
