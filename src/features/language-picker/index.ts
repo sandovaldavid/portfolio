@@ -1,2 +1,2 @@
-export { LanguagePicker } from './ui';
-export type { Language, LanguagePickerProps, LocalizedPathMap } from './model';
+export { default as LanguagePicker } from './ui/LanguagePicker.astro';
+export type { Language, LanguagePickerProps, LocalizedPathMap } from './model/types';

@@ -1,10 +1,10 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
 import { getExperienceData } from '@entities/experience';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { ExperienceArchive } from '@widgets/experience-case-study';
 
-const lang = Language.ENGLISH;
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const tPage = createScopedUiTranslator(lang, 'pages.experience');
 const experience = await getExperienceData(lang);
 ---
@@ -12,7 +12,7 @@ const experience = await getExperienceData(lang);
 <Layout
 	title={`${tPage('archiveTitle')} | David Sandoval`}
 	description={tPage('archiveSummary')}
-	img_preview="/og/preview-website-experience-en-dark.png"
+	img_preview={`/og/preview-website-experience-${lang}-dark.png`}
 	breadcrumbLabel={tPage('archiveTitle')}
 >
 	<ExperienceArchive {experience} />

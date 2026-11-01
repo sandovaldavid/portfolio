@@ -85,31 +85,6 @@ const scenarios = [
 		theme: 'light',
 		viewport: { width: 1280, height: 900 },
 	},
-	{
-		name: 'cli-dark',
-		path: '/',
-		theme: 'dark',
-		viewport: { width: 1280, height: 900 },
-		prepare: async page => {
-			await page.waitForFunction(
-				() => typeof Reflect.get(globalThis, '__openCLI') === 'function'
-			);
-			await page.evaluate(() => {
-				const openCli = Reflect.get(globalThis, '__openCLI');
-				if (typeof openCli === 'function') openCli();
-			});
-			await page.locator('#cli-overlay').waitFor({ state: 'visible' });
-		},
-	},
-	{
-		name: 'splash-dark',
-		path: '/?retro=1',
-		theme: 'dark',
-		viewport: { width: 1280, height: 900 },
-		prepare: async page => {
-			await page.locator('#splash-screen').waitFor({ state: 'visible' });
-		},
-	},
 ];
 
 /**

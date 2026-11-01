@@ -1,6 +1,5 @@
 import accessibilityEn from './locales/en/accessibility.json';
 import breadcrumbsEn from './locales/en/breadcrumbs.json';
-import cliEn from './locales/en/cli.json';
 import commonEn from './locales/en/common.json';
 import errorsEn from './locales/en/errors.json';
 import footerEn from './locales/en/footer.json';
@@ -21,11 +20,9 @@ import heroEn from './locales/en/sections/hero.json';
 import projectsEn from './locales/en/sections/projects.json';
 import researchEn from './locales/en/sections/research.json';
 import techStackEn from './locales/en/sections/tech-stack.json';
-import splashEn from './locales/en/splash.json';
 import themeEn from './locales/en/theme.json';
 import accessibilityEs from './locales/es/accessibility.json';
 import breadcrumbsEs from './locales/es/breadcrumbs.json';
-import cliEs from './locales/es/cli.json';
 import commonEs from './locales/es/common.json';
 import errorsEs from './locales/es/errors.json';
 import footerEs from './locales/es/footer.json';
@@ -46,7 +43,6 @@ import heroEs from './locales/es/sections/hero.json';
 import projectsEs from './locales/es/sections/projects.json';
 import researchEs from './locales/es/sections/research.json';
 import techStackEs from './locales/es/sections/tech-stack.json';
-import splashEs from './locales/es/splash.json';
 import themeEs from './locales/es/theme.json';
 import { Language } from './languages';
 import type { KeysWithinNamespace, LeafPath, StringCatalogShape } from './types';
@@ -56,13 +52,11 @@ const englishCatalog = {
 	navigation: navigationEn,
 	accessibility: accessibilityEn,
 	breadcrumbs: breadcrumbsEn,
-	cli: cliEn,
 	footer: footerEn,
 	metadata: metadataEn,
 	theme: themeEn,
 	errors: errorsEn,
 	recruiter: recruiterEn,
-	splash: splashEn,
 	pages: {
 		about: aboutPageEn,
 		blog: blogEn,
@@ -88,13 +82,11 @@ const spanishCatalog = {
 	navigation: navigationEs,
 	accessibility: accessibilityEs,
 	breadcrumbs: breadcrumbsEs,
-	cli: cliEs,
 	footer: footerEs,
 	metadata: metadataEs,
 	theme: themeEs,
 	errors: errorsEs,
 	recruiter: recruiterEs,
-	splash: splashEs,
 	pages: {
 		about: aboutPageEs,
 		blog: blogEs,
@@ -120,13 +112,11 @@ export const UI_CATALOG_MODULES = [
 	'navigation',
 	'accessibility',
 	'breadcrumbs',
-	'cli',
 	'footer',
 	'metadata',
 	'theme',
 	'errors',
 	'recruiter',
-	'splash',
 	'pages.about',
 	'pages.blog',
 	'pages.components',

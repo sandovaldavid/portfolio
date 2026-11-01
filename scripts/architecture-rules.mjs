@@ -42,6 +42,9 @@ const ALIASES = [
 	{ alias: '@components', layer: null, root: 'src/components', retired: true },
 	{ alias: '@styles', layer: null, root: 'src/styles', retired: true },
 	{ alias: '@assets', layer: null, root: 'src/assets' },
+	{ alias: '@content', layer: null, root: 'src/content' },
+	{ alias: '@scripts', layer: null, root: 'scripts' },
+	{ alias: '@tests', layer: null, root: 'tests' },
 ];
 
 /**

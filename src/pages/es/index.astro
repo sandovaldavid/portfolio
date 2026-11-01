@@ -14,7 +14,7 @@ const tMetadata = createScopedUiTranslator(lang, 'metadata');
 <Layout
 	title={tMetadata('siteTitle')}
 	description={tMetadata('siteDescription')}
-	img_preview="/og/preview-portfolio-home-es-dark.png"
+	img_preview={`/og/preview-portfolio-home-${lang}-dark.png`}
 	isHome
 >
 	<Hero slot="hero" />

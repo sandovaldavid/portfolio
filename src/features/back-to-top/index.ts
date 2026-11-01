@@ -1,1 +1,1 @@
-export { BackToTop } from './ui';
+export { default as BackToTop } from './ui/BackToTop.astro';

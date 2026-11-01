@@ -5,7 +5,7 @@ import { describe, expect, it } from 'vitest';
 import {
 	ResumeAssetValidationError,
 	validateResumeAssets,
-} from '../../scripts/validate-resume-assets.mjs';
+} from '@scripts/validate-resume-assets.mjs';
 
 const SOURCE_COMMIT = 'a'.repeat(40);
 const ENGLISH_FILENAME = 'david-sandoval-resume.pdf';

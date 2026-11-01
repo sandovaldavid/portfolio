@@ -3,7 +3,7 @@ import {
 	getMermaidDirection,
 	normalizeMermaidAuthoring,
 	prepareMermaidChart,
-} from '../../src/shared/ui/rich-content/model/diagram';
+} from '@shared/ui/rich-content/model/diagram';
 
 describe('Mermaid rich-content authoring adapter', () => {
 	it('converts physical newlines inside quoted labels to Mermaid Markdown Strings', () => {

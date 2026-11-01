@@ -1,2 +1,7 @@
-export type { DevlogPost } from './model';
-export { getDevlogLocalizedPaths, getDevlogPost, getDevlogPosts, getDevlogSlug } from './model';
+export type { DevlogPost } from './model/types';
+export {
+	getDevlogLocalizedPaths,
+	getDevlogPost,
+	getDevlogPosts,
+	getDevlogSlug,
+} from './model/queries';

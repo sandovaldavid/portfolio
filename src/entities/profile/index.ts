@@ -1,2 +1,2 @@
-export type { PortfolioProfile, PortfolioProfileData } from './model';
-export { getPortfolioProfile } from './model';
+export type { PortfolioProfile, PortfolioProfileData } from './model/types';
+export { getPortfolioProfile } from './model/queries';

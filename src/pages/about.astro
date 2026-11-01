@@ -1,10 +1,10 @@
 ---
 import Layout from '@app/layouts/Layout.astro';
 import { getPortfolioProfile } from '@entities/profile';
-import { createScopedUiTranslator, Language } from '@shared/config/i18n';
+import { createScopedUiTranslator, getLanguageFromLocale } from '@shared/config/i18n';
 import { AboutContent } from '@widgets/about-content';
 
-const lang = Language.ENGLISH;
+const lang = getLanguageFromLocale(Astro.currentLocale);
 const profile = await getPortfolioProfile(lang);
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 ---
@@ -12,7 +12,7 @@ const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 <Layout
 	title={profile.data.seo.title}
 	description={profile.data.seo.description}
-	img_preview="/og/preview-profile-about-en-dark.png"
+	img_preview={`/og/preview-profile-about-${lang}-dark.png`}
 	pageType="profile"
 	contentLayout="flush"
 >
