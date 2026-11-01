@@ -2,7 +2,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { validateProductionOutput } from '../../scripts/check-production-output.mjs';
+import { validateProductionOutput } from '@scripts/check-production-output.mjs';
 
 const fixtures: string[] = [];
 

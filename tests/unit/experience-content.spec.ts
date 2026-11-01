@@ -1,9 +1,6 @@
 import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
-import {
-	EXPERIENCE_METADATA,
-	EXPERIENCE_TECHNOLOGIES,
-} from '../../src/entities/experience/model/metadata';
+import { EXPERIENCE_METADATA, EXPERIENCE_TECHNOLOGIES } from '@entities/experience/model/metadata';
 
 const readSource = (path: string): string => readFileSync(path, 'utf8');
 const locales = ['en', 'es'] as const;

@@ -51,6 +51,9 @@ export default defineConfig({
 			'@widgets': path.resolve(root, 'src/widgets'),
 			'@app': path.resolve(root, 'src/app'),
 			'@assets': path.resolve(root, 'src/assets'),
+			'@content': path.resolve(root, 'src/content'),
+			'@scripts': path.resolve(root, 'scripts'),
+			'@tests': path.resolve(root, 'tests'),
 		},
 	},
 });

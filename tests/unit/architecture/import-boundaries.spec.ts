@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { extractImportSpecifiers, validateImport } from '../../../scripts/architecture-rules.mjs';
+import { extractImportSpecifiers, validateImport } from '@scripts/architecture-rules.mjs';
 
 const validate = (importer: string, specifier: string): string[] =>
 	validateImport({ importer, specifier, rootDir: process.cwd() });
