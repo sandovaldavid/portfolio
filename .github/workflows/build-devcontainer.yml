@@ -78,18 +78,21 @@ jobs:
               run: |
                   node -e "
                     const fs = require('node:fs');
-                    const file = '.devcontainer/devcontainer.json';
-                    const config = JSON.parse(fs.readFileSync(file, 'utf8'));
+                    const directory = '.devcontainer/ci';
+                    const config = JSON.parse(fs.readFileSync('.devcontainer/devcontainer.json', 'utf8'));
                     config.updateRemoteUserUID = true;
                     config.runArgs = (config.runArgs ?? []).filter(arg => arg !== '--userns=keep-id');
-                    fs.writeFileSync('.devcontainer/devcontainer.ci.json', JSON.stringify(config, null, 2) + '\n');
+                    config.build = { ...config.build, context: '../..', dockerfile: '../Dockerfile' };
+                    fs.mkdirSync(directory, { recursive: true });
+                    fs.writeFileSync(directory + '/devcontainer.json', JSON.stringify(config, null, 2) + '\n');
+                    fs.copyFileSync('.devcontainer/devcontainer-lock.json', directory + '/devcontainer-lock.json');
                   "
 
             - name: Build, validate and optionally publish development container
               uses: devcontainers/ci@v0.3
               with:
                   imageName: ${{ env.IMAGE_NAME }}
-                  configFile: .devcontainer/devcontainer.ci.json
+                  configFile: .devcontainer/ci/devcontainer.json
                   imageTag: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || github.ref_name }},${{ github.sha }}
                   cacheFrom: ${{ env.IMAGE_NAME }}
                   push: ${{ github.event_name == 'push' && 'always' || 'never' }}
