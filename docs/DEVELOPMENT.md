@@ -115,14 +115,14 @@ Do not recursively change ownership of the repository. A corrupted disposable `n
 
 ### Docker-backed visual tests fail
 
-Confirm that the host Docker daemon is running and that the container can execute:
+The Dev Container does not mount the host container socket, so `bun run test:docker` must run from the host. Confirm the host CLI and Compose provider are available:
 
 ```bash
 docker --version
 docker compose version
 ```
 
-The Dev Container reuses the host Docker daemon; only trusted repository code should run with that access. The separate Docker test image is maintained for visual-regression reproducibility, not as the general local browser runtime.
+The separate Docker test image is maintained for visual-regression reproducibility, not as the general local browser runtime.
 
 ### Forwarded port conflict
 

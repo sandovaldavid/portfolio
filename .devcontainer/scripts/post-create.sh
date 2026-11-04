@@ -51,13 +51,19 @@ fi
 
 bun run check:devcontainer
 
-docker --version
-docker compose version
+if command -v docker >/dev/null 2>&1; then
+	docker --version
+	if docker compose version >/dev/null 2>&1; then
+		docker compose version
+	fi
 
-if docker info >/dev/null 2>&1; then
-	echo "Docker daemon connection: available"
+	if docker info >/dev/null 2>&1; then
+		echo "Docker daemon connection: available"
+	else
+		echo "Docker daemon connection: unavailable. Start the host Docker daemon before running Docker-backed tests." >&2
+	fi
 else
-	echo "Docker daemon connection: unavailable. Start the host Docker daemon before running Docker-backed tests." >&2
+	echo "Docker CLI not installed in container (running in isolated mode)."
 fi
 
 printf '\nDevelopment container ready.\n'
