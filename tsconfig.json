@@ -13,5 +13,16 @@
 			"@widgets/*": ["./src/widgets/*"]
 		}
 	},
-	"exclude": ["dist", "coverage/", "tests/", "playwright.config.ts", "vitest.config.ts"]
+	"exclude": [
+		"dist",
+		"coverage/",
+		"playwright-report/",
+		"test-results/",
+		"bundle-analysis/",
+		"performance-report/",
+		".lighthouseci/",
+		"tests/",
+		"playwright.config.ts",
+		"vitest.config.ts"
+	]
 }
