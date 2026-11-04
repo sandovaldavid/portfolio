@@ -43,20 +43,19 @@ Active documentation should describe implemented operation. Decisions, alternati
 
 ## Branch and pull-request model
 
-- `develop` is the integration base for ordinary work.
-- `main` is the default and production branch.
+- `main` is the default and only long-lived development branch.
 - `resume-assets` contains only the validated public CV payload.
 
 Before changing the repository:
 
-1. update `develop` and create one short-lived branch;
+1. update `main` and create one short-lived branch;
 2. read the issue, nearby source, tests and the smallest owning document;
 3. identify localization, accessibility, responsive and regression impact;
 4. implement one coherent concern;
 5. run the strongest applicable validation;
-6. open the pull request into `develop`.
+6. open the pull request into `main`.
 
-Do not push directly to `develop` or `main`. Production promotion is a separate `develop` to `main` pull request governed by [docs/DELIVERY.md](docs/DELIVERY.md).
+Do not push directly to `main`. Pushes to `main` deploy to the development/preview environment (`dev.sandovaldavid.com`). Production deployment is triggered when a release tag is published, governed by [docs/DELIVERY.md](docs/DELIVERY.md).
 
 ## Architecture
 

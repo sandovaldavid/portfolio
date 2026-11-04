@@ -22,7 +22,7 @@ A bilingual, static-first portfolio for presenting software-engineering experien
 - **Architecture:** dependencies follow `src/pages → app → widgets → features → entities → shared` and are enforced by `bun run lint:architecture`.
 - **Localization:** English is unprefixed and Spanish uses `/es`; typed UI catalogs, localized Content Collections and route checks enforce parity.
 - **Quality:** Vitest, Playwright, Axe, generated-link checks, route budgets and Lighthouse are versioned in the repository.
-- **Deployment:** `develop` is the integration branch and `main` is the production branch.
+- **Deployment:** `main` serves as the development/preview environment; production deploys on published releases.
 - **Resume delivery:** validated public PDFs are supplied through the isolated `resume-assets` branch; editable sources remain private.
 
 ## Architecture
@@ -40,7 +40,6 @@ Use the Bun version declared in [package.json](package.json).
 ```bash
 git clone https://github.com/sandovaldavid/portfolio.git
 cd portfolio
-git switch develop
 bun install --frozen-lockfile
 bun run dev
 ```
