@@ -71,10 +71,28 @@ jobs:
             - name: Resolve development image name
               run: echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY,,}/devcontainer" >> "$GITHUB_ENV"
 
+            # The committed config targets rootless Podman: --userns=keep-id and
+            # updateRemoteUserUID=false. GitHub runners use Docker, which rejects
+            # keep-id and needs the UID helper to match the 1001 runner workspace.
+            - name: Prepare Docker-compatible container config
+              run: |
+                  node -e "
+                    const fs = require('node:fs');
+                    const directory = '.devcontainer/ci';
+                    const config = JSON.parse(fs.readFileSync('.devcontainer/devcontainer.json', 'utf8'));
+                    config.updateRemoteUserUID = true;
+                    config.runArgs = (config.runArgs ?? []).filter(arg => arg !== '--userns=keep-id');
+                    config.build = { ...config.build, context: '../..', dockerfile: '../Dockerfile' };
+                    fs.mkdirSync(directory, { recursive: true });
+                    fs.writeFileSync(directory + '/devcontainer.json', JSON.stringify(config, null, 2) + '\n');
+                    fs.copyFileSync('.devcontainer/devcontainer-lock.json', directory + '/devcontainer-lock.json');
+                  "
+
             - name: Build, validate and optionally publish development container
               uses: devcontainers/ci@v0.3
               with:
                   imageName: ${{ env.IMAGE_NAME }}
+                  configFile: .devcontainer/ci/devcontainer.json
                   imageTag: ${{ github.event_name == 'pull_request' && format('pr-{0}', github.event.number) || github.ref_name }},${{ github.sha }}
                   cacheFrom: ${{ env.IMAGE_NAME }}
                   push: ${{ github.event_name == 'push' && 'always' || 'never' }}
@@ -196,8 +214,3 @@ jobs:
                       sudo chown -R root:root test-results
                       sudo chmod -R go-rwx test-results
                       bun run test:e2e:smoke
-
-                      VERIFY_DOCKER_WORKSPACE_ONLY=true bash docker/docker-test.sh
-                      docker --version
-                      docker compose version
-                      docker info

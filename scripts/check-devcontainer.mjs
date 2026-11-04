@@ -48,6 +48,20 @@ expect(
 	'VS Code and default container processes must run as pwuser.'
 );
 expect(
+	devcontainer.updateRemoteUserUID === false,
+	'Rootless Podman must not rewrite the remote user UID inside the container.'
+);
+expect(
+	Array.isArray(devcontainer.runArgs) && devcontainer.runArgs.includes('--userns=keep-id'),
+	'runArgs must map the host user into the container through --userns=keep-id.'
+);
+expect(
+	!Object.keys(devcontainer.features ?? {}).some(feature =>
+		feature.includes('docker-outside-of-docker')
+	),
+	'features must not mount the host container socket.'
+);
+expect(
 	mounts.some(
 		(/** @type {string} */ m) =>
 			typeof m === 'string' && m.includes('target=${containerWorkspaceFolder}/node_modules')

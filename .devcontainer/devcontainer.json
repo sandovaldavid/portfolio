@@ -11,7 +11,7 @@
 	},
 
 	"remoteUser": "pwuser",
-	"updateRemoteUserUID": true,
+	"updateRemoteUserUID": false,
 
 	"features": {
 		"ghcr.io/devcontainers/features/common-utils:2.5.9": {
@@ -22,7 +22,6 @@
 			"upgradePackages": false,
 			"username": "pwuser"
 		},
-		"ghcr.io/devcontainers/features/docker-outside-of-docker:1.10.0": {},
 		"ghcr.io/devcontainers/features/github-cli:1.1.0": {}
 	},
 
@@ -85,7 +84,7 @@
 	},
 
 	"init": true,
-	"runArgs": ["--ipc=host", "--security-opt", "label=disable"],
+	"runArgs": ["--ipc=host", "--userns=keep-id", "--security-opt", "label=disable"],
 
 	"postCreateCommand": "bash .devcontainer/scripts/post-create.sh",
 	"postStartCommand": "bash .devcontainer/scripts/post-start.sh",

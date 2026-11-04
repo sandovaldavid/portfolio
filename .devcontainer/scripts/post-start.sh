@@ -80,7 +80,8 @@ fi
 sudo mkdir -p "$history_directory"
 sudo chown "$owner" -- "$history_directory"
 sudo chmod 0700 "$history_directory"
-touch "$history_file"
+# A stale history file may be owned by another UID; repair it as root first.
+sudo touch -- "$history_file"
 sudo chown "$owner" -- "$history_file"
 chmod 0600 "$history_file"
 
