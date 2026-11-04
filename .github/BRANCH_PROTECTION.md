@@ -1,61 +1,42 @@
 # Branch protection and ruleset contract
 
-This document records the GitHub-hosted protection expected for `develop` and `main`. Rulesets, required checks, Actions quota, repository secrets and environment protection are not stored in Git; verify them in repository settings before relying on them.
+This document records the GitHub-hosted protection expected for `main` and release tags. Rulesets, required checks, Actions quota, repository secrets and environment protection are not stored in Git; verify them in repository settings before relying on them.
 
 ## Branch lifecycle
 
 ```text
-short-lived branch -> develop -> main -> production
+short-lived branch -> main (dev environment) -> release tag -> production
 ```
 
-- `develop` is the integration branch for ordinary pull requests.
-- `main` is the default and production branch.
-- Ordinary promotions come from `develop`, but pull requests into `main` are not restricted to that source: a hotfix may go directly to `main`, and Release Please opens its own release pull requests from a branch that is never `develop`.
-- `develop` uses squash merge only. `main` allows both squash (single-purpose pull requests: hotfixes, Dependabot, Release Please) and merge (the `develop` → `main` promotion, so `develop`'s individual commit history stays a real ancestor of `main` for future `main` → `develop` syncs). Both branches reject direct or force pushes.
+- `main` is the default and only long-lived development branch.
+- Ordinary changes come from short-lived branches into `main` via pull request.
+- `main` uses squash merge for single-purpose pull requests (features, fixes, Dependabot), and allows merge commits for Release Please pull requests.
+- Direct and force pushes to `main` are prohibited.
 
 ## Stable pull-request checks
 
-The versioned workflows expose these stable checks for pull requests targeting `develop` or `main`:
+The versioned workflows expose these stable checks for pull requests targeting `main`:
 
 - `Code Quality & Unit Tests`;
 - `Build & Bundle Analysis`;
 - `Playwright Chromium Smoke`;
-- `Analyze Security`.
+- `Analyze Security`;
+- `Main Build & Unit Quality`;
+- `Main Chromium Suite`;
+- `Main Lighthouse`.
 
 `PR Summary Report` and Vercel preview deployment checks are informative and should not be required. Preview deployments and status reporting are handled natively by Vercel.
 
-Do not configure deployment status checks as blocking merge requirements. `Main Quality` is what gates the pull request before merge (see the `main` ruleset below). Production deployment runs natively on Vercel upon push to `main`.
-
-## Ruleset for develop
-
-Use branch target `develop` and configure:
-
-- require a pull request before merge;
-- require the branch to be up to date before merge;
-- require conversation resolution;
-- require these checks:
-    - `Code Quality & Unit Tests`;
-    - `Build & Bundle Analysis`;
-    - `Playwright Chromium Smoke`;
-    - `Analyze Security`;
-- block direct pushes;
-- block force pushes;
-- block branch deletion;
-- allow squash merge only at repository level;
-- optionally require one approval when an independent reviewer is available.
+Do not configure deployment status checks as blocking merge requirements. `Main Quality` and `Continuous Integration` gate the pull request before merge (see the `main` ruleset below). Production deployment runs via GitHub Actions upon release publication.
 
 ## Ruleset for main
 
 Use branch target `main` and configure:
 
 - require a pull request before merge;
-- require the branch to be up to date before merge;
-- require conversation resolution;
 - require these checks:
     - `Code Quality & Unit Tests`;
     - `Build & Bundle Analysis`;
-    - `Playwright Chromium Smoke`;
-    - `Analyze Security`;
     - `Main Build & Unit Quality`;
     - `Main Chromium Suite`;
     - `Main Lighthouse`;
@@ -65,14 +46,19 @@ Use branch target `main` and configure:
 - allow both squash and merge methods at repository level;
 - optionally require one approval when an independent reviewer is available.
 
-`main` intentionally accepts pull requests from more than one kind of source branch: `develop` promotions, direct hotfixes, and Release Please's release pull requests. No job restricts the head branch name.
+`main` accepts pull requests from feature branches, Dependabot, and Release Please release pull requests.
+
+## Ruleset for release tags
+
+Use tag target `refs/tags/v*` and configure:
+
+- block tag deletion;
+- block non-fast-forward tag updates.
 
 ## Environment protection
 
-Deployments are handled directly by Vercel's native Git integration rather than GitHub Actions runner jobs, conserving CI minutes:
-
-- `Preview`: Managed by Vercel for pull requests and pushes to `develop` (assigned to `https://dev.sandovaldavid.com`).
-- `Production`: Managed by Vercel for pushes to `main` (assigned to `https://www.sandovaldavid.com` and `https://sandovaldavid.com`).
+- `Preview / Dev`: Managed by Vercel for pull requests and pushes to `main` (assigned to `https://dev.sandovaldavid.com`).
+- `Production`: Triggered by GitHub Actions on release publication (`deploy-production.yml`), deploying static assets and canonical resume payload directly to Vercel Production (`https://www.sandovaldavid.com` and `https://sandovaldavid.com`).
 - Build and domain settings are configured in `vercel.json` and the Vercel project configuration.
 
 ## Repository merge settings
@@ -80,23 +66,20 @@ Deployments are handled directly by Vercel's native Git integration rather than 
 Verify:
 
 - squash merge enabled;
-- merge commits enabled (used only for the `develop` → `main` promotion; every other pull request still squashes);
+- merge commits enabled (allowed for Release Please; feature PRs use squash);
 - rebase merge disabled;
-- automatic deletion of merged branches **disabled** at the repository level — `develop` is a long-lived branch and must survive being the head of a promotion pull request; delete short-lived branches explicitly per merge instead (`gh pr merge --delete-branch`);
 - auto-merge enabled only when the maintainer intentionally uses it;
 - `main` remains the default branch.
 
 ## Verification checklist
 
-- [ ] `develop` accepts ordinary pull requests and rejects direct/force pushes.
-- [ ] `main` accepts promotion, hotfix and Release Please pull requests and rejects direct/force pushes.
-- [ ] Pull requests into `develop` report the five stable checks; pull requests into `main` report those five plus the three `Main Quality` jobs.
+- [ ] `main` accepts feature, Dependabot and Release Please pull requests and rejects direct/force pushes.
+- [ ] Pull requests into `main` report the stable checks and `Main Quality` jobs.
 - [ ] Check names in rulesets exactly match the workflow job names above.
-- [ ] Preview runs for pull requests into `develop` and `main` when credentials are available, and pushes to `develop` update `https://dev.sandovaldavid.com`.
+- [ ] Release tags `v*` cannot be deleted or force-updated.
+- [ ] Preview runs for pull requests into `main` when credentials are available, and pushes to `main` update `https://dev.sandovaldavid.com`.
 - [ ] Preview and PR summary remain informative rather than required.
-- [ ] `Main Quality` runs as a pull-request check against `main` (or manual dispatch), not on push.
-- [ ] Production deploys directly on push to `main`, except documented manual/resume dispatches.
+- [ ] Production deploys exclusively when a release is published.
 - [ ] Production deployment is not configured as a pre-merge requirement.
-- [ ] `develop` survives being the head of a merged promotion pull request (automatic branch deletion on merge is disabled at the repository level).
 
 Treat unchecked hosted settings as **Unconfirmed** and unavailable automation as **Blocked**, not passed.

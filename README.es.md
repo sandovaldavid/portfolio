@@ -22,7 +22,7 @@ Portafolio bilingüe y static-first para presentar experiencia profesional, evid
 - **Arquitectura:** las dependencias siguen `src/pages → app → widgets → features → entities → shared` y `bun run lint:architecture` valida sus límites.
 - **Localización:** inglés no usa prefijo y español utiliza `/es`; catálogos tipados, Content Collections localizadas y validaciones de rutas garantizan la paridad.
 - **Calidad:** Vitest, Playwright, Axe, enlaces generados, presupuestos por ruta y Lighthouse están versionados en el repositorio.
-- **Despliegue:** `develop` es la rama de integración y `main` es la rama de producción.
+- **Despliegue:** `main` funciona como entorno de desarrollo/vista previa; la producción se despliega al publicar un release.
 - **Entrega del CV:** los PDF públicos validados se suministran mediante `resume-assets`; las fuentes editables permanecen privadas.
 
 ## Arquitectura
@@ -40,7 +40,6 @@ Usa la versión de Bun declarada en [package.json](package.json).
 ```bash
 git clone https://github.com/sandovaldavid/portfolio.git
 cd portfolio
-git switch develop
 bun install --frozen-lockfile
 bun run dev
 ```

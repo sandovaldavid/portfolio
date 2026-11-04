@@ -11,7 +11,6 @@ For hosts outside Playwright's supported Linux matrix, including Fedora, browser
 ```bash
 git clone https://github.com/sandovaldavid/portfolio.git
 cd portfolio
-git switch develop
 bun install --frozen-lockfile
 bun run dev
 ```

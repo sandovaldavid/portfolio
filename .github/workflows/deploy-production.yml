@@ -1,0 +1,50 @@
+name: Deploy Production
+
+on:
+    release:
+        types: [published]
+    workflow_dispatch:
+
+concurrency:
+    group: production-deploy
+    cancel-in-progress: false
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        name: Deploy Production
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout release tag
+              uses: actions/checkout@v7
+              with:
+                  ref: ${{ github.event.release.tag_name || github.ref }}
+
+            - name: Checkout canonical resume assets
+              uses: actions/checkout@v7
+              with:
+                  ref: resume-assets
+                  path: .resume-assets
+                  sparse-checkout: public/resume
+                  sparse-checkout-cone-mode: false
+
+            - name: Install canonical resume assets
+              run: bash scripts/install-resume-assets.sh
+
+            - name: Setup repository
+              uses: ./.github/actions/setup-bun
+
+            - name: Build production output
+              run: bun run build
+
+            - name: Deploy to Vercel Production
+              env:
+                  VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+                  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+                  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+              run: |
+                  bunx vercel pull --yes --environment=production --token=$VERCEL_TOKEN
+                  bunx vercel build --prod --token=$VERCEL_TOKEN
+                  bunx vercel deploy --prebuilt --prod --token=$VERCEL_TOKEN
