@@ -3,6 +3,7 @@ import { Font } from 'astro:assets';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
 import '@app/styles/global.css';
+import ThemeBootstrap from '@app/layouts/ThemeBootstrap.astro';
 import { Footer } from '@widgets/footer';
 import { Header } from '@widgets/header';
 import { Button, LinkButton } from '@shared/ui';
@@ -47,16 +48,7 @@ const localizedHomePaths = {
 		<Font cssVariable="--font-gaming-mono" />
 		<Font cssVariable="--font-mono" preload={[{ weight: '400', style: 'normal' }]} />
 
-		<script is:inline>
-			(function applyTheme() {
-				const saved = localStorage.getItem('theme') || 'dark';
-				const isDark =
-					saved === 'dark' ||
-					(saved === 'system' &&
-						window.matchMedia('(prefers-color-scheme: dark)').matches);
-				document.documentElement.classList.toggle('dark', isDark);
-			})();
-		</script>
+		<ThemeBootstrap />
 		<script
 			is:inline
 			data-localized-errors={JSON.stringify(localizedErrors)}

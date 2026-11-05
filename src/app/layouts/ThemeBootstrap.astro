@@ -1,0 +1,16 @@
+---
+// Single source for the pre-paint theme state. Inline so it runs before first paint.
+---
+
+<script is:inline>
+	const applyTheme = () => {
+		const saved = localStorage.getItem('theme') || 'dark';
+		const isDark =
+			saved === 'dark' ||
+			(saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+		document.documentElement.classList.toggle('dark', isDark);
+	};
+
+	applyTheme();
+	document.addEventListener('astro:after-swap', applyTheme);
+</script>
