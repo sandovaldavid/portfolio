@@ -1,11 +1,7 @@
 ---
-import { Font } from 'astro:assets';
 import { getRelativeLocaleUrl } from 'astro:i18n';
 import ArrowUpRightIcon from '@assets/icons/ArrowUpRight.astro';
-import '@app/styles/global.css';
-import ThemeBootstrap from '@app/layouts/ThemeBootstrap.astro';
-import { Footer } from '@widgets/footer';
-import { Header } from '@widgets/header';
+import NotFoundLayout from '@app/layouts/NotFoundLayout.astro';
 import { Button, LinkButton } from '@shared/ui';
 import { createScopedUiTranslator, getUiCatalogNamespace, Language } from '@shared/config/i18n';
 
@@ -21,153 +17,52 @@ const localizedHomePaths = {
 };
 ---
 
-<!doctype html>
-<html lang={defaultLang}>
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<meta name="description" content={tErrors('notFoundDescription')} />
-		<meta name="robots" content="noindex, follow" />
-		<link
-			rel="icon"
-			type="image/svg+xml"
-			href="/favicon.light.svg"
-			media="(prefers-color-scheme: light)"
-		/>
-		<link
-			rel="icon"
-			type="image/svg+xml"
-			href="/favicon.dark.svg"
-			media="(prefers-color-scheme: dark)"
-		/>
-		<title>{tErrors('notFoundPageTitle')}</title>
+<NotFoundLayout
+	lang={defaultLang}
+	title={tErrors('notFoundPageTitle')}
+	description={tErrors('notFoundDescription')}
+	{localizedErrors}
+	{localizedHomePaths}
+>
+	<p
+		class="font-pixel-clean text-8xl leading-none text-channel-accent-primary select-none md:text-9xl"
+		aria-hidden="true"
+	>
+		404
+	</p>
 
-		<Font cssVariable="--font-pixel" />
-		<Font cssVariable="--font-pixel-clean" />
-		<Font cssVariable="--font-retro-tag" />
-		<Font cssVariable="--font-gaming-mono" />
-		<Font cssVariable="--font-mono" preload={[{ weight: '400', style: 'normal' }]} />
+	<h1
+		id="not-found-title"
+		class="mt-8 text-feature-title uppercase text-channel-content-strong md:text-section-title"
+	>
+		{tErrors('notFoundTitle')}
+	</h1>
+	<p id="not-found-message" class="mt-5 max-w-2xl text-body text-channel-content-default">
+		{tErrors('notFoundMessage')}
+	</p>
 
-		<ThemeBootstrap />
-		<script
-			is:inline
-			data-localized-errors={JSON.stringify(localizedErrors)}
-			data-localized-home-paths={JSON.stringify(localizedHomePaths)}
-		>
-			const script = document.currentScript;
-			const localizedErrors = JSON.parse(
-				script?.getAttribute('data-localized-errors') ?? '{}'
-			);
-			const homePaths = JSON.parse(script?.getAttribute('data-localized-home-paths') ?? '{}');
-			const locale =
-				window.location.pathname === '/es' || window.location.pathname.startsWith('/es/')
-					? 'es'
-					: 'en';
-			const localizedCopy = localizedErrors[locale];
+	<div class="mt-6 w-full max-w-2xl border border-channel-edge-subtle bg-channel-surface-default px-5 py-4 shadow-retro-sm">
+		<p class="text-code text-channel-content-default">
+			<span aria-hidden="true">“</span>
+			<span id="not-found-quote">{tErrors('notFoundQuote')}</span>
+			<span aria-hidden="true">”</span>
+		</p>
+	</div>
 
-			if (localizedCopy) {
-				document.documentElement.lang = locale;
-				document.title = localizedCopy.notFoundPageTitle;
-				document
-					.querySelector('meta[name="description"]')
-					?.setAttribute('content', localizedCopy.notFoundDescription);
-
-				const updateNotFoundDom = () => {
-					const textById = {
-						'not-found-title': localizedCopy.notFoundTitle,
-						'not-found-message': localizedCopy.notFoundMessage,
-						'not-found-quote': localizedCopy.notFoundQuote,
-						'not-found-home-label': localizedCopy.homeButton,
-						'not-found-back-label': localizedCopy.backButton,
-					};
-					for (const [id, value] of Object.entries(textById)) {
-						const element = document.getElementById(id);
-						if (element) element.textContent = value;
-					}
-					document
-						.querySelector('#not-found-home-link a')
-						?.setAttribute('href', homePaths[locale]);
-				};
-
-				if (document.readyState === 'loading') {
-					document.addEventListener('DOMContentLoaded', updateNotFoundDom, {
-						once: true,
-					});
-				} else {
-					updateNotFoundDom();
-				}
-			}
-		</script>
-	</head>
-
-	<body class="min-h-screen bg-channel-background-canvas text-channel-content-strong">
-		<a
-			href="#main-content"
-			class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:border-2 focus:border-button-border focus:bg-button-primary-background focus:px-4 focus:py-2 focus:text-button-label focus:text-button-primary-content focus:shadow-retro-lg focus:no-underline"
-		>
-			{getUiCatalogNamespace(defaultLang, 'accessibility').skipToContent}
-		</a>
-
-		<div class="flex min-h-screen w-full flex-col">
-			<Header localizedPaths={localizedHomePaths} />
-
-			<main
-				id="main-content"
-				class="flex min-h-screen w-full items-center justify-center px-5 pt-28 pb-16 md:px-8"
+	<div class="mt-6 flex w-full max-w-85 flex-col justify-center gap-4 sm:max-w-none sm:flex-row">
+		<div id="not-found-home-link" class="w-full sm:w-auto">
+			<LinkButton
+				href={localizedHomePaths[defaultLang]}
+				target="_self"
+				class="w-full sm:w-47.5"
 			>
-				<div class="mx-auto flex w-full max-w-3xl flex-col items-center text-center">
-					<p
-						class="font-pixel-clean text-8xl leading-none text-channel-accent-primary select-none md:text-9xl"
-						aria-hidden="true"
-					>
-						404
-					</p>
-
-					<h1
-						id="not-found-title"
-						class="mt-8 text-feature-title uppercase text-channel-content-strong md:text-section-title"
-					>
-						{tErrors('notFoundTitle')}
-					</h1>
-					<p
-						id="not-found-message"
-						class="mt-5 max-w-2xl text-body text-channel-content-default"
-					>
-						{tErrors('notFoundMessage')}
-					</p>
-
-					<div class="mt-6 w-full max-w-2xl border border-channel-edge-subtle bg-channel-surface-default px-5 py-4 shadow-retro-sm">
-						<p class="text-code text-channel-content-default">
-							<span aria-hidden="true">“</span>
-							<span id="not-found-quote">{tErrors('notFoundQuote')}</span>
-							<span aria-hidden="true">”</span>
-						</p>
-					</div>
-
-					<div class="mt-6 flex w-full max-w-85 flex-col justify-center gap-4 sm:max-w-none sm:flex-row">
-						<div id="not-found-home-link" class="w-full sm:w-auto">
-							<LinkButton
-								href={localizedHomePaths[defaultLang]}
-								target="_self"
-								class="w-full sm:w-47.5"
-							>
-								<ArrowUpRightIcon aria-hidden="true" />
-								<span id="not-found-home-label">{tErrors('homeButton')}</span>
-							</LinkButton>
-						</div>
-						<Button
-							variant="secondary"
-							onclick="history.back()"
-							class="w-full sm:w-47.5"
-						>
-							<ArrowUpRightIcon aria-hidden="true" />
-							<span id="not-found-back-label">{tErrors('backButton')}</span>
-						</Button>
-					</div>
-				</div>
-			</main>
-
-			<Footer />
+				<ArrowUpRightIcon aria-hidden="true" />
+				<span id="not-found-home-label">{tErrors('homeButton')}</span>
+			</LinkButton>
 		</div>
-	</body>
-</html>
+		<Button variant="secondary" onclick="history.back()" class="w-full sm:w-47.5">
+			<ArrowUpRightIcon aria-hidden="true" />
+			<span id="not-found-back-label">{tErrors('backButton')}</span>
+		</Button>
+	</div>
+</NotFoundLayout>
