@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.1](https://github.com/sandovaldavid/portfolio/compare/v2.0.0...v2.0.1) (2026-11-05)
+
+
+### Bug Fixes
+
+* **devcontainer:** support rootless podman ([#370](https://github.com/sandovaldavid/portfolio/issues/370)) ([8e99bc7](https://github.com/sandovaldavid/portfolio/commit/8e99bc75af43bfc0ddf10f6906f9bdee01214306))
+* **tsconfig:** exclude generated report directories from type checking ([#364](https://github.com/sandovaldavid/portfolio/issues/364)) ([750f4a6](https://github.com/sandovaldavid/portfolio/commit/750f4a67051b7fa0a46e44e0f220eb4857956e5a))
+
 ## [2.0.0](https://github.com/sandovaldavid/portfolio/compare/v1.0.0...v2.0.0) (2026-11-01)
 
 
