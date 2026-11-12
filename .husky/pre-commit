@@ -8,6 +8,10 @@ echo "[INFO] Running ESLint and architecture checks..."
 bun run lint
 
 echo ""
+echo "[INFO] Checking Dev Container contracts..."
+bun run check:devcontainer
+
+echo ""
 echo "[INFO] Checking Prettier formatting..."
 bun run format:check
 
