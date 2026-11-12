@@ -18,7 +18,7 @@
 			"startServerReadyPattern": "Accepting connections",
 			"numberOfRuns": 1,
 			"settings": {
-				"chromeFlags": "--headless --no-sandbox",
+				"chromeFlags": "--headless --no-sandbox --disable-gpu --disable-dev-shm-usage",
 				"onlyCategories": ["performance"]
 			}
 		},

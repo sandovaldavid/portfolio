@@ -83,15 +83,28 @@ test.describe('first rendered frame', () => {
 			expect(first.background).not.toMatch(/^(rgba\(0, 0, 0, 0\)|rgb\(255, 255, 255\))$/);
 			expect(cssResponses).toEqual([200]);
 			if (browserName === 'chromium') {
-				const timings = await page.evaluate(() => ({
-					fcp: performance
-						.getEntriesByType('paint')
-						.find(entry => entry.name === 'first-contentful-paint')?.startTime,
-					cssEnd: (
-						performance.getEntriesByType('resource') as PerformanceResourceTiming[]
-					).find(entry => entry.name.endsWith('.css'))?.responseEnd,
-				}));
-				expect(timings.fcp).toBeGreaterThanOrEqual(timings.cssEnd ?? Infinity);
+				await expect
+					.poll(
+						async () => {
+							const timings = await page.evaluate(() => ({
+								fcp: performance
+									.getEntriesByType('paint')
+									.find(entry => entry.name === 'first-contentful-paint')
+									?.startTime,
+								cssEnd: (
+									performance.getEntriesByType(
+										'resource'
+									) as PerformanceResourceTiming[]
+								).find(entry => entry.name.endsWith('.css'))?.responseEnd,
+							}));
+							if (timings.fcp === undefined || timings.cssEnd === undefined) {
+								return undefined;
+							}
+							return timings.fcp >= timings.cssEnd;
+						},
+						{ message: 'Expected first contentful paint after CSS loaded' }
+					)
+					.toBe(true);
 			}
 		});
 	}
