@@ -1,6 +1,21 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
+
+const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
+const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
+
+const shouldFix = process.argv.includes('--fix');
+if (shouldFix && bunVersion && /^\d+\.\d+\.\d+$/.test(playwrightVersion ?? '')) {
+	const currentVisual = readFileSync('docker/Dockerfile.test', 'utf8');
+	const updatedVisual = currentVisual
+		.replace(/^(ARG PLAYWRIGHT_VERSION=).*$/m, `$1${playwrightVersion}`)
+		.replace(/^(ARG BUN_VERSION=).*$/m, `$1${bunVersion}`);
+	if (updatedVisual !== currentVisual) {
+		writeFileSync('docker/Dockerfile.test', updatedVisual, 'utf8');
+	}
+}
+
 const visualDockerfile = readFileSync('docker/Dockerfile.test', 'utf8');
 
 /** @type {string[]} */
@@ -12,9 +27,6 @@ const failures = [];
 const expect = (condition, message) => {
 	if (!condition) failures.push(message);
 };
-
-const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
-const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
 
 expect(Boolean(bunVersion), 'packageManager must pin Bun as bun@<version>.');
 expect(
@@ -44,6 +56,11 @@ expect(
 if (failures.length > 0) {
 	console.error('Local browser validation contract failed:');
 	for (const failure of failures) console.error(`- ${failure}`);
+	if (failures.some(f => f.includes('Playwright version') || f.includes('Bun version'))) {
+		console.error(
+			'\nRun "bun run check:devcontainer:fix" to synchronize pinned versions with package.json.'
+		);
+	}
 	process.exit(1);
 }
 

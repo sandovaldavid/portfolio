@@ -24,6 +24,11 @@ updates:
               update-types:
                   - 'minor'
                   - 'patch'
+              exclude-patterns:
+                  - '@playwright/test'
+          playwright:
+              patterns:
+                  - '@playwright/test'
           major-updates:
               update-types:
                   - 'major'

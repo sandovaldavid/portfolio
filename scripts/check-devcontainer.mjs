@@ -1,8 +1,39 @@
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 
 const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
-const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
 const devcontainerLock = JSON.parse(readFileSync('.devcontainer/devcontainer-lock.json', 'utf8'));
+
+const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
+const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
+
+const shouldFix = process.argv.includes('--fix');
+if (shouldFix && bunVersion && /^\d+\.\d+\.\d+$/.test(playwrightVersion ?? '')) {
+	const currentDocker = readFileSync('.devcontainer/Dockerfile', 'utf8');
+	const updatedDocker = currentDocker
+		.replace(/^(ARG PLAYWRIGHT_VERSION=).*$/m, `$1${playwrightVersion}`)
+		.replace(/^(ARG BUN_VERSION=).*$/m, `$1${bunVersion}`);
+	if (updatedDocker !== currentDocker) {
+		writeFileSync('.devcontainer/Dockerfile', updatedDocker, 'utf8');
+	}
+
+	const currentDevcontainer = readFileSync('.devcontainer/devcontainer.json', 'utf8');
+	const updatedDevcontainer = currentDevcontainer
+		.replace(/("PLAYWRIGHT_VERSION":\s*")[^"]+(")/, `$1${playwrightVersion}$2`)
+		.replace(/("BUN_VERSION":\s*")[^"]+(")/, `$1${bunVersion}$2`);
+	if (updatedDevcontainer !== currentDevcontainer) {
+		writeFileSync('.devcontainer/devcontainer.json', updatedDevcontainer, 'utf8');
+	}
+
+	const currentDockerTest = readFileSync('docker/Dockerfile.test', 'utf8');
+	const updatedDockerTest = currentDockerTest
+		.replace(/^(ARG PLAYWRIGHT_VERSION=).*$/m, `$1${playwrightVersion}`)
+		.replace(/^(ARG BUN_VERSION=).*$/m, `$1${bunVersion}`);
+	if (updatedDockerTest !== currentDockerTest) {
+		writeFileSync('docker/Dockerfile.test', updatedDockerTest, 'utf8');
+	}
+}
+
+const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
 const dockerfile = readFileSync('.devcontainer/Dockerfile', 'utf8');
 
 /** @type {string[]} */
@@ -16,8 +47,6 @@ function expect(condition, message) {
 	if (!condition) failures.push(message);
 }
 
-const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
-const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
 const mounts = Array.isArray(devcontainer.mounts) ? devcontainer.mounts : [];
 const forwardedPorts = Array.isArray(devcontainer.forwardPorts) ? devcontainer.forwardPorts : [];
 
@@ -96,6 +125,11 @@ expect(
 if (failures.length > 0) {
 	console.error('Devcontainer contract validation failed:');
 	for (const failure of failures) console.error(`- ${failure}`);
+	if (failures.some(f => f.includes('Bun version') || f.includes('Playwright version'))) {
+		console.error(
+			'\nRun "bun run check:devcontainer:fix" to synchronize pinned versions with package.json.'
+		);
+	}
 	process.exit(1);
 }
 

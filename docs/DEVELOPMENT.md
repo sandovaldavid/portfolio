@@ -35,6 +35,12 @@ Validate the environment contract with:
 bun run check:devcontainer
 ```
 
+If Bun or Playwright versions were updated in `package.json`, synchronize the container definitions with:
+
+```bash
+bun run check:devcontainer:fix
+```
+
 VS Code forwards Astro on port `4321` and the Playwright report on port `9323`. Playwright production preview uses the dedicated loopback port `4322`; it is not reused as the development server.
 
 ## Canonical local validation
