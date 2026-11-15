@@ -26,17 +26,18 @@ jobs:
               uses: ./.github/actions/setup-bun
 
             - name: Synchronize devcontainer contracts if needed
-              run: node scripts/check-devcontainer.mjs --fix
+              run: bun run check:devcontainer:fix
 
             - name: Format tracked files if changed
               run: bun run format
 
             - name: Commit and push devcontainer synchronization
+              # Note: pushes made with GITHUB_TOKEN do not trigger downstream pull_request workflows automatically.
               run: |
-                  if ! git diff --quiet .devcontainer/; then
+                  if ! git diff --quiet -- .devcontainer/ docker/Dockerfile.test docker-compose.yml scripts/update-webkit-snapshots.sh; then
                       git config user.name "github-actions[bot]"
                       git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-                      git add .devcontainer/
+                      git add -- .devcontainer/ docker/Dockerfile.test docker-compose.yml scripts/update-webkit-snapshots.sh
                       git commit -m "chore(devcontainer): sync devcontainer contracts with package.json"
                       git push
                   fi
