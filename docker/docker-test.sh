@@ -5,12 +5,16 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$REPO_ROOT"
 
-export CI="${CI:-true}"
-export GITHUB_ACTIONS="${GITHUB_ACTIONS:-}"
-export RUN_VISUAL_TESTS="${RUN_VISUAL_TESTS:-}"
-export E2E_USE_PRODUCTION_PREVIEW="${E2E_USE_PRODUCTION_PREVIEW:-1}"
-export HOST_UID="$(id -u)"
-export HOST_GID="$(id -g)"
+# shellcheck source=docker/container-runtime.sh
+source "$SCRIPT_DIR/container-runtime.sh"
+
+CI="${CI:-true}"
+GITHUB_ACTIONS="${GITHUB_ACTIONS:-}"
+RUN_VISUAL_TESTS="${RUN_VISUAL_TESTS:-}"
+E2E_USE_PRODUCTION_PREVIEW="${E2E_USE_PRODUCTION_PREVIEW:-1}"
+HOST_UID="$(id -u)"
+HOST_GID="$(id -g)"
+export CI GITHUB_ACTIONS RUN_VISUAL_TESTS E2E_USE_PRODUCTION_PREVIEW HOST_UID HOST_GID
 
 if [[ "${DEVCONTAINER:-}" == "true" ]]; then
 	bash .devcontainer/scripts/post-start.sh
@@ -39,12 +43,68 @@ for directory in .docker/runtime/node_modules .docker/runtime/home; do
 	fi
 done
 
-echo "==> Building pinned Playwright visual-regression image..."
-docker compose build playwright
+resolve_container_runtime
+
+if [[ "$CONTAINER_RUNTIME_KIND" == "docker" ]]; then
+	echo "==> Building pinned Playwright visual-regression image (docker)..."
+	"$CONTAINER_RUNTIME_BIN" compose build playwright
+else
+	# Invoke podman build/run directly instead of podman-compose to avoid rootless
+	# netavark bridge failures and enforce --userns=keep-id bind-mount ownership.
+	echo "==> Building pinned Playwright visual-regression image (podman)..."
+	"$CONTAINER_RUNTIME_BIN" build \
+		-f "$REPO_ROOT/docker/Dockerfile.test" \
+		-t portfolio-test:latest \
+		"$REPO_ROOT"
+
+	podman_run_args=(
+		--rm
+		--init
+		--ipc=host
+		--security-opt label=disable
+		--user "${HOST_UID}:${HOST_GID}"
+		-w /workspace
+		-v "${HOST_WORKSPACE_FOLDER}:/workspace"
+		-v "${HOST_WORKSPACE_FOLDER}/.docker/runtime/node_modules:/workspace/node_modules"
+		-v "${HOST_WORKSPACE_FOLDER}/.docker/runtime/home:/home/tester"
+		-e HOME=/home/tester
+		-e "CI=${CI}"
+		-e "GITHUB_ACTIONS=${GITHUB_ACTIONS}"
+		-e "RUN_VISUAL_TESTS=${RUN_VISUAL_TESTS}"
+		-e "E2E_USE_PRODUCTION_PREVIEW=${E2E_USE_PRODUCTION_PREVIEW}"
+	)
+	if [[ "$HOST_UID" -ne 0 ]]; then
+		podman_run_args+=(--userns=keep-id)
+	fi
+fi
+
+run_test_container() {
+	local entrypoint="${1:-}"
+	if [[ $# -gt 0 ]]; then
+		shift
+	fi
+	local entrypoint_args=()
+	if [[ -n "$entrypoint" ]]; then
+		entrypoint_args=(--entrypoint "$entrypoint")
+	fi
+
+	if [[ "$CONTAINER_RUNTIME_KIND" == "docker" ]]; then
+		"$CONTAINER_RUNTIME_BIN" compose run --rm \
+			-e CI \
+			-e GITHUB_ACTIONS \
+			-e RUN_VISUAL_TESTS \
+			-e E2E_USE_PRODUCTION_PREVIEW \
+			${entrypoint_args[@]+"${entrypoint_args[@]}"} \
+			playwright "$@"
+	else
+		"$CONTAINER_RUNTIME_BIN" run "${podman_run_args[@]}" \
+			${entrypoint_args[@]+"${entrypoint_args[@]}"} \
+			portfolio-test:latest "$@"
+	fi
+}
 
 echo "==> Verifying the host workspace mount..."
-docker compose run --rm --entrypoint bash playwright -lc \
-	'test -f /workspace/package.json && test -f /workspace/bun.lock'
+run_test_container bash -lc 'test -f /workspace/package.json && test -f /workspace/bun.lock'
 
 if [[ "${VERIFY_DOCKER_WORKSPACE_ONLY:-}" == "true" ]]; then
 	echo "Pinned Playwright visual-regression container can access the host workspace."
@@ -52,9 +112,4 @@ if [[ "${VERIFY_DOCKER_WORKSPACE_ONLY:-}" == "true" ]]; then
 fi
 
 echo "==> Running Playwright visual regression in the pinned container..."
-docker compose run --rm \
-	-e CI \
-	-e GITHUB_ACTIONS \
-	-e RUN_VISUAL_TESTS \
-	-e E2E_USE_PRODUCTION_PREVIEW \
-	playwright "$@"
+run_test_container "" "$@"

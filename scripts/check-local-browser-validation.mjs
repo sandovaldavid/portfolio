@@ -5,18 +5,45 @@ const packageJson = JSON.parse(readFileSync('package.json', 'utf8'));
 const bunVersion = packageJson.packageManager?.match(/^bun@(.+)$/)?.[1];
 const playwrightVersion = packageJson.devDependencies?.['@playwright/test'];
 
-const shouldFix = process.argv.includes('--fix');
-if (shouldFix && bunVersion && /^\d+\.\d+\.\d+$/.test(playwrightVersion ?? '')) {
-	const currentVisual = readFileSync('docker/Dockerfile.test', 'utf8');
-	const updatedVisual = currentVisual
-		.replace(/^(ARG PLAYWRIGHT_VERSION=).*$/m, `$1${playwrightVersion}`)
-		.replace(/^(ARG BUN_VERSION=).*$/m, `$1${bunVersion}`);
-	if (updatedVisual !== currentVisual) {
-		writeFileSync('docker/Dockerfile.test', updatedVisual, 'utf8');
+/**
+ * Apply a pure text transform and write only when content changed.
+ *
+ * @param {string} path
+ * @param {(content: string) => string} transform
+ */
+function syncFile(path, transform) {
+	const current = readFileSync(path, 'utf8');
+	const updated = transform(current);
+	if (updated !== current) {
+		writeFileSync(path, updated, 'utf8');
 	}
 }
 
+const shouldFix = process.argv.includes('--fix');
+if (shouldFix && bunVersion && /^\d+\.\d+\.\d+$/.test(playwrightVersion ?? '')) {
+	syncFile('docker/Dockerfile.test', content =>
+		content
+			.replace(/^(ARG PLAYWRIGHT_VERSION=).*$/m, `$1${playwrightVersion}`)
+			.replace(/^(ARG BUN_VERSION=).*$/m, `$1${bunVersion}`)
+	);
+
+	syncFile('docker-compose.yml', content =>
+		content
+			.replace(/^(\s*PLAYWRIGHT_VERSION:\s*')[^']+('.*)$/m, `$1${playwrightVersion}$2`)
+			.replace(/^(\s*BUN_VERSION:\s*')[^']+('.*)$/m, `$1${bunVersion}$2`)
+	);
+
+	syncFile('scripts/update-webkit-snapshots.sh', content =>
+		content.replace(
+			/mcr\.microsoft\.com\/playwright:v[^-\s]+-noble/,
+			`mcr.microsoft.com/playwright:v${playwrightVersion}-noble`
+		)
+	);
+}
+
 const visualDockerfile = readFileSync('docker/Dockerfile.test', 'utf8');
+const dockerCompose = readFileSync('docker-compose.yml', 'utf8');
+const webkitSnapshotScript = readFileSync('scripts/update-webkit-snapshots.sh', 'utf8');
 
 /** @type {string[]} */
 const failures = [];
@@ -42,6 +69,18 @@ expect(
 	visualDockerfile.includes(`ARG BUN_VERSION=${bunVersion}`),
 	'Visual regression Bun version must match packageManager.'
 );
+expect(
+	dockerCompose.includes(`PLAYWRIGHT_VERSION: '${playwrightVersion}'`),
+	'docker-compose.yml Playwright version must match package.json.'
+);
+expect(
+	dockerCompose.includes(`BUN_VERSION: '${bunVersion}'`),
+	'docker-compose.yml Bun version must match packageManager.'
+);
+expect(
+	webkitSnapshotScript.includes(`mcr.microsoft.com/playwright:v${playwrightVersion}-noble`),
+	'scripts/update-webkit-snapshots.sh Playwright image must match the project Playwright version.'
+);
 
 expect(
 	packageJson.scripts?.['test:e2e:report'] ===
@@ -65,5 +104,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, Docker visual regression image, and report ports.`
+	`Local browser validation contract verified: Bun ${bunVersion}, Playwright ${playwrightVersion}, container visual configs, and report ports.`
 );

@@ -119,16 +119,17 @@ bun install --frozen-lockfile
 
 Do not recursively change ownership of the repository. A corrupted disposable `node_modules` volume may be removed from the host and recreated by rebuilding the Dev Container.
 
-### Docker-backed visual tests fail
+### Container-backed visual tests fail
 
-The Dev Container does not mount the host container socket, so `bun run test:docker` must run from the host. Confirm the host CLI and Compose provider are available:
+The Dev Container does not mount the host container socket, so `bun run test:docker` must run from the host. `docker/docker-test.sh` uses `podman` directly on rootless Podman hosts (with `--userns=keep-id`, bypassing `podman-compose`) and `docker compose` on Docker hosts such as CI. Confirm the host container CLI is available:
 
 ```bash
-docker --version
-docker compose version
+podman --version
+# or on Docker hosts:
+docker --version && docker compose version
 ```
 
-The separate Docker test image is maintained for visual-regression reproducibility, not as the general local browser runtime.
+The separate visual-regression image is maintained for snapshot reproducibility, not as the general local browser runtime.
 
 ### Forwarded port conflict
 

@@ -23,14 +23,6 @@ if (shouldFix && bunVersion && /^\d+\.\d+\.\d+$/.test(playwrightVersion ?? '')) 
 	if (updatedDevcontainer !== currentDevcontainer) {
 		writeFileSync('.devcontainer/devcontainer.json', updatedDevcontainer, 'utf8');
 	}
-
-	const currentDockerTest = readFileSync('docker/Dockerfile.test', 'utf8');
-	const updatedDockerTest = currentDockerTest
-		.replace(/^(ARG PLAYWRIGHT_VERSION=).*$/m, `$1${playwrightVersion}`)
-		.replace(/^(ARG BUN_VERSION=).*$/m, `$1${bunVersion}`);
-	if (updatedDockerTest !== currentDockerTest) {
-		writeFileSync('docker/Dockerfile.test', updatedDockerTest, 'utf8');
-	}
 }
 
 const devcontainer = JSON.parse(readFileSync('.devcontainer/devcontainer.json', 'utf8'));
