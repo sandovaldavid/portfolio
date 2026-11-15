@@ -14,6 +14,7 @@ import { EditorialCard, LinkButton } from '@shared/ui';
  */
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tBlog = createScopedUiTranslator(lang, 'pages.blog');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const posts = await getBlogPosts(lang);
 
 const allTopics = posts.flatMap(post => post.data.tags ?? []);
@@ -47,6 +48,7 @@ const formatCount = (count: number) => String(count).padStart(2, '0');
 						href={lang === 'es' ? '/es/rss.xml' : '/rss.xml'}
 						variant="secondary"
 						target="_blank"
+						newTabLabel={tAccessibility('externalLink')}
 						class="w-fit"
 					>
 						<ScrollTextIcon class="size-4 shrink-0" aria-hidden="true" />
@@ -101,6 +103,7 @@ const formatCount = (count: number) => String(count).padStart(2, '0');
 						metaText={post.data.pubDate.toISOString().split('T')[0]}
 						datetime={post.data.pubDate.toISOString()}
 						tags={post.data.tags}
+						tagsLabel={tAccessibility('tags')}
 						title={post.data.title}
 						description={post.data.description}
 						ctaText={tBlog('readMore')}

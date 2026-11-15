@@ -31,10 +31,10 @@ const {
  * Stack MD h46/min156/px20/gap8 highlight surface label 14
  */
 const comboGeometry = {
-	'card-sm': 'h-7.5 min-w-31.5 px-3 gap-1.5 text-xs',
-	'card-md': 'h-7.5 min-w-34.5 px-3 gap-1.5 text-sm',
-	'stack-sm': 'h-8.5 min-w-31 px-2.5 gap-2 text-xs',
-	'stack-md': 'h-11.5 min-w-39 px-5 gap-2 text-sm',
+	'card-sm': 'min-h-7.5 min-w-31.5 px-3 py-px gap-1.5 text-xs',
+	'card-md': 'min-h-7.5 min-w-34.5 px-3 py-px gap-1.5 text-sm',
+	'stack-sm': 'min-h-8.5 min-w-31 px-2.5 py-0.5 gap-2 text-xs',
+	'stack-md': 'min-h-11.5 min-w-39 px-5 py-1 gap-2 text-sm',
 } as const;
 
 // Consumer-provided bg-/text- classes replace the contract surfaces (existing data-driven brand colors).
@@ -44,6 +44,8 @@ const hasText = additionalClasses.includes('text-');
 const containerClasses = [
 	'tech-pill inline-flex w-fit items-center rounded-none border-2 border-edge-strong',
 	'shadow-retro-sm font-mono font-bold',
+	href &&
+		'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-focus',
 	!hasText && 'text-content-strong',
 	!hasBg && (variant === 'stack' ? 'bg-channel-surface-highlight' : 'bg-channel-surface-default'),
 	comboGeometry[`${variant}-${size}`],

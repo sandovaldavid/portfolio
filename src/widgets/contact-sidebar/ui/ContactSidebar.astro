@@ -64,7 +64,6 @@ const links = [
 	class="contact-sidebar fixed left-0 top-1/2 z-40 hidden w-14 -translate-y-1/2 xl:flex"
 	data-collapsed={String(defaultCollapsed)}
 	data-default-collapsed={String(defaultCollapsed)}
-	aria-label={tAccessibility('socialContactLinks')}
 >
 	<div
 		id="contact-sidebar-rail"
@@ -83,12 +82,14 @@ const links = [
 					{href}
 					target={external ? '_blank' : undefined}
 					rel={external ? 'noopener noreferrer' : undefined}
-					title={tooltip}
 					aria-label={external ? `${label}, ${tAccessibility('externalLink')}` : label}
-					class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
+					class="group relative flex size-11 items-center justify-center border-b-2 border-edge-strong text-content-muted transition-colors duration-150 last:border-b-0 hover:bg-badge-brand-bg hover:text-channel-accent-primary focus-visible:bg-badge-brand-bg focus-visible:text-channel-accent-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-button-focus"
 				>
 					<Icon class="size-5" aria-hidden="true" />
-					<span class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100">
+					<span
+						aria-hidden="true"
+						class="pointer-events-none absolute left-full z-50 ml-3 translate-x-1 whitespace-nowrap border-2 border-edge-strong bg-channel-surface-default px-2.5 py-1.5 text-caption text-content-strong opacity-0 shadow-retro-md transition-[opacity,transform] duration-150 group-hover:translate-x-0 group-hover:opacity-100 group-focus-visible:translate-x-0 group-focus-visible:opacity-100 motion-reduce:transition-none"
+					>
 						{tooltip}
 					</span>
 				</a>
@@ -101,7 +102,7 @@ const links = [
 	<button
 		id="contact-sidebar-reveal"
 		type="button"
-		class="contact-sidebar-hotspot absolute inset-y-0 left-0 grid w-6 cursor-pointer place-items-center bg-transparent opacity-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+		class="contact-sidebar-hotspot absolute inset-y-0 left-0 grid w-6 cursor-pointer place-items-center bg-transparent opacity-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus"
 		aria-label={tRecruiter('showContactShortcuts')}
 		tabindex={defaultCollapsed ? 0 : -1}
 	>

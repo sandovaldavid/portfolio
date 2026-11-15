@@ -9,6 +9,7 @@ interface Props {
 	/** Optional machine-readable datetime for the meta element. */
 	datetime?: string;
 	tags?: string[];
+	tagsLabel?: string;
 	title: string;
 	description: string;
 	ctaText: string;
@@ -23,6 +24,7 @@ const {
 	metaText,
 	datetime,
 	tags = [],
+	tagsLabel,
 	title,
 	description,
 	ctaText,
@@ -60,7 +62,7 @@ const cardSize = 'min-h-[360px] lg:min-h-[300px]';
 
 	<div class="flex grow flex-col gap-5 pt-4.5 px-3.5 pb-4 lg:px-4.5">
 		{tags.length > 0 && (
-			<ul class="flex flex-row flex-wrap gap-2" aria-label={typeLabel}>
+			<ul class="flex flex-row flex-wrap gap-2" aria-label={tagsLabel}>
 				{tags.map(tag => (
 					<li class="inline-flex items-center rounded-none border border-badge-brand-outline-border bg-badge-brand-bg px-2 py-0.75 font-retro-tag text-xs font-bold leading-none tracking-wide text-badge-brand-text">
 						{tag}
@@ -77,7 +79,7 @@ const cardSize = 'min-h-[360px] lg:min-h-[300px]';
 
 		<a
 			href={ctaHref}
-			class="mt-auto inline-flex w-fit items-center gap-1.5 pt-2 font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2"
+			class="mt-auto inline-flex w-fit items-center gap-1.5 pt-2 font-retro-tag text-xs font-bold uppercase tracking-wide text-channel-accent-primary underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-focus"
 		>
 			{ctaText}
 			<span class="sr-only">: {title}</span>

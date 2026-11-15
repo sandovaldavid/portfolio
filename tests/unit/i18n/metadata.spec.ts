@@ -16,6 +16,7 @@ describe('localized SEO, RSS and structured metadata', () => {
 		expect(Object.keys(spanish).sort()).toEqual(Object.keys(english).sort());
 		expect(spanish.siteTitle).toContain('Ingeniero de Software');
 		expect(spanish.siteDescription).not.toBe(english.siteDescription);
+		expect(spanish.defaultKeywords).not.toBe(english.defaultKeywords);
 		expect(spanish.rssFeedDescription).not.toBe(english.rssFeedDescription);
 	});
 
@@ -23,6 +24,8 @@ describe('localized SEO, RSS and structured metadata', () => {
 		const layout = readSource('src/app/layouts/Layout.astro');
 
 		expect(layout).toContain("createScopedUiTranslator(lang, 'metadata')");
+		expect(layout).toContain('<meta name="color-scheme" content="light dark" />');
+		expect(layout).toContain("keywords ?? tMetadata('defaultKeywords')");
 		expect(layout).toContain('og:locale:alternate');
 		expect(layout).toContain('twitter:image:alt');
 		expect(layout).toContain('BlogPosting');

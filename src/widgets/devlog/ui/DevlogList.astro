@@ -13,6 +13,7 @@ import { EditorialCard } from '@shared/ui';
  */
 const lang = getLanguageFromLocale(Astro.currentLocale);
 const tDevlog = createScopedUiTranslator(lang, 'pages.devlog');
+const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const posts = await getDevlogPosts(lang);
 const formatCount = (count: number) => String(count).padStart(2, '0');
 ---
@@ -85,6 +86,7 @@ const formatCount = (count: number) => String(count).padStart(2, '0');
 						metaText={`${post.data.pubDate.toISOString().split('T')[0]} · #${getDevlogSlug(post)}`}
 						datetime={post.data.pubDate.toISOString()}
 						tags={post.data.tags}
+						tagsLabel={tAccessibility('tags')}
 						title={post.data.title}
 						description={post.data.summary}
 						ctaText={tDevlog('readMore')}

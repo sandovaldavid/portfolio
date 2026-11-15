@@ -9,6 +9,8 @@ interface Props {
 	class?: string;
 	/** Screen-reader-only text announcing the link opens in a new tab. Omit for non-navigating targets (e.g. mailto:). */
 	newTabLabel?: string;
+	/** Marks a link that dismisses an enclosing mobile navigation dialog when activated. */
+	closeMenu?: boolean;
 }
 
 const {
@@ -18,6 +20,7 @@ const {
 	disabled = false,
 	class: className,
 	newTabLabel,
+	closeMenu = false,
 } = Astro.props;
 ---
 
@@ -25,9 +28,10 @@ const {
 	href={disabled ? undefined : href}
 	{target}
 	rel={target === '_blank' ? 'noopener noreferrer' : undefined}
-	role="link"
+	role={disabled ? 'link' : undefined}
 	aria-disabled={disabled ? 'true' : undefined}
 	tabindex={disabled ? -1 : undefined}
+	data-close-menu={closeMenu ? 'true' : undefined}
 	class:list={[
 		'btn-base',
 		variant === 'primary' ? 'btn-primary' : 'btn-secondary',

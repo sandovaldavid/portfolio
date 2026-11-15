@@ -11,6 +11,14 @@ interface Props {
 
 const { title, src, caption, poster, kind = 'file' } = Astro.props;
 const posterSrc = typeof poster === 'string' ? poster : poster?.src;
+const cleanSrc = src.split(/[?#]/)[0]?.toLowerCase() ?? '';
+const sourceType = cleanSrc.endsWith('.webm')
+	? 'video/webm'
+	: cleanSrc.endsWith('.mp4')
+		? 'video/mp4'
+		: cleanSrc.endsWith('.ogg') || cleanSrc.endsWith('.ogv')
+			? 'video/ogg'
+			: undefined;
 ---
 
 <figure class="w-full" data-project-video>
@@ -29,6 +37,8 @@ const posterSrc = typeof poster === 'string' ? poster : poster?.src;
 			</div>
 		) : (
 			<video
+				width="1280"
+				height="720"
 				class="aspect-video w-full bg-channel-background-canvas object-contain"
 				controls
 				playsinline
@@ -36,7 +46,7 @@ const posterSrc = typeof poster === 'string' ? poster : poster?.src;
 				poster={posterSrc}
 				aria-label={title}
 			>
-				<source {src} />
+				<source {src} type={sourceType} />
 			</video>
 		)}
 	</div>

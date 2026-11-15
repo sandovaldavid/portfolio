@@ -37,6 +37,7 @@ const EXPERIENCE = await getExperienceData(lang);
 			<div
 				id="experience-tablist"
 				role="tablist"
+				aria-orientation="horizontal"
 				aria-label={tAccessibility('experienceTabs')}
 				class="experience-tablist flex w-full min-w-0 items-stretch gap-2.5 overflow-x-auto md:flex-col md:overflow-visible md:border-y md:border-edge-subtle md:py-2"
 			>
@@ -172,7 +173,25 @@ const EXPERIENCE = await getExperienceData(lang);
 	</style>
 
 	<script>
+		const desktopExperienceMedia = window.matchMedia('(min-width: 768px)');
+
+		const syncExperienceOrientation = () => {
+			const tablist = document.getElementById('experience-tablist');
+			if (!tablist) return;
+			tablist.setAttribute(
+				'aria-orientation',
+				desktopExperienceMedia.matches ? 'vertical' : 'horizontal'
+			);
+		};
+
 		const setupExperienceTabs = () => {
+			syncExperienceOrientation();
+
+			if (document.documentElement.dataset.experienceOrientationReady !== 'true') {
+				document.documentElement.dataset.experienceOrientationReady = 'true';
+				desktopExperienceMedia.addEventListener('change', syncExperienceOrientation);
+			}
+
 			const tablist = document.getElementById('experience-tablist');
 			if (!tablist || tablist.dataset.tabsReady === 'true') return;
 			tablist.dataset.tabsReady = 'true';

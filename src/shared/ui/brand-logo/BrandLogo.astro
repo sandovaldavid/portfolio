@@ -59,6 +59,18 @@ const nameVisibility =
 	</span>
 </a>
 
+<script is:inline>
+	(() => {
+		const image =
+			document.currentScript?.previousElementSibling?.querySelector('[data-brand-logo]');
+		if (!(image instanceof HTMLImageElement)) return;
+		const mode = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+		const source = `/brand/logo-primary-${mode}.svg`;
+		if (image.getAttribute('src') !== source) image.setAttribute('src', source);
+		image.dataset.brandMode = mode;
+	})();
+</script>
+
 <script>
 	const syncBrandLogoAssets = () => {
 		const mode = document.documentElement.classList.contains('dark') ? 'dark' : 'light';

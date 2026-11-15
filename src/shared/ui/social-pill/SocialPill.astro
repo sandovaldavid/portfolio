@@ -21,7 +21,6 @@ const { href, target = '_blank', class: className, newTabLabel } = Astro.props;
 	{href}
 	{target}
 	rel={target === '_blank' ? 'noopener noreferrer' : undefined}
-	role="link"
 	class:list={[
 		'social-pill inline-flex items-center justify-center',
 		'h-9 px-3 py-1.5 gap-1.5 md:h-11 md:px-4 md:py-2 md:gap-2',
@@ -32,7 +31,7 @@ const { href, target = '_blank', class: className, newTabLabel } = Astro.props;
 		'hover:bg-channel-surface-default hover:shadow-retro-lg',
 		'active:bg-channel-surface-highlight active:shadow-retro-xs',
 		'shadow-retro-sm',
-		'focus:outline-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas',
+		'focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas',
 		className,
 	]}
 >

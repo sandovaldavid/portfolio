@@ -60,9 +60,29 @@ const localizedHomePaths = {
 				<span id="not-found-home-label">{tErrors('homeButton')}</span>
 			</LinkButton>
 		</div>
-		<Button variant="secondary" onclick="history.back()" class="w-full sm:w-47.5">
+		<Button id="not-found-back-btn" variant="secondary" class="w-full sm:w-47.5">
 			<ArrowUpRightIcon aria-hidden="true" />
 			<span id="not-found-back-label">{tErrors('backButton')}</span>
 		</Button>
 	</div>
 </NotFoundLayout>
+
+<script>
+	const setupNotFoundBackButton = () => {
+		const backBtn = document.getElementById('not-found-back-btn');
+		if (!backBtn || backBtn.dataset.backReady === 'true') return;
+		backBtn.dataset.backReady = 'true';
+		backBtn.addEventListener('click', () => {
+			if (window.history.length > 1) {
+				window.history.back();
+				return;
+			}
+			const fallbackHref =
+				document.querySelector<HTMLAnchorElement>('#not-found-home-link a')?.href;
+			if (fallbackHref) window.location.assign(fallbackHref);
+		});
+	};
+
+	setupNotFoundBackButton();
+	document.addEventListener('astro:page-load', setupNotFoundBackButton);
+</script>

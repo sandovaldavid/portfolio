@@ -2,25 +2,25 @@
 import './button.css';
 
 interface Props {
+	id?: string;
 	variant?: 'primary' | 'secondary';
 	type?: 'button' | 'submit' | 'reset';
 	disabled?: boolean;
 	class?: string;
-	onclick?: string;
 }
 
 const {
+	id,
 	variant = 'primary',
 	type = 'button',
 	disabled = false,
 	class: className,
-	onclick,
 } = Astro.props;
 ---
 
 <button
+	{id}
 	{type}
-	{onclick}
 	{disabled}
 	class:list={['btn-base', variant === 'primary' ? 'btn-primary' : 'btn-secondary', className]}
 >

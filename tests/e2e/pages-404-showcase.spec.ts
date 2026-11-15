@@ -87,6 +87,47 @@ test.describe('404 localized fallback', () => {
 			}
 		}
 	}
+
+	test('404 initializes the mobile dialog menu without ClientRouter', async ({ page }) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await page.goto('/route-probe-404');
+
+		const toggle = page.locator('#mobile-menu-btn');
+		const dialog = page.locator('#mobile-menu');
+		const closeBtn = page.locator('#mobile-menu-close');
+
+		await expect(toggle).toBeVisible();
+		await expect(dialog).toBeHidden();
+
+		await toggle.click();
+		await expect(dialog).toBeVisible();
+		await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+		await expect(closeBtn).toBeFocused();
+
+		await page.keyboard.press('Escape');
+		await expect(dialog).toBeHidden();
+		await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+		await expect(toggle).toBeFocused();
+	});
+
+	test('mobile dialog marks active page, prevents overflow, and closes across lg resize', async ({
+		page,
+	}) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await page.goto('/blog');
+
+		const toggle = page.locator('#mobile-menu-btn');
+		const dialog = page.locator('#mobile-menu');
+		await toggle.click();
+		await expect(dialog).toBeVisible();
+
+		await expect(dialog.locator('a[href="/blog"]')).toHaveAttribute('aria-current', 'page');
+		expect(await dialog.evaluate(el => el.scrollWidth <= el.clientWidth)).toBe(true);
+
+		await page.setViewportSize({ width: 1280, height: 800 });
+		await expect(dialog).toBeHidden();
+		await expect(dialog).not.toHaveAttribute('open', '');
+	});
 });
 
 test.describe('Skills page contract', () => {

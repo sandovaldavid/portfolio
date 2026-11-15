@@ -24,6 +24,7 @@
 	"resourceRelated": "Related project",
 	"resourceShare": "Share",
 	"shareCopied": "Link copied",
+	"shareError": "Could not copy link",
 	"shareOnlyHint": "Share this project",
 	"sourcePublic": "Public source",
 	"sourcePrivate": "Private source",
