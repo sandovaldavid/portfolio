@@ -3,6 +3,7 @@
 	"mainNavigation": "Main navigation",
 	"brandHomeLink": "David Sandoval — Home",
 	"mobileNavigation": "Mobile navigation",
+	"mobileMenu": "Mobile menu",
 	"openMenu": "Open navigation menu",
 	"closeMenu": "Close navigation menu",
 	"chooseLanguage": "Choose language",
@@ -17,5 +18,6 @@
 	"terminalInput": "Terminal command input",
 	"closeTerminal": "Close terminal",
 	"secretMode": "Developer secret mode",
-	"backToTop": "Back to top"
+	"backToTop": "Back to top",
+	"tags": "Tags"
 }

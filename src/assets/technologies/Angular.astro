@@ -2,7 +2,13 @@
 const idSuffix = Math.random().toString(36).substring(2, 9);
 ---
 
-<svg {...Astro.props} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 242 256">
+<svg
+	aria-hidden="true"
+	{...Astro.props}
+	xmlns="http://www.w3.org/2000/svg"
+	fill="none"
+	viewBox="0 0 242 256"
+>
 	<g clip-path={`url(#angular__a-${idSuffix})`}>
 		<mask
 			id={`angular__b-${idSuffix}`}

@@ -1,7 +1,7 @@
 @theme {
-	--font-sans: 'Inter', system-ui, sans-serif;
+	--font-sans: 'Inter', 'Inter Fallback', system-ui, sans-serif;
 	--font-mono: 'JetBrains Mono', monospace;
-	--font-code: 'Fira Code', 'JetBrains Mono', monospace;
+	--font-code: 'Fira Code', 'Fira Code Fallback', 'JetBrains Mono', monospace;
 	--font-pixel: 'Press Start 2P', monospace;
 	--font-pixel-clean: 'VT323', monospace;
 	--font-retro-tag: 'Silkscreen', monospace;
@@ -358,6 +358,150 @@
 }
 :root.dark {
 	color-scheme: dark;
+}
+
+@supports not (color: light-dark(black, white)) {
+	:root {
+		--color-primary-400: var(--color-primary-400-light);
+		--color-primary-500: var(--color-primary-500-light);
+		--color-primary-600: var(--color-primary-600-light);
+		--color-background: var(--color-base-background-light);
+		--color-surface: var(--color-base-white);
+		--color-surface-highlight: var(--color-base-surface-highlight-light);
+		--color-content-strong: var(--color-neutral-900);
+		--color-content: var(--color-neutral-700);
+		--color-content-muted: var(--color-neutral-600);
+		--color-edge-subtle: var(--color-neutral-300);
+		--color-edge-strong: var(--color-neutral-900);
+		--color-banner-border: var(--alpha-primary-600-60-light);
+		--color-banner-text: var(--color-primary-600-light);
+		--color-badge-brand-bg: var(--alpha-primary-500-10-light);
+		--color-badge-brand-bg-hover: var(--alpha-primary-500-20-light);
+		--color-badge-brand-text: var(--color-primary-600-light);
+		--color-badge-brand-outline-border: var(--alpha-primary-600-40-light);
+		--color-badge-brand-outline-bg-hover: var(--alpha-primary-500-10-light);
+		--color-badge-secondary-bg: var(--color-badge-secondary-bg-light);
+		--color-badge-secondary-text: var(--color-badge-secondary-text-light);
+		--color-badge-info-bg: var(--color-badge-info-bg-light);
+		--color-badge-info-text: var(--color-badge-info-text-light);
+		--color-badge-warning-bg: var(--color-badge-warning-bg-light);
+		--color-badge-warning-text: var(--color-base-status-warning-text-light);
+		--color-badge-danger-bg: var(--color-badge-danger-bg-light);
+		--color-badge-danger-text: var(--color-base-status-error-text-light);
+		--color-status-success-bg: var(--alpha-success-05-light);
+		--color-status-success-border: var(--alpha-success-40-light);
+		--color-status-success-text: var(--color-base-status-success-text-light);
+		--color-logo-ring: var(--color-primary-600-light);
+		--color-logo-brackets: var(--color-primary-800);
+		--color-logo-slash-start: var(--color-primary-800);
+		--color-logo-slash-end: var(--color-primary-500-dark);
+		--color-logo-monochrome: var(--color-neutral-950);
+		--channel-background-canvas: var(--color-base-background-light);
+		--channel-surface-default: var(--color-base-white);
+		--channel-surface-highlight: var(--color-base-surface-highlight-light);
+		--channel-content-strong: var(--color-neutral-900);
+		--channel-content-default: var(--color-neutral-700);
+		--channel-content-muted: var(--color-neutral-600);
+		--channel-edge-default: var(--color-neutral-300);
+		--channel-edge-strong: var(--color-neutral-900);
+		--channel-accent-primary: var(--color-primary-500-light);
+		--channel-accent-secondary: var(--color-primary-400-light);
+		--channel-status-online: var(--color-base-status-success-text-light);
+		--color-channel-accent-primary-hover: var(--color-primary-600-light);
+		--color-channel-status-warning: var(--color-base-status-warning-text-light);
+		--color-channel-status-error: var(--color-base-status-error-text-light);
+		--color-channel-overlay: rgb(0 0 0 / 36%);
+		--color-button-primary-background-hover: var(--color-primary-600-light);
+		--color-button-primary-content: var(--color-base-white);
+		--color-button-secondary-background-hover: var(--color-neutral-200);
+		--color-button-focus: var(--color-primary-600-light);
+		--color-header-surface-scrolled: color-mix(
+			in oklch,
+			var(--color-base-background-light) 78%,
+			transparent
+		);
+		--color-header-shadow-primary: color-mix(
+			in oklch,
+			var(--color-neutral-950) 12%,
+			transparent
+		);
+		--color-header-shadow-secondary: color-mix(
+			in oklch,
+			var(--color-neutral-950) 14%,
+			transparent
+		);
+	}
+
+	:root.dark {
+		--color-primary-400: var(--color-primary-400-dark);
+		--color-primary-500: var(--color-primary-500-dark);
+		--color-primary-600: var(--color-primary-600-dark);
+		--color-background: var(--color-neutral-950);
+		--color-surface: var(--color-base-surface-dark);
+		--color-surface-highlight: var(--color-base-surface-highlight-dark);
+		--color-content-strong: var(--color-base-content-strong-dark);
+		--color-content: var(--color-neutral-300);
+		--color-content-muted: var(--color-neutral-400);
+		--color-edge-subtle: var(--color-neutral-800);
+		--color-edge-strong: var(--color-neutral-300);
+		--color-banner-border: var(--alpha-primary-400-60-dark);
+		--color-banner-text: var(--color-primary-400-dark);
+		--color-badge-brand-bg: var(--alpha-primary-500-15-dark);
+		--color-badge-brand-bg-hover: var(--alpha-primary-500-25-dark);
+		--color-badge-brand-text: var(--color-primary-400-dark);
+		--color-badge-brand-outline-border: var(--alpha-primary-500-40-dark);
+		--color-badge-brand-outline-bg-hover: var(--alpha-primary-500-10-dark);
+		--color-badge-secondary-bg: var(--color-badge-secondary-bg-dark);
+		--color-badge-secondary-text: var(--color-badge-secondary-text-dark);
+		--color-badge-info-bg: var(--color-badge-info-bg-dark);
+		--color-badge-info-text: var(--color-badge-info-text-dark);
+		--color-badge-warning-bg: var(--color-badge-warning-bg-dark);
+		--color-badge-warning-text: var(--color-base-status-warning-text-dark);
+		--color-badge-danger-bg: var(--color-badge-danger-bg-dark);
+		--color-badge-danger-text: var(--color-base-status-error-text-dark);
+		--color-status-success-bg: var(--alpha-success-10-dark);
+		--color-status-success-border: var(--alpha-success-60-dark);
+		--color-status-success-text: var(--color-base-status-success-text-dark);
+		--color-logo-ring: var(--color-primary-500-dark);
+		--color-logo-brackets: var(--color-primary-400-light);
+		--color-logo-slash-start: var(--color-primary-400-light);
+		--color-logo-slash-end: var(--color-primary-400-dark);
+		--color-logo-monochrome: var(--color-base-white);
+		--channel-background-canvas: var(--color-neutral-950);
+		--channel-surface-default: var(--color-base-surface-dark);
+		--channel-surface-highlight: var(--color-base-surface-highlight-dark);
+		--channel-content-strong: var(--color-base-content-strong-dark);
+		--channel-content-default: var(--color-neutral-300);
+		--channel-content-muted: var(--color-neutral-400);
+		--channel-edge-default: var(--color-neutral-800);
+		--channel-edge-strong: var(--color-neutral-300);
+		--channel-accent-primary: var(--color-primary-500-dark);
+		--channel-accent-secondary: var(--color-primary-400-dark);
+		--channel-status-online: var(--color-base-status-success-text-dark);
+		--color-channel-accent-primary-hover: var(--color-primary-400-dark);
+		--color-channel-status-warning: var(--color-base-status-warning-text-dark);
+		--color-channel-status-error: var(--color-base-status-error-text-dark);
+		--color-channel-overlay: rgb(0 0 0 / 62%);
+		--color-button-primary-background-hover: var(--color-primary-400-dark);
+		--color-button-primary-content: var(--color-neutral-950);
+		--color-button-secondary-background-hover: var(--color-neutral-700);
+		--color-button-focus: var(--color-primary-500-dark);
+		--color-header-surface-scrolled: color-mix(
+			in oklch,
+			var(--color-neutral-900) 88%,
+			transparent
+		);
+		--color-header-shadow-primary: color-mix(
+			in oklch,
+			var(--color-neutral-950) 45%,
+			transparent
+		);
+		--color-header-shadow-secondary: color-mix(
+			in oklch,
+			var(--color-neutral-950) 35%,
+			transparent
+		);
+	}
 }
 
 body {

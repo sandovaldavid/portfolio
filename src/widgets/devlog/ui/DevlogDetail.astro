@@ -123,10 +123,10 @@ const articleBodyClasses = editorialArticleBodyClasses;
 			{(previousPost || nextPost) && (
 				<footer class="mt-14 border-t-2 border-edge-strong pt-8">
 					<nav class="grid grid-cols-1 gap-4 sm:grid-cols-2" aria-label={paginationLabel}>
-						{previousPost ? (
+						{previousPost && (
 							<a
 								href={previousPost.href}
-								class="group flex flex-col gap-1 border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md transition-[box-shadow] duration-100 hover:shadow-retro-xl"
+								class="group flex flex-col gap-1 border-2 border-edge-strong bg-channel-surface-default p-4 shadow-retro-md transition-[box-shadow] duration-100 hover:shadow-retro-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-focus"
 							>
 								<span class="flex items-center gap-1 font-mono text-caption text-content-muted">
 									<ArrowLeftIcon class="size-3.5 shrink-0" aria-hidden="true" />
@@ -136,13 +136,11 @@ const articleBodyClasses = editorialArticleBodyClasses;
 									{previousPost.title}
 								</span>
 							</a>
-						) : (
-							<div />
 						)}
-						{nextPost ? (
+						{nextPost && (
 							<a
 								href={nextPost.href}
-								class="group flex flex-col items-end gap-1 border-2 border-edge-strong bg-channel-surface-default p-4 text-right shadow-retro-md transition-[box-shadow] duration-100 hover:shadow-retro-xl sm:col-start-2"
+								class="group flex flex-col items-end gap-1 border-2 border-edge-strong bg-channel-surface-default p-4 text-right shadow-retro-md transition-[box-shadow] duration-100 hover:shadow-retro-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-focus sm:col-start-2"
 							>
 								<span class="flex items-center gap-1 font-mono text-caption text-content-muted">
 									{nextLabel} · {nextPost.version}
@@ -152,8 +150,6 @@ const articleBodyClasses = editorialArticleBodyClasses;
 									{nextPost.title}
 								</span>
 							</a>
-						) : (
-							<div />
 						)}
 					</nav>
 				</footer>

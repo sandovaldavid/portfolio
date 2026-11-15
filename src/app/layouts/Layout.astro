@@ -51,7 +51,7 @@ const {
 	publishedTime,
 	modifiedTime,
 	breadcrumbLabel,
-	keywords = 'David Sandoval, Software Engineer, backend engineering, web architecture, automated testing, developer tooling, software maintenance research, .NET, Angular, TypeScript, Peru, remote',
+	keywords,
 	localizedPaths,
 	contentLayout = 'default',
 } = Astro.props;
@@ -78,6 +78,7 @@ const esUrl = esPath ? new URL(esPath, siteConfig.url).toString() : undefined;
 const tAccessibility = createScopedUiTranslator(lang, 'accessibility');
 const tBreadcrumbs = createScopedUiTranslator(lang, 'breadcrumbs');
 const tMetadata = createScopedUiTranslator(lang, 'metadata');
+const resolvedKeywords = keywords ?? tMetadata('defaultKeywords');
 const tResearchSection = createScopedUiTranslator(lang, 'sections.research');
 const tProjects = createScopedUiTranslator(lang, 'sections.projects');
 const tAbout = createScopedUiTranslator(lang, 'sections.about');
@@ -246,10 +247,11 @@ const serializeJsonLd = (schema: unknown): string =>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="color-scheme" content="light dark" />
 
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<meta name="keywords" content={keywords} />
+		<meta name="keywords" content={resolvedKeywords} />
 		<meta name="author" content={siteConfig.fullName} />
 		<meta name="robots" content={noindex ? 'noindex, nofollow' : 'index, follow'} />
 		<link rel="canonical" href={canonicalUrl} />
@@ -314,8 +316,6 @@ const serializeJsonLd = (schema: unknown): string =>
 			href="/es/rss.xml"
 		/>
 
-		<Font cssVariable="--font-pixel" />
-		<Font cssVariable="--font-pixel-clean" />
 		<Font cssVariable="--font-retro-tag" />
 		<Font cssVariable="--font-gaming-mono" />
 		<Font cssVariable="--font-mono" preload={[{ weight: '400', style: 'normal' }]} />

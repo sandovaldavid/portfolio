@@ -24,6 +24,7 @@
 	"resourceRelated": "Proyecto relacionado",
 	"resourceShare": "Compartir",
 	"shareCopied": "Enlace copiado",
+	"shareError": "No se pudo copiar el enlace",
 	"shareOnlyHint": "Comparte este proyecto",
 	"sourcePublic": "Código público",
 	"sourcePrivate": "Código privado",

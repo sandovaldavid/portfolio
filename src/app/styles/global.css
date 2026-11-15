@@ -131,12 +131,13 @@
 	letter-spacing: 0;
 }
 
-html {
-	@apply scroll-smooth;
-	scrollbar-width: auto;
-}
-
 @layer base {
+	html {
+		@apply scroll-smooth;
+		scrollbar-width: auto;
+		scrollbar-color: var(--color-primary-500) var(--color-background);
+	}
+
 	#main-content > *,
 	#main-content > * > * {
 		max-width: 100%;
@@ -158,25 +159,38 @@ html {
 	h6 {
 		font-family: var(--font-mono);
 	}
-}
 
-::-webkit-scrollbar {
-	width: 12px;
-	height: 12px;
-}
+	:is(.article-body, .research-prose) p {
+		text-wrap: pretty;
+	}
 
-::-webkit-scrollbar-track {
-	background: var(--color-background);
-	border-left: 2px solid var(--color-edge-strong);
-}
+	@supports not (scrollbar-color: auto) {
+		::-webkit-scrollbar {
+			width: 12px;
+			height: 12px;
+		}
 
-::-webkit-scrollbar-thumb {
-	background: var(--color-primary-500);
-	border: 2px solid var(--color-edge-strong);
-}
+		::-webkit-scrollbar-track {
+			background: var(--color-background);
+			border-left: 2px solid var(--color-edge-strong);
+		}
 
-::-webkit-scrollbar-thumb:hover {
-	background: var(--color-primary-600);
+		::-webkit-scrollbar-thumb {
+			background: var(--color-primary-500);
+			border: 2px solid var(--color-edge-strong);
+		}
+
+		::-webkit-scrollbar-thumb:hover {
+			background: var(--color-primary-600);
+		}
+	}
+
+	@media (forced-colors: active) {
+		:is(a, button, summary, [tabindex]):focus-visible {
+			outline: 2px solid Highlight !important;
+			outline-offset: 2px !important;
+		}
+	}
 }
 
 @supports (padding: env(safe-area-inset-left)) {
@@ -225,7 +239,6 @@ html.theme-transition::view-transition-new(root) {
 	*::after {
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
-		transition-duration: 0.01ms !important;
 		scroll-behavior: auto !important;
 	}
 

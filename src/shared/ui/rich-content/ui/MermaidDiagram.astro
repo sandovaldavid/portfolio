@@ -90,7 +90,56 @@ const captionId = `mermaid-caption-${diagramHash}`;
 			const renderId = `portfolio-mermaid-${host.dataset.mermaidId ?? 'diagram'}-${renderSequence++}`;
 			const { svg, bindFunctions } = await mermaid.render(renderId, source);
 
-			host.innerHTML = svg;
+			const parsed = new DOMParser().parseFromString(svg, 'text/html');
+			const parsedSvg = parsed.body.querySelector('svg');
+			if (!(parsedSvg instanceof SVGElement)) {
+				throw new Error('Mermaid rendered without an SVG root.');
+			}
+
+			parsedSvg
+				.querySelectorAll(
+					'script, iframe, object, embed, portal, applet, base, form, meta, link, animate, animateMotion, animateTransform, set'
+				)
+				.forEach(node => node.remove());
+			const urlAttributes = new Set([
+				'href',
+				'xlink:href',
+				'src',
+				'action',
+				'formaction',
+				'poster',
+				'data',
+			]);
+			const isSafeSvgUrl = (value: string) => {
+				const normalized = value
+					.split('')
+					.filter(char => char.charCodeAt(0) > 32)
+					.join('')
+					.toLowerCase();
+				return (
+					normalized.startsWith('#') ||
+					normalized.startsWith('https://') ||
+					normalized.startsWith('http://') ||
+					(normalized.startsWith('/') && !normalized.startsWith('//'))
+				);
+			};
+			parsedSvg.querySelectorAll('*').forEach(el => {
+				for (const attr of Array.from(el.attributes)) {
+					const attrName = attr.name.toLowerCase();
+					if (attrName.startsWith('on')) {
+						el.removeAttribute(attr.name);
+					} else if (urlAttributes.has(attrName) && !isSafeSvgUrl(attr.value)) {
+						el.removeAttribute(attr.name);
+					} else if (
+						attrName === 'style' &&
+						/expression\s*\(|javascript:|vbscript:/i.test(attr.value)
+					) {
+						el.removeAttribute(attr.name);
+					}
+				}
+			});
+
+			host.replaceChildren(document.importNode(parsedSvg, true));
 			const svgElement = host.querySelector('svg');
 			if (!svgElement) throw new Error('Mermaid rendered without an SVG root.');
 
@@ -155,7 +204,8 @@ const captionId = `mermaid-caption-${diagramHash}`;
 
 <style>
 	.diagram-scroll {
-		scrollbar-width: none;
+		scrollbar-width: thin;
+		scrollbar-color: var(--color-edge-strong) transparent;
 		touch-action: pan-x pan-y;
 	}
 
@@ -164,10 +214,15 @@ const captionId = `mermaid-caption-${diagramHash}`;
 		outline-offset: 3px;
 	}
 
-	.diagram-scroll::-webkit-scrollbar {
-		display: none;
-		width: 0;
-		height: 0;
+	@supports not (scrollbar-color: auto) {
+		.diagram-scroll::-webkit-scrollbar {
+			height: 6px;
+			width: 6px;
+		}
+
+		.diagram-scroll::-webkit-scrollbar-thumb {
+			background: var(--color-edge-strong);
+		}
 	}
 
 	.diagram-scroll :global(svg) {

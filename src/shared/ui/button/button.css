@@ -13,7 +13,7 @@
 	@apply text-button-label;
 	@apply rounded-none border-2 border-button-border;
 	@apply transition-[box-shadow,background-color,color] duration-100;
-	@apply focus:outline-none focus-visible:outline-none;
+	@apply focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent;
 	@apply focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2;
 	@apply focus-visible:ring-offset-channel-background-canvas;
 

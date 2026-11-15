@@ -25,47 +25,49 @@ const gridClass = columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-2';
 const resolvedItems = items.map(item => ({
 	...item,
 	src: typeof item.src === 'string' ? item.src : item.src.src,
+	width: typeof item.src === 'string' ? undefined : item.src.width,
+	height: typeof item.src === 'string' ? undefined : item.src.height,
 }));
 ---
 
 {resolvedItems.length > 0 && (
 	<div class="w-full" data-project-gallery>
-		<div
-			class:list={['grid gap-4 md:grid-cols-2', gridClass]}
-			role="list"
-			aria-label={resolvedLabel}
-		>
+		<ul class:list={['grid gap-4 md:grid-cols-2', gridClass]} aria-label={resolvedLabel}>
 			{resolvedItems.map((item, index) => (
-				<figure class="min-w-0" role="listitem">
-					<button
-						type="button"
-						class="group relative block w-full cursor-zoom-in overflow-hidden border-2 border-edge-strong bg-channel-surface-highlight shadow-retro-sm transition-[box-shadow,transform] duration-150 hover:shadow-retro-lg active:translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas motion-reduce:transform-none motion-reduce:transition-none"
-						aria-label={`${tPage('galleryOpen')}: ${item.alt}`}
-						data-gallery-open
-						data-gallery-index={String(index)}
-					>
-						<img
-							src={item.src}
-							alt={item.alt}
-							class="aspect-video w-full object-contain transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none"
-							loading="lazy"
-							decoding="async"
-						/>
-						<span
-							class="absolute right-3 bottom-3 flex size-10 items-center justify-center border-2 border-edge-strong bg-channel-background-canvas text-channel-accent-primary shadow-retro-sm"
-							aria-hidden="true"
+				<li class="min-w-0">
+					<figure class="min-w-0">
+						<button
+							type="button"
+							class="group relative block w-full cursor-zoom-in overflow-hidden border-2 border-edge-strong bg-channel-surface-highlight shadow-retro-sm transition-[box-shadow,transform] duration-150 hover:shadow-retro-lg active:translate-y-0.5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas motion-reduce:transform-none motion-reduce:transition-none"
+							aria-label={`${tPage('galleryOpen')}: ${item.alt}`}
+							data-gallery-open
+							data-gallery-index={String(index)}
 						>
-							<ZoomInIcon class="size-5" />
-						</span>
-					</button>
-					{item.caption && (
-						<figcaption class="mt-2 text-caption text-content-muted">
-							{item.caption}
-						</figcaption>
-					)}
-				</figure>
+							<img
+								src={item.src}
+								alt={item.alt}
+								width={item.width}
+								height={item.height}
+								class="aspect-video w-full object-contain transition-transform duration-200 group-hover:scale-[1.02] motion-reduce:transform-none motion-reduce:transition-none"
+								loading="lazy"
+								decoding="async"
+							/>
+							<span
+								class="absolute right-3 bottom-3 flex size-10 items-center justify-center border-2 border-edge-strong bg-channel-background-canvas text-channel-accent-primary shadow-retro-sm"
+								aria-hidden="true"
+							>
+								<ZoomInIcon class="size-5" aria-hidden="true" />
+							</span>
+						</button>
+						{item.caption && (
+							<figcaption class="mt-2 text-caption text-content-muted">
+								{item.caption}
+							</figcaption>
+						)}
+					</figure>
+				</li>
 			))}
-		</div>
+		</ul>
 
 		<dialog
 			class="m-auto max-h-[92svh] w-[min(92vw,80rem)] overflow-hidden border-2 border-edge-strong bg-channel-background-canvas p-0 text-content-default shadow-retro-3xl"
@@ -83,26 +85,26 @@ const resolvedItems = items.map(item => ({
 					<div class="flex items-center gap-2">
 						<button
 							type="button"
-							class="flex size-11 cursor-pointer items-center justify-center border-2 border-button-border bg-channel-surface-default text-content-strong transition-[background-color,box-shadow] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+							class="flex size-11 cursor-pointer items-center justify-center border-2 border-button-border bg-channel-surface-default text-content-strong transition-[background-color,box-shadow] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus"
 							aria-label={tPage('galleryZoomIn')}
 							data-gallery-zoom
 							data-label-in={tPage('galleryZoomIn')}
 							data-label-out={tPage('galleryZoomOut')}
 						>
-							<span data-gallery-zoom-in-icon>
-								<ZoomInIcon class="size-5" />
+							<span data-gallery-zoom-in-icon aria-hidden="true">
+								<ZoomInIcon class="size-5" aria-hidden="true" />
 							</span>
-							<span class="hidden" data-gallery-zoom-out-icon>
-								<ZoomOutIcon class="size-5" />
+							<span class="hidden" data-gallery-zoom-out-icon aria-hidden="true">
+								<ZoomOutIcon class="size-5" aria-hidden="true" />
 							</span>
 						</button>
 						<button
 							type="button"
-							class="flex size-11 cursor-pointer items-center justify-center border-2 border-button-border bg-channel-surface-default text-content-strong transition-[background-color,box-shadow] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+							class="flex size-11 cursor-pointer items-center justify-center border-2 border-button-border bg-channel-surface-default text-content-strong transition-[background-color,box-shadow] duration-150 hover:bg-channel-surface-highlight hover:shadow-retro-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus"
 							aria-label={tPage('galleryClose')}
 							data-gallery-close
 						>
-							<CloseIcon class="size-5" />
+							<CloseIcon class="size-5" aria-hidden="true" />
 						</button>
 					</div>
 				</header>
@@ -134,13 +136,14 @@ const resolvedItems = items.map(item => ({
 	}
 
 	[data-gallery-stage] [data-gallery-active-image] {
-		transform-origin: center;
-		transition: transform 180ms ease-out;
+		transition: width 180ms ease-out;
 		cursor: zoom-in;
 	}
 
 	[data-gallery-stage][data-zoomed='true'] [data-gallery-active-image] {
-		transform: scale(1.6);
+		width: 160%;
+		max-width: none;
+		max-height: none;
 		cursor: zoom-out;
 	}
 
@@ -232,10 +235,19 @@ const resolvedItems = items.map(item => ({
 			});
 			dialog.addEventListener('close', () => {
 				setZoomed(false);
-				opener?.focus();
+				if (dialog.returnValue !== 'navigate') {
+					opener?.focus();
+				}
+				opener = null;
 			});
 		});
 	}
+
+	document.addEventListener('astro:before-preparation', () => {
+		document
+			.querySelectorAll<HTMLDialogElement>('[data-gallery-dialog][open]')
+			.forEach(dialog => dialog.close('navigate'));
+	});
 
 	setupProjectGalleries();
 	document.addEventListener('astro:page-load', setupProjectGalleries);

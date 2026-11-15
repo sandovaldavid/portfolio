@@ -21,6 +21,9 @@ for (const viewport of [
 		const shellBox = await shell.boundingBox();
 		expect(shellBox?.height).toBeGreaterThanOrEqual(viewport.height - HEADER_HEIGHT);
 
+		const tablist = section.getByRole('tablist');
+		await expect(tablist).toHaveAttribute('aria-orientation', 'vertical');
+
 		const title = section.getByRole('heading', { level: 2, name: /experience/i });
 		const titleBox = await title.boundingBox();
 		expect(titleBox).not.toBeNull();
@@ -49,6 +52,7 @@ test('mobile experience keeps compact section typography and a visually hidden h
 	expect(await title.evaluate(el => getComputedStyle(el).lineHeight)).toBe('36px');
 
 	const tablist = section.getByRole('tablist');
+	await expect(tablist).toHaveAttribute('aria-orientation', 'horizontal');
 	expect(await tablist.evaluate(el => getComputedStyle(el).flexDirection)).toBe('row');
 	expect(await tablist.evaluate(el => getComputedStyle(el).overflowX)).toBe('auto');
 	expect(await tablist.evaluate(el => getComputedStyle(el).scrollbarWidth)).toBe('none');

@@ -3,12 +3,37 @@
 ---
 
 <script is:inline>
+	const readSavedTheme = () => {
+		try {
+			const value = localStorage.getItem('theme');
+			return value === 'light' || value === 'dark' || value === 'system' ? value : 'dark';
+		} catch {
+			return 'dark';
+		}
+	};
+
+	const syncFavicon = resolved => {
+		let favicon = document.querySelector('link[data-theme-favicon-active]');
+		if (!favicon) {
+			favicon = document.createElement('link');
+			favicon.rel = 'icon';
+			favicon.type = 'image/svg+xml';
+			favicon.dataset.themeFaviconActive = 'true';
+		}
+		const href = `/favicon.${resolved}.svg`;
+		if (favicon.getAttribute('href') !== href) favicon.setAttribute('href', href);
+		document.head.append(favicon);
+	};
+
 	const applyTheme = () => {
-		const saved = localStorage.getItem('theme') || 'dark';
+		const saved = readSavedTheme();
 		const isDark =
 			saved === 'dark' ||
 			(saved === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+		const resolved = isDark ? 'dark' : 'light';
 		document.documentElement.classList.toggle('dark', isDark);
+		document.documentElement.dataset.themeResolved = resolved;
+		syncFavicon(resolved);
 	};
 
 	applyTheme();

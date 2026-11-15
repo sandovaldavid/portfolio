@@ -28,3 +28,21 @@
 	font-weight: 400;
 	font-display: swap;
 }
+
+@font-face {
+	font-family: 'Inter Fallback';
+	src: local('Arial'), local('Helvetica Neue'), local('Liberation Sans');
+	size-adjust: 107%;
+	ascent-override: 90%;
+	descent-override: 22%;
+	line-gap-override: 0%;
+}
+
+@font-face {
+	font-family: 'Fira Code Fallback';
+	src: local('Consolas'), local('Liberation Mono'), local('Courier New');
+	size-adjust: 102%;
+	ascent-override: 94%;
+	descent-override: 25%;
+	line-gap-override: 0%;
+}

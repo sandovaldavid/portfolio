@@ -34,7 +34,7 @@ const hasExternalResources =
 	repositories.length > 0 || Boolean(docs || packageUrl || related || liveDemo);
 
 const resourceBaseClasses =
-	'inline-flex min-h-11 items-center gap-2 border-2 px-4 py-2 text-button-label shadow-retro-sm transition-[box-shadow] duration-150 hover:shadow-retro-md active:shadow-retro-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas';
+	'inline-flex min-h-11 items-center gap-2 border-2 px-4 py-2 text-button-label shadow-retro-sm transition-[box-shadow] duration-150 hover:shadow-retro-md active:shadow-retro-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas';
 const resourceToneClasses = {
 	repository: 'border-badge-info-text bg-badge-info-bg text-badge-info-text',
 	docs: 'border-badge-brand-text bg-badge-brand-bg text-badge-brand-text',
@@ -149,8 +149,9 @@ const resourceToneClasses = {
 					data-resource-tone="neutral"
 					data-share-label={tPage('resourceShare')}
 					data-share-copied={tPage('shareCopied')}
+					data-share-error={tPage('shareError')}
 				>
-					<ShareIcon class="size-4 shrink-0" />
+					<ShareIcon class="size-4 shrink-0" aria-hidden="true" />
 					<span class="inline-block" data-share-text>
 						{tPage('resourceShare')}
 					</span>
@@ -195,12 +196,22 @@ const resourceToneClasses = {
 				const status = nav?.querySelector<HTMLElement>('[data-share-status]');
 				const label = button.dataset.shareLabel ?? '';
 				const copied = button.dataset.shareCopied ?? label;
+				const errorMessage = button.dataset.shareError ?? label;
 				const shareData = { title: document.title, url: window.location.href };
 
 				try {
 					if (navigator.share) {
-						await navigator.share(shareData);
-						return;
+						try {
+							await navigator.share(shareData);
+							return;
+						} catch (shareError) {
+							if (
+								shareError instanceof DOMException &&
+								shareError.name === 'AbortError'
+							) {
+								return;
+							}
+						}
 					}
 
 					await navigator.clipboard.writeText(shareData.url);
@@ -210,7 +221,7 @@ const resourceToneClasses = {
 					await swapShareText(text, label);
 					if (status) status.textContent = '';
 				} catch {
-					if (status) status.textContent = label;
+					if (status) status.textContent = errorMessage;
 				} finally {
 					button.dataset.shareBusy = 'false';
 				}

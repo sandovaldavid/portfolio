@@ -15,7 +15,7 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 -->
 <button
 	type="button"
-	class="theme-toggle relative grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-150 hover:bg-channel-surface-highlight focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
+	class="theme-toggle relative grid size-10 shrink-0 place-items-center rounded border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong transition-colors duration-150 hover:bg-channel-surface-highlight focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus focus-visible:ring-offset-2 focus-visible:ring-offset-channel-background-canvas"
 	data-theme-toggle
 	data-theme-select-label={tTheme('select')}
 	data-theme-light-label={tTheme('light')}
@@ -57,8 +57,12 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		value === 'light' || value === 'dark' || value === 'system';
 
 	const getSavedTheme = (): ThemePreference => {
-		const saved = localStorage.getItem(THEME_STORAGE_KEY);
-		return isThemePreference(saved) ? saved : 'dark';
+		try {
+			const saved = localStorage.getItem(THEME_STORAGE_KEY);
+			return isThemePreference(saved) ? saved : 'dark';
+		} catch {
+			return 'dark';
+		}
 	};
 
 	const getResolvedTheme = (theme: ThemePreference): ResolvedTheme =>
@@ -166,7 +170,11 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 		// to the palette that is already visible, so starting a document snapshot in
 		// that case only re-captures identical colors and can produce a perceptible
 		// flash. Update preference semantics directly unless the palette must change.
-		localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+		try {
+			localStorage.setItem(THEME_STORAGE_KEY, nextTheme);
+		} catch {
+			// Storage may be unavailable in restricted contexts; apply theme in memory for the session.
+		}
 		if (
 			currentResolvedTheme === nextResolvedTheme ||
 			renderedResolvedTheme === nextResolvedTheme
@@ -206,6 +214,11 @@ const tTheme = createScopedUiTranslator(lang, 'theme');
 				if (requestVersion !== themeRequestVersion || getSavedTheme() !== 'system') return;
 				syncThemeState();
 			});
+		});
+
+		window.addEventListener('storage', event => {
+			if (event.key !== null && event.key !== THEME_STORAGE_KEY) return;
+			syncThemeState();
 		});
 	}
 

@@ -13,6 +13,7 @@ import SystemIcon from '@assets/icons/System.astro';
 import type { Language, LocalizedPathMap } from '@shared/config/i18n';
 import { ThemeToggle } from '@features/theme-toggle';
 import { LanguagePicker } from '@features/language-picker';
+import { isCurrentNavPath } from '../lib/navigation';
 
 interface Props {
 	navItems: Array<{
@@ -24,6 +25,7 @@ interface Props {
 	}>;
 	lang: Language;
 	localizedPaths?: LocalizedPathMap;
+	dialogLabel: string;
 	menuLabel: string;
 	openLabel: string;
 	closeLabel: string;
@@ -38,6 +40,7 @@ const {
 	navItems,
 	lang,
 	localizedPaths,
+	dialogLabel,
 	menuLabel,
 	openLabel,
 	closeLabel,
@@ -47,6 +50,7 @@ const {
 	contactHref,
 	newTabLabel,
 } = Astro.props;
+const currentPathname = Astro.url.pathname;
 ---
 
 <!--
@@ -55,32 +59,32 @@ const {
 	every preference surface below lg: primary navigation, Download resume,
 	Get in touch, Theme and Language.
 -->
-<nav class="flex lg:hidden w-full items-center justify-between" aria-label={menuLabel}>
+<div class="flex lg:hidden w-full items-center justify-between">
 	<button
+		type="button"
 		id="mobile-menu-btn"
-		class="grid size-10 place-items-center rounded-none border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+		class="grid size-10 place-items-center rounded-none border-2 border-edge-strong bg-channel-surface-default p-0 text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus"
 		aria-label={openLabel}
 		aria-haspopup="dialog"
 		aria-controls="mobile-menu"
 		aria-expanded="false"
 	>
-		<MenuIcon class="size-5" />
+		<MenuIcon class="size-5" aria-hidden="true" />
 	</button>
-</nav>
+</div>
 
 <!-- Mobile Menu Overlay -->
-<div
+<dialog
 	id="mobile-menu"
-	role="dialog"
-	aria-modal="true"
-	aria-label={menuLabel}
-	class="fixed inset-0 w-full h-screen bg-background/95 backdrop-blur-md z-50 hidden items-center justify-center transition-all duration-100 overflow-y-auto"
+	aria-label={dialogLabel}
+	class="fixed inset-0 z-50 m-0 h-dvh w-full max-h-none max-w-none overflow-y-auto border-0 bg-background/95 p-0 text-content-strong backdrop-blur-md open:flex lg:hidden"
 >
-	<div class="flex flex-col items-center justify-center gap-6 w-full max-w-sm px-6 py-10">
+	<div class="m-auto flex flex-col items-center justify-center gap-6 w-full max-w-sm px-6 pt-16 pb-10">
 		<!-- Close Button -->
 		<button
+			type="button"
 			id="mobile-menu-close"
-			class="absolute top-6 right-6 grid size-10 place-items-center rounded-none bg-channel-surface-default border-2 border-edge-strong text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-button-focus"
+			class="fixed top-6 right-6 z-10 grid size-10 place-items-center rounded-none bg-channel-surface-default border-2 border-edge-strong text-content-strong shadow-retro-sm transition-[box-shadow,background-color] duration-100 hover:bg-channel-surface-highlight active:shadow-retro-xs focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-transparent focus-visible:ring-2 focus-visible:ring-button-focus"
 			aria-label={closeLabel}
 		>
 			<CloseIcon class="size-5" aria-hidden="true" />
@@ -88,25 +92,48 @@ const {
 
 		<!-- Navigation Items -->
 		<nav class="flex flex-col items-center gap-3 w-full" aria-label={menuLabel}>
-			{navItems.map(link => (
-				<a
-					class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-none text-base font-bold uppercase tracking-wider font-mono text-content-strong hover:text-primary-500 hover:bg-surface-highlight border-2 border-transparent hover:border-edge-strong transition-all duration-100 whitespace-nowrap"
-					aria-label={link.title}
-					data-section-id={link.label}
-					href={link.url}
-					data-astro-prefetch={link.prefetch ? 'hover' : undefined}
-					data-close-menu="true"
-				>
-					{link.icon === 'experience' && <BriefcaseIcon class="size-5" />}
-					{link.icon === 'research' && <BrainIcon class="size-5" />}
-					{link.icon === 'projects' && <CodeIcon class="size-5" />}
-					{link.icon === 'devlog' && <ScrollTextIcon class="size-5" />}
-					{link.icon === 'blog' && <BookOpenIcon class="size-5" />}
-					{link.icon === 'about-me' && <AboutIcon class="size-5" />}
-					{link.icon === 'technologies' && <SystemIcon class="size-5" />}
-					<span>{link.title}</span>
-				</a>
-			))}
+			{navItems.map(link => {
+				const isCurrentPage = isCurrentNavPath(currentPathname, link.url);
+
+				return (
+					<a
+						class:list={[
+							'w-full flex items-center justify-center gap-2 px-6 py-3 rounded-none text-center text-base font-bold uppercase tracking-wider font-mono text-content-strong hover:text-primary-500 hover:bg-surface-highlight border-2 hover:border-edge-strong transition-colors duration-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-button-focus',
+							isCurrentPage
+								? 'border-edge-strong bg-surface-highlight text-channel-accent-primary'
+								: 'border-transparent',
+						]}
+						aria-current={isCurrentPage ? 'page' : undefined}
+						data-section-id={link.label}
+						href={link.url}
+						data-astro-prefetch={link.prefetch ? 'hover' : undefined}
+						data-close-menu="true"
+					>
+						{link.icon === 'experience' && (
+							<BriefcaseIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						{link.icon === 'research' && (
+							<BrainIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						{link.icon === 'projects' && (
+							<CodeIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						{link.icon === 'devlog' && (
+							<ScrollTextIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						{link.icon === 'blog' && (
+							<BookOpenIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						{link.icon === 'about-me' && (
+							<AboutIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						{link.icon === 'technologies' && (
+							<SystemIcon class="size-5 shrink-0" aria-hidden="true" />
+						)}
+						<span>{link.title}</span>
+					</a>
+				);
+			})}
 		</nav>
 
 		<!-- Actions: Download resume and Get in touch -->
@@ -114,7 +141,7 @@ const {
 			<LinkButton href={resumeHref} target="_blank" variant="primary" {newTabLabel}>
 				{resumeLabel}
 			</LinkButton>
-			<LinkButton href={contactHref} target="_self" variant="secondary">
+			<LinkButton href={contactHref} target="_self" variant="secondary" closeMenu>
 				<MailIcon aria-hidden="true" />
 				{contactLabel}
 			</LinkButton>
@@ -126,39 +153,42 @@ const {
 			<LanguagePicker {localizedPaths} currentLang={lang} />
 		</div>
 	</div>
-</div>
+</dialog>
+
+<style>
+	dialog#mobile-menu::backdrop {
+		background: transparent;
+	}
+</style>
 
 <script>
 	// The header is re-rendered on every client-side navigation, so the open/
-	// close listeners are (re)wired on astro:page-load. Document-level listeners
-	// are attached once and resolve the current elements live.
+	// close listeners are wired on initial load and re-wired on astro:page-load
+	// (including non-ClientRouter routes such as /404).
 	const openMobileMenu = () => {
 		const menu = document.getElementById('mobile-menu');
 		const btn = document.getElementById('mobile-menu-btn');
 		const close = document.getElementById('mobile-menu-close');
-		menu?.classList.remove('hidden');
-		menu?.classList.add('flex');
+		if (!(menu instanceof HTMLDialogElement)) return;
+		if (!menu.open) menu.showModal();
 		btn?.setAttribute('aria-expanded', 'true');
 		// Move focus into the dialog for keyboard/AT users.
 		close?.focus();
 	};
 
-	const closeMobileMenu = () => {
+	const closeMobileMenu = (reason = 'dismiss') => {
 		const menu = document.getElementById('mobile-menu');
 		const btn = document.getElementById('mobile-menu-btn');
-		if (!menu || menu.classList.contains('hidden')) return;
-		menu.classList.add('hidden');
-		menu.classList.remove('flex');
+		if (!(menu instanceof HTMLDialogElement) || !menu.open) return;
+		menu.close(reason);
 		btn?.setAttribute('aria-expanded', 'false');
-		// Return focus to the trigger after dismissing (repo focus pattern).
-		btn?.focus();
 	};
 
 	const setupMobileNav = () => {
 		const btn = document.getElementById('mobile-menu-btn');
 		const menu = document.getElementById('mobile-menu');
 		const close = document.getElementById('mobile-menu-close');
-		if (!btn || !menu) return;
+		if (!btn || !(menu instanceof HTMLDialogElement)) return;
 
 		if (btn.dataset.navReady !== 'true') {
 			btn.dataset.navReady = 'true';
@@ -172,62 +202,51 @@ const {
 			close.dataset.navReady = 'true';
 			close.addEventListener('click', e => {
 				e.stopPropagation();
-				closeMobileMenu();
+				closeMobileMenu('dismiss');
+			});
+		}
+
+		if (menu.dataset.dialogReady !== 'true') {
+			menu.dataset.dialogReady = 'true';
+			menu.addEventListener('click', e => {
+				if (e.target !== menu) return;
+				const rect = menu.getBoundingClientRect();
+				const inViewportBox =
+					(e.clientX === 0 && e.clientY === 0) ||
+					(e.clientX >= rect.left &&
+						e.clientX < rect.left + menu.clientWidth &&
+						e.clientY >= rect.top &&
+						e.clientY < rect.top + menu.clientHeight);
+				if (inViewportBox) closeMobileMenu('dismiss');
+			});
+			menu.addEventListener('close', () => {
+				const liveBtn = document.getElementById('mobile-menu-btn');
+				liveBtn?.setAttribute('aria-expanded', 'false');
+				if (menu.returnValue !== 'navigate') {
+					liveBtn?.focus();
+				}
 			});
 		}
 	};
 
+	const desktopBreakpoint = window.matchMedia('(min-width: 1024px)');
+	desktopBreakpoint.addEventListener('change', event => {
+		if (event.matches) closeMobileMenu('dismiss');
+	});
+
 	// Close on nav-item click — closest() so clicks on the inner icon/label
-	// (not just the <a>) still dismiss the menu. Attached once.
+	// (not just the <a>) still dismiss the menu without restoring focus mid-navigation.
 	document.addEventListener('click', e => {
 		const target = e.target as HTMLElement | null;
-		if (target?.closest?.('[data-close-menu]')) closeMobileMenu();
-	});
-
-	// Close on outside click (attached once, resolves elements live).
-	document.addEventListener('click', e => {
-		const menu = document.getElementById('mobile-menu');
-		const btn = document.getElementById('mobile-menu-btn');
-		if (menu && !menu.classList.contains('hidden')) {
-			const target = e.target;
-			if (target instanceof Node && !menu.contains(target) && target !== btn) {
-				closeMobileMenu();
-			}
+		if (target?.closest?.('#mobile-menu [data-close-menu]')) {
+			closeMobileMenu('navigate');
 		}
 	});
 
-	// Escape closes the dialog and returns focus to the trigger; Tab is trapped inside (attached once).
-	document.addEventListener('keydown', e => {
-		const menu = document.getElementById('mobile-menu');
-		if (!menu || menu.classList.contains('hidden')) return;
-		if (e.key === 'Escape') {
-			closeMobileMenu();
-			return;
-		}
-		if (e.key === 'Tab') {
-			const focusable = Array.from(
-				menu.querySelectorAll<HTMLElement>(
-					'button:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
-				)
-			).filter(el => !el.hasAttribute('hidden') && el.offsetParent !== null);
-			if (focusable.length === 0) return;
-			const first = focusable[0];
-			const last = focusable[focusable.length - 1];
-			if (
-				e.shiftKey &&
-				(document.activeElement === first || !menu.contains(document.activeElement))
-			) {
-				e.preventDefault();
-				last?.focus();
-			} else if (
-				!e.shiftKey &&
-				(document.activeElement === last || !menu.contains(document.activeElement))
-			) {
-				e.preventDefault();
-				first?.focus();
-			}
-		}
+	document.addEventListener('astro:before-preparation', () => {
+		closeMobileMenu('navigate');
 	});
 
+	setupMobileNav();
 	document.addEventListener('astro:page-load', setupMobileNav);
 </script>
