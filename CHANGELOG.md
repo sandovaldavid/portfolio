@@ -1,5 +1,13 @@
 # Changelog
 
+## [2.0.2](https://github.com/sandovaldavid/portfolio/compare/v2.0.1...v2.0.2) (2026-11-16)
+
+
+### Bug Fixes
+
+* **app:** resolve modern web audit findings ([#376](https://github.com/sandovaldavid/portfolio/issues/376)) ([de0b693](https://github.com/sandovaldavid/portfolio/commit/de0b693fa17198022b6a9848360bf0d7d28f1ea7))
+* **docker:** support rootless podman scripts ([#377](https://github.com/sandovaldavid/portfolio/issues/377)) ([7cc0dd3](https://github.com/sandovaldavid/portfolio/commit/7cc0dd388654202f4372d2db1a8ddace5f690676))
+
 ## [2.0.1](https://github.com/sandovaldavid/portfolio/compare/v2.0.0...v2.0.1) (2026-11-05)
 
 
