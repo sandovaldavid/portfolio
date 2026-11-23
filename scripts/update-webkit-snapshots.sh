@@ -68,7 +68,7 @@ fi
 
 echo "Regenerating webkit + Mobile Safari snapshots (${CONTAINER_RUNTIME_KIND})..."
 "$CONTAINER_RUNTIME_BIN" "${container_args[@]}" \
-	mcr.microsoft.com/playwright:v1.65.0-noble \
+	mcr.microsoft.com/playwright:v1.65.1-noble \
 	node node_modules/@playwright/test/cli.js test \
 	tests/e2e/visual.spec.ts \
 	--project=webkit --project="Mobile Safari" \
